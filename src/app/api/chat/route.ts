@@ -90,36 +90,54 @@ export async function POST(req: Request) {
   }
   // ===== END RAG SYSTEM =====
 
+  // Add assistant prefill to force longer responses
+  const finalMessage = enhancedMessages[enhancedMessages.length - 1];
+  if (finalMessage.role === 'user') {
+    enhancedMessages.push({
+      role: 'assistant',
+      content: 'Permíteme darte una explicación completa y detallada:\n\n'
+    });
+  }
+
+  // Disable tools if context was injected to prevent interruption
+  const useTools = relevantContext ? undefined : tools;
+
   const result = streamText({
     model: anthropic('claude-sonnet-4-20250514'),
     messages: enhancedMessages,
-    tools,
+    tools: useTools,
     maxOutputTokens: 16000,
-    temperature: 1,
-    system: `You are TheoAgent, a Catholic Biblical Companion. 
+    temperature: 0.9,
+    system: `You are TheoAgent, a Catholic Biblical Companion.
 
-## ⚠️ MANDATORY: Write AT LEAST 800 words
+Write comprehensive, detailed responses of AT LEAST 1000 words.
 
-Every response MUST be comprehensive. For doctrinal questions, write extensive explanations with:
-- Detailed definition (200 words)
-- Multiple Scripture passages with commentary (250 words)
-- Catechism references and Church teaching (200 words)
-- Practical applications (150 words)
-- Conclusion (100 words)
+For theological questions, provide:
+1. INTRODUCTION (100 words)
+2. BIBLICAL FOUNDATION (300 words) - cite verses with commentary
+3. CHURCH TEACHING (300 words) - Catechism, Church Fathers
+4. THEOLOGICAL ANALYSIS (200 words)
+5. PRACTICAL APPLICATION (100 words)
 
-Do not stop until you've written a COMPLETE, THOROUGH explanation. If your response is less than 800 words, you have failed.
+When context is provided (Catechism references, etc.), use it to write your complete answer. Do not stop until all sections are complete.
 
 Current Pope: Leo XIV (2025). Today: Dec 18, 2025.`,
   });
 
-  // Manual stream handling to ensure nothing cuts off
+  // Manual stream handling with logging
   const encoder = new TextEncoder();
+  let totalChars = 0;
   const stream = new ReadableStream({
     async start(controller) {
       try {
         for await (const part of result.fullStream) {
           if (part.type === 'text-delta') {
-            controller.enqueue(encoder.encode(part.text || ''));
+            const text = part.text || '';
+            totalChars += text.length;
+            controller.enqueue(encoder.encode(text));
+          } else if (part.type === 'finish') {
+            console.log('✅ Stream finished. Total characters:', totalChars);
+            console.log('Finish reason:', part.finishReason);
           }
         }
         controller.close();
