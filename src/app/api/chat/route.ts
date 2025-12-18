@@ -112,6 +112,22 @@ Do not stop until you've written a COMPLETE, THOROUGH explanation. If your respo
 Current Pope: Leo XIV (2025). Today: Dec 18, 2025.`,
   });
 
-  // Stream the text response directly using the built-in streaming from result
-  return result.toTextStreamResponse();
+  // Stream the text response using manual ReadableStream for reliable completion
+  const stream = new ReadableStream({
+    async start(controller) {
+      try {
+        for await (const chunk of result.textStream) {
+          controller.enqueue(new TextEncoder().encode(chunk));
+        }
+        controller.close();
+      } catch (error) {
+        console.error('Stream error:', error);
+        controller.error(error);
+      }
+    },
+  });
+
+  return new Response(stream, {
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  });
 }
