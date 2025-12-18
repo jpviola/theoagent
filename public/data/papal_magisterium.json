@@ -1,0 +1,606 @@
+{
+  "papal_documents": [
+    {
+      "id": "leo14_dm_1",
+      "pope": "Leo XIV",
+      "document_type": "Apostolic Exhortation",
+      "title": "Dilexi me",
+      "abbreviation": "DM",
+      "year": 2025,
+      "theme": "On the Love of Christ and Devotion to the Sacred Heart",
+      "key_passages": [
+        {
+          "paragraph": 1,
+          "text": "He loved me and gave himself for me (Gal 2:20). These words of Saint Paul resonate through the centuries, reminding us of the personal and intimate love that Christ has for each soul. The devotion to the Sacred Heart of Jesus is not a peripheral practice in the life of the Church, but rather stands at the very center of our relationship with God, because it leads us to contemplate the infinite love that moved the Word to become flesh and dwell among us.",
+          "theme": "Personal Love of Christ"
+        },
+        {
+          "paragraph": 3,
+          "text": "When the soldier pierced the side of Jesus with his lance, there came forth blood and water (Jn 19:34). The Church Fathers saw in this outpouring from Christ's pierced heart the birth of the Church and the sacraments. From the wounded heart of the Redeemer flow the saving waters of Baptism and the Blood of the Eucharist. This is why devotion to the Sacred Heart is inseparable from sacramental life and from the Church herself.",
+          "theme": "Sacramental Foundation"
+        },
+        {
+          "paragraph": 7,
+          "text": "In this time of fragmentation and isolation, the devotion to the Sacred Heart calls us back to the essential: we are loved personally, individually, by God. In an age of digital connection but spiritual loneliness, the Heart of Christ offers us true communion. Pope Francis often spoke of God's closeness, tenderness, and compassion - these qualities find their fullest expression in the wounded, loving Heart of Jesus.",
+          "theme": "Contemporary Relevance"
+        },
+        {
+          "paragraph": 12,
+          "text": "The three dimensions of the Sacred Heart devotion are: contemplation of Christ's love, reparation for sins against that love, and consecration of ourselves to His Heart. To contemplate is to gaze upon the mystery of God's love revealed in the Incarnation, Passion, and ongoing presence in the Eucharist. To make reparation is to respond with love to the indifference and rejection that Christ continues to suffer. To consecrate is to entrust our whole being to His loving providence.",
+          "theme": "Three Dimensions of Devotion"
+        },
+        {
+          "paragraph": 18,
+          "text": "Saint Margaret Mary Alacoque received from Christ himself the message: 'Behold this Heart which has so loved men, but receives from the greater part only ingratitude.' These words remain painfully relevant today. Yet the devotion to the Sacred Heart is not primarily about our failings, but about His unfailing love. It is a devotion of hope, because it reveals that no matter how far we stray, His Heart remains open to us, always ready to receive the repentant sinner.",
+          "theme": "Hope and Mercy"
+        },
+        {
+          "paragraph": 23,
+          "text": "I encourage all the faithful to rediscover this beautiful devotion. Begin with simply contemplating a crucifix or an image of the Sacred Heart. Pray the Litany of the Sacred Heart. Make acts of reparation, especially through the worthy reception of the Eucharist and through works of mercy. Consecrate your families to the Sacred Heart. In doing so, you will find that this ancient devotion speaks powerfully to the deepest needs of our contemporary world.",
+          "theme": "Practical Application"
+        },
+        {
+          "paragraph": 28,
+          "text": "The pierced Heart of Jesus is the ultimate icon of divine vulnerability. God does not love us from a safe distance but enters fully into our human condition, even unto death. The wound in His side invites us to enter into the mystery of His love. As Saint Thomas placed his hand in that wound and proclaimed 'My Lord and my God,' so too are we called to this intimate encounter with divine love that transforms doubt into faith, fear into hope, and indifference into burning charity.",
+          "theme": "Divine Vulnerability and Intimacy"
+        }
+      ],
+      "biblical_foundation": ["Galatians 2:20", "John 19:34", "Ephesians 3:18-19", "John 15:13", "1 John 4:9-10", "Romans 5:8", "Ezekiel 36:26"],
+      "tags": ["Sacred Heart", "divine love", "devotion", "christology", "sacraments", "mercy", "reparation", "consecration", "eucharist"]
+    },
+    {
+      "id": "lf_1",
+      "pope": "Francis",
+      "document_type": "Encyclical",
+      "title": "Lumen Fidei",
+      "abbreviation": "LF",
+      "year": 2013,
+      "theme": "The Light of Faith",
+      "key_passages": [
+        {
+          "paragraph": 1,
+          "text": "The light of faith: this is how the Church's tradition speaks of the great gift brought by Jesus. In John's Gospel, Christ says of himself: 'I have come as light into the world, that whoever believes in me may not remain in darkness' (Jn 12:46).",
+          "theme": "Faith as Light"
+        },
+        {
+          "paragraph": 4,
+          "text": "In continuity with Moses, through whom God led Israel to knowledge of his name, Jesus, by his death and resurrection, bestows that knowledge in its fullness.",
+          "theme": "Revelation and Knowledge of God"
+        }
+      ],
+      "biblical_foundation": ["John 12:46", "Exodus 3:14", "John 17:3"],
+      "tags": ["faith", "revelation", "light", "knowledge of God"]
+    },
+    {
+      "id": "eg_1",
+      "pope": "Francis",
+      "document_type": "Apostolic Exhortation",
+      "title": "Evangelii Gaudium",
+      "abbreviation": "EG",
+      "year": 2013,
+      "theme": "The Joy of the Gospel",
+      "key_passages": [
+        {
+          "paragraph": 1,
+          "text": "The joy of the gospel fills the hearts and lives of all who encounter Jesus. Those who accept his offer of salvation are set free from sin, sorrow, inner emptiness and loneliness.",
+          "theme": "Joy of Encountering Christ"
+        },
+        {
+          "paragraph": 3,
+          "text": "I invite all Christians, everywhere, at this very moment, to a renewed personal encounter with Jesus Christ, or at least an openness to letting him encounter them.",
+          "theme": "Personal Encounter with Christ"
+        },
+        {
+          "paragraph": 24,
+          "text": "The Church which 'goes forth' is a community of missionary disciples who take the first step, who are involved and supportive, who bear fruit and rejoice.",
+          "theme": "Missionary Discipleship"
+        }
+      ],
+      "biblical_foundation": ["Matthew 28:19-20", "Acts 1:8", "Luke 4:18-19"],
+      "tags": ["evangelization", "joy", "mission", "discipleship", "mercy"]
+    },
+    {
+      "id": "ls_1",
+      "pope": "Francis",
+      "document_type": "Encyclical",
+      "title": "Laudato Si'",
+      "abbreviation": "LS",
+      "year": 2015,
+      "theme": "On Care for Our Common Home",
+      "key_passages": [
+        {
+          "paragraph": 2,
+          "text": "This sister [Mother Earth] now cries out to us because of the harm we have inflicted on her by our irresponsible use and abuse of the goods with which God has endowed her.",
+          "theme": "Ecological Crisis"
+        },
+        {
+          "paragraph": 66,
+          "text": "The creation accounts in the book of Genesis contain, in their own symbolic and narrative language, profound teachings about human existence and its historical reality.",
+          "theme": "Biblical View of Creation"
+        }
+      ],
+      "biblical_foundation": ["Genesis 1:26-28", "Genesis 2:15", "Psalm 24:1"],
+      "tags": ["ecology", "creation", "stewardship", "common good", "integral ecology"]
+    },
+    {
+      "id": "al_1",
+      "pope": "Francis",
+      "document_type": "Apostolic Exhortation",
+      "title": "Amoris Laetitia",
+      "abbreviation": "AL",
+      "year": 2016,
+      "theme": "The Joy of Love",
+      "key_passages": [
+        {
+          "paragraph": 59,
+          "text": "Jesus himself, born into a modest family, chose to begin his public life at a family celebration, the wedding feast of Cana.",
+          "theme": "Jesus and Family Life"
+        },
+        {
+          "paragraph": 89,
+          "text": "The hymn to love in the First Letter to the Corinthians (cf. 13:4-7) is quoted in every wedding. Paul describes the qualities of true love.",
+          "theme": "Biblical Understanding of Love"
+        },
+        {
+          "paragraph": 113,
+          "text": "Marriage is a precious sign, for 'when a man and a woman celebrate the sacrament of marriage, God, as it were, is 'mirrored' in them'.",
+          "theme": "Sacramentality of Marriage"
+        }
+      ],
+      "biblical_foundation": ["1 Corinthians 13:4-7", "John 2:1-11", "Genesis 2:24", "Ephesians 5:21-33"],
+      "tags": ["family", "marriage", "love", "sacrament", "pastoral care"]
+    },
+    {
+      "id": "cv_1",
+      "pope": "Benedict XVI",
+      "document_type": "Encyclical",
+      "title": "Caritas in Veritate",
+      "abbreviation": "CV",
+      "year": 2009,
+      "theme": "Charity in Truth",
+      "key_passages": [
+        {
+          "paragraph": 1,
+          "text": "Charity in truth, to which Jesus Christ bore witness by his earthly life and especially by his death and resurrection, is the principal driving force behind the authentic development of every person and of all humanity.",
+          "theme": "Charity as Foundation of Development"
+        },
+        {
+          "paragraph": 2,
+          "text": "Charity is at the heart of the Church's social doctrine. Every responsibility and every commitment spelled out by that doctrine is derived from charity.",
+          "theme": "Social Doctrine and Charity"
+        }
+      ],
+      "biblical_foundation": ["1 Corinthians 13", "John 15:12-13", "1 John 4:7-21"],
+      "tags": ["charity", "truth", "social doctrine", "development", "common good"]
+    },
+    {
+      "id": "ss_1",
+      "pope": "Benedict XVI",
+      "document_type": "Encyclical",
+      "title": "Spe Salvi",
+      "abbreviation": "SS",
+      "year": 2007,
+      "theme": "Saved in Hope",
+      "key_passages": [
+        {
+          "paragraph": 1,
+          "text": "'SPE SALVI facti sumus'—in hope we were saved, says Saint Paul to the Romans, and likewise to us (Rom 8:24). 'Redemption' is offered to us in the sense that we have been given hope, trustworthy hope, by virtue of which we can face our present.",
+          "theme": "Christian Hope and Salvation"
+        },
+        {
+          "paragraph": 7,
+          "text": "The Gospel is not merely a communication of things that can be known—it is one that makes things happen and is life-changing. The dark door of time, of the future, has been thrown open.",
+          "theme": "Transformative Power of the Gospel"
+        }
+      ],
+      "biblical_foundation": ["Romans 8:24-25", "Hebrews 11:1", "1 Peter 1:3-9"],
+      "tags": ["hope", "salvation", "eternal life", "resurrection", "eschatology"]
+    },
+    {
+      "id": "dce_1",
+      "pope": "Benedict XVI",
+      "document_type": "Encyclical",
+      "title": "Deus Caritas Est",
+      "abbreviation": "DCE",
+      "year": 2005,
+      "theme": "God is Love",
+      "key_passages": [
+        {
+          "paragraph": 1,
+          "text": "'God is love, and he who abides in love abides in God, and God abides in him' (1 Jn 4:16). These words from the First Letter of John express with remarkable clarity the heart of the Christian faith: the Christian image of God and the resulting image of mankind and its destiny.",
+          "theme": "God as Love"
+        },
+        {
+          "paragraph": 17,
+          "text": "Jesus gave this act of oblation an enduring presence through his institution of the Eucharist at the Last Supper. He anticipated his death and resurrection by giving his disciples, in the bread and wine, his very self.",
+          "theme": "Eucharist as Self-Giving Love"
+        }
+      ],
+      "biblical_foundation": ["1 John 4:16", "John 13:1", "1 Corinthians 11:23-26"],
+      "tags": ["love", "God", "charity", "Eucharist", "agape", "eros"]
+    },
+    {
+      "id": "vd_1",
+      "pope": "Benedict XVI",
+      "document_type": "Apostolic Exhortation",
+      "title": "Verbum Domini",
+      "abbreviation": "VD",
+      "year": 2010,
+      "theme": "The Word of the Lord",
+      "key_passages": [
+        {
+          "paragraph": 7,
+          "text": "The prologue of the Fourth Gospel presents the eternal Logos who 'became flesh' (Jn 1:14) and thus made it possible for us to see and touch him (cf. 1 Jn 1:1-2).",
+          "theme": "Word Made Flesh"
+        },
+        {
+          "paragraph": 11,
+          "text": "To speak of the word of God as event is thus to stress its essential dialogical character. God speaks and calls us to live in fellowship with him.",
+          "theme": "Word as Dialogue with God"
+        },
+        {
+          "paragraph": 86,
+          "text": "Lectio divina is 'a prayerful reading of Sacred Scripture' which seeks to unite study, meditation and prayer.",
+          "theme": "Lectio Divina"
+        }
+      ],
+      "biblical_foundation": ["John 1:1-14", "Hebrews 4:12", "2 Timothy 3:16-17", "1 John 1:1-2"],
+      "tags": ["Word of God", "Scripture", "revelation", "lectio divina", "liturgy"]
+    },
+    {
+      "id": "fr_1",
+      "pope": "John Paul II",
+      "document_type": "Encyclical",
+      "title": "Fides et Ratio",
+      "abbreviation": "FR",
+      "year": 1998,
+      "theme": "Faith and Reason",
+      "key_passages": [
+        {
+          "paragraph": 1,
+          "text": "Faith and reason are like two wings on which the human spirit rises to the contemplation of truth; and God has placed in the human heart a desire to know the truth.",
+          "theme": "Harmony of Faith and Reason"
+        },
+        {
+          "paragraph": 13,
+          "text": "Sacred Scripture indicates with remarkably clear cues how deeply related are the knowledge conferred by faith and the knowledge conferred by reason.",
+          "theme": "Biblical View of Knowledge"
+        }
+      ],
+      "biblical_foundation": ["Wisdom 13:1-9", "Romans 1:19-20", "Acts 17:22-31"],
+      "tags": ["faith", "reason", "philosophy", "theology", "truth", "wisdom"]
+    },
+    {
+      "id": "ut_1",
+      "pope": "John Paul II",
+      "document_type": "Encyclical",
+      "title": "Ut Unum Sint",
+      "abbreviation": "UUS",
+      "year": 1995,
+      "theme": "That They May Be One",
+      "key_passages": [
+        {
+          "paragraph": 1,
+          "text": "Ut unum sint! The call for Christian unity made by the Second Vatican Ecumenical Council with such impassioned commitment is finding an ever greater echo in the hearts of believers.",
+          "theme": "Call to Christian Unity"
+        },
+        {
+          "paragraph": 11,
+          "text": "Jesus himself, at the hour of his Passion, prayed 'that they may all be one' (Jn 17:21). This unity is the fruit of the love which the Father gives and his Son pours out in the Holy Spirit.",
+          "theme": "Christ's Prayer for Unity"
+        }
+      ],
+      "biblical_foundation": ["John 17:20-23", "Ephesians 4:4-6", "1 Corinthians 1:10-13"],
+      "tags": ["ecumenism", "unity", "Church", "dialogue", "communion"]
+    },
+    {
+      "id": "ev_1",
+      "pope": "John Paul II",
+      "document_type": "Encyclical",
+      "title": "Evangelium Vitae",
+      "abbreviation": "EV",
+      "year": 1995,
+      "theme": "The Gospel of Life",
+      "key_passages": [
+        {
+          "paragraph": 1,
+          "text": "The Gospel of life is at the heart of Jesus' message. Lovingly received day after day by the Church, it is to be preached with dauntless fidelity as good news to the people of every age and culture.",
+          "theme": "Gospel of Life"
+        },
+        {
+          "paragraph": 34,
+          "text": "The blood of Christ, while it reveals the grandeur of the Father's love, shows how precious man is in God's eyes and how priceless the value of his life.",
+          "theme": "Value of Human Life"
+        }
+      ],
+      "biblical_foundation": ["Genesis 1:26-27", "Psalm 139:13-16", "John 10:10"],
+      "tags": ["life", "dignity", "sanctity of life", "human person", "abortion", "euthanasia"]
+    },
+    {
+      "id": "rm_1",
+      "pope": "John Paul II",
+      "document_type": "Encyclical",
+      "title": "Redemptoris Missio",
+      "abbreviation": "RM",
+      "year": 1990,
+      "theme": "Mission of the Redeemer",
+      "key_passages": [
+        {
+          "paragraph": 3,
+          "text": "God 'desires all men to be saved and to come to the knowledge of the truth' (1 Tm 2:4): salvation is found in the truth. Those who obey the promptings of the Spirit of truth are already on the way of salvation.",
+          "theme": "Universal Salvific Will"
+        },
+        {
+          "paragraph": 44,
+          "text": "Jesus is 'the way, and the truth, and the life' (Jn 14:6). Mission is based on faith in Jesus Christ, who came to make known and give his life that all might have life.",
+          "theme": "Christ as the Way"
+        }
+      ],
+      "biblical_foundation": ["1 Timothy 2:4", "John 14:6", "Matthew 28:19-20", "Acts 1:8"],
+      "tags": ["mission", "evangelization", "salvation", "inculturation", "dialogue"]
+    },
+    {
+      "id": "es_1",
+      "pope": "Paul VI",
+      "document_type": "Apostolic Exhortation",
+      "title": "Evangelii Nuntiandi",
+      "abbreviation": "EN",
+      "year": 1975,
+      "theme": "Evangelization in the Modern World",
+      "key_passages": [
+        {
+          "paragraph": 14,
+          "text": "We wish to confirm once more that the task of evangelizing all people constitutes the essential mission of the Church. It is a task and mission which the vast and profound changes of present-day society make all the more urgent.",
+          "theme": "Essential Mission of the Church"
+        },
+        {
+          "paragraph": 22,
+          "text": "For the Church, evangelizing means bringing the Good News into all the strata of humanity, and through its influence transforming humanity from within and making it new.",
+          "theme": "Transformation through Evangelization"
+        },
+        {
+          "paragraph": 41,
+          "text": "Modern man listens more willingly to witnesses than to teachers, and if he does listen to teachers, it is because they are witnesses.",
+          "theme": "Witness in Evangelization"
+        }
+      ],
+      "biblical_foundation": ["Mark 16:15", "Acts 2:42-47", "2 Corinthians 5:17-20"],
+      "tags": ["evangelization", "mission", "witness", "transformation", "Gospel"]
+    },
+    {
+      "id": "hv_1",
+      "pope": "Paul VI",
+      "document_type": "Encyclical",
+      "title": "Humanae Vitae",
+      "abbreviation": "HV",
+      "year": 1968,
+      "theme": "On Human Life",
+      "key_passages": [
+        {
+          "paragraph": 8,
+          "text": "Married love particularly reveals its true nature and nobility when we realize that it takes its origin from God, who 'is love,' the Father 'from whom every family in heaven and on earth is named.'",
+          "theme": "Divine Origin of Married Love"
+        },
+        {
+          "paragraph": 12,
+          "text": "This love is above all fully human, a compound of sense and spirit. It is not, then, merely a question of natural instinct or emotional drive.",
+          "theme": "Nature of Conjugal Love"
+        }
+      ],
+      "biblical_foundation": ["1 John 4:8", "Ephesians 3:15", "Genesis 1:28", "Ephesians 5:25-33"],
+      "tags": ["marriage", "family", "love", "procreation", "human life"]
+    },
+    {
+      "id": "rn_1",
+      "pope": "Leo XIII",
+      "document_type": "Encyclical",
+      "title": "Rerum Novarum",
+      "abbreviation": "RN",
+      "year": 1891,
+      "theme": "On Capital and Labor",
+      "key_passages": [
+        {
+          "paragraph": 3,
+          "text": "The great mistake made in regard to the matter now under consideration is to take up with the notion that class is naturally hostile to class, and that the wealthy and the working men are intended by nature to live in mutual conflict.",
+          "theme": "Solidarity Between Classes"
+        },
+        {
+          "paragraph": 20,
+          "text": "No man may with impunity outrage that human dignity which God Himself treats with great reverence. The employer must never tax his work people beyond their strength, nor employ them in work unsuited to their sex or age.",
+          "theme": "Workers' Dignity"
+        },
+        {
+          "paragraph": 45,
+          "text": "Wages ought not to be insufficient to support a frugal and well-behaved wage-earner. If through necessity or fear of a worse evil the workman accept harder conditions because an employer or contractor will afford him no better, he is made the victim of force and injustice.",
+          "theme": "Just Wage"
+        }
+      ],
+      "biblical_foundation": ["Genesis 3:17", "James 5:4", "Matthew 20:1-16", "1 Timothy 5:18"],
+      "tags": ["social justice", "workers rights", "labor", "capital", "dignity", "Catholic social teaching"]
+    },
+    {
+      "id": "ac_1",
+      "pope": "Leo XIII",
+      "document_type": "Encyclical",
+      "title": "Aeterni Patris",
+      "abbreviation": "AP",
+      "year": 1879,
+      "theme": "On the Restoration of Christian Philosophy",
+      "key_passages": [
+        {
+          "paragraph": 10,
+          "text": "Reason, borne on the wings of Thomas to its human height, can scarcely rise higher, while faith could scarcely expect more or stronger aids from reason than those which she has already obtained through Thomas.",
+          "theme": "Faith and Reason in Aquinas"
+        },
+        {
+          "paragraph": 17,
+          "text": "Those, therefore, who to the study of philosophy unite obedience to the Christian faith, are philosophizing in the best possible way; for the splendor of the divine truths, received into the mind, helps the understanding.",
+          "theme": "Christian Philosophy"
+        }
+      ],
+      "biblical_foundation": ["Romans 1:20", "John 1:9", "Wisdom 13:5"],
+      "tags": ["philosophy", "Thomism", "faith and reason", "scholasticism", "truth"]
+    },
+    {
+      "id": "px_1",
+      "pope": "Pius X",
+      "document_type": "Encyclical",
+      "title": "Pascendi Dominici Gregis",
+      "abbreviation": "PDG",
+      "year": 1907,
+      "theme": "On the Doctrines of the Modernists",
+      "key_passages": [
+        {
+          "paragraph": 39,
+          "text": "There is no part of Catholic truth which they leave untouched, none that they do not strive to corrupt.",
+          "theme": "Defense Against Modernism"
+        },
+        {
+          "paragraph": 6,
+          "text": "It is one of the cleverest devices of the Modernists to present their doctrines without order and systematic arrangement, in a scattered and disjointed manner, so as to make it appear as if their minds were in doubt or hesitation.",
+          "theme": "Exposing Modernist Tactics"
+        }
+      ],
+      "biblical_foundation": ["2 Timothy 4:3-4", "Colossians 2:8", "1 Timothy 6:20"],
+      "tags": ["modernism", "doctrine", "truth", "heresy", "faith"]
+    },
+    {
+      "id": "qp_1",
+      "pope": "Pius XI",
+      "document_type": "Encyclical",
+      "title": "Quadragesimo Anno",
+      "abbreviation": "QA",
+      "year": 1931,
+      "theme": "On Reconstruction of the Social Order",
+      "key_passages": [
+        {
+          "paragraph": 79,
+          "text": "Just as it is gravely wrong to take from individuals what they can accomplish by their own initiative and industry and give it to the community, so also it is an injustice and at the same time a grave evil and disturbance of right order to assign to a greater and higher association what lesser and subordinate organizations can do.",
+          "theme": "Principle of Subsidiarity"
+        },
+        {
+          "paragraph": 88,
+          "text": "Free competition, while justified and certainly useful provided it is kept within certain limits, clearly cannot direct economic life.",
+          "theme": "Limits of Free Market"
+        }
+      ],
+      "biblical_foundation": ["Acts 2:44-45", "James 2:15-16", "Matthew 25:31-46"],
+      "tags": ["social justice", "subsidiarity", "economics", "social order", "Catholic social teaching"]
+    },
+    {
+      "id": "dae_1",
+      "pope": "Pius XI",
+      "document_type": "Encyclical",
+      "title": "Divini Illius Magistri",
+      "abbreviation": "DIM",
+      "year": 1929,
+      "theme": "On Christian Education",
+      "key_passages": [
+        {
+          "paragraph": 58,
+          "text": "The family holds directly from the Creator the mission and hence the right to educate the offspring, a right inalienable because inseparably joined to the strict obligation.",
+          "theme": "Family's Right to Educate"
+        },
+        {
+          "paragraph": 79,
+          "text": "Education consists essentially in preparing man for what he must be and for what he must do here below, in order to attain the sublime end for which he was created.",
+          "theme": "Purpose of Education"
+        }
+      ],
+      "biblical_foundation": ["Proverbs 22:6", "Ephesians 6:4", "Deuteronomy 6:6-7"],
+      "tags": ["education", "family", "formation", "youth", "Christian education"]
+    },
+    {
+      "id": "mc_1",
+      "pope": "Pius XII",
+      "document_type": "Encyclical",
+      "title": "Mystici Corporis Christi",
+      "abbreviation": "MCC",
+      "year": 1943,
+      "theme": "On the Mystical Body of Christ",
+      "key_passages": [
+        {
+          "paragraph": 13,
+          "text": "Actually only those are to be included as members of the Church who have been baptized and profess the true faith, and who have not been so unfortunate as to separate themselves from the unity of the Body, or been excluded by legitimate authority for grave faults committed.",
+          "theme": "Membership in the Church"
+        },
+        {
+          "paragraph": 78,
+          "text": "In the Eucharistic Sacrifice the faithful are united with their divine Head and the Victim offered on Calvary.",
+          "theme": "Unity Through the Eucharist"
+        }
+      ],
+      "biblical_foundation": ["1 Corinthians 12:12-27", "Ephesians 1:22-23", "Colossians 1:18", "Romans 12:4-5"],
+      "tags": ["Church", "mystical body", "unity", "Eucharist", "ecclesiology"]
+    },
+    {
+      "id": "hg_1",
+      "pope": "Pius XII",
+      "document_type": "Encyclical",
+      "title": "Humani Generis",
+      "abbreviation": "HG",
+      "year": 1950,
+      "theme": "On Certain False Opinions Threatening to Undermine Catholic Doctrine",
+      "key_passages": [
+        {
+          "paragraph": 20,
+          "text": "The Teaching Authority of the Church does not forbid that, in conformity with the present state of human sciences and sacred theology, research and discussions be pursued with regard to the doctrine of evolution.",
+          "theme": "Church and Evolution"
+        },
+        {
+          "paragraph": 18,
+          "text": "Theologians must always return to the sources of divine revelation: for it belongs to them to point out how the doctrine of the living Teaching Authority is to be found either explicitly or implicitly in the Scriptures and in Tradition.",
+          "theme": "Sources of Revelation"
+        }
+      ],
+      "biblical_foundation": ["Genesis 1-2", "Romans 5:12", "1 Corinthians 15:45"],
+      "tags": ["doctrine", "evolution", "original sin", "theology", "modern errors"]
+    },
+    {
+      "id": "mm_1",
+      "pope": "John XXIII",
+      "document_type": "Encyclical",
+      "title": "Mater et Magistra",
+      "abbreviation": "MM",
+      "year": 1961,
+      "theme": "Christianity and Social Progress",
+      "key_passages": [
+        {
+          "paragraph": 3,
+          "text": "The Church has always taught and continues to teach that the advances in science, technology and the resulting economic development must be accompanied by a corresponding advancement in the social sphere.",
+          "theme": "Social Progress"
+        },
+        {
+          "paragraph": 219,
+          "text": "Scientific and technical progress, economic development and the betterment of living conditions, are certainly positive elements in a civilization. But we must realize that they are essentially instrumental in character.",
+          "theme": "Instrumental Nature of Progress"
+        }
+      ],
+      "biblical_foundation": ["Matthew 16:26", "Acts 4:32", "2 Corinthians 8:13-15"],
+      "tags": ["social justice", "development", "progress", "economics", "Catholic social teaching"]
+    },
+    {
+      "id": "pt_1",
+      "pope": "John XXIII",
+      "document_type": "Encyclical",
+      "title": "Pacem in Terris",
+      "abbreviation": "PT",
+      "year": 1963,
+      "theme": "Peace on Earth",
+      "key_passages": [
+        {
+          "paragraph": 11,
+          "text": "Any human society, if it is to be well-ordered and productive, must lay down as a foundation this principle, namely, that every human being is a person; his nature is endowed with intelligence and free will.",
+          "theme": "Human Dignity and Rights"
+        },
+        {
+          "paragraph": 167,
+          "text": "Peace will be but an empty-sounding word unless it is founded on the order which this present document has outlined in confident hope: an order founded on truth, built according to justice, vivified and integrated by charity, and put into practice in freedom.",
+          "theme": "Foundation of Peace"
+        }
+      ],
+      "biblical_foundation": ["Matthew 5:9", "Isaiah 32:17", "James 3:18", "John 14:27"],
+      "tags": ["peace", "human rights", "justice", "international order", "dignity"]
+    }
+  ]
+}

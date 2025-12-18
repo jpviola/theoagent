@@ -1,0 +1,226 @@
+[
+  {
+    "id": "john-316",
+    "reference": "John 3:16",
+    "text": "For God so loved the world that he gave his only Son, that whoever believes in him should not perish but have eternal life.",
+    "difficulty": "What does 'only begotten' really mean? Is 'world' everyone or just the elect?",
+    "greek_key_words": {
+      "loved": {
+        "word": "ἠγάπησεν",
+        "transliteration": "ēgapēsen",
+        "root": "ἀγαπάω (agapaō)",
+        "meaning": "Divine, self-giving love (not mere affection). Aorist tense = decisive past action.",
+        "insight": "God's love was a definitive historical act in giving Christ, not just eternal feeling."
+      },
+      "world": {
+        "word": "κόσμον",
+        "transliteration": "kosmon",
+        "root": "κόσμος (kosmos)",
+        "meaning": "The created order; humanity in rebellion; the system opposed to God",
+        "insight": "John uses 'world' 78 times - often negatively (1 Jn 2:15) but here as object of God's saving love."
+      },
+      "only_begotten": {
+        "word": "μονογενῆ",
+        "transliteration": "monogenē",
+        "root": "μονογενής (monogenēs)",
+        "meaning": "Unique, one-of-a-kind (not about 'begetting' process but uniqueness)",
+        "insight": "Better translated 'unique Son' or 'one and only Son' - emphasizes Christ's singular relationship to Father."
+      },
+      "believes": {
+        "word": "πιστεύων",
+        "transliteration": "pisteuōn",
+        "root": "πιστεύω (pisteuō)",
+        "meaning": "Trust, commit to, have faith in (present participle = ongoing action)",
+        "insight": "Not mere intellectual assent but ongoing trust and commitment - 'keeps on believing.'"
+      }
+    },
+    "context": {
+      "literary": "Part of Nicodemus dialogue - explaining the 'new birth' through faith in the lifted-up Son",
+      "canonical": "Echoes Genesis 22:2 - 'your only son' (Isaac typology) and Wisdom 11:24-26 - God's love for creation",
+      "johannine_theology": "Central to John's Gospel purpose: 'that you may believe... and have life' (20:31)"
+    },
+    "scholars": {
+      "ratzinger": "Benedict XVI: This verse sums up the Gospel - God's initiative in love, the gift of the Son, universal offer, condition of faith, promise of eternal life.",
+      "wright": "N.T. Wright notes 'eternal life' in John isn't just quantity (forever) but quality - the life of the age to come, resurrection life.",
+      "aquinas": "St. Thomas Aquinas: 'So loved' shows both the intensity and the manner of God's love - proven by giving what is most precious."
+    },
+    "interpretation": "God's love is active (gave), costly (His Son), universal (world), accessible (whoever believes), and life-giving (eternal life). This is the Gospel in miniature.",
+    "tags": ["john", "salvation", "greek", "love", "eternal-life"]
+  },
+  {
+    "id": "sermon-mount-beatitudes",
+    "reference": "Matthew 5:3-12",
+    "text": "Blessed are the poor in spirit... Blessed are those who mourn... etc.",
+    "difficulty": "Why does Jesus bless suffering and poverty? Doesn't God want us happy?",
+    "greek_key_words": {
+      "blessed": {
+        "word": "μακάριοι",
+        "transliteration": "makarioi",
+        "root": "μακάριος (makarios)",
+        "meaning": "Deeply happy, fortunate, privileged - but not emotion-based happiness",
+        "insight": "This is the happiness of the gods (classical Greek) - deep joy regardless of circumstances. Related to 'makar' (the blessed ones)."
+      },
+      "poor_in_spirit": {
+        "word": "πτωχοὶ τῷ πνεύματι",
+        "transliteration": "ptōchoi tō pneumati",
+        "root": "πτωχός (ptōchos) = utterly destitute beggar",
+        "meaning": "Not just humble, but spiritually bankrupt - knowing total dependence on God",
+        "insight": "Matthew's 'in spirit' (vs Luke's 'poor') shows this is spiritual poverty - recognizing we have nothing to offer God."
+      },
+      "meek": {
+        "word": "πραεῖς",
+        "transliteration": "praeis",
+        "root": "πραΰς (praus)",
+        "meaning": "Gentle, humble, controlled strength (like a trained warhorse)",
+        "insight": "Not weakness but strength under control. Classical Greek used this for tamed animals."
+      }
+    },
+    "context": {
+      "literary": "Opening of Sermon on the Mount - sets tone for Jesus' Kingdom ethic",
+      "canonical": "Reverses worldly values; echoes Isaiah 61:1-3 (Jesus' Nazareth sermon)",
+      "structure": "9 beatitudes in chiastic pattern with 'righteousness' at center (vv. 6, 10)"
+    },
+    "scholars": {
+      "ratzinger": "Benedict XVI in 'Jesus of Nazareth': These are not conditions for entry but descriptions of Kingdom citizens. Jesus Himself embodies each beatitude.",
+      "augustine": "St. Augustine saw 7 beatitudes (combining last two) corresponding to Isaiah's 7 gifts of the Holy Spirit.",
+      "hahn": "Scott Hahn: Each beatitude promises reversal - present suffering, future glory. Already/not yet Kingdom tension."
+    },
+    "interpretation": "Jesus redefines blessing: not worldly success but Kingdom values. Those society marginalizes, God exalts. Present suffering, future glory.",
+    "tags": ["matthew", "beatitudes", "kingdom", "sermon-mount", "greek"]
+  },
+  {
+    "id": "john-prologue-word",
+    "reference": "John 1:1-14",
+    "text": "In the beginning was the Word, and the Word was with God, and the Word was God... And the Word became flesh.",
+    "difficulty": "How can the Word be 'with God' and 'be God' simultaneously? Trinity confusion.",
+    "greek_key_words": {
+      "word": {
+        "word": "Λόγος",
+        "transliteration": "Logos",
+        "root": "λόγος (logos)",
+        "meaning": "Word, reason, wisdom, divine rationality, creative principle",
+        "insight": "John uses Greek philosophical concept (Stoic Logos = rational order of universe) but radically redefines it - Logos is personal and incarnate."
+      },
+      "was": {
+        "word": "ἦν",
+        "transliteration": "ēn",
+        "root": "εἰμί (eimi)",
+        "meaning": "Imperfect tense of 'to be' = continuous past existence",
+        "insight": "Three uses: (1) eternal existence, (2) eternal relationship with God, (3) eternal deity. NOT 'became' but always 'was.'"
+      },
+      "with_God": {
+        "word": "πρὸς τὸν θεόν",
+        "transliteration": "pros ton theon",
+        "meaning": "Face to face with God, in relationship toward God",
+        "insight": "'Pros' implies intimate relationship, not mere proximity. Two distinct persons in communion."
+      },
+      "God": {
+        "word": "θεὸς ἦν ὁ λόγος",
+        "transliteration": "theos ēn ho logos",
+        "meaning": "'The Word was God' - no article before 'theos' emphasizes NATURE not identity",
+        "insight": "Grammar shows: Word has divine nature (theos without article) while being distinct from 'the God' (ton theon with article)."
+      },
+      "became_flesh": {
+        "word": "σὰρξ ἐγένετο",
+        "transliteration": "sarx egeneto",
+        "root": "γίνομαι (ginomai) = to become",
+        "meaning": "The Logos took on human nature (sarx = flesh, humanity with all its weakness)",
+        "insight": "Aorist tense = definitive historical moment. Anti-Docetic: real humanity, not just appearance."
+      }
+    },
+    "context": {
+      "literary": "Gospel prologue - hymnic structure, likely early Christian hymn John adapted",
+      "canonical": "Echoes Genesis 1:1 ('In beginning') and personifies Wisdom from Proverbs 8/Wisdom of Solomon",
+      "theological": "Highest Christology in NT - unambiguous deity of Christ + genuine incarnation"
+    },
+    "scholars": {
+      "ratzinger": "Benedict XVI: John uses 'Logos' to bridge Jewish and Greek thought, but transcends both - God's Word is not abstract but incarnate Person.",
+      "aquinas": "St. Thomas: The three 'was' statements establish Trinity doctrine - eternal existence, eternal relationship (begetting), consubstantial deity.",
+      "brown": "Raymond Brown: 'Became flesh' is most anti-Docetic statement possible - shocking to Greek thought that divine Logos would become material."
+    },
+    "interpretation": "John establishes: (1) Christ's pre-existence, (2) Christ's deity, (3) Christ's distinctness from Father, (4) Christ's true humanity. Foundation for Trinitarian and Incarnational theology.",
+    "tags": ["john", "incarnation", "trinity", "christology", "greek", "prologue"]
+  },
+  {
+    "id": "john-611-bread",
+    "reference": "John 6:51-58",
+    "text": "I am the living bread... Whoever eats my flesh and drinks my blood has eternal life... For my flesh is true food and my blood is true drink.",
+    "difficulty": "This sounds cannibalistic. What did Jesus mean? Why do many disciples leave after this?",
+    "greek_key_words": {
+      "eat": {
+        "word": "τρώγων",
+        "transliteration": "trōgōn",
+        "root": "τρώγω (trōgō)",
+        "meaning": "To chew, gnaw, munch - graphic, physical eating",
+        "insight": "John 6:54+ switches from 'phagein' (eat) to 'trōgō' (chew/munch) - intensifying the realism. Jesus means literal eating, not just metaphor."
+      },
+      "flesh": {
+        "word": "σάρξ",
+        "transliteration": "sarx",
+        "root": "σάρξ (sarx)",
+        "meaning": "Flesh, meat, physical body (NOT 'sōma' = body)",
+        "insight": "'Sarx' emphasizes physical reality. John could have used 'body' (sōma) but chose the more visceral term."
+      },
+      "true_food": {
+        "word": "ἀληθής βρῶσις",
+        "transliteration": "alēthēs brōsis",
+        "meaning": "Real food, genuine nourishment (not symbolic or metaphorical)",
+        "insight": "Jesus intensifies the claim - this isn't just 'spiritual' food but TRUE food, as opposed to false/inadequate food."
+      }
+    },
+    "context": {
+      "literary": "Bread of Life discourse (John 6) - follows feeding of 5000, walking on water",
+      "eucharistic": "Clear Eucharistic language - foreshadows Last Supper institution",
+      "turning_point": "John 6:66 - many disciples leave. This discourse separates true believers."
+    },
+    "scholars": {
+      "ratzinger": "Benedict XVI: John 6 is impossible to understand without Eucharistic theology. Protestant attempts to make this purely metaphorical miss the scandal that drove disciples away.",
+      "hahn": "Scott Hahn: 'Trōgō' (chew) appears NOWHERE else in NT except here (4x in 6:54-58) - John deliberately chose shocking word to emphasize Real Presence.",
+      "augustine": "St. Augustine: 'Believe and you have eaten' - BUT Augustine still affirmed Real Presence. Faith makes the reception fruitful, but Christ is truly present.",
+      "brown": "Raymond Brown: The graphic language and disciples' departure prove Jesus meant literal eating. If metaphorical, He would have clarified when they left."
+    },
+    "interpretation": "Jesus teaches Real Presence in Eucharist. The physical language (flesh/blood, eating/drinking, chewing) is deliberate and literal. The offense caused proves it wasn't understood metaphorically. Catholic Eucharistic doctrine is rooted here.",
+    "tags": ["john", "eucharist", "real-presence", "sacrament", "greek"]
+  },
+  {
+    "id": "luke-narrative-today",
+    "reference": "Luke 23:43",
+    "text": "Truly I tell you, today you will be with me in Paradise.",
+    "difficulty": "Does this prove no purgatory? Didn't Jesus descend to the dead? Where is 'paradise'?",
+    "greek_key_words": {
+      "truly": {
+        "word": "ἀμήν",
+        "transliteration": "amēn",
+        "root": "ἀμήν (amen)",
+        "meaning": "Truly, verily, amen - solemn affirmation of truth",
+        "insight": "Jesus' unique introduction (82x in Gospels) - unprecedented in Jewish literature. Marks authoritative divine pronouncement."
+      },
+      "today": {
+        "word": "σήμερον",
+        "transliteration": "sēmeron",
+        "root": "σήμερον (sēmeron)",
+        "meaning": "Today, this day",
+        "insight": "Where does punctuation go? 'Today you will be' OR 'I tell you today, you will be'? Greek has no punctuation. Catholic tradition: 'today you will be.'"
+      },
+      "paradise": {
+        "word": "παραδείσῳ",
+        "transliteration": "paradeisō",
+        "root": "παράδεισος (paradeisos)",
+        "meaning": "Paradise, garden, place of blessed rest (Persian loanword)",
+        "insight": "Used 3x in NT (here, 2 Cor 12:4, Rev 2:7). In Jewish thought = intermediate state of blessed souls, not final heaven."
+      }
+    },
+    "context": {
+      "literary": "Luke's crucifixion narrative - Good Thief's confession and Jesus' promise",
+      "theological": "Shows salvation by faith and grace, not works. Thief had no time for sacraments or penance.",
+      "descent_narrative": "Jesus descended to Sheol/Hades (1 Pet 3:19) - 'Paradise' here likely means righteous dead's waiting place, not final heaven."
+    },
+    "scholars": {
+      "ratzinger": "Benedict XVI: 'Paradise' here is the intermediate state, not final resurrection glory. Jesus and thief both descended to Sheol, but to the righteous section (Abraham's bosom).",
+      "aquinas": "St. Thomas: The thief was purified by his suffering on the cross and sincere repentance. Paradise = Limbo of the Fathers, where righteous awaited Christ.",
+      "hahn": "Scott Hahn: 'Today' emphasizes immediacy of salvation by faith. But paradise ≠ heaven (which wasn't opened until Ascension)."
+    },
+    "interpretation": "Jesus promises the thief immediate entry to the blessed rest of the righteous dead. This isn't final heaven (not yet opened) but the righteous compartment of Sheol. Purgatory doctrine isn't contradicted - the thief was uniquely purified by suffering alongside Christ. Shows God's mercy and immediate salvation for those who repent.",
+    "tags": ["luke", "salvation", "crucifixion", "paradise", "greek", "purgatory"]
+  }
+]

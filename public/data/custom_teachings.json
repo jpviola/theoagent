@@ -1,0 +1,23 @@
+[
+  {
+    "id": "example-1",
+    "title": "The Four Cardinal Virtues",
+    "content": "The four cardinal virtues are prudence, justice, fortitude, and temperance. They are called 'cardinal' because all other moral virtues are grouped around them. Prudence guides practical reason to discern the true good. Justice gives each person their due. Fortitude ensures firmness in difficulties. Temperance moderates the attraction of pleasures.",
+    "source": "CCC 1805-1809",
+    "tags": ["virtues", "moral theology", "ethics"]
+  },
+  {
+    "id": "example-2",
+    "title": "The Theological Virtues",
+    "content": "The three theological virtues are faith, hope, and charity (love). They are called 'theological' because they relate directly to God. Faith enables us to believe in God. Hope enables us to desire heaven and eternal life. Charity enables us to love God above all things and our neighbor as ourselves for the love of God.",
+    "source": "CCC 1812-1829",
+    "tags": ["virtues", "faith", "hope", "charity"]
+  },
+  {
+    "id": "example-3",
+    "title": "The Seven Sacraments",
+    "content": "The seven sacraments are Baptism, Confirmation, Eucharist, Penance (Reconciliation), Anointing of the Sick, Holy Orders, and Matrimony. They are efficacious signs of grace instituted by Christ and entrusted to the Church, by which divine life is dispensed to us.",
+    "source": "CCC 1113-1134",
+    "tags": ["sacraments", "grace", "liturgy"]
+  }
+]

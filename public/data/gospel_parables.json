@@ -1,0 +1,157 @@
+[
+  {
+    "id": "parable-prodigal-son",
+    "title": "The Prodigal Son (Merciful Father)",
+    "reference": "Luke 15:11-32",
+    "text": "A man had two sons. The younger son asked for his inheritance, squandered it, then returned home. The father welcomed him with a feast, but the elder son was angry.",
+    "difficulty": "Why does the father seem to reward bad behavior?",
+    "context": {
+      "historical": "Asking for inheritance early was like wishing father dead - deeply offensive in ancient Near East culture",
+      "literary": "Part of Luke's 'Lost Trilogy' (sheep, coin, son) - escalating value",
+      "audience": "Response to Pharisees criticizing Jesus for eating with sinners (Luke 15:1-2)"
+    },
+    "interpretation": {
+      "literal": "Story of family reconciliation after betrayal",
+      "allegorical": "Father = God, Younger son = repentant sinners/Gentiles, Elder son = Pharisees/self-righteous",
+      "moral": "God's mercy is extravagant; we must forgive as He forgives",
+      "anagogical": "Heavenly celebration over each repentant sinner"
+    },
+    "scholars": {
+      "ratzinger": "Benedict XVI emphasizes this is really about the FATHER's love, not just the son's sin. Better titled 'Parable of the Merciful Father.'",
+      "jeremias": "Joachim Jeremias shows the father's running to meet the son was culturally shocking - dignified men didn't run. This displays God's undignified, passionate love.",
+      "hahn": "Scott Hahn highlights the covenant restoration: the robe, ring, and sandals restore sonship and authority, prefiguring baptismal garments."
+    },
+    "greek_insights": "The word translated 'lost' (ἀπολωλώς, apolōlōs) means utterly destroyed/perished - not just misplaced. The son was as good as dead.",
+    "connections": [
+      "Genesis 37 - Joseph's coat, brothers' jealousy (Joseph typology)",
+      "Exodus 32:6 - 'They sat down to eat and drink' - covenant meal imagery",
+      "Hosea 11:1-4 - God's fatherly love for wayward Israel"
+    ],
+    "practical": "This parable teaches us to never despair of God's mercy, no matter how far we've fallen. It also challenges us to examine whether we harbor the elder brother's resentment toward repentant sinners.",
+    "tags": ["parables", "mercy", "repentance", "luke", "forgiveness"]
+  },
+  {
+    "id": "parable-good-samaritan",
+    "title": "The Good Samaritan",
+    "reference": "Luke 10:25-37",
+    "text": "A man traveling from Jerusalem to Jericho was attacked by robbers. A priest and Levite passed by, but a Samaritan stopped to help.",
+    "difficulty": "Why make a heretical Samaritan the hero instead of a faithful Jew?",
+    "context": {
+      "historical": "Jews and Samaritans had 500+ years of bitter hostility. Samaritans were seen as heretics, half-breeds, apostates.",
+      "literary": "Response to lawyer's question 'Who is my neighbor?' - Jesus turns it around to 'Be a neighbor'",
+      "audience": "Challenging Jewish ethnic and religious boundaries"
+    },
+    "interpretation": {
+      "literal": "Story showing compassion transcends ethnic/religious boundaries",
+      "allegorical": "Man = fallen humanity, Robbers = sin/devil, Samaritan = Christ (despised outsider who saves), Inn = Church, Innkeeper = clergy",
+      "moral": "Love of neighbor requires concrete action, not just religious observance",
+      "anagogical": "Christ's redemption of humanity through Incarnation"
+    },
+    "scholars": {
+      "augustine": "St. Augustine's famous allegorical reading: Jerusalem = heaven, Jericho = world, man = Adam, wounds = sin, Samaritan = Christ.",
+      "ratzinger": "Benedict XVI warns against reducing this to mere 'be nice' moralism. It's about radical love that crosses all boundaries.",
+      "hahn": "Scott Hahn notes the Samaritan binding wounds (covenant binding) and oil/wine (sacramental imagery) point to Christ's healing ministry."
+    },
+    "greek_insights": "The verb for 'had compassion' (ἐσπλαγχνίσθη, esplanchnisthē) is visceral - literally 'moved in his bowels' - deep gut-level mercy.",
+    "connections": [
+      "2 Chronicles 28:8-15 - Samaritans showing mercy to Jewish captives (historical precedent)",
+      "Isaiah 1:6 - 'From sole of foot to head, no soundness' - describing Israel's spiritual wounds",
+      "Hosea 6:6 - 'I desire mercy, not sacrifice' - theme Jesus quotes in Matthew 9:13"
+    ],
+    "practical": "This parable challenges us to show Christ-like mercy to those we find most difficult to love, especially those outside our religious or cultural comfort zones.",
+    "tags": ["parables", "mercy", "neighbor-love", "luke", "samaritan"]
+  },
+  {
+    "id": "parable-sower",
+    "title": "The Sower (Parable of the Soils)",
+    "reference": "Matthew 13:1-23; Mark 4:1-20; Luke 8:4-15",
+    "text": "A sower went out to sow seed. Some fell on the path, some on rocky ground, some among thorns, some on good soil. Only the last produced a harvest.",
+    "difficulty": "Why does Jesus speak in parables that hide meaning? Isn't that counterproductive?",
+    "context": {
+      "historical": "Palestinian farming used broadcast sowing before plowing - seeds would naturally fall on all types of terrain",
+      "literary": "First parable in Matthew's Parable Discourse (ch 13) - foundational for understanding others",
+      "audience": "Explains why Jesus' ministry produces mixed results despite His divine authority"
+    },
+    "interpretation": {
+      "literal": "Agricultural reality of varied soil conditions affecting harvest",
+      "allegorical": "Sower = Jesus/disciples proclaiming Gospel, Seed = Word of God, Soils = human hearts' conditions",
+      "moral": "We must prepare our hearts to receive God's word - examining which soil we are",
+      "anagogical": "Final harvest at end of age when Kingdom bears full fruit"
+    },
+    "scholars": {
+      "jeremias": "Joachim Jeremias emphasizes the shocking 'extravagance' of the harvest (30, 60, 100-fold) - God's Kingdom will succeed despite failures.",
+      "ratzinger": "Benedict XVI notes this is really a parable about HEARING - 'Let anyone with ears to hear, listen' (13:9). It teaches us HOW to hear God's word.",
+      "gray": "Tim Gray connects this to Isaiah 55:10-11 - God's word will not return empty but accomplish its purpose."
+    },
+    "greek_insights": "The verb 'understand' (συνιέναι, synienai) in Mt 13:13 means to 'bring together' - seeing connections. Parables require active engagement, not passive hearing.",
+    "connections": [
+      "Isaiah 6:9-10 - Prophetic hardening of hearts (quoted in Mt 13:14-15)",
+      "Ezekiel 12:2 - 'Eyes that do not see, ears that do not hear'",
+      "Isaiah 55:10-11 - Word going forth and achieving its purpose"
+    ],
+    "practical": "This parable invites self-examination: What condition is my heart in to receive God's word? What obstacles (path = Satan, rocks = shallow faith, thorns = worldly cares) prevent fruitfulness?",
+    "tags": ["parables", "word-of-god", "synoptic", "discipleship", "hearing"]
+  },
+  {
+    "id": "parable-mustard-seed",
+    "title": "The Mustard Seed",
+    "reference": "Matthew 13:31-32; Mark 4:30-32; Luke 13:18-19",
+    "text": "The kingdom of heaven is like a mustard seed, the smallest of seeds, which grows into a large shrub where birds nest.",
+    "difficulty": "Why compare God's kingdom to a weed-like shrub? Isn't that insulting?",
+    "context": {
+      "historical": "Mustard plants in Palestine could reach 8-10 feet - much larger than expected from tiny seed",
+      "literary": "Paired with Leaven parable - both about small beginnings, large results",
+      "audience": "Encouragement to disciples discouraged by small size of Jesus' movement"
+    },
+    "interpretation": {
+      "literal": "Natural phenomenon of disproportionate growth from small seed",
+      "allegorical": "Seed = Gospel/Church beginning small but growing to encompass nations",
+      "moral": "Don't despise small beginnings; God works through humble means",
+      "anagogical": "Kingdom's eschatological fulfillment when all nations gather in God's tree"
+    },
+    "scholars": {
+      "ratzinger": "Benedict XVI notes the deliberate contrast with Jewish expectations of the Kingdom coming as a mighty cedar (Ezekiel 17:22-24). God's Kingdom comes humbly.",
+      "hahn": "Scott Hahn sees the 'birds of the air' as Gentile nations finding refuge in the Church (cf. Daniel 4:12, 21).",
+      "wright": "N.T. Wright emphasizes this overturns apocalyptic expectations - the Kingdom comes through Jesus' ministry, not violent revolution."
+    },
+    "greek_insights": "Mark uses μικρότερον (mikroteron) - 'smaller than' - comparative emphasizing the extreme contrast between seed and plant.",
+    "connections": [
+      "Ezekiel 17:22-24 - God planting a cedar on mountain where birds will nest (Kingdom prophecy)",
+      "Daniel 4:12, 21 - Great tree sheltering birds = empire protecting nations",
+      "Zechariah 4:10 - 'Do not despise the day of small things'"
+    ],
+    "practical": "This parable encourages us when our faith efforts seem insignificant. God can bring enormous fruit from small acts of faithfulness. Trust His timing and methods.",
+    "tags": ["parables", "kingdom", "growth", "synoptic", "hope"]
+  },
+  {
+    "id": "parable-pearl",
+    "title": "The Pearl of Great Price",
+    "reference": "Matthew 13:45-46",
+    "text": "The kingdom of heaven is like a merchant seeking fine pearls. Finding one of great value, he sold all he had and bought it.",
+    "difficulty": "Is Jesus saying salvation can be purchased or earned?",
+    "context": {
+      "historical": "Pearls were among the most valuable items in ancient world - one pearl could be worth a lifetime's wages",
+      "literary": "Paired with Hidden Treasure parable - both about total commitment for supreme value",
+      "audience": "Calling disciples to recognize Kingdom's surpassing worth"
+    },
+    "interpretation": {
+      "literal": "A wise merchant making the deal of a lifetime",
+      "allegorical": "Pearl = Kingdom/Christ, Merchant = seeker who recognizes value, Selling all = total discipleship commitment",
+      "moral": "Following Christ requires giving up everything else - no half measures",
+      "anagogical": "Eternal life as the ultimate treasure worth any earthly sacrifice"
+    },
+    "scholars": {
+      "augustine": "St. Augustine saw Christ as both the merchant (seeking us) AND the pearl (His precious worth). Beautiful dual interpretation.",
+      "ratzinger": "Benedict XVI emphasizes the JOY of discovery - this isn't grim duty but delighted response to finding ultimate beauty.",
+      "hahn": "Scott Hahn notes the 'selling all' echoes Jesus' call to the rich young man (Mt 19:21) - total surrender for total treasure."
+    },
+    "greek_insights": "The word for 'sold' (πέπρακεν, pepraken) is perfect tense - completed action with ongoing results. The decision is irreversible and definitive.",
+    "connections": [
+      "Matthew 19:21 - 'Sell all you have' to the rich young man",
+      "Philippians 3:7-8 - Paul counting everything as loss for Christ",
+      "Proverbs 2:1-5 - Seeking wisdom as hidden treasure"
+    ],
+    "practical": "This parable challenges us: Have we recognized Christ and His Kingdom as worth everything? Are we holding back anything in reserve? True joy comes from total surrender to what is most valuable.",
+    "tags": ["parables", "kingdom", "discipleship", "matthew", "treasure"]
+  }
+]
