@@ -108,7 +108,7 @@ export default function Chat() {
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let assistantMessage = '';
-      let assistantId = (Date.now() + 1).toString();
+      const assistantId = (Date.now() + 1).toString();
 
       setMessages(prev => [...prev, {
         id: assistantId,
@@ -119,7 +119,22 @@ export default function Chat() {
       if (reader) {
         while (true) {
           const { done, value } = await reader.read();
-          if (done) break;
+          if (done) {
+            // Final flush to ensure all buffered bytes are decoded
+            const finalText = decoder.decode(new Uint8Array(), { stream: false });
+            if (finalText) {
+              assistantMessage += finalText;
+              setMessages(prev => {
+                const newMessages = [...prev];
+                const lastMsg = newMessages[newMessages.length - 1];
+                if (lastMsg && lastMsg.id === assistantId) {
+                  lastMsg.content = assistantMessage;
+                }
+                return newMessages;
+              });
+            }
+            break;
+          }
           
           const text = decoder.decode(value, { stream: true });
           assistantMessage += text;
