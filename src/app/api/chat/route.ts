@@ -20,10 +20,10 @@ export async function POST(req: Request) {
   const relevantContext = gatherContextForQuery(userQuery);
   
   // Transform messages to support attachments (multimodal)
-  const transformedMessages = messages.map((msg: any) => {
-    if (msg.role === 'user' && msg.attachments && msg.attachments.length > 0) {
+  const transformedMessages = messages.map((msg: Record<string, unknown>) => {
+    if (msg.role === 'user' && msg.attachments && Array.isArray(msg.attachments) && msg.attachments.length > 0) {
       // Create multimodal content array
-      const content: any[] = [];
+      const content: Array<Record<string, unknown>> = [];
       
       // Add text if present
       if (msg.content && msg.content !== '(Attached files)') {
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       }
       
       // Add attachments
-      msg.attachments.forEach((attachment: any) => {
+      (msg.attachments as Array<Record<string, unknown>>).forEach((attachment) => {
         if (attachment.type === 'image') {
           content.push({
             type: 'image',
@@ -124,6 +124,7 @@ When context is provided (Catechism references, etc.), use it to write your comp
 Current Pope: Leo XIV (2025). Today: Dec 18, 2025.`,
   });
 
+<<<<<<< HEAD
   // Manual stream handling with logging
   const encoder = new TextEncoder();
   let totalChars = 0;
@@ -139,19 +140,24 @@ Current Pope: Leo XIV (2025). Today: Dec 18, 2025.`,
             console.log('✅ Stream finished. Total characters:', totalChars);
             console.log('Finish reason:', part.finishReason);
           }
+=======
+  // Stream the text response using manual ReadableStream for reliable completion
+  const stream = new ReadableStream({
+    async start(controller) {
+      try {
+        for await (const chunk of result.textStream) {
+          controller.enqueue(new TextEncoder().encode(chunk));
+>>>>>>> d4c7969dc321eede30437babe9e199e2cf6d92a3
         }
         controller.close();
       } catch (error) {
         console.error('Stream error:', error);
-        controller.close();
+        controller.error(error);
       }
     },
   });
 
   return new Response(stream, {
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Transfer-Encoding': 'chunked',
-    },
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
   });
 }
