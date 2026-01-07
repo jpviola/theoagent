@@ -442,7 +442,7 @@ TONE & STYLE:
 - Original insights and research contributions`
     };
 
-    return modeSpecificPrompts[mode] || modeSpecificPrompts.standard;
+    return modeSpecificPrompts[mode as keyof typeof modeSpecificPrompts] || modeSpecificPrompts.standard;
   }
 
   const result = streamText({
