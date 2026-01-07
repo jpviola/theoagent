@@ -44,6 +44,15 @@ export interface Translations {
     bibleReading: string;
     popeTeachings: string;
   };
+  subscription: {
+    free: string;
+    plus: string;
+    expert: string;
+    upgrade: string;
+    messagesLeft: string;
+    dailyLimit: string;
+    upgradePrompt: string;
+  };
   loading: string;
 }
 
@@ -92,6 +101,15 @@ export const translations: Record<Language, Translations> = {
       bibleReading: '📅 Customize a plan for an annual Bible reading',
       popeTeachings: '⛪ What are the recent papal encyclicals and teachings?',
     },
+    subscription: {
+      free: 'Free',
+      plus: 'Plus',
+      expert: 'Expert',
+      upgrade: 'Upgrade',
+      messagesLeft: 'messages left today',
+      dailyLimit: 'Daily limit reached',
+      upgradePrompt: 'Upgrade for unlimited access',
+    },
     loading: 'Thinking...',
   },
   es: {
@@ -137,6 +155,15 @@ export const translations: Record<Language, Translations> = {
       dailyGospel: '📖 Muestra el Evangelio del día y explícalo',
       bibleReading: '📅 Personaliza un plan de lectura bíblica anual',
       popeTeachings: '⛪ ¿Cuáles son las encíclicas y enseñanzas papales recientes?',
+    },
+    subscription: {
+      free: 'Gratuito',
+      plus: 'Plus',
+      expert: 'Experto',
+      upgrade: 'Actualizar',
+      messagesLeft: 'mensajes restantes hoy',
+      dailyLimit: 'Límite diario alcanzado',
+      upgradePrompt: 'Actualiza para acceso ilimitado',
     },
     loading: 'Pensando...',
   },
@@ -184,6 +211,15 @@ export const translations: Record<Language, Translations> = {
       bibleReading: '📅 Personalizza un piano di lettura biblica annuale',
       popeTeachings: '⛪ Quali sono le recenti encicliche e insegnamenti papali?',
     },
+    subscription: {
+      free: 'Gratuito',
+      plus: 'Plus',
+      expert: 'Esperto',
+      upgrade: 'Aggiorna',
+      messagesLeft: 'messaggi rimasti oggi',
+      dailyLimit: 'Limite giornaliero raggiunto',
+      upgradePrompt: 'Aggiorna per accesso illimitato',
+    },
     loading: 'Pensando...',
   },
   fr: {
@@ -229,6 +265,15 @@ export const translations: Record<Language, Translations> = {
       dailyGospel: '📖 Afficher l\'Évangile du jour et l\'expliquer',
       bibleReading: '📅 Personnaliser un plan de lecture biblique annuel',
       popeTeachings: '⛪ Quelles sont les récentes encycliques et enseignements papaux?',
+    },
+    subscription: {
+      free: 'Gratuit',
+      plus: 'Plus',
+      expert: 'Expert',
+      upgrade: 'Mettre à niveau',
+      messagesLeft: 'messages restants aujourd\'hui',
+      dailyLimit: 'Limite quotidienne atteinte',
+      upgradePrompt: 'Mettez à niveau pour un accès illimité',
     },
     loading: 'Réflexion...',
   },

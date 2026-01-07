@@ -32,7 +32,7 @@ export default function ScriptureLinkedMarkdown({
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
-        // Custom link styling for scripture references - subtle and smaller
+        // Custom link styling for scripture references - bold and prominent
         a: ({ node, ...props }) => {
           const isBibleLink = props.href?.includes('bible.usccb.org') || 
                              props.href?.includes('vatican.va') ||
@@ -43,7 +43,7 @@ export default function ScriptureLinkedMarkdown({
               {...props}
               className={`${
                 isBibleLink
-                  ? 'text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-1 text-sm font-normal opacity-80 hover:opacity-100 transition-opacity'
+                  ? 'text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 underline decoration-2 text-base font-bold hover:scale-105 transition-all inline-block'
                   : 'text-blue-500 hover:text-blue-700 underline'
               }`}
               target="_blank"

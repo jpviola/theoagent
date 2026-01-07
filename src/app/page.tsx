@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import ScriptureLinkedMarkdown from '@/components/ScriptureLinkedMarkdown';
 import { initializeLanguage, translations, type Language } from '@/lib/translations';
+import { getUserSubscription, canUserAccessMode, hasReachedDailyLimit, getUpgradeMessage, SUBSCRIPTION_TIERS, PRICING_INFO, type UserSubscription, type SubscriptionTier } from '@/lib/subscription';
 
 interface Message {
   id: string;
@@ -22,6 +23,8 @@ export default function Chat() {
   const [editContent, setEditContent] = useState('');
   const [mode, setMode] = useState<ChatMode>('standard');
   const [language, setLanguage] = useState<Language>('en');
+  const [subscription, setSubscription] = useState<UserSubscription | null>(null);
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<{ type: 'image' | 'pdf'; data: string; name: string }[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -34,9 +37,16 @@ export default function Chat() {
 
   // Initialize language based on geolocation
   useEffect(() => {
-    initializeLanguage().then(detectedLang => {
+    const initializeApp = async () => {
+      const detectedLang = await initializeLanguage();
       setLanguage(detectedLang);
-    });
+      
+      // Initialize user subscription
+      const userSubscription = getUserSubscription();
+      setSubscription(userSubscription);
+    };
+    
+    initializeApp();
   }, []);
 
   // Auto-scroll to bottom when messages change
@@ -177,6 +187,23 @@ export default function Chat() {
   };
 
   const sendMessage = async (content: string, currentMessages: Message[]) => {
+    // Check subscription limits
+    if (!subscription) return;
+    
+    // Check daily message limit
+    if (hasReachedDailyLimit(subscription)) {
+      setError(getUpgradeMessage(subscription.tier, 'limit'));
+      setShowUpgrade(true);
+      return;
+    }
+    
+    // Check if user can access selected mode
+    if (!canUserAccessMode(subscription, mode)) {
+      setError(getUpgradeMessage(subscription.tier, 'mode'));
+      setShowUpgrade(true);
+      return;
+    }
+    
     setIsLoading(true);
     setError(null);
 
@@ -188,7 +215,8 @@ export default function Chat() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           messages: validMessages,
-          mode: mode 
+          mode: mode,
+          subscriptionTier: subscription.tier
         }),
       });
 
@@ -775,8 +803,117 @@ export default function Chat() {
             <p className="font-medium">{t.modes.currentMode}</p>
             <p className="capitalize">{mode.replace('-', ' ')}</p>
           </div>
+          
+          {/* Subscription Status */}
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="text-xs text-gray-600">
+                <div className="font-medium text-xs text-gray-600 uppercase tracking-wide">
+                  {subscription?.tier === 'free' && t.subscription.free}
+                  {subscription?.tier === 'plus' && t.subscription.plus}
+                  {subscription?.tier === 'expert' && t.subscription.expert}
+                </div>
+                {subscription && subscription.tier === 'free' && (
+                  <div className="text-xs text-gray-500 mt-1">
+                    {Math.max(0, SUBSCRIPTION_TIERS[subscription.tier].maxMessagesPerDay - subscription.messagesUsedToday)} {t.subscription.messagesLeft}
+                  </div>
+                )}
+              </div>
+              {subscription?.tier !== 'expert' && (
+                <button
+                  onClick={() => setShowUpgrade(true)}
+                  className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full transition-colors"
+                >
+                  {t.subscription.upgrade}
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  );
-}
+
+    {/* Upgrade Modal */}
+    {showUpgrade && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-900">Upgrade TheoAgent</h2>
+              <button
+                onClick={() => setShowUpgrade(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <div className="p-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Plus Plan */}
+              <div className="border border-blue-200 rounded-xl p-6 bg-blue-50">
+                <div className="text-center mb-4">
+                  <h3 className="text-xl font-bold text-blue-900">TheoAgent Plus</h3>
+                  <p className="text-sm text-blue-700 mt-1">{PRICING_INFO.plus.target}</p>
+                  <div className="mt-4">
+                    <span className="text-3xl font-bold text-blue-900">${PRICING_INFO.plus.monthly}</span>
+                    <span className="text-blue-700">/month</span>
+                  </div>
+                </div>
+                <ul className="space-y-2 mb-6">
+                  {PRICING_INFO.plus.features.map((feature, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <svg className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-sm text-blue-900">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium transition-colors">
+                  Choose Plus
+                </button>
+              </div>
+
+              {/* Expert Plan */}
+              <div className="border border-purple-200 rounded-xl p-6 bg-purple-50 relative">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-medium">Institutional</span>
+                </div>
+                <div className="text-center mb-4">
+                  <h3 className="text-xl font-bold text-purple-900">TheoAgent Expert</h3>
+                  <p className="text-sm text-purple-700 mt-1">{PRICING_INFO.expert.target}</p>
+                  <div className="mt-4">
+                    <span className="text-3xl font-bold text-purple-900">${PRICING_INFO.expert.monthly}</span>
+                    <span className="text-purple-700">/month</span>
+                  </div>
+                </div>
+                <ul className="space-y-2 mb-6">
+                  {PRICING_INFO.expert.features.map((feature, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <svg className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-sm text-purple-900">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-medium transition-colors">
+                  Contact Sales
+                </button>
+              </div>
+            </div>
+            
+            <div className="mt-8 text-center">
+              <p className="text-sm text-gray-600">
+                All plans include multilingual support, Scripture integration, and Catholic orthodoxy guarantee.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>);
