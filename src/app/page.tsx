@@ -25,6 +25,12 @@ export default function Chat() {
   const [attachedFiles, setAttachedFiles] = useState<{ type: 'image' | 'pdf'; data: string; name: string }[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Accessibility features
+  const [fontSize, setFontSize] = useState<'normal' | 'large' | 'xlarge'>('normal');
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const recognitionRef = useRef<any>(null);
 
   // Initialize language based on geolocation
   useEffect(() => {
@@ -38,7 +44,89 @@ export default function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Initialize speech recognition
+  useEffect(() => {
+    if (typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = language === 'es' ? 'es-ES' : language === 'it' ? 'it-IT' : language === 'fr' ? 'fr-FR' : 'en-US';
+
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, [language]);
+
   const t = translations[language];
+
+  // Accessibility: Text-to-Speech
+  const speakText = (text: string) => {
+    if ('speechSynthesis' in window) {
+      // Stop any ongoing speech
+      window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = language === 'es' ? 'es-ES' : language === 'it' ? 'it-IT' : language === 'fr' ? 'fr-FR' : 'en-US';
+      utterance.rate = 0.9;
+      
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  // Accessibility: Stop Speech
+  const stopSpeaking = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
+  };
+
+  // Accessibility: Voice Input
+  const toggleVoiceInput = () => {
+    if (!recognitionRef.current) {
+      alert('Voice recognition not supported in this browser');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
+
+  // Accessibility: Font Size
+  const increaseFontSize = () => {
+    setFontSize(prev => prev === 'normal' ? 'large' : prev === 'large' ? 'xlarge' : 'xlarge');
+  };
+
+  const decreaseFontSize = () => {
+    setFontSize(prev => prev === 'xlarge' ? 'large' : prev === 'large' ? 'normal' : 'normal');
+  };
+
+  const fontSizeClasses = {
+    normal: 'text-base',
+    large: 'text-lg',
+    xlarge: 'text-xl'
+  };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -98,7 +186,10 @@ export default function Chat() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: validMessages }),
+        body: JSON.stringify({ 
+          messages: validMessages,
+          mode: mode 
+        }),
       });
 
       if (!response.ok) {
@@ -223,12 +314,72 @@ export default function Chat() {
 
   return (
     <div className="flex h-screen bg-gradient-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7]">
+      {/* Skip to main content link for screen readers */}
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-gray-900 focus:rounded-lg focus:shadow-lg"
+      >
+        Skip to main content
+      </a>
+
+      {/* Accessibility Controls Bar */}
+      <div className="absolute top-4 left-4 z-40 flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg px-3 py-2" role="toolbar" aria-label="Accessibility controls">
+        {/* Font Size Controls */}
+        <button
+          onClick={decreaseFontSize}
+          disabled={fontSize === 'normal'}
+          className="p-2 hover:bg-gray-100 rounded disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-[#8fa9bc]"
+          aria-label="Decrease font size"
+          title="Decrease font size"
+        >
+          <span className="text-sm">A</span>
+        </button>
+        <button
+          onClick={increaseFontSize}
+          disabled={fontSize === 'xlarge'}
+          className="p-2 hover:bg-gray-100 rounded disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-[#8fa9bc]"
+          aria-label="Increase font size"
+          title="Increase font size"
+        >
+          <span className="text-lg font-bold">A</span>
+        </button>
+        
+        <div className="w-px h-6 bg-gray-300 mx-1"></div>
+        
+        {/* Voice Input */}
+        <button
+          onClick={toggleVoiceInput}
+          className={`p-2 hover:bg-gray-100 rounded focus:outline-none focus:ring-2 focus:ring-[#8fa9bc] ${isListening ? 'bg-red-100 text-red-600 animate-pulse' : ''}`}
+          aria-label={isListening ? "Stop voice input" : "Start voice input"}
+          title={isListening ? "Stop voice input" : "Start voice input"}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+          </svg>
+        </button>
+
+        {/* Text-to-Speech Status */}
+        {isSpeaking && (
+          <button
+            onClick={stopSpeaking}
+            className="p-2 hover:bg-gray-100 rounded focus:outline-none focus:ring-2 focus:ring-[#8fa9bc] animate-pulse"
+            aria-label="Stop reading"
+            title="Stop reading"
+          >
+            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+            </svg>
+          </button>
+        )}
+      </div>
+
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col" id="main-content">
 
       {/* Error Display */}
       {error && (
-        <div className="max-w-4xl mx-auto px-6 pt-4">
+        <div className="max-w-4xl mx-auto px-6 pt-4" role="alert" aria-live="assertive">
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
             {error}
           </div>
@@ -389,15 +540,26 @@ export default function Chat() {
                     /* Assistant Message */
                     <div className="flex justify-start items-start gap-3">
                       <div className="flex-1 max-w-4xl">
-                        <div className="rounded-2xl px-6 py-4 shadow-md bg-white text-gray-800">
+                        <div className={`rounded-2xl px-6 py-4 shadow-md bg-white text-gray-800 ${fontSizeClasses[fontSize]}`}>
                           <div className="prose prose-sm max-w-none prose-headings:font-semibold prose-p:leading-relaxed prose-strong:text-gray-900">
                             <ScriptureLinkedMarkdown content={m.content} autoDetectLanguage={true} />
                           </div>
                           {/* Action buttons at the bottom of message */}
                           <div className="flex gap-2 mt-4 pt-3 border-t border-gray-200">
                             <button
+                              onClick={() => speakText(m.content)}
+                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#8fa9bc]"
+                              aria-label="Read message aloud"
+                              title="Read aloud"
+                            >
+                              <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                              </svg>
+                            </button>
+                            <button
                               onClick={() => copyToClipboard(m.content)}
-                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#8fa9bc]"
+                              aria-label="Copy message"
                               title="Copy"
                             >
                               <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -406,7 +568,8 @@ export default function Chat() {
                             </button>
                             <button
                               onClick={() => retryMessage(m.id)}
-                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#8fa9bc]"
+                              aria-label="Retry message"
                               title="Retry"
                             >
                               <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
