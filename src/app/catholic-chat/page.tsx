@@ -3,6 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase-client';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Send, Trash2, Home, LogIn, User, Sparkles, BookOpen, FlaskConical, AlertTriangle, X } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageToggle } from '@/components/LanguageToggle';
 
 interface Message {
   id: string;
@@ -17,7 +21,7 @@ export default function CatholicChatPage() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [language, setLanguage] = useState<'es' | 'en'>('es'); // Español por defecto
+  const { language } = useLanguage(); // Use global language context
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -63,7 +67,8 @@ export default function CatholicChatPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: userMessage.content,
-          implementation: 'Catholic Chat'
+          implementation: 'Catholic Chat',
+          language: language, // Pass language to API
         })
       });
 
@@ -115,8 +120,8 @@ export default function CatholicChatPage() {
 
   const texts = {
     es: {
-      backHome: '← Volver al Inicio',
-      title: 'SantaPalabra.app - Chat Católico',
+      backHome: 'Volver al Inicio',
+      title: 'Chat Católico',
       signedIn: 'Conectado como',
       signIn: 'Iniciar Sesión',
       clearChat: 'Limpiar Chat',
@@ -130,8 +135,8 @@ export default function CatholicChatPage() {
       errorOccurred: 'Ocurrió un error. Por favor intenta de nuevo.'
     },
     en: {
-      backHome: '← Back to Home',
-      title: 'SantaPalabra.app - Catholic Chat',
+      backHome: 'Back to Home',
+      title: 'Catholic Chat',
       signedIn: 'Signed in as',
       signIn: 'Sign In',
       clearChat: 'Clear Chat',
@@ -152,142 +157,192 @@ export default function CatholicChatPage() {
     setInput(question);
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white flex flex-col">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4">
+      <motion.header
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-yellow-200 sticky top-0 z-10"
+      >
+        <div className="max-w-4xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <Link href="/" className="text-blue-600 hover:text-blue-800 mr-4">
-                {currentTexts.backHome}
+            <div className="flex items-center space-x-4">
+              <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <img src="/santapalabra-logo.svg" alt="SantaPalabra" className="h-9" />
+                <div className="leading-tight">
+                  <div className="text-sm font-extrabold tracking-wide text-gray-900">SantaPalabra</div>
+                  <h1 className="text-xs text-gray-600">{currentTexts.title}</h1>
+                </div>
               </Link>
-              <h1 className="text-xl font-semibold text-gray-900">{currentTexts.title}</h1>
             </div>
             <div className="flex items-center space-x-4">
-              {/* Language Toggle */}
-              <div className="flex items-center bg-gray-100 rounded-md p-1">
-                <button
-                  onClick={() => setLanguage('es')}
-                  className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-                    language === 'es' 
-                      ? 'bg-blue-600 text-white shadow-sm' 
-                      : 'text-gray-600 hover:text-gray-800'
-                  }`}
-                >
-                  🇪🇸 ES
-                </button>
-                <button
-                  onClick={() => setLanguage('en')}
-                  className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-                    language === 'en' 
-                      ? 'bg-blue-600 text-white shadow-sm' 
-                      : 'text-gray-600 hover:text-gray-800'
-                  }`}
-                >
-                  🇺🇸 EN
-                </button>
-              </div>
+              <LanguageToggle />
               {user ? (
-                <span className="text-sm text-gray-600">{currentTexts.signedIn} {user.email}</span>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <User className="h-4 w-4" />
+                  <span>{user.email}</span>
+                </div>
               ) : (
-                <Link href="/auth-test" className="text-sm text-blue-600 hover:text-blue-800">
+                <Link href="/auth-test" className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800">
+                  <LogIn className="h-4 w-4" />
                   {currentTexts.signIn}
                 </Link>
               )}
               <button
                 onClick={clearChat}
-                className="text-sm text-gray-600 hover:text-gray-800 px-3 py-1 rounded-md hover:bg-gray-100"
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800 px-3 py-1 rounded-md hover:bg-gray-100"
               >
+                <Trash2 className="h-4 w-4" />
                 {currentTexts.clearChat}
               </button>
             </div>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* Main Chat Area */}
-      <main className="max-w-4xl mx-auto px-4 py-6">
+      <main className="max-w-4xl mx-auto px-4 py-6 flex-1 w-full">
         {/* Welcome Message */}
-        {messages.length === 0 && (
-          <div className="text-center mb-8">
-            <div className="bg-white rounded-lg shadow-sm p-8 mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                {currentTexts.welcomeTitle}
-              </h2>
-              <p className="text-gray-600 mb-6">
-                {currentTexts.welcomeDesc}
-              </p>
-              
-              {/* Sample Questions */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">{currentTexts.sampleQuestionsTitle}</h3>
-                <p className="text-sm text-gray-600 mb-4">{currentTexts.clickToUse}</p>
-                <div className="grid md:grid-cols-2 gap-3">
-                  {sampleQuestions[language].map((question, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleSampleQuestion(question)}
-                      className="text-left p-3 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 hover:border-blue-300 transition-colors text-sm"
-                    >
-                      {question}
-                    </button>
-                  ))}
+        <AnimatePresence>
+          {messages.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="text-center mb-8"
+            >
+              <div className="bg-white rounded-lg shadow-sm p-8 mb-6">
+                <Sparkles className="mx-auto h-10 w-10 text-yellow-500 mb-4" />
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  {currentTexts.welcomeTitle}
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  {currentTexts.welcomeDesc}
+                </p>
+                
+                {/* Sample Questions */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">{currentTexts.sampleQuestionsTitle}</h3>
+                  <p className="text-sm text-gray-600 mb-4">{currentTexts.clickToUse}</p>
+                  <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="grid md:grid-cols-2 gap-3"
+                  >
+                    {sampleQuestions[language].map((question, index) => (
+                      <motion.button
+                        key={index}
+                        variants={itemVariants}
+                        whileHover={{ scale: 1.02, borderColor: 'rgb(234 179 8)' }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleSampleQuestion(question)}
+                        className="text-left p-3 bg-yellow-50 hover:bg-yellow-100 rounded-lg border border-yellow-200 transition-colors text-sm"
+                      >
+                        {question}
+                      </motion.button>
+                    ))}
+                  </motion.div>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Messages */}
         <div className="space-y-6 mb-6">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              <div
-                className={`max-w-3xl rounded-lg px-4 py-3 ${
-                  message.role === 'user'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white border border-gray-200 text-gray-900'
-                }`}
+          <AnimatePresence initial={false}>
+            {messages.map((message, index) => (
+              <motion.div
+                key={message.id}
+                layout
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.9 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                <div className="prose prose-sm max-w-none">
-                  {message.role === 'assistant' ? (
-                    <div 
-                      className="whitespace-pre-wrap"
-                      dangerouslySetInnerHTML={{ 
-                        __html: message.content.replace(/\n/g, '<br>') 
-                      }}
-                    />
-                  ) : (
-                    <p className="whitespace-pre-wrap">{message.content}</p>
-                  )}
+                <div
+                  className={`max-w-3xl rounded-lg px-4 py-3 shadow-sm ${
+                    message.role === 'user'
+                      ? 'bg-yellow-500 text-gray-900'
+                      : 'bg-white border border-yellow-200 text-gray-900'
+                  }`}
+                >
+                  <div className="prose prose-sm max-w-none">
+                    {message.role === 'assistant' ? (
+                      <div 
+                        className="whitespace-pre-wrap"
+                        dangerouslySetInnerHTML={{ 
+                          __html: message.content.replace(/\n/g, '<br>') 
+                        }}
+                      />
+                    ) : (
+                      <p className="whitespace-pre-wrap">{message.content}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
 
         {/* Error Display */}
-        {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-            <p>{language === 'es' ? 'Error:' : 'Error:'} {error}</p>
-            <button 
-              onClick={() => setError(null)}
-              className="mt-2 text-sm underline hover:no-underline"
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 flex items-center justify-between"
             >
-              {language === 'es' ? 'Cerrar' : 'Dismiss'}
-            </button>
-          </div>
-        )}
+              <div className="flex items-center">
+                <AlertTriangle className="h-5 w-5 mr-3" />
+                <p>{language === 'es' ? 'Error:' : 'Error:'} {error}</p>
+              </div>
+              <button 
+                onClick={() => setError(null)}
+                className="p-1 rounded-full hover:bg-red-100"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div ref={messagesEndRef} />
       </main>
 
       {/* Input Form */}
-      <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
+      <motion.div
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="sticky bottom-0 bg-white/80 backdrop-blur-xl border-t border-yellow-200 p-4"
+      >
         <div className="max-w-4xl mx-auto">
           <form onSubmit={handleSubmit} className="flex space-x-4">
             <div className="flex-1">
@@ -296,17 +351,28 @@ export default function CatholicChatPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={currentTexts.enterMessage}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                 disabled={isLoading}
               />
             </div>
-            <button
+            <motion.button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-3 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-semibold flex items-center gap-2"
             >
+              {isLoading ? (
+                <motion.div
+                  className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                />
+              ) : (
+                <Send className="h-5 w-5" />
+              )}
               {isLoading ? currentTexts.loading : currentTexts.send}
-            </button>
+            </motion.button>
           </form>
           <div className="mt-2 text-center text-xs text-gray-500">
             {language === 'es' 
@@ -315,7 +381,7 @@ export default function CatholicChatPage() {
             }
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

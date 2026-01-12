@@ -259,8 +259,8 @@ export default function AuthFlowManager({
               </svg>
             </div>
           </div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Loading TheoAgent</h2>
-          <p className="text-gray-600">Preparing your theological assistant...</p>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">SantaPalabra Cargando...</h2>
+          <p className="text-gray-600">Preparando tu asistente teológico...</p>
         </div>
       </div>
     )

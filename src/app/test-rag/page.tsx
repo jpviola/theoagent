@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase-client';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Beaker, BookCopy, ChevronRight, Home, LogIn, Zap, BarChart2, AlertTriangle, CheckCircle, Loader, Settings, Languages, MessageSquare, Play } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface TestResult {
   query: string;
@@ -29,12 +32,13 @@ export default function RAGTestingInterface() {
   const [query, setQuery] = useState('');
   const [implementation, setImplementation] = useState<'LangChain' | 'LlamaIndex'>('LangChain');
   const [mode, setMode] = useState<'standard' | 'advanced'>('standard');
-  const [language, setLanguage] = useState<'en' | 'es'>('en');
+  const { language, setLanguage } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [comparing, setComparing] = useState(false);
   const [result, setResult] = useState<TestResult | null>(null);
   const [comparisonResult, setComparisonResult] = useState<ComparisonResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'single' | 'compare'>('single');
 
   useEffect(() => {
     const getUser = async () => {
@@ -49,14 +53,20 @@ export default function RAGTestingInterface() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const sampleQueries = [
-    'What is the Catholic teaching on the Trinity?',
-    'How should Catholics approach prayer?',
-    'What is the significance of the Eucharist?',
-    'Can you explain Catholic teaching on salvation?',
-    'What does the Church teach about Mary?',
-    '¿Qué enseña la Iglesia sobre la oración?' // Spanish example
-  ];
+  const sampleQueries = {
+    es: [
+      '¿Qué enseña la Iglesia sobre la oración?',
+      'Explica la transubstanciación en la Eucaristía.',
+      '¿Cuál es el rol de la Virgen María en la salvación?',
+      '¿Qué dice el CELAM sobre la opción por los pobres?',
+    ],
+    en: [
+      'What is the Catholic teaching on the Trinity?',
+      'How should Catholics approach prayer?',
+      'What is the significance of the Eucharist?',
+      'Can you explain Catholic teaching on salvation?',
+    ]
+  };
 
   const testSingleQuery = async () => {
     if (!query.trim()) {
@@ -125,335 +135,420 @@ export default function RAGTestingInterface() {
     }
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <Link href="/" className="text-blue-600 hover:text-blue-800 mr-4">
-                ← Back to Home
-              </Link>
-              <h1 className="text-xl font-semibold text-gray-900">RAG Testing Interface</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              {user ? (
-                <span className="text-sm text-gray-600">Signed in as {user.email}</span>
-              ) : (
-                <Link href="/auth-test" className="text-sm text-blue-600 hover:text-blue-800">
-                  Sign In
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-white relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute w-96 h-96 bg-yellow-400/20 rounded-full blur-3xl -top-48 -left-48"
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute w-96 h-96 bg-amber-400/20 rounded-full blur-3xl -bottom-48 -right-48"
+          animate={{ scale: [1, 1.2, 1], rotate: [0, -90, 0] }}
+          transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut', delay: 5 }}
+        />
+        <motion.div
+          className="absolute w-64 h-64 bg-yellow-500/20 rounded-full blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+        />
+      </div>
+
+      {/* Floating Navigation */}
+      <motion.nav
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="relative z-50 px-6 py-4"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white/80 backdrop-blur-xl rounded-2xl border border-yellow-200 shadow-lg px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-6">
+                <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+                  <img src="/santapalabra-logo.svg" alt="SantaPalabra" className="h-10" />
                 </Link>
-              )}
-              <Link 
-                href="/catholic-chat" 
-                className="text-sm text-blue-600 hover:text-blue-800 px-3 py-1 rounded-md hover:bg-blue-50"
-              >
-                Chat Interface
-              </Link>
+                <div className="h-6 w-px bg-gray-300"></div>
+                <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2"><Beaker className="text-yellow-600" />Laboratorio RAG</h1>
+              </div>
+              <div className="flex items-center space-x-4">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link
+                    href="/"
+                    className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-all border border-gray-200"
+                  >
+                    <Home className="h-4 w-4" />
+                    Inicio
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link
+                    href="/catholic-chat"
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-gray-900 rounded-xl font-medium transition-all shadow-md"
+                  >
+                    <BookCopy className="h-4 w-4" />
+                    Iniciar Chat
+                  </Link>
+                </motion.div>
+              </div>
             </div>
           </div>
         </div>
-      </header>
+      </motion.nav>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Catholic RAG System Testing
-          </h2>
-          <p className="text-gray-600">
-            Test and compare different RAG implementations for Catholic theological queries
-          </p>
-        </div>
-
-        {/* Single Query Testing */}
-        <div className="bg-white rounded-lg shadow-md p-8 mb-8">
-          <div className="flex items-center mb-6">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a9 9 0 117.072 0l-.548.547A3.374 3.374 0 0014.846 21H9.154a3.374 3.374 0 00-2.548-1.053l-.548-.547z" />
-              </svg>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900">Single Query Test</h3>
-              <p className="text-gray-600 text-sm">Test individual queries with specific configurations</p>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Implementation</label>
-              <select
-                value={implementation}
-                onChange={(e) => setImplementation(e.target.value as 'LangChain' | 'LlamaIndex')}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="LangChain">🔗 LangChain</option>
-                <option value="LlamaIndex">🦙 LlamaIndex</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Mode</label>
-              <select
-                value={mode}
-                onChange={(e) => setMode(e.target.value as 'standard' | 'advanced')}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="standard">📄 Standard</option>
-                <option value="advanced">⚡ Advanced</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Language</label>
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value as 'en' | 'es')}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="en">🇺🇸 English</option>
-                <option value="es">🇪🇸 Español</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Query</label>
-            <textarea
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Enter your Catholic theology question here..."
-              className="w-full p-4 border border-gray-300 rounded-lg h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      <main className="relative z-10 max-w-7xl mx-auto px-6 py-12">
+        {/* Hero Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 backdrop-blur-sm px-6 py-2 rounded-full border border-yellow-300 mb-6">
+            <motion.div
+              className="w-2 h-2 bg-green-500 rounded-full"
+              animate={{ scale: [1, 1.5, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
             />
+            <span className="text-gray-700 text-sm font-medium">Sistema en Línea</span>
           </div>
-
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-3">Sample Questions</label>
-            <div className="grid md:grid-cols-2 gap-3">
-              {sampleQueries.map((sample, index) => (
-                <button
-                  key={index}
-                  onClick={() => setQuery(sample)}
-                  className="text-left p-3 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-colors text-sm"
-                >
-                  {sample}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button
-            onClick={testSingleQuery}
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-          >
-            {loading ? (
-              <span className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                Testing...
-              </span>
-            ) : (
-              '🚀 Test Query'
-            )}
-          </button>
-        </div>
-
-        {/* Results Display */}
-        {result && (
-          <div className="bg-white rounded-lg shadow-md p-8 mb-8">
-            <div className="flex items-center mb-6">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900">Test Result</h3>
-                <p className="text-gray-600 text-sm">Query completed successfully</p>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <div className="text-sm font-medium text-blue-800">Implementation</div>
-                <div className="text-lg font-bold text-blue-900">{result.implementation}</div>
-              </div>
-              <div className="bg-green-50 p-4 rounded-lg">
-                <div className="text-sm font-medium text-green-800">Response Time</div>
-                <div className="text-lg font-bold text-green-900">{result.responseTime}ms</div>
-              </div>
-              <div className="bg-purple-50 p-4 rounded-lg">
-                <div className="text-sm font-medium text-purple-800">Timestamp</div>
-                <div className="text-lg font-bold text-purple-900">{new Date(result.timestamp).toLocaleTimeString()}</div>
-              </div>
-            </div>
-            
-            <div className="mb-6">
-              <div className="font-semibold text-gray-900 mb-3">Query:</div>
-              <div className="text-gray-700 bg-gray-50 p-4 rounded-lg border-l-4 border-blue-500">{result.query}</div>
-            </div>
-            
-            <div>
-              <div className="font-semibold text-gray-900 mb-3">Response:</div>
-              <div className="text-gray-700 bg-gray-50 p-4 rounded-lg border-l-4 border-green-500 whitespace-pre-wrap">{result.response}</div>
-            </div>
-          </div>
-        )}
-
-        {/* Full Comparison */}
-        <div className="bg-white rounded-lg shadow-md p-8 mb-8">
-          <div className="flex items-center mb-6">
-            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
-              <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900">Full RAG Comparison</h3>
-              <p className="text-gray-600 text-sm">Compare both implementations with multiple queries</p>
-            </div>
-          </div>
-          
-          <p className="text-gray-600 mb-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
-            This will test both implementations with multiple queries to compare performance and quality.
+          <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
+            Laboratorio de Pruebas RAG
+          </h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Experimenta con sistemas de recuperación avanzados para teología católica
           </p>
-          
-          <button
-            onClick={runComparison}
-            disabled={comparing}
-            className="w-full bg-orange-600 text-white py-3 px-6 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-          >
-            {comparing ? (
-              <span className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                Running Comparison...
-              </span>
-            ) : (
-              '📈 Run Full Comparison'
-            )}
-          </button>
+        </motion.div>
+
+        {/* Tab Navigation */}
+        <div className="flex justify-center mb-12">
+          <div className="relative bg-white/80 backdrop-blur-xl rounded-2xl p-2 border border-yellow-200 inline-flex shadow-lg">
+            <motion.div
+              className="absolute top-2 bottom-2 left-2 w-[164px] bg-gradient-to-r from-yellow-400 to-amber-500 rounded-xl shadow-lg"
+              animate={{ x: activeTab === 'single' ? 0 : 168 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            />
+            <button
+              onClick={() => setActiveTab('single')}
+              className="relative z-10 px-8 py-3 rounded-xl font-semibold transition-colors text-gray-900"
+            >
+              Prueba Individual
+            </button>
+            <button
+              onClick={() => setActiveTab('compare')}
+              className="relative z-10 px-8 py-3 rounded-xl font-semibold transition-colors text-gray-900"
+            >
+              Comparar
+            </button>
+          </div>
         </div>
 
-        {/* Comparison Results */}
-        {comparisonResult && (
-          <div className="bg-white rounded-lg shadow-md p-8 mb-8">
-            <div className="flex items-center mb-6">
-              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
+        <AnimatePresence mode="wait">
+          {/* Single Query Testing */}
+          {activeTab === 'single' && (
+            <motion.div
+              key="single"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="space-y-6"
+            >
+              {/* Configuration Card */}
+              <div className="bg-white/90 backdrop-blur-xl rounded-3xl border border-yellow-200 p-8 shadow-xl">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                  <div>
+                    <label className="flex items-center gap-2 text-gray-800 text-sm font-semibold mb-3"><Settings className="h-4 w-4" />Implementación</label>
+                    <select
+                      value={implementation}
+                      onChange={(e) => setImplementation(e.target.value as 'LangChain' | 'LlamaIndex')}
+                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    >
+                      <option value="LangChain">🔗 LangChain</option>
+                      <option value="LlamaIndex">🦙 LlamaIndex</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="flex items-center gap-2 text-gray-800 text-sm font-semibold mb-3"><Zap className="h-4 w-4" />Modo</label>
+                    <select
+                      value={mode}
+                      onChange={(e) => setMode(e.target.value as 'standard' | 'advanced')}
+                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    >
+                      <option value="standard">📄 Standard</option>
+                      <option value="advanced">⚡ Advanced</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="flex items-center gap-2 text-gray-800 text-sm font-semibold mb-3"><Languages className="h-4 w-4" />Idioma</label>
+                    <select
+                      value={language}
+                      onChange={(e) => setLanguage(e.target.value as 'en' | 'es')}
+                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    >
+                      <option value="en">🇺🇸 English</option>
+                      <option value="es">🇪🇸 Español</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <label className="flex items-center gap-2 text-gray-800 text-sm font-semibold mb-3"><MessageSquare className="h-4 w-4" />Tu Pregunta</label>
+                  <textarea
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Pregunta cualquier cosa sobre teología católica..."
+                    className="w-full px-6 py-4 bg-white border border-gray-300 rounded-2xl text-gray-900 placeholder-gray-400 h-32 resize-none focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div className="mb-6">
+                  <label className="block text-gray-800 text-sm font-semibold mb-3">Ejemplos Rápidos</label>
+                  <div className="grid md:grid-cols-2 gap-3">
+                    {sampleQueries[language].map((sample, index) => (
+                      <motion.button
+                        key={index}
+                        onClick={() => setQuery(sample)}
+                        whileHover={{ scale: 1.02, borderColor: 'rgb(234 179 8)' }}
+                        whileTap={{ scale: 0.98 }}
+                        className="text-left px-4 py-3 bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 rounded-xl transition-all text-sm text-gray-700 hover:text-gray-900"
+                      >
+                        {sample}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
+                <motion.button
+                  onClick={testSingleQuery}
+                  disabled={loading}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-4 px-6 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-gray-900 font-bold rounded-2xl shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  {loading ? (
+                    <span className="flex items-center justify-center">
+                      <Loader className="animate-spin mr-3" />
+                      Procesando Consulta...
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center">
+                      <Play className="mr-2" />
+                      Ejecutar Prueba
+                    </span>
+                  )}
+                </motion.button>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900">Comparison Results</h3>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
-                <div className="flex items-center mb-4">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                    <span className="text-blue-600 font-bold">🔗</span>
+
+              {/* Results Card */}
+              <AnimatePresence>
+                {result && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -50 }}
+                    className="bg-white/90 backdrop-blur-xl rounded-3xl border border-yellow-200 p-8 shadow-xl"
+                  >
+                    <div className="flex items-center mb-6">
+                      <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center mr-4">
+                        <CheckCircle className="text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900">Prueba Completada</h3>
+                        <p className="text-gray-600">Consulta ejecutada exitosamente</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                      <div className="bg-yellow-50 p-5 rounded-2xl border border-yellow-200">
+                        <div className="text-yellow-800 text-sm font-medium mb-1">Implementación</div>
+                        <div className="text-2xl font-bold text-gray-900">{result.implementation}</div>
+                      </div>
+                      <div className="bg-yellow-50 p-5 rounded-2xl border border-yellow-200">
+                        <div className="text-yellow-800 text-sm font-medium mb-1">Tiempo de Respuesta</div>
+                        <div className="text-2xl font-bold text-gray-900">{result.responseTime}ms</div>
+                      </div>
+                      <div className="bg-yellow-50 p-5 rounded-2xl border border-yellow-200">
+                        <div className="text-yellow-800 text-sm font-medium mb-1">Timestamp</div>
+                        <div className="text-2xl font-bold text-gray-900">{new Date(result.timestamp).toLocaleTimeString()}</div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <div className="text-gray-800 font-semibold mb-2">Pregunta</div>
+                        <div className="bg-gray-50 p-4 rounded-xl border-l-4 border-yellow-500 text-gray-800">{result.query}</div>
+                      </div>
+                      
+                      <div>
+                        <div className="text-gray-800 font-semibold mb-2">Respuesta</div>
+                        <div className="bg-gray-50 p-4 rounded-xl border-l-4 border-yellow-500 text-gray-800 whitespace-pre-wrap max-h-96 overflow-y-auto">{result.response}</div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          )}
+
+          {/* Comparison Testing */}
+          {activeTab === 'compare' && (
+            <motion.div
+              key="compare"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="space-y-6"
+            >
+              <div className="bg-white/90 backdrop-blur-xl rounded-3xl border border-yellow-200 p-8 shadow-xl">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl flex items-center justify-center mr-4">
+                    <BarChart2 className="text-white" />
                   </div>
-                  <h4 className="font-bold text-blue-900 text-lg">LangChain</h4>
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900">Comparación de Rendimiento</h3>
+                    <p className="text-gray-600">Prueba de batalla de ambas implementaciones</p>
+                  </div>
                 </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-blue-700">Avg Response Time:</span>
-                    <span className="font-mono font-bold text-blue-900">{comparisonResult.performance.langchain.avgTime.toFixed(2)}ms</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-blue-700">Success Rate:</span>
-                    <span className="font-mono font-bold text-blue-900">{comparisonResult.performance.langchain.successRate.toFixed(1)}%</span>
-                  </div>
+                
+                <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/30 rounded-2xl p-6 mb-6">
+                  <p className="text-gray-700 leading-relaxed">
+                    Esta prueba exhaustiva ejecutará múltiples consultas a través de las implementaciones de LangChain y LlamaIndex, 
+                    proporcionando métricas de rendimiento detalladas y análisis de calidad.
+                  </p>
                 </div>
+                
+                <motion.button
+                  onClick={runComparison}
+                  disabled={comparing}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-4 px-6 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  {comparing ? (
+                    <span className="flex items-center justify-center">
+                      <Loader className="animate-spin mr-3" />
+                      Ejecutando Pruebas de Comparación...
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center">
+                      <Play className="mr-2" />
+                      Lanzar Comparación
+                    </span>
+                  )}
+                </motion.button>
               </div>
-              
-              <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
-                <div className="flex items-center mb-4">
-                  <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
-                    <span className="text-purple-600 font-bold">🦙</span>
-                  </div>
-                  <h4 className="font-bold text-purple-900 text-lg">LlamaIndex</h4>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-purple-700">Avg Response Time:</span>
-                    <span className="font-mono font-bold text-purple-900">{comparisonResult.performance.llamaindex.avgTime.toFixed(2)}ms</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-purple-700">Success Rate:</span>
-                    <span className="font-mono font-bold text-purple-900">{comparisonResult.performance.llamaindex.successRate.toFixed(1)}%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-lg border border-yellow-200">
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-2xl">🏆</span>
-                </div>
-                <div>
-                  <div className="font-bold text-yellow-800 text-lg">Winner: {comparisonResult.summary.winner}</div>
-                  <div className="text-yellow-700 text-sm">Based on average response time and success rate comparison</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+
+              {/* Comparison Results */}
+              <AnimatePresence>
+                {comparisonResult && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -50 }}
+                    className="bg-white/90 backdrop-blur-xl rounded-3xl border border-yellow-200 p-8 shadow-xl"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                      <div className="bg-yellow-50 p-8 rounded-3xl border border-yellow-200">
+                        <div className="flex items-center mb-6">
+                          <div className="w-10 h-10 bg-yellow-500/30 rounded-xl flex items-center justify-center mr-3">
+                            <span className="text-2xl">🔗</span>
+                          </div>
+                          <h4 className="text-2xl font-bold text-gray-900">LangChain</h4>
+                        </div>
+                        <div className="space-y-4">
+                          <div className="flex justify-between items-center">
+                            <span className="text-yellow-800">Tiempo Promedio</span>
+                            <span className="text-3xl font-bold text-gray-900">{comparisonResult.performance.langchain.avgTime.toFixed(0)}ms</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-yellow-800">Tasa de Éxito</span>
+                            <span className="text-3xl font-bold text-gray-900">{comparisonResult.performance.langchain.successRate.toFixed(0)}%</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-yellow-50 p-8 rounded-3xl border border-yellow-200">
+                        <div className="flex items-center mb-6">
+                          <div className="w-10 h-10 bg-yellow-500/30 rounded-xl flex items-center justify-center mr-3">
+                            <span className="text-2xl">🦙</span>
+                          </div>
+                          <h4 className="text-2xl font-bold text-gray-900">LlamaIndex</h4>
+                        </div>
+                        <div className="space-y-4">
+                          <div className="flex justify-between items-center">
+                            <span className="text-yellow-800">Tiempo Promedio</span>
+                            <span className="text-3xl font-bold text-gray-900">{comparisonResult.performance.llamaindex.avgTime.toFixed(0)}ms</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-yellow-800">Tasa de Éxito</span>
+                            <span className="text-3xl font-bold text-gray-900">{comparisonResult.performance.llamaindex.successRate.toFixed(0)}%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-gradient-to-r from-yellow-400 to-amber-500 p-8 rounded-3xl shadow-lg">
+                      <div className="flex items-center">
+                        <div className="w-16 h-16 bg-white/30 rounded-2xl flex items-center justify-center mr-6">
+                          <span className="text-4xl">🏆</span>
+                        </div>
+                        <div>
+                          <div className="text-yellow-900 text-sm font-medium mb-1">Ganador</div>
+                          <div className="text-3xl font-bold text-gray-900">{comparisonResult.summary.winner}</div>
+                          <div className="text-yellow-900/80 text-sm mt-1">Basado en métricas de rendimiento</div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Error Display */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
-            <div className="flex items-center">
-              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4">
-                <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div>
-                <div className="font-bold text-red-800">Error Occurred</div>
-                <div className="text-red-700">{error}</div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Instructions */}
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-8">
-          <div className="flex items-start mb-4">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <h3 className="font-bold text-blue-900 text-lg mb-3">Testing Guidelines</h3>
-              <div className="space-y-3 text-blue-800">
-                <div className="flex items-start">
-                  <span className="text-blue-600 mr-2 flex-shrink-0">•</span>
-                  <span>Test different Catholic theology questions to evaluate knowledge coverage</span>
-                </div>
-                <div className="flex items-start">
-                  <span className="text-blue-600 mr-2 flex-shrink-0">•</span>
-                  <span>Compare response times and accuracy between LangChain and LlamaIndex implementations</span>
-                </div>
-                <div className="flex items-start">
-                  <span className="text-blue-600 mr-2 flex-shrink-0">•</span>
-                  <span>Test both English and Spanish queries for multilingual support</span>
-                </div>
-                <div className="flex items-start">
-                  <span className="text-blue-600 mr-2 flex-shrink-0">•</span>
-                  <span>Use Advanced mode for more detailed theological responses (subscription required)</span>
-                </div>
-                <div className="flex items-start">
-                  <span className="text-blue-600 mr-2 flex-shrink-0">•</span>
-                  <span>The full comparison automatically tests multiple queries for comprehensive analysis</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl relative mt-6"
+              role="alert"
+            >
+              <strong className="font-bold flex items-center"><AlertTriangle className="mr-2" />Error: </strong>
+              <span className="block sm:inline">{error}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );
