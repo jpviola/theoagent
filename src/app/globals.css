@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0f1419;
+  --foreground: #ffffff;
+  --gold-400: #fbbf24;
+  --gold-300: #fcd34d;
+  --gold-500: #f59e0b;
+  --amber-400: #fbbf24;
+  --amber-500: #f59e0b;
 }
 
 @theme inline {
@@ -10,6 +15,11 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  /* Custom Gold Colors */
+  --color-gold-300: var(--gold-300);
+  --color-gold-400: var(--gold-400);
+  --color-gold-500: var(--gold-500);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,117 +32,82 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Geist Sans', Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
 }
 
-/* Custom animations for creative landing */
-@keyframes blob {
-  0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(30px, -50px) scale(1.1); }
-  66% { transform: translate(-20px, 20px) scale(0.9); }
-  100% { transform: translate(0px, 0px) scale(1); }
+/* Custom animations */
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.6;
+  }
+  50% { 
+    transform: translateY(-20px) rotate(10deg);
+    opacity: 0.8;
+  }
 }
 
-.animate-blob {
-  animation: blob 7s infinite;
+@keyframes float-delayed {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.4;
+  }
+  50% { 
+    transform: translateY(-30px) rotate(-10deg);
+    opacity: 0.7;
+  }
 }
 
-.animation-delay-2000 {
-  animation-delay: 2s;
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
 }
 
-.animation-delay-4000 {
-  animation-delay: 4s;
+@keyframes stars-move {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-100px); }
 }
 
-/* Gradient text animations */
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+.animate-float {
+  animation: float 6s ease-in-out infinite;
 }
 
-.animate-gradient {
-  background: linear-gradient(-45deg, #fbbf24, #f59e0b, #d97706, #b45309);
-  background-size: 400% 400%;
-  animation: gradient-shift 3s ease infinite;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
+.animate-float-delayed {
+  animation: float-delayed 8s ease-in-out infinite;
 }
 
-/* Custom scrollbar styling */
+.animate-twinkle {
+  animation: twinkle 3s ease-in-out infinite alternate;
+}
+
+/* Stars background */
+.bg-stars {
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+    radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+    radial-gradient(2px 2px at 160px 30px, #ddd, transparent);
+  background-repeat: repeat;
+  background-size: 200px 100px;
+  animation: stars-move 20s linear infinite;
+}
+
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: rgba(15, 20, 25, 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #8fa9bc;
+  background: linear-gradient(to bottom, var(--gold-400), var(--amber-500));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #7a94a7;
-}
-
-/* Accessibility: Focus indicators */
-*:focus-visible {
-  outline: 2px solid #8fa9bc;
-  outline-offset: 2px;
-}
-
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid #8fa9bc;
-  outline-offset: 2px;
-}
-
-/* Screen reader only content */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
-.sr-only:focus {
-  position: static;
-  width: auto;
-  height: auto;
-  padding: inherit;
-  margin: inherit;
-  overflow: visible;
-  clip: auto;
-  white-space: normal;
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  button,
-  input,
-  textarea {
-    border: 2px solid currentColor;
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+  background: linear-gradient(to bottom, var(--gold-300), var(--gold-400));
 }

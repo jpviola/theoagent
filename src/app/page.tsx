@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase-client';
 import SantaPalabraLogo from '@/components/SantaPalabraLogo';
@@ -8,6 +8,30 @@ import SantaPalabraLogo from '@/components/SantaPalabraLogo';
 export default function HomePage() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  const testimonials = [
+    {
+      quote: "SantaPalabra me ha ayudado a profundizar mi oración contemplativa",
+      author: "María Elena",
+      location: "México",
+      icon: "🙏"
+    },
+    {
+      quote: "Increíble conocimiento sobre la tradición carmelita",
+      author: "Fr. José Luis",
+      location: "Colombia",
+      icon: "📿"
+    },
+    {
+      quote: "Respuestas claras sobre la teología latinoamericana",
+      author: "Ana Sofía",
+      location: "Argentina",
+      icon: "✨"
+    }
+  ];
 
   useEffect(() => {
     const getUser = async () => {
@@ -25,64 +49,111 @@ export default function HomePage() {
       }
     );
 
-    return () => subscription.unsubscribe();
+    // Auto-rotate testimonials
+    const testimonialInterval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 4000);
+
+    // Intersection Observer for animations
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (heroRef.current) {
+      observer.observe(heroRef.current);
+    }
+
+    return () => {
+      subscription.unsubscribe();
+      clearInterval(testimonialInterval);
+      observer.disconnect();
+    };
   }, []);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse">
-            <span className="text-white font-bold text-xl">✝</span>
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-indigo-800 to-purple-900 flex items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-stars animate-twinkle opacity-30"></div>
+        <div className="text-center relative z-10">
+          <div className="relative mb-8">
+            <div className="w-24 h-24 bg-gradient-to-br from-gold-400 to-amber-500 rounded-full flex items-center justify-center mx-auto shadow-2xl transform animate-pulse border-4 border-white/20">
+              <span className="text-white font-bold text-2xl drop-shadow-lg">✝</span>
+            </div>
+            <div className="absolute -inset-4 bg-gradient-to-r from-gold-300 to-amber-400 rounded-full blur-xl opacity-30 animate-pulse"></div>
           </div>
-          <p className="text-amber-700 font-medium">Cargando SantaPalabra...</p>
+          <p className="text-white font-medium text-lg tracking-wide">Cargando SantaPalabra...</p>
+          <div className="mt-6 flex justify-center space-x-2">
+            <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
+            <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+            <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-yellow-50 via-white to-amber-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-stars animate-twinkle opacity-20"></div>
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-gold-500/20 to-amber-500/20 rounded-full blur-3xl animate-float-delayed"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
+      </div>
+
       {/* Navigation */}
-      <nav className="bg-white/90 backdrop-blur-md shadow-lg border-b border-yellow-200/50 sticky top-0 z-50">
+      <nav className="relative z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center space-x-4">
               <div className="relative group">
-                <div className="w-12 h-12 bg-gradient-to-br from-orange-200 to-amber-300 rounded-2xl flex items-center justify-center shadow-xl transform rotate-6 group-hover:rotate-12 transition-transform duration-300 border border-orange-300 p-1">
-                  <SantaPalabraLogo size={40} className="transform -rotate-6" />
+                <div className="w-14 h-14 bg-gradient-to-br from-gold-400 to-amber-500 rounded-2xl flex items-center justify-center shadow-2xl transform hover:scale-110 transition-all duration-300 border-2 border-white/20 p-1">
+                  <SantaPalabraLogo size={44} className="drop-shadow-lg" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-400 rounded-full animate-pulse shadow-lg border-2 border-white"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-gold-400 to-amber-500 rounded-2xl blur-lg opacity-50 animate-pulse"></div>
               </div>
               <div>
-                <h1 className="text-2xl font-black bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-700 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-black bg-gradient-to-r from-gold-300 via-amber-200 to-yellow-300 bg-clip-text text-transparent drop-shadow-sm">
                   SantaPalabra
                 </h1>
-                <p className="text-xs text-yellow-700 font-semibold tracking-wider">
-                  ✨ Catequista Digital IA
+                <p className="text-xs text-gold-200/80 font-semibold tracking-wider flex items-center">
+                  <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                  Catequista Digital IA
                 </p>
               </div>
             </div>
 
             <div className="hidden md:flex items-center space-x-6">
-              <div className="flex items-center space-x-2 bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-2 rounded-full border border-green-200">
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
-                <span className="text-sm text-green-700 font-semibold">IA Disponible 24/7</span>
+              <div className="flex items-center space-x-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-xl px-5 py-3 rounded-2xl border border-green-400/30 shadow-lg">
+                <div className="relative">
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-ping absolute"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                </div>
+                <span className="text-sm text-green-100 font-semibold">IA Disponible 24/7</span>
               </div>
               
               {user ? (
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-amber-400 rounded-2xl flex items-center justify-center shadow-lg">
-                    <span className="text-white text-sm font-bold">U</span>
+                  <div className="w-12 h-12 bg-gradient-to-br from-gold-400 to-amber-500 rounded-2xl flex items-center justify-center shadow-xl border-2 border-white/20">
+                    <span className="text-white text-sm font-bold drop-shadow">U</span>
                   </div>
-                  <span className="text-amber-700 font-semibold">¡Bienvenido!</span>
+                  <span className="text-gold-200 font-semibold">¡Bienvenido!</span>
                 </div>
               ) : (
                 <Link
                   href="/auth-test"
-                  className="px-6 py-3 bg-gradient-to-r from-orange-400 to-amber-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 hover:scale-105 border border-orange-300"
+                  className="group relative px-8 py-3 bg-gradient-to-r from-gold-500 to-amber-500 text-white font-bold rounded-2xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-gold-400/50 overflow-hidden"
                 >
-                  Iniciar Sesión
+                  <span className="absolute inset-0 bg-gradient-to-r from-gold-400 to-amber-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                  <span className="relative flex items-center">
+                    <span className="mr-2">✨</span>
+                    Iniciar Sesión
+                  </span>
                 </Link>
               )}
             </div>
@@ -91,331 +162,319 @@ export default function HomePage() {
       </nav>
 
       {/* Hero Section */}
-      <main className="relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-10 w-40 h-40 bg-yellow-200/40 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob"></div>
-          <div className="absolute top-40 right-20 w-40 h-40 bg-amber-200/40 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-20 left-1/3 w-40 h-40 bg-orange-200/40 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-4000"></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-6 py-24">
-          <div className="grid lg:grid-cols-5 gap-16 items-center">
-            <div className="lg:col-span-3 space-y-10">
-              <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-yellow-100 to-amber-100 px-5 py-3 rounded-2xl border border-yellow-300 shadow-sm">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
-                <span className="text-amber-800 text-sm font-bold tracking-wide">
+      <main className="relative z-10" ref={heroRef}>
+        <div className="max-w-7xl mx-auto px-6 py-20">
+          <div className="grid lg:grid-cols-2 gap-16 items-center min-h-[80vh]">
+            {/* Left Column - Content */}
+            <div className={`space-y-10 transition-all duration-1000 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'}`}>
+              <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-gold-500/20 to-amber-500/20 backdrop-blur-xl px-6 py-4 rounded-2xl border border-gold-400/30 shadow-xl">
+                <div className="relative">
+                  <div className="w-3 h-3 bg-gold-400 rounded-full animate-ping absolute"></div>
+                  <div className="w-3 h-3 bg-gold-500 rounded-full"></div>
+                </div>
+                <span className="text-gold-200 text-sm font-bold tracking-wide">
                   ✨ Tradición Católica Hispanoamericana
                 </span>
               </div>
               
-              <div className="space-y-8 text-center lg:text-left">
-                <h1 className="text-4xl lg:text-6xl xl:text-7xl font-black leading-none">
-                  <div className="flex flex-col lg:flex-row items-center lg:items-end gap-4 lg:gap-6">
-                    <div className="flex flex-col">
-                      <span className="block text-gray-900">Conversa</span>
-                      <span className="block text-gray-900">con</span>
-                    </div>
-                    <div className="relative group">
-                      <SantaPalabraLogo size={200} className="animate-pulse hover:animate-none transition-all duration-300 transform hover:scale-105" />
-                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-400 rounded-full animate-ping shadow-lg"></div>
-                    </div>
+              <div className="space-y-8">
+                <h1 className="text-5xl lg:text-7xl font-black leading-none">
+                  <div className="flex flex-col space-y-2">
+                    <span className="text-white drop-shadow-2xl">Tu</span>
+                    <span className="bg-gradient-to-r from-gold-300 via-amber-200 to-yellow-300 bg-clip-text text-transparent drop-shadow-lg">
+                      Catequista
+                    </span>
+                    <span className="text-white drop-shadow-2xl">Digital</span>
                   </div>
                 </h1>
-              </div>
-              
-              <p className="text-xl text-gray-700 leading-relaxed max-w-2xl">
-                Descubre la riquísima espiritualidad de <span className="text-amber-600 font-bold">Santa Teresa de Ávila</span>, 
-                <span className="text-orange-600 font-bold"> San Juan de la Cruz</span> y la teología del 
-                <span className="text-yellow-700 font-bold"> CELAM</span>. Respuestas católicas auténticas, siempre disponibles.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-5">
-                <Link
-                  href="/catholic-chat"
-                  className="group relative inline-flex items-center justify-center px-10 py-5 bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600 text-white font-bold text-xl rounded-3xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 overflow-hidden border border-yellow-400"
-                >
-                  <span className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
-                  <span className="relative flex items-center">
-                    💬 Comenzar Conversación
-                    <svg className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/>
-                    </svg>
-                  </span>
-                </Link>
                 
-                <button className="group flex items-center justify-center space-x-4 px-8 py-5 bg-white/80 backdrop-blur border-2 border-yellow-400 text-yellow-700 font-bold text-lg rounded-3xl hover:bg-yellow-50 hover:border-amber-500 transition-all duration-300 shadow-lg hover:shadow-xl">
-                  <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
-                  <span>🎬 Ver Demo</span>
-                </button>
-              </div>
-              
-              <div className="flex items-center space-x-12 pt-10 border-t border-yellow-200">
-                <div className="text-center">
-                  <div className="text-3xl font-black text-gray-900 mb-1">24/7</div>
-                  <div className="text-sm text-gray-600 font-medium">Disponible</div>
+                <p className="text-xl text-blue-100/90 leading-relaxed max-w-2xl font-light">
+                  Descubre la riquísima espiritualidad de <span className="text-gold-300 font-semibold">Santa Teresa de Ávila</span>, 
+                  <span className="text-amber-300 font-semibold"> San Juan de la Cruz</span> y la teología del 
+                  <span className="text-yellow-300 font-semibold"> CELAM</span>. Respuestas católicas auténticas, siempre disponibles.
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-6 pt-4">
+                  <Link
+                    href="/catholic-chat"
+                    className="group relative inline-flex items-center justify-center px-12 py-5 bg-gradient-to-r from-gold-500 via-amber-500 to-yellow-500 text-white font-bold text-xl rounded-3xl shadow-2xl hover:shadow-gold-500/25 transform hover:scale-105 transition-all duration-500 overflow-hidden border-2 border-gold-400/50"
+                  >
+                    <span className="absolute inset-0 bg-gradient-to-r from-gold-400 via-amber-400 to-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+                    <span className="relative flex items-center">
+                      <span className="mr-3 text-2xl">🙏</span>
+                      Comenzar Conversación
+                      <svg className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/>
+                      </svg>
+                    </span>
+                  </Link>
+                  
+                  <button className="group flex items-center justify-center space-x-4 px-8 py-5 bg-white/10 backdrop-blur-xl border-2 border-white/20 text-white font-bold text-lg rounded-3xl hover:bg-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
+                    <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
+                    <span>🎬 Ver Demo</span>
+                  </button>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-black text-gray-900 mb-1">5K+</div>
-                  <div className="text-sm text-gray-600 font-medium">Documentos</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-black text-gray-900 mb-1">🇪🇸🌎</div>
-                  <div className="text-sm text-gray-600 font-medium">Hispanoamérica</div>
+                
+                {/* Stats */}
+                <div className="flex items-center space-x-12 pt-10 border-t border-white/20">
+                  <div className="text-center">
+                    <div className="text-3xl font-black text-white mb-1">24/7</div>
+                    <div className="text-sm text-blue-200 font-medium">Disponible</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-black text-white mb-1">5K+</div>
+                    <div className="text-sm text-blue-200 font-medium">Documentos</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-black text-white mb-1">🌎</div>
+                    <div className="text-sm text-blue-200 font-medium">Hispanoamérica</div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Chat Preview */}
-            <div className="lg:col-span-2 relative lg:pl-8">
-              <div className="relative bg-white rounded-[2rem] shadow-2xl p-8 max-w-lg mx-auto transform rotate-2 hover:rotate-0 transition-transform duration-700 border border-yellow-100">
-                <div className="flex items-center space-x-4 pb-6 border-b border-gray-100">
-                  <div className="w-12 h-12 bg-gradient-to-br from-orange-200 to-amber-300 rounded-2xl flex items-center justify-center shadow-lg border border-orange-300 p-1">
-                    <SantaPalabraLogo size={40} />
+            {/* Right Column - Interactive Chat Preview */}
+            <div className={`relative transition-all duration-1000 delay-300 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-20 opacity-0'}`}>
+              <div className="relative bg-white/10 backdrop-blur-2xl rounded-[3rem] shadow-2xl p-8 max-w-lg mx-auto border border-white/20 hover:bg-white/15 transition-all duration-700">
+                {/* Chat Header */}
+                <div className="flex items-center space-x-4 pb-6 border-b border-white/20">
+                  <div className="relative">
+                    <div className="w-14 h-14 bg-gradient-to-br from-gold-400 to-amber-500 rounded-2xl flex items-center justify-center shadow-2xl border-2 border-white/20 p-1">
+                      <SantaPalabraLogo size={44} />
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-4 h-4 bg-green-400 rounded-full animate-pulse border-2 border-white"></div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold text-gray-900 text-lg">SantaPalabra IA</h3>
+                    <h3 className="font-bold text-white text-lg drop-shadow">SantaPalabra IA</h3>
                     <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                      <span className="text-sm text-green-600 font-medium">Activo ahora</span>
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-sm text-green-300 font-medium">Activo ahora</span>
                     </div>
                   </div>
                 </div>
                 
-                <div className="space-y-5 py-6">
+                {/* Chat Messages */}
+                <div className="space-y-6 py-6">
                   <div className="flex justify-start">
-                    <div className="bg-gradient-to-br from-yellow-50 to-amber-50 border border-yellow-200 rounded-3xl rounded-tl-lg px-6 py-4 max-w-sm shadow-sm">
-                      <p className="text-sm text-gray-800 font-medium">¡Hola! 🙏 Soy tu catequista digital. ¿En qué puedo ayudarte con tu fe hoy?</p>
+                    <div className="bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-xl border border-white/30 rounded-3xl rounded-tl-lg px-6 py-4 max-w-sm shadow-xl">
+                      <p className="text-sm text-white font-medium">¡Hola! 🙏 Soy tu catequista digital. ¿En qué puedo ayudarte con tu fe hoy?</p>
                     </div>
                   </div>
                   
                   <div className="flex justify-end">
-                    <div className="bg-gradient-to-br from-yellow-400 to-amber-400 rounded-3xl rounded-tr-lg px-6 py-4 max-w-sm shadow-lg">
-                      <p className="text-sm text-white font-medium">¿Podrías explicarme qué enseña Santa Teresa sobre la oración contemplativa?</p>
+                    <div className="bg-gradient-to-br from-gold-500 to-amber-500 rounded-3xl rounded-tr-lg px-6 py-4 max-w-sm shadow-2xl border border-gold-400/50">
+                      <p className="text-sm text-white font-medium drop-shadow">¿Podrías explicarme qué enseña Santa Teresa sobre la oración contemplativa?</p>
                     </div>
                   </div>
                   
                   <div className="flex justify-start">
-                    <div className="bg-gradient-to-br from-yellow-50 to-amber-50 border border-yellow-200 rounded-3xl rounded-tl-lg px-6 py-4 max-w-sm shadow-sm">
-                      <p className="text-sm text-gray-800 font-medium">Santa Teresa describe la oración como "un trato de amistad, estando muchas veces tratando a solas con quien sabemos nos ama"... ✨</p>
+                    <div className="bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-xl border border-white/30 rounded-3xl rounded-tl-lg px-6 py-4 max-w-sm shadow-xl">
+                      <p className="text-sm text-white font-medium">Santa Teresa describe la oración como un trato de amistad, estando muchas veces tratando a solas con quien sabemos nos ama... ✨</p>
                     </div>
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-3 pt-4 border-t border-gray-100">
-                  <div className="flex-1 bg-gray-50 rounded-full px-6 py-3 border border-gray-200">
-                    <span className="text-sm text-gray-500 font-medium">Escribe tu pregunta aquí...</span>
+                {/* Input Area */}
+                <div className="flex items-center space-x-3 pt-4 border-t border-white/20">
+                  <div className="flex-1 bg-white/10 backdrop-blur-xl rounded-full px-6 py-3 border border-white/20">
+                    <span className="text-sm text-white/60 font-medium">Escribe tu pregunta aquí...</span>
                   </div>
-                  <button className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-amber-400 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <button className="w-12 h-12 bg-gradient-to-br from-gold-500 to-amber-500 rounded-full flex items-center justify-center shadow-2xl hover:shadow-gold-500/25 transition-all duration-300 hover:scale-110 border-2 border-gold-400/50">
+                    <svg className="w-5 h-5 text-white drop-shadow" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
                     </svg>
                   </button>
                 </div>
               </div>
               
-              <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-yellow-300 to-amber-300 rounded-full mix-blend-multiply animate-bounce opacity-60 shadow-lg"></div>
-              <div className="absolute -bottom-10 -left-10 w-20 h-20 bg-gradient-to-br from-orange-300 to-yellow-300 rounded-full mix-blend-multiply animate-pulse opacity-60 shadow-lg"></div>
+              {/* Floating Decorations */}
+              <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-gold-400/30 to-amber-400/30 rounded-full backdrop-blur-xl animate-float opacity-80 shadow-2xl"></div>
+              <div className="absolute -bottom-12 -left-12 w-20 h-20 bg-gradient-to-br from-blue-400/30 to-purple-400/30 rounded-full backdrop-blur-xl animate-float-delayed opacity-80 shadow-2xl"></div>
             </div>
           </div>
         </div>
-
-        {/* Features Section */}
-        <div className="relative py-32 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-20">
-              <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-yellow-100 to-amber-100 px-5 py-3 rounded-2xl border border-yellow-400 shadow-sm mb-8">
-                <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
-                <span className="text-yellow-800 font-bold tracking-wide">Espiritualidad Auténtica</span>
-              </div>
-              
-              <h2 className="text-5xl font-black text-gray-900 mb-6">
-                La Riquísima 
-                <span className="block bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-700 bg-clip-text text-transparent mt-2">
-                  Tradición Hispanoamericana
-                </span>
-              </h2>
-              
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Uniendo la mística española con la teología latinoamericana para servir a toda la comunidad católica hispanoamericana
-              </p>
-            </div>
-
-            <div className="grid grid-cols-12 gap-8">
-              <div className="col-span-12 lg:col-span-8 bg-gradient-to-br from-yellow-50 via-amber-50 to-yellow-100 rounded-3xl p-10 relative overflow-hidden border border-yellow-300 shadow-xl">
-                <div className="relative z-10">
-                  <div className="flex items-start justify-between mb-8">
-                    <div>
-                      <h3 className="text-4xl font-black text-gray-900 mb-4 leading-tight">
-                        Mística Española
-                        <span className="block text-2xl text-yellow-700 font-medium mt-2">
-                          Los grandes santos de España
-                        </span>
-                      </h3>
-                      <p className="text-lg text-gray-700 max-w-xl leading-relaxed">
-                        La tradición contemplativa más profunda de la Iglesia católica, 
-                        desde los místicos carmelitas hasta los grandes reformadores jesuitas.
-                      </p>
-                    </div>
-                    <div className="hidden lg:block text-8xl opacity-20 transform rotate-12">🇪🇸</div>
-                  </div>
-                  
-                  <div className="grid md:grid-cols-3 gap-6">
-                    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-yellow-400 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                      <div className="w-14 h-14 bg-gradient-to-br from-yellow-500 to-amber-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg border border-yellow-300">
-                        <span className="text-2xl">📿</span>
-                      </div>
-                      <h4 className="font-black text-gray-900 mb-3 text-lg">Santa Teresa de Ávila</h4>
-                      <p className="text-sm text-gray-600 leading-relaxed">Doctora de la Iglesia, las Moradas del alma, reformadora carmelita</p>
-                    </div>
-                    
-                    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-yellow-400 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                      <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg border border-orange-300">
-                        <span className="text-2xl">🌙</span>
-                      </div>
-                      <h4 className="font-black text-gray-900 mb-3 text-lg">San Juan de la Cruz</h4>
-                      <p className="text-sm text-gray-600 leading-relaxed">La noche oscura del alma, Cántico Espiritual, unión mística</p>
-                    </div>
-                    
-                    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-yellow-400 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                      <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg border border-blue-300">
-                        <span className="text-2xl">⚡</span>
-                      </div>
-                      <h4 className="font-black text-gray-900 mb-3 text-lg">San Ignacio de Loyola</h4>
-                      <p className="text-sm text-gray-600 leading-relaxed">Ejercicios Espirituales, discernimiento, espiritualidad jesuita</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-yellow-400 to-amber-400 rounded-full mix-blend-multiply opacity-20 transform translate-x-1/3 -translate-y-1/3"></div>
-              </div>
-              
-              <div className="col-span-12 lg:col-span-4 space-y-8">
-                <div className="bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl p-8 relative overflow-hidden border border-green-200 shadow-xl">
-                  <div className="relative z-10">
-                    <h3 className="text-3xl font-black text-gray-900 mb-4">5,000+</h3>
-                    <p className="text-gray-700 mb-6 font-medium leading-relaxed">
-                      Documentos católicos auténticos procesados por nuestra IA especializada
-                    </p>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-4 h-4 bg-green-500 rounded-full animate-ping"></div>
-                      <span className="text-sm text-green-700 font-bold">Actualizándose constantemente</span>
-                    </div>
-                  </div>
-                  <div className="absolute -bottom-6 -right-6 text-9xl opacity-10 transform rotate-12">📚</div>
-                </div>
-                
-                <div className="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-3xl p-8 relative overflow-hidden border border-blue-200 shadow-xl">
-                  <div className="relative z-10">
-                    <h3 className="text-3xl font-black text-gray-900 mb-4">24/7</h3>
-                    <p className="text-gray-700 mb-6 font-medium leading-relaxed">
-                      Tu catequista personal siempre disponible para guiarte en la fe
-                    </p>
-                    <div className="flex -space-x-3">
-                      <div className="w-10 h-10 bg-yellow-400 rounded-full border-3 border-white flex items-center justify-center shadow-lg">
-                        <span className="text-sm font-bold">🇪🇸</span>
-                      </div>
-                      <div className="w-10 h-10 bg-green-400 rounded-full border-3 border-white flex items-center justify-center shadow-lg">
-                        <span className="text-sm font-bold">🇲🇽</span>
-                      </div>
-                      <div className="w-10 h-10 bg-blue-400 rounded-full border-3 border-white flex items-center justify-center shadow-lg">
-                        <span className="text-sm font-bold">🇦🇷</span>
-                      </div>
-                      <div className="w-10 h-10 bg-red-400 rounded-full border-3 border-white flex items-center justify-center shadow-lg">
-                        <span className="text-sm font-bold">+</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="absolute -bottom-6 -right-6 text-9xl opacity-10">⏰</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Auth CTA */}
-        {!user && (
-          <div className="relative py-32 bg-gradient-to-r from-amber-600 via-orange-600 to-red-500">
-            <div className="absolute inset-0 bg-black/10"></div>
-            <div className="relative max-w-4xl mx-auto px-6 text-center">
-              <div className="bg-white/15 backdrop-blur-lg rounded-3xl p-12 border border-white/20 shadow-2xl">
-                <h2 className="text-4xl font-black text-white mb-6">
-                  Únete a la Comunidad
-                  <span className="block text-3xl font-light mt-2 text-amber-100">
-                    Católica Hispanoamericana
-                  </span>
-                </h2>
-                <p className="text-amber-100 text-xl mb-10 leading-relaxed">
-                  Crea tu cuenta gratuita para guardar tus conversaciones espirituales y conectar con otros católicos de España y América Latina.
-                </p>
-                <Link 
-                  href="/auth-test" 
-                  className="inline-flex items-center px-10 py-5 bg-white text-amber-700 font-black text-lg rounded-2xl hover:bg-amber-50 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
-                >
-                  <span className="mr-3 text-xl">🙏</span>
-                  Crear Cuenta Gratuita
-                  <span className="ml-3 text-xl">→</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Footer */}
-        <footer className="bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white py-20">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center">
-              <div className="flex justify-center items-center mb-10">
-                <div className="w-16 h-16 bg-gradient-to-br from-orange-200 to-amber-300 rounded-3xl flex items-center justify-center mr-6 shadow-xl border border-orange-300 p-2">
-                  <SantaPalabraLogo size={48} />
-                </div>
-                <div>
-                  <h3 className="text-3xl font-black bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent">
-                    SantaPalabra.app
-                  </h3>
-                  <p className="text-gray-400 font-semibold tracking-wide">✨ Catequista Digital Hispanoamericano</p>
-                </div>
-              </div>
-              
-              <p className="text-gray-300 text-lg max-w-3xl mx-auto mb-12 leading-relaxed">
-                Uniendo la riquísima tradición mística española con la teología latinoamericana 
-                para servir a toda la comunidad católica hispanoamericana con la mejor tecnología de IA.
-              </p>
-              
-              <div className="flex justify-center flex-wrap gap-6 text-gray-400 mb-12">
-                <div className="flex items-center space-x-2 bg-gray-800 px-4 py-2 rounded-full">
-                  <span className="text-lg">🇪🇸</span>
-                  <span className="font-medium">España</span>
-                </div>
-                <div className="flex items-center space-x-2 bg-gray-800 px-4 py-2 rounded-full">
-                  <span className="text-lg">🇲🇽</span>
-                  <span className="font-medium">México</span>
-                </div>
-                <div className="flex items-center space-x-2 bg-gray-800 px-4 py-2 rounded-full">
-                  <span className="text-lg">🇦🇷</span>
-                  <span className="font-medium">Argentina</span>
-                </div>
-                <div className="flex items-center space-x-2 bg-gray-800 px-4 py-2 rounded-full">
-                  <span className="text-lg">🇨🇴</span>
-                  <span className="font-medium">Colombia</span>
-                </div>
-                <div className="flex items-center space-x-2 bg-gray-800 px-4 py-2 rounded-full">
-                  <span className="text-lg">🇺🇸</span>
-                  <span className="font-medium">USA Latinos</span>
-                </div>
-              </div>
-              
-              <div className="border-t border-gray-700 pt-10 text-gray-400">
-                <p className="text-lg font-medium mb-3">
-                  © 2026 SantaPalabra.app - Hecho con ❤️ para la comunidad católica hispanoamericana.
-                </p>
-                <p className="text-amber-400 font-semibold text-lg italic">
-                  "La palabra de Dios es viva y eficaz" - Hebreos 4:12
-                </p>
-              </div>
-            </div>
-          </div>
-        </footer>
       </main>
+
+      {/* Features Section */}
+      <section className="relative py-20 bg-gradient-to-b from-transparent to-black/20">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-gold-500/20 to-amber-500/20 backdrop-blur-xl px-6 py-3 rounded-2xl border border-gold-400/30 shadow-xl mb-8">
+              <div className="w-3 h-3 bg-gold-400 rounded-full animate-pulse"></div>
+              <span className="text-gold-200 font-bold tracking-wide">Espiritualidad Auténtica</span>
+            </div>
+            
+            <h2 className="text-4xl lg:text-6xl font-black text-center mb-6">
+              <span className="text-white drop-shadow-2xl">La Riquísima</span>
+              <span className="block bg-gradient-to-r from-gold-300 via-amber-200 to-yellow-300 bg-clip-text text-transparent mt-2 drop-shadow-lg">
+                Tradición Hispanoamericana
+              </span>
+            </h2>
+            
+            <p className="text-xl text-blue-100/80 max-w-3xl mx-auto leading-relaxed font-light">
+              Uniendo la mística española con la teología latinoamericana para servir a toda la comunidad católica hispanoamericana
+            </p>
+          </div>
+
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            {/* Mística Española */}
+            <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-2xl rounded-3xl p-8 border border-white/20 hover:border-gold-400/50 transition-all duration-500 hover:bg-white/15 shadow-2xl">
+              <div className="text-center mb-6">
+                <div className="w-20 h-20 bg-gradient-to-br from-gold-500 to-amber-500 rounded-3xl flex items-center justify-center mx-auto shadow-2xl mb-4 group-hover:scale-110 transition-transform duration-500">
+                  <span className="text-3xl">🇪🇸</span>
+                </div>
+                <h3 className="text-2xl font-black text-white mb-2">Mística Española</h3>
+                <p className="text-blue-200/80">Los grandes santos de España</p>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-gold-400 rounded-full"></div>
+                  <span className="text-white font-medium">Santa Teresa de Ávila</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-amber-400 rounded-full"></div>
+                  <span className="text-white font-medium">San Juan de la Cruz</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
+                  <span className="text-white font-medium">San Ignacio de Loyola</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Teología Latinoamericana */}
+            <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-2xl rounded-3xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all duration-500 hover:bg-white/15 shadow-2xl">
+              <div className="text-center mb-6">
+                <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-green-500 rounded-3xl flex items-center justify-center mx-auto shadow-2xl mb-4 group-hover:scale-110 transition-transform duration-500">
+                  <span className="text-3xl">🌎</span>
+                </div>
+                <h3 className="text-2xl font-black text-white mb-2">CELAM</h3>
+                <p className="text-blue-200/80">Teología Latinoamericana</p>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-emerald-400 rounded-full"></div>
+                  <span className="text-white font-medium">Evangelización</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                  <span className="text-white font-medium">Justicia Social</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-lime-400 rounded-full"></div>
+                  <span className="text-white font-medium">Inculturación</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Tecnología IA */}
+            <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-2xl rounded-3xl p-8 border border-white/20 hover:border-purple-400/50 transition-all duration-500 hover:bg-white/15 shadow-2xl">
+              <div className="text-center mb-6">
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-3xl flex items-center justify-center mx-auto shadow-2xl mb-4 group-hover:scale-110 transition-transform duration-500">
+                  <span className="text-3xl">🤖</span>
+                </div>
+                <h3 className="text-2xl font-black text-white mb-2">Tecnología IA</h3>
+                <p className="text-blue-200/80">Inteligencia Artificial Avanzada</p>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
+                  <span className="text-white font-medium">RAG Especializado</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-indigo-400 rounded-full"></div>
+                  <span className="text-white font-medium">5K+ Documentos</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-cyan-400 rounded-full"></div>
+                  <span className="text-white font-medium">Disponible 24/7</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Testimonials Carousel */}
+          <div className="relative bg-gradient-to-r from-white/5 to-white/10 backdrop-blur-2xl rounded-3xl p-8 border border-white/20 shadow-2xl">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-white mb-8">Lo que dicen nuestros usuarios</h3>
+              
+              <div className="relative h-32 overflow-hidden">
+                {testimonials.map((testimonial, index) => (
+                  <div
+                    key={index}
+                    className={`absolute inset-0 transition-all duration-500 ${
+                      index === currentTestimonial ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                    }`}
+                  >
+                    <div className="text-center space-y-4">
+                      <div className="text-4xl">{testimonial.icon}</div>
+                      <blockquote className="text-lg text-blue-100 font-medium italic max-w-2xl mx-auto">
+                        "{testimonial.quote}"
+                      </blockquote>
+                      <div className="text-gold-300">
+                        <div className="font-bold">{testimonial.author}</div>
+                        <div className="text-sm text-blue-200">{testimonial.location}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Testimonial Dots */}
+              <div className="flex justify-center space-x-2 mt-6">
+                {testimonials.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentTestimonial(index)}
+                    className={`w-3 h-3 rounded-full transition-colors duration-300 ${
+                      index === currentTestimonial ? 'bg-gold-400' : 'bg-white/30'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative py-20">
+        <div className="max-w-4xl mx-auto text-center px-6">
+          <div className="space-y-8">
+            <h2 className="text-4xl lg:text-6xl font-black">
+              <span className="text-white drop-shadow-2xl">¿Listo para</span>
+              <span className="block bg-gradient-to-r from-gold-300 via-amber-200 to-yellow-300 bg-clip-text text-transparent mt-2 drop-shadow-lg">
+                Profundizar tu Fe?
+              </span>
+            </h2>
+            
+            <p className="text-xl text-blue-100/80 max-w-2xl mx-auto leading-relaxed font-light">
+              Únete a miles de católicos que ya están explorando la riqueza de nuestra tradición con SantaPalabra
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center pt-4">
+              <Link
+                href="/catholic-chat"
+                className="group relative inline-flex items-center justify-center px-12 py-6 bg-gradient-to-r from-gold-500 via-amber-500 to-yellow-500 text-white font-bold text-2xl rounded-3xl shadow-2xl hover:shadow-gold-500/25 transform hover:scale-105 transition-all duration-500 overflow-hidden border-2 border-gold-400/50"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-gold-400 via-amber-400 to-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+                <span className="relative flex items-center">
+                  <span className="mr-4 text-3xl">🙏</span>
+                  Comenzar mi Jornada Espiritual
+                  <svg className="ml-4 w-8 h-8 group-hover:translate-x-1 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/>
+                  </svg>
+                </span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
