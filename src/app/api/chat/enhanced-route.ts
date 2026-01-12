@@ -72,7 +72,8 @@ async function loadCatholicDocuments() {
 
     console.log(`📚 Loaded ${documents.length} Catholic documents for RAG system`);
 
-    // Initialize TheoAgent RAG
+    // Initialize TheoAgent RAG with LangChain
+    const { initializeWithCatholicDocuments } = await import('@/lib/langchain-rag');
     theoAgent = await initializeWithCatholicDocuments(documents);
     documentsLoaded = true;
     
@@ -83,11 +84,42 @@ async function loadCatholicDocuments() {
   }
 }
 
+// Helper function to get documents array for other implementations
+async function getCatholicDocuments() {
+  const publicDir = path.join(process.cwd(), 'public', 'data');
+  
+  const documents = [];
+  
+  // Load Catechism
+  const catechismData = await fs.readFile(path.join(publicDir, 'catechism.json'), 'utf-8');
+  const catechismEntries = JSON.parse(catechismData);
+  documents.push(...catechismEntries.map((entry: any) => ({
+    id: `catechism-${entry.id}`,
+    title: `Catechism ${entry.id}`,
+    content: entry.text,
+    source: 'Catechism of the Catholic Church',
+    category: 'catechism' as const
+  })));
+
+  // Load other documents similarly...
+  const papalData = await fs.readFile(path.join(publicDir, 'papal_magisterium.json'), 'utf-8');
+  const papalEntries = JSON.parse(papalData);
+  documents.push(...papalEntries.map((entry: any, index: number) => ({
+    id: `papal-${index}`,
+    title: entry.title || `Papal Document ${index}`,
+    content: entry.content,
+    source: entry.source || 'Papal Magisterium',
+    category: 'papal' as const
+  })));
+
+  return documents;
+}
+
 export async function POST(req: NextRequest) {
   try {
-    console.log('🚀 Enhanced Chat route with LangChain called');
-    const { messages, mode = 'standard', userId, language = 'en' } = await req.json();
-    console.log('📝 Chat request:', { messagesCount: messages?.length, mode, userId, language });
+    console.log('🚀 Enhanced Chat route with RAG called');
+    const { messages, mode = 'standard', userId, language = 'en', ragImplementation = 'LangChain' } = await req.json();
+    console.log('📝 Chat request:', { messagesCount: messages?.length, mode, userId, language, ragImplementation });
     
     // Authenticate and validate user
     if (!userId) {
@@ -147,15 +179,6 @@ export async function POST(req: NextRequest) {
       return new Response('Mode not available for your subscription tier', { status: 403 });
     }
     
-    // Initialize TheoAgent RAG system
-    console.log('🧠 Initializing TheoAgent RAG system...');
-    const rag = await loadCatholicDocuments();
-    
-    // Set advanced mode based on subscription
-    const useAdvanced = userProfile.subscription_tier === 'plus' || userProfile.subscription_tier === 'expert';
-    await rag.setAdvancedMode(useAdvanced);
-    console.log(`🤖 Using ${useAdvanced ? 'advanced' : 'standard'} model for ${userProfile.subscription_tier} tier`);
-    
     // Get user's last message
     const lastMessage = messages[messages.length - 1];
     const userQuery = lastMessage?.content || '';
@@ -163,19 +186,45 @@ export async function POST(req: NextRequest) {
     if (!userQuery) {
       return new Response('No user message provided', { status: 400 });
     }
+
+    // Set advanced mode based on subscription
+    const useAdvanced = userProfile.subscription_tier === 'plus' || userProfile.subscription_tier === 'expert';
+
+    // Initialize RAG system based on user preference
+    console.log(`🧠 Initializing ${ragImplementation} RAG system...`);
+    let response: string;
     
-    // Generate enhanced response using LangChain RAG
+    // Generate enhanced response using selected RAG implementation
     console.log('💭 Generating response with enhanced RAG system...');
     const startTime = Date.now();
     
-    const response = await rag.generateResponse(userQuery, {
-      userId,
-      mode,
-      language
-    });
+    if (ragImplementation === 'LlamaIndex') {
+      // LlamaIndex temporarily disabled - using LangChain fallback
+      console.log('🦙➡️🦜 LlamaIndex disabled, falling back to LangChain');
+      const rag = await loadCatholicDocuments();
+      await rag.setAdvancedMode(useAdvanced);
+      
+      console.log(`🦜 Using LangChain with ${useAdvanced ? 'advanced' : 'standard'} model (LlamaIndex fallback)`);
+      response = await rag.generateResponse(userQuery, {
+        userId,
+        mode,
+        language
+      });
+    } else {
+      // Use LangChain (default)
+      const rag = await loadCatholicDocuments();
+      await rag.setAdvancedMode(useAdvanced);
+      console.log(`🔗 Using LangChain with ${useAdvanced ? 'advanced' : 'standard'} model`);
+      
+      response = await rag.generateResponse(userQuery, {
+        userId,
+        mode,
+        language
+      });
+    }
     
     const endTime = Date.now();
-    console.log(`⚡ Response generated in ${endTime - startTime}ms`);
+    console.log(`⚡ Response generated in ${endTime - startTime}ms using ${ragImplementation}`);
     
     // Update usage count
     const { error: updateError } = await supabaseAdmin

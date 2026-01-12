@@ -1,0 +1,86 @@
+{
+  "title": "Espiritualidad Católica Hispanoamericana",
+  "description": "Tradiciones espirituales de España y América Latina - Unidos por la fe católica",
+  "source": "Tradición Espiritual Hispanoamericana",
+  "categories": {
+    "mistica_espanola": "Mística Española Clásica",
+    "santos_espanoles": "Santos y Beatos de España", 
+    "espiritualidad_ignaciana": "Tradición Ignaciana",
+    "camino_santiago": "Espiritualidad del Camino de Santiago",
+    "conexion_hispanoamericana": "Conexión España-América"
+  },
+  "documents": [
+    {
+      "id": "teresa_avila_1",
+      "title": "Santa Teresa de Ávila - Las Moradas del Alma",
+      "category": "Mística Española",
+      "content": "El alma es como un castillo hecho de un solo diamante donde hay muchos aposentos. En este castillo interior, Dios mora en el centro del alma. La oración es el medio para llegar a las moradas más profundas donde habita el Señor."
+    },
+    {
+      "id": "juan_cruz_1", 
+      "title": "San Juan de la Cruz - Noche Oscura del Alma",
+      "category": "Mística Española",
+      "content": "La noche oscura es una purificación que Dios obra en el alma para limpiarla de sus imperfecciones y unirla consigo. Es un camino de despojamiento donde el alma aprende a confiar solo en Dios."
+    },
+    {
+      "id": "ignacio_loyola_1",
+      "title": "San Ignacio de Loyola - Ejercicios Espirituales",
+      "category": "Espiritualidad Ignaciana", 
+      "content": "Los Ejercicios Espirituales buscan ayudar a la persona a encontrar la voluntad de Dios en su vida. A través del discernimiento de espíritus, se aprende a distinguir las mociones que vienen de Dios de las que no."
+    },
+    {
+      "id": "santiago_apostol_1",
+      "title": "Santiago Apóstol - Patrón de España e Hispanoamérica",
+      "category": "Camino de Santiago",
+      "content": "Santiago el Mayor, hermano de Juan, fue el primer apóstol mártir. Su sepulcro en Compostela se convirtió en lugar de peregrinación. El Camino de Santiago une espiritualmente toda Europa con España."
+    },
+    {
+      "id": "teresa_lisieux_1",
+      "title": "Santa Teresita del Niño Jesús - Caminito Espiritual", 
+      "category": "Santos Españoles",
+      "content": "Santa Teresita enseña el 'caminito' de confianza y abandono en Dios. Su 'pequeña vía' consiste en hacerse pequeño ante Dios como un niño, confiando completamente en su misericordia."
+    },
+    {
+      "id": "josemaria_escriva_1",
+      "title": "San Josemaría Escrivá - Santificación del Trabajo",
+      "category": "Espiritualidad del Trabajo",
+      "content": "El trabajo ordinario puede y debe ser ocasión de encuentro con Jesucristo, de servicio a los demás y de santificación personal. La vocación universal a la santidad se vive en medio del mundo."
+    },
+    {
+      "id": "conexion_1",
+      "title": "Evangelización de América - Herencia Española",
+      "category": "Conexión Hispanoamericana", 
+      "content": "La evangelización de América llevó la fe católica desde España al Nuevo Mundo. Santos como Toribio de Mogrovejo, Rosa de Lima y Martín de Porres florecieron en tierra americana con raíces espirituales españolas."
+    },
+    {
+      "id": "francisco_javier_1",
+      "title": "San Francisco Javier - Misionero de las Indias",
+      "category": "Misioneros Españoles",
+      "content": "San Francisco Javier, compañero de San Ignacio, llevó el Evangelio hasta las Indias Orientales. Su celo misionero inspira la evangelización tanto en Asia como en América."
+    },
+    {
+      "id": "john_cross_2",
+      "title": "San Juan de la Cruz - Llama de Amor Viva", 
+      "category": "Mística Española",
+      "content": "¡Oh llama de amor viva que tiernamente hieres de mi alma en el más profundo centro! La unión mística con Dios es como una llama que transforma el alma sin consumirla, llenándola de amor divino."
+    },
+    {
+      "id": "domingo_guzman_1",
+      "title": "Santo Domingo de Guzmán - Predicación y Rosario",
+      "category": "Santos Españoles",
+      "content": "Santo Domingo fundó la Orden de Predicadores para combatir la herejía mediante la predicación y el estudio. La devoción del Santo Rosario, promovida por los dominicos, se extendió por toda Hispanoamérica."
+    },
+    {
+      "id": "isidro_labrador_1",
+      "title": "San Isidro Labrador - Santidad en lo Cotidiano",
+      "category": "Santos Españoles",
+      "content": "San Isidro, patrón de Madrid y los agricultores, vivió la santidad en el trabajo del campo y la vida familiar. Su ejemplo muestra que la santidad está al alcance de todos, especialmente los trabajadores humildes."
+    },
+    {
+      "id": "vicente_ferrer_1",
+      "title": "San Vicente Ferrer - Predicador de Penitencia",
+      "category": "Santos Españoles", 
+      "content": "San Vicente Ferrer recorrió Europa predicando la penitencia y preparando los corazones para el encuentro con Cristo. Su predicación llegó hasta los confines del mundo conocido, incluyendo las futuras tierras de América."
+    }
+  ]
+}

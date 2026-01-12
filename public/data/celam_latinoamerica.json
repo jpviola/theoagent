@@ -1,0 +1,79 @@
+{
+  "title": "Enseñanzas Católicas de América Latina - CELAM",
+  "description": "Documentos y enseñanzas del Consejo Episcopal Latinoamericano",
+  "source": "CELAM - Conferencia Episcopal Latinoamericana",
+  "documents": [
+    {
+      "id": "aparecida_1",
+      "title": "Documento de Aparecida - Discípulos Misioneros",
+      "category": "CELAM",
+      "content": "La Iglesia en América Latina está llamada a ser una Iglesia en estado permanente de misión. Como discípulos de Jesucristo, estamos llamados a ser misioneros, llevando la Buena Nueva a todos los rincones de nuestro continente."
+    },
+    {
+      "id": "aparecida_2", 
+      "title": "Aparecida - Opción Preferencial por los Pobres",
+      "category": "CELAM",
+      "content": "La opción preferencial por los pobres está implícita en la fe cristológica. Jesucristo se identificó con los pobres, y desde ellos nos revela el corazón de Dios. Esta opción no es exclusiva ni excluyente."
+    },
+    {
+      "id": "medellín_1",
+      "title": "Medellín - Justicia Social en América Latina",
+      "category": "CELAM",
+      "content": "En América Latina existe una situación de injusticia que puede llamarse de violencia institucionalizada. La Iglesia tiene el deber de denunciar todo aquello que se opone a la fraternidad."
+    },
+    {
+      "id": "puebla_1",
+      "title": "Puebla - Evangelización y Cultura Latinoamericana",
+      "category": "CELAM",
+      "content": "La evangelización debe encarnarse en las culturas latinoamericanas. El Evangelio debe ser anunciado respetando y asumiendo los valores auténticos de nuestras culturas indígenas, afroamericanas y mestizas."
+    },
+    {
+      "id": "santo_domingo_1",
+      "title": "Santo Domingo - Nueva Evangelización",
+      "category": "CELAM",
+      "content": "América Latina necesita una nueva evangelización: nueva en su ardor, nueva en sus métodos, nueva en su expresión. Debemos anunciar a Jesucristo con renovado entusiasmo."
+    },
+    {
+      "id": "guadalupe_1",
+      "title": "Nuestra Señora de Guadalupe - Estrella de la Evangelización",
+      "category": "Mariología Latinoamericana",
+      "content": "Santa María de Guadalupe es la Estrella de la evangelización siempre renovada de América Latina. En ella, el Evangelio ha sido especialmente inculturado en nuestro continente."
+    },
+    {
+      "id": "libertad_1",
+      "title": "Teología de la Liberación - Perspectiva Latinoamericana",
+      "category": "Teología Latinoamericana",
+      "content": "La teología de la liberación, en su acepción correcta, es una reflexión sobre la praxis liberadora a la luz de la Palabra de Dios vivida en la comunidad eclesial."
+    },
+    {
+      "id": "cultura_1",
+      "title": "Religiosidad Popular Latinoamericana",
+      "category": "Cultura y Fe",
+      "content": "La religiosidad popular es una expresión privilegiada de la inculturación del Evangelio. En ella, la fe católica se ha encarnado en las culturas de América Latina."
+    },
+    {
+      "id": "familia_1",
+      "title": "Familia Latinoamericana - Iglesia Doméstica",
+      "category": "Pastoral Familiar",
+      "content": "La familia latinoamericana, a pesar de las crisis que enfrenta, sigue siendo el núcleo básico de la sociedad y de la Iglesia. Es una iglesia doméstica donde se vive y transmite la fe."
+    },
+    {
+      "id": "jovenes_1",
+      "title": "Jóvenes Latinoamericanos - Esperanza de la Iglesia",
+      "category": "Pastoral Juvenil",
+      "content": "Los jóvenes latinoamericanos son esperanza de la Iglesia y de nuestros pueblos. La pastoral juvenil debe acompañarlos en su proceso de maduración humana y cristiana."
+    },
+    {
+      "id": "migracion_1",
+      "title": "Migración en América Latina - Desafío Pastoral",
+      "category": "Pastoral Social",
+      "content": "El fenómeno migratorio en América Latina requiere una respuesta pastoral específica. Los migrantes deben encontrar en la Iglesia una casa acogedora y fraternal."
+    },
+    {
+      "id": "ecologia_1",
+      "title": "Casa Común Latinoamericana - Cuidado de la Creación",
+      "category": "Ecología Integral",
+      "content": "América Latina posee una riqueza natural extraordinaria. Los cristianos estamos llamados a ser guardianes responsables de la casa común que Dios nos ha confiado."
+    }
+  ]
+}

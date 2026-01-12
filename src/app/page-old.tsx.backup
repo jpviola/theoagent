@@ -1,0 +1,1693 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { supabase } from '@/lib/supabase-client';
+
+interface User {
+  id: string;
+  email: string;
+  email_confirmed_at?: string;
+}
+
+export default function HomePage() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user || null);
+      setLoading(false);
+    };
+
+    getUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user || null);
+        setLoading(false);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+  onPasswordReset?: () => void;
+  emailVerified?: boolean;
+  mfaEnabled?: boolean;
+  onboardingCompleted?: boolean;
+}
+
+export default function HomePage() {
+  const { user, session, onSignOut, onSignUp, onSignIn, onPasswordReset } = useAuth();
+  
+  // Debug context
+  console.log('HomePage context:', {
+    hasUser: !!user,
+    hasOnSignIn: !!onSignIn,
+    hasOnSignUp: !!onSignUp,
+    onSignInType: typeof onSignIn,
+    onSignUpType: typeof onSignUp
+  });
+  
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [editContent, setEditContent] = useState('');
+  const [mode, setMode] = useState<ChatMode>('standard');
+  const [language, setLanguage] = useState<Language>('en');
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [showPricing, setShowPricing] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState<{ type: 'image' | 'pdf'; data: string; name: string }[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Accessibility features
+  const [fontSize, setFontSize] = useState<'normal' | 'large' | 'xlarge'>('normal');
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  // Initialize language and load user profile
+  useEffect(() => {
+    const initializeApp = async () => {
+      const detectedLang = await initializeLanguage();
+      setLanguage(detectedLang);
+      
+      // Load user profile if user is authenticated
+      if (user?.id) {
+        await loadUserProfile(user.id);
+      }
+    };
+    
+    initializeApp();
+  }, [user]);
+
+  const loadUserProfile = async (userId: string) => {
+    const { data: profileData, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error loading profile:', error);
+    } else {
+      setProfile(profileData);
+    }
+  };
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // Initialize speech recognition
+  useEffect(() => {
+    if (typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = language === 'es' ? 'es-ES' : language === 'it' ? 'it-IT' : language === 'fr' ? 'fr-FR' : 'en-US';
+
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, [language]);
+
+  const t = translations[language];
+
+  // Landing Page Component for unauthenticated users
+  const LandingPage = () => {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-white via-yellow-50 to-amber-50">
+        {/* Navigation */}
+        <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-md shadow-sm z-50">
+          <div className="max-w-7xl mx-auto px-6 py-4">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="h-10">
+                  <img src="/theoagent-logo-horizontal.svg" alt="TheoAgent" className="h-full object-contain" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-gray-900">TheoAgent</h1>
+                  <p className="text-xs text-gray-600">AI Catholic Theologian</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setShowPricing(true)}
+                  className="text-gray-700 hover:text-blue-600 font-medium"
+                >
+                  Pricing
+                </button>
+                <button
+                  onClick={() => {
+                    console.log('Sign In clicked, handler:', typeof onSignIn);
+                    onSignIn?.();
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-medium transition-colors"
+                >
+                  Sign In
+                </button>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        {/* Hero Section */}
+        <section className="pt-24 pb-20 px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left Column - Content */}
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
+                    <span className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></span>
+                    Now Live with AI-Powered Catholic Theology
+                  </div>
+                  
+                  <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                    Your Personal
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F4B400] to-[#FFCC00]"> Catholic </span>
+                    Theologian
+                  </h1>
+                  
+                  <p className="text-xl text-gray-600 leading-relaxed max-w-2xl">
+                    Get instant, accurate answers to your theological questions from an AI trained on Sacred Scripture, Church Tradition, and the Magisterium. From daily Gospel reflections to complex doctrinal inquiries.
+                  </p>
+                </div>
+
+                {/* Key Benefits */}
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                    </div>
+                    <h3 className="font-semibold text-gray-900">Scripture Expert</h3>
+                    <p className="text-sm text-gray-600">Deep biblical exegesis with patristic insights</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="w-12 h-12 bg-[#F4B400] bg-opacity-20 rounded-lg flex items-center justify-center">
+                      <svg className="w-6 h-6 text-[#F4B400]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                      </svg>
+                    </div>
+                    <h3 className="font-semibold text-gray-900">Magisterial Authority</h3>
+                    <p className="text-sm text-gray-600">Papal encyclicals and conciliar documents</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9" />
+                      </svg>
+                    </div>
+                    <h3 className="font-semibold text-gray-900">Multilingual</h3>
+                    <p className="text-sm text-gray-600">English, Spanish, Italian, French</p>
+                  </div>
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <button
+                    onClick={() => {
+                      console.log('Start Free clicked, handler:', typeof onSignUp, 'available:', !!onSignUp);
+                      onSignUp?.();
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl text-center"
+                  >
+                    Start Free (10 Daily Questions)
+                  </button>
+                  <button 
+                    onClick={() => setShowPricing(true)}
+                    className="border-2 border-[#F4B400] hover:bg-[#F4B400] text-[#333333] hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-all text-center"
+                  >
+                    View Pricing
+                  </button>
+                </div>
+
+                {/* Social Proof */}
+                <div className="pt-8 border-t border-gray-200">
+                  <p className="text-sm text-gray-500 mb-4">Trusted by Catholic institutions worldwide</p>
+                  <div className="flex items-center gap-8 opacity-60">
+                    <span className="text-sm font-medium">⛪ Seminaries</span>
+                    <span className="text-sm font-medium">🎓 Universities</span>
+                    <span className="text-sm font-medium">📖 Parishes</span>
+                    <span className="text-sm font-medium">👥 Study Groups</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column - Demo/Visual */}
+              <div className="relative">
+                <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                  {/* Mock Chat Interface */}
+                  <div className="bg-gradient-to-r from-[#F4B400] to-[#FFCC00] p-4 text-white">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                        <span className="text-sm">🤖</span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">TheoAgent</h3>
+                        <p className="text-sm opacity-90">Catholic AI Theologian</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-6 space-y-4 h-96 overflow-hidden">
+                    <div className="flex justify-end">
+                      <div className="bg-blue-100 rounded-2xl px-4 py-2 max-w-xs">
+                        <p className="text-sm">What does the Catholic Church teach about the Immaculate Conception?</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-start">
+                      <div className="bg-gray-100 rounded-2xl px-4 py-3 max-w-md">
+                        <p className="text-sm font-medium mb-2">📖 SUMMARY</p>
+                        <p className="text-sm text-gray-700 mb-3">The Immaculate Conception refers to Mary being conceived without original sin, preparing her to be the Mother of God.</p>
+                        
+                        <p className="text-sm font-medium mb-2">⛪ EXPLANATION</p>
+                        <p className="text-sm text-gray-700 mb-3">Defined as dogma by Pope Pius IX in 1854 (Ineffabilis Deus), this teaching holds that Mary was preserved from original sin from the moment of conception...</p>
+                        
+                        <p className="text-sm font-medium mb-2">📚 CITATIONS</p>
+                        <p className="text-sm text-gray-600">[Source: CCC §491] "Through the centuries the Church has become ever more aware..."</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-end">
+                      <div className="bg-blue-100 rounded-2xl px-4 py-2 max-w-xs">
+                        <p className="text-sm">How is this different from the Virgin Birth?</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-start">
+                      <div className="bg-gray-100 rounded-2xl px-4 py-2 max-w-md">
+                        <p className="text-sm text-gray-700">Great distinction! The Immaculate Conception refers to Mary's conception, while the Virgin Birth refers to Jesus's birth...</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gray-50 p-4 border-t">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 bg-white rounded-full px-4 py-2 text-sm text-gray-500 border">
+                        Ask about Scripture, Tradition, or Doctrine...
+                      </div>
+                      <button className="bg-[#F4B400] text-[#333333] p-2 rounded-full hover:bg-[#FFCC00] transition-colors">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Floating elements */}
+                <div className="absolute -top-4 -right-4 bg-[#FFCC00] text-[#333333] px-4 py-2 rounded-full text-sm font-medium shadow-lg">
+                  ✨ Orthodox & Accurate
+                </div>
+                <div className="absolute -bottom-4 -left-4 bg-[#F4B400] text-[#333333] px-4 py-2 rounded-full text-sm font-medium shadow-lg">
+                  🔥 Instant Responses
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="py-20 px-6 bg-white">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Built for Catholic Excellence</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                TheoAgent combines cutting-edge AI with authentic Catholic teaching to provide you with reliable theological guidance.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto">
+                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Doctrinally Sound</h3>
+                <p className="text-gray-600">All responses grounded in Scripture, Sacred Tradition, and the Magisterium</p>
+              </div>
+
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 bg-[#F4B400] bg-opacity-20 rounded-xl flex items-center justify-center mx-auto">
+                  <svg className="w-8 h-8 text-[#F4B400]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Lightning Fast</h3>
+                <p className="text-gray-600">Get comprehensive theological answers in seconds, not hours</p>
+              </div>
+
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mx-auto">
+                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Scripture Integrated</h3>
+                <p className="text-gray-600">Direct links to biblical passages with multiple translations available</p>
+              </div>
+            </div>
+
+            {/* LangChain Enhancement Section */}
+            <div className="mt-20 bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-3xl p-8 border border-blue-100">
+              <div className="text-center mb-8">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <h3 className="text-3xl font-bold text-gray-900 mb-4">🧠 Now Enhanced with LangChain</h3>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+                  TheoAgent now features advanced AI capabilities powered by LangChain, providing even smarter, more contextual responses.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-blue-100">
+                  <div className="flex items-center mb-4">
+                    <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <h4 className="text-xl font-semibold text-gray-900">Enhanced RAG System</h4>
+                  </div>
+                  <p className="text-gray-600">Advanced retrieval-augmented generation finds the most relevant Catholic teachings for your questions using vector similarity search.</p>
+                </div>
+
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-purple-100">
+                  <div className="flex items-center mb-4">
+                    <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center mr-3">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                    </div>
+                    <h4 className="text-xl font-semibold text-gray-900">Conversation Memory</h4>
+                  </div>
+                  <p className="text-gray-600">Maintains context across your entire conversation, allowing for deeper, more nuanced theological discussions.</p>
+                </div>
+
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-green-100">
+                  <div className="flex items-center mb-4">
+                    <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center mr-3">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9" />
+                      </svg>
+                    </div>
+                    <h4 className="text-xl font-semibold text-gray-900">Multilingual Intelligence</h4>
+                  </div>
+                  <p className="text-gray-600">Seamlessly responds in English or Spanish with the same theological depth and cultural sensitivity.</p>
+                </div>
+
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-orange-100">
+                  <div className="flex items-center mb-4">
+                    <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center mr-3">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                    </div>
+                    <h4 className="text-xl font-semibold text-gray-900">Smart Model Routing</h4>
+                  </div>
+                  <p className="text-gray-600">Automatically uses Claude 3.5 Sonnet for Plus/Expert users and Claude 3 Haiku for Free users, optimizing both quality and speed.</p>
+                </div>
+              </div>
+
+              <div className="text-center mt-8">
+                <div className="inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Powered by LangChain + Anthropic Claude
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Section */}
+            <div className="text-center mt-16">
+              <div className="bg-gradient-to-r from-blue-50 to-[#F4B400]/10 rounded-2xl p-8 max-w-3xl mx-auto">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to deepen your faith?</h3>
+                <p className="text-lg text-gray-600 mb-6">Join thousands of Catholics already using TheoAgent for their theological studies.</p>
+                <div className="flex items-center justify-center gap-4 text-sm text-gray-600 mb-6">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>No Credit Card Required</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>Instant Access</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>Catholic Orthodox</span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => onSignUp?.()}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  Start Your Free Account
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* TheoAgent Foundational Principle Section */}
+        <section className="py-20 px-6 bg-gradient-to-r from-blue-50 via-yellow-50 to-amber-50">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-4xl font-bold text-gray-900 mb-8">Our Foundational Principle</h2>
+            <div className="bg-white rounded-2xl shadow-lg p-8 border-l-4 border-[#F4B400]">
+              <div className="space-y-6">
+                <div className="text-xl italic text-gray-800 leading-relaxed">
+                  "Tu tono debe ser caritativo pero firme en la verdad dogmática. Ante dudas complejas, prioriza siempre citas directas del Catecismo de la Iglesia Católica (CIC) y documentos conciliares. Evita alucinaciones teológicas; si no hay respuesta en el Magisterium, indícalo con humildad."
+                </div>
+                <div className="border-t pt-6">
+                  <p className="text-lg text-gray-700 leading-relaxed">
+                    <strong>English Translation:</strong> "Your tone should be charitable yet firm in dogmatic truth. When facing complex doubts, always prioritize direct quotes from the Catechism of the Catholic Church (CCC) and conciliar documents. Avoid theological hallucinations; if there's no answer in the Magisterium, indicate it with humility."
+                  </p>
+                </div>
+                <div className="flex items-center justify-center space-x-8 pt-4">
+                  <div className="flex items-center space-x-2 text-[#F4B400]">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span className="font-semibold">Charity in Truth</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-blue-600">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                    <span className="font-semibold">Magisterial Accuracy</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-green-600">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                    <span className="font-semibold">Humble Precision</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* User Testimonials/Opinions Section */}
+        <section className="py-20 px-6 bg-white">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">What Our Users Say</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Catholics worldwide trust TheoAgent for authentic theological guidance
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Testimonial 1 */}
+              <div className="bg-gray-50 rounded-2xl p-8 shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="flex text-[#F4B400]">
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+                <p className="text-gray-700 mb-6 italic">
+                  "As a seminary professor, I've been impressed by TheoAgent's precision in citing Church documents. It never compromises on orthodoxy while remaining accessible to students."
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-blue-600 font-semibold text-sm">FR</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Fr. Michael Rodriguez</p>
+                    <p className="text-sm text-gray-500">Seminary Professor, Dogmatic Theology</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Testimonial 2 */}
+              <div className="bg-gray-50 rounded-2xl p-8 shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="flex text-[#F4B400]">
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+                <p className="text-gray-700 mb-6 italic">
+                  "I use TheoAgent daily for parish adult education prep. The Spanish responses are just as thorough as English ones, and the liturgical calendar knowledge is incredibly helpful."
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-green-600 font-semibold text-sm">MA</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Maria Gonzalez</p>
+                    <p className="text-sm text-gray-500">Director of Religious Education</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Testimonial 3 */}
+              <div className="bg-gray-50 rounded-2xl p-8 shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="flex text-[#F4B400]">
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+                <p className="text-gray-700 mb-6 italic">
+                  "As a graduate student in theology, TheoAgent's deep research mode has been a game-changer. The patristic citations and historical context are exactly what I need for my thesis work."
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-purple-600 font-semibold text-sm">SA</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Sarah Thompson</p>
+                    <p className="text-sm text-gray-500">Graduate Student, Catholic University</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional User Stats */}
+            <div className="mt-16 grid md:grid-cols-4 gap-8 text-center">
+              <div>
+                <div className="text-3xl font-bold text-[#F4B400] mb-2">50,000+</div>
+                <p className="text-gray-600">Questions Answered</p>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">95%</div>
+                <p className="text-gray-600">User Satisfaction</p>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-green-600 mb-2">24/7</div>
+                <p className="text-gray-600">Always Available</p>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-purple-600 mb-2">Orthodox</div>
+                <p className="text-gray-600">100% Catholic Teaching</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  };
+
+  // Main render logic: show landing page for unauthenticated users, chat interface for authenticated users
+  if (!user) {
+    return (
+      <>
+        <Suspense fallback={null}>
+          <AuthStatusMessage />
+        </Suspense>
+        <LandingPage />
+
+        {/* Pricing Modal */}
+        {showPricing && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6 border-b border-gray-200">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-3xl font-bold text-gray-900">Choose Your Plan</h2>
+                  <button
+                    onClick={() => setShowPricing(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              
+              <div className="p-8">
+                <div className="grid md:grid-cols-3 gap-8">
+                  {/* Free Plan */}
+                  <div className="border border-gray-200 rounded-2xl p-8 relative">
+                    <div className="text-center mb-6">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Free</h3>
+                      <div className="text-4xl font-bold text-gray-900 mb-2">$0</div>
+                      <p className="text-gray-600">Perfect for personal exploration</p>
+                    </div>
+                    
+                    <ul className="space-y-4 mb-8">
+                      {SUBSCRIPTION_TIERS.free.features.map((feature, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                          <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                          <span className="text-gray-700">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    <button
+                      onClick={() => { setShowPricing(false); onSignUp?.(); }}
+                      className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 py-3 rounded-xl font-medium transition-colors"
+                    >
+                      Start Free
+                    </button>
+                  </div>
+
+                  {/* Plus Plan */}
+                  <div className="border-2 border-blue-500 rounded-2xl p-8 relative bg-blue-50">
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                      <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">Most Popular</span>
+                    </div>
+                    
+                    <div className="text-center mb-6">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Plus</h3>
+                      <div className="text-4xl font-bold text-blue-600 mb-2">${SUBSCRIPTION_TIERS.plus.price}</div>
+                      <p className="text-gray-600">For serious theological study</p>
+                    </div>
+                    
+                    <ul className="space-y-4 mb-8">
+                      {SUBSCRIPTION_TIERS.plus.features.map((feature, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                          <svg className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                          <span className="text-gray-700">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    <button 
+                      onClick={() => { setShowPricing(false); onSignUp?.(); }}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium transition-colors"
+                    >
+                      Choose Plus
+                    </button>
+                  </div>
+
+                  {/* Expert Plan */}
+                  <div className="border border-[#F4B400] border-opacity-40 rounded-2xl p-8 relative bg-gradient-to-br from-[#F4B400] from-opacity-10 to-[#FFCC00] to-opacity-5">
+                    <div className="text-center mb-6">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Expert</h3>
+                      <div className="text-4xl font-bold text-[#F4B400] mb-2">${SUBSCRIPTION_TIERS.expert.price}</div>
+                      <p className="text-gray-600">For institutions & scholars</p>
+                    </div>
+                    
+                    <ul className="space-y-4 mb-8">
+                      {SUBSCRIPTION_TIERS.expert.features.map((feature, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                          <svg className="w-5 h-5 text-[#F4B400] mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                          <span className="text-gray-700">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    <button 
+                      onClick={() => { setShowPricing(false); onSignUp?.(); }}
+                      className="w-full bg-[#F4B400] hover:bg-[#FFCC00] text-[#333333] py-3 rounded-xl font-medium transition-colors"
+                    >
+                      Choose Expert
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="mt-12 text-center">
+                  <p className="text-gray-600 mb-4">All plans include Catholic orthodoxy guarantee and multilingual support</p>
+                  <p className="text-sm text-gray-500">🔒 Secure payments • 📧 Email support • ⚡ Instant activation</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  // Chat Interface for authenticated users
+
+  // Accessibility: Text-to-Speech
+  const speakText = (text: string) => {
+    if ('speechSynthesis' in window) {
+      // Stop any ongoing speech
+      window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = language === 'es' ? 'es-ES' : language === 'it' ? 'it-IT' : language === 'fr' ? 'fr-FR' : 'en-US';
+      utterance.rate = 0.9;
+      
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  // Accessibility: Stop Speech
+  const stopSpeaking = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
+  };
+
+  // Accessibility: Voice Input
+  const toggleVoiceInput = () => {
+    if (!recognitionRef.current) {
+      alert('Voice recognition not supported in this browser');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
+
+  // Accessibility: Font Size
+  const increaseFontSize = () => {
+    setFontSize(prev => prev === 'normal' ? 'large' : prev === 'large' ? 'xlarge' : 'xlarge');
+  };
+
+  const decreaseFontSize = () => {
+    setFontSize(prev => prev === 'xlarge' ? 'large' : prev === 'large' ? 'normal' : 'normal');
+  };
+
+  const fontSizeClasses = {
+    normal: 'text-base',
+    large: 'text-lg',
+    xlarge: 'text-xl'
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+
+  const handleEdit = (messageId: string, content: string) => {
+    setEditingMessageId(messageId);
+    setEditContent(content);
+  };
+
+  const saveEdit = async (messageId: string) => {
+    // Find message index
+    const messageIndex = messages.findIndex(m => m.id === messageId);
+    if (messageIndex === -1) return;
+
+    // Remove all messages after this one
+    const newMessages = messages.slice(0, messageIndex);
+    
+    // Add edited message
+    const editedMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: editContent,
+    };
+    
+    setMessages([...newMessages, editedMessage]);
+    setEditingMessageId(null);
+    setEditContent('');
+    
+    // Resend the edited message
+    await sendMessage(editContent, [...newMessages, editedMessage]);
+  };
+
+  const retryMessage = async (messageId: string) => {
+    // Find the user message before this assistant message
+    const messageIndex = messages.findIndex(m => m.id === messageId);
+    if (messageIndex === -1) return;
+    
+    const userMessage = messages[messageIndex - 1];
+    if (!userMessage || userMessage.role !== 'user') return;
+    
+    // Remove this and all subsequent messages
+    const newMessages = messages.slice(0, messageIndex);
+    setMessages(newMessages);
+    
+    // Resend
+    await sendMessage(userMessage.content, newMessages);
+  };
+
+  const sendMessage = async (content: string, currentMessages: Message[]) => {
+    // Check if user is authenticated
+    if (!user || !profile) {
+      onSignIn?.();
+      return;
+    }
+    
+    // Check subscription limits
+    const currentTier = SUBSCRIPTION_TIERS[profile.subscription_tier];
+    
+    // Check daily message limit
+    if (currentTier.limits.dailyMessages !== -1 && profile.usage_count_today >= currentTier.limits.dailyMessages) {
+      setError(`Daily limit reached (${currentTier.limits.dailyMessages} messages). Please upgrade to continue.`);
+      setShowPricing(true);
+      return;
+    }
+    
+    // Check if user can access selected mode
+    if (!currentTier.limits.modesAccess.includes(mode)) {
+      setError(`${mode} mode requires ${mode === 'pope' || mode === 'academic-expert' ? 'Expert' : 'Plus'} subscription or higher.`);
+      setShowPricing(true);
+      return;
+    }
+    
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const validMessages = currentMessages.filter(m => m.content && m.content.trim() !== '');
+      
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          messages: validMessages,
+          mode: mode,
+          subscriptionTier: profile.subscription_tier,
+          userId: user.id
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let assistantMessage = '';
+      const assistantId = (Date.now() + 1).toString();
+
+      setMessages(prev => [...prev, {
+        id: assistantId,
+        role: 'assistant',
+        content: '',
+      }]);
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) {
+            // Final flush to ensure all buffered bytes are decoded
+            const finalText = decoder.decode(new Uint8Array(), { stream: false });
+            if (finalText) {
+              assistantMessage += finalText;
+              setMessages(prev => {
+                const newMessages = [...prev];
+                const lastMsg = newMessages[newMessages.length - 1];
+                if (lastMsg && lastMsg.id === assistantId) {
+                  lastMsg.content = assistantMessage;
+                }
+                return newMessages;
+              });
+            }
+            break;
+          }
+          
+          const text = decoder.decode(value, { stream: true });
+          assistantMessage += text;
+          
+          setMessages(prev => {
+            const newMessages = [...prev];
+            const lastMsg = newMessages[newMessages.length - 1];
+            if (lastMsg && lastMsg.id === assistantId) {
+              lastMsg.content = assistantMessage;
+            }
+            return newMessages;
+          });
+        }
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const newAttachments: { type: 'image' | 'pdf'; data: string; name: string }[] = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      
+      // Validate file type
+      if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
+        alert(`File ${file.name} is not supported. Only images and PDFs are allowed.`);
+        continue;
+      }
+
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+        continue;
+      }
+
+      const reader = new FileReader();
+      const fileData = await new Promise<string>((resolve) => {
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.readAsDataURL(file);
+      });
+
+      newAttachments.push({
+        type: file.type === 'application/pdf' ? 'pdf' : 'image',
+        data: fileData,
+        name: file.name,
+      });
+    }
+
+    setAttachedFiles(prev => [...prev, ...newAttachments]);
+    
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const removeAttachment = (index: number) => {
+    setAttachedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if ((!input.trim() && attachedFiles.length === 0) || isLoading) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: input || '(Attached files)',
+      attachments: attachedFiles.length > 0 ? [...attachedFiles] : undefined,
+    };
+
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
+    setInput('');
+    setAttachedFiles([]);
+    
+    await sendMessage(input || '(Attached files)', newMessages);
+  };
+
+  return (
+    <div className="flex h-screen bg-gradient-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7]">
+      <Suspense fallback={null}>
+        <AuthStatusMessage />
+      </Suspense>
+      {/* Skip to main content link for screen readers */}
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-gray-900 focus:rounded-lg focus:shadow-lg"
+      >
+        Skip to main content
+      </a>
+
+      {/* Accessibility Controls Bar */}
+      <div className="absolute top-4 left-4 z-40 flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg px-3 py-2" role="toolbar" aria-label="Accessibility controls">
+        {/* Font Size Controls */}
+        <button
+          onClick={decreaseFontSize}
+          disabled={fontSize === 'normal'}
+          className="p-2 hover:bg-gray-100 rounded disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-[#F4B400]"
+          aria-label="Decrease font size"
+          title="Decrease font size"
+        >
+          <span className="text-sm">A</span>
+        </button>
+        <button
+          onClick={increaseFontSize}
+          disabled={fontSize === 'xlarge'}
+          className="p-2 hover:bg-gray-100 rounded disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-[#F4B400]"
+          aria-label="Increase font size"
+          title="Increase font size"
+        >
+          <span className="text-lg font-bold">A</span>
+        </button>
+        
+        <div className="w-px h-6 bg-gray-300 mx-1"></div>
+        
+        {/* Database Status */}
+        <DatabaseStatus />
+        
+        <div className="w-px h-6 bg-gray-300 mx-1"></div>
+        
+        {/* Voice Input */}
+        <button
+          onClick={toggleVoiceInput}
+          className={`p-2 hover:bg-gray-100 rounded focus:outline-none focus:ring-2 focus:ring-[#F4B400] ${isListening ? 'bg-red-100 text-red-600 animate-pulse' : ''}`}
+          aria-label={isListening ? "Stop voice input" : "Start voice input"}
+          title={isListening ? "Stop voice input" : "Start voice input"}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+          </svg>
+        </button>
+
+        {/* Text-to-Speech Status */}
+        {isSpeaking && (
+          <button
+            onClick={stopSpeaking}
+            className="p-2 hover:bg-gray-100 rounded focus:outline-none focus:ring-2 focus:ring-[#F4B400] animate-pulse"
+            aria-label="Stop reading"
+            title="Stop reading"
+          >
+            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+            </svg>
+          </button>
+        )}
+      </div>
+
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col" id="main-content">
+
+      {/* Error Display */}
+      {error && (
+        <div className="max-w-4xl mx-auto px-6 pt-4" role="alert" aria-live="assertive">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            {error}
+          </div>
+        </div>
+      )}
+
+      {/* Messages Container with centered input when empty */}
+      <div className="flex-1 overflow-y-auto px-6 py-6 flex flex-col">
+        <div className={`max-w-4xl mx-auto w-full ${messages.length === 0 ? 'flex-1 flex flex-col justify-center' : 'space-y-6'}`}>
+          {messages.length === 0 ? (
+            <div className="text-center space-y-8">
+              <div className="space-y-6">
+                <div className="w-32 h-32 mx-auto">
+                  <Image 
+                    src="/theoagent-logo-vertical.svg" 
+                    alt="TheoAgent Logo" 
+                    width={128} 
+                    height={128} 
+                    className="w-full h-full object-contain drop-shadow-xl" 
+                    priority
+                  />
+                </div>
+                <div>
+                  <h1 className="text-4xl font-bold text-gray-800 mb-2">
+                    {t.welcome.title}
+                  </h1>
+                  <p className="text-lg text-gray-700 mb-1">{t.welcome.subtitle}</p>
+                  <p className="text-sm text-gray-600">{t.welcome.description}</p>
+                </div>
+              </div>
+              
+              {/* Centered Input Form when no messages */}
+              <div className="max-w-3xl mx-auto">
+                <form onSubmit={handleSubmit} className="relative">
+                  <input
+                    className="w-full border-2 border-gray-300 rounded-2xl px-6 py-4 pr-16 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#8fa9bc] focus:border-transparent placeholder-gray-400 shadow-lg"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder={t.input.placeholder}
+                    disabled={isLoading}
+                  />
+                  <button 
+                    type="submit" 
+                    disabled={isLoading || !input.trim()} 
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#F4B400] text-[#333333] p-3 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#FFCC00] hover:shadow-lg transition-all"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                  </button>
+                </form>
+                
+                {/* Suggested Questions */}
+                <div className="mt-6 space-y-3">
+                  <p className="text-xs text-gray-600 font-medium uppercase tracking-wide text-center">{t.suggestions.title}</p>
+                  <div className="grid grid-cols-1 gap-2">
+                    <button
+                      onClick={() => setInput(t.suggestions.dailyGospel.replace('📖 ', ''))}
+                      className="px-4 py-2 bg-white/80 hover:bg-[#e8e2d0] border border-gray-200 rounded-xl text-sm text-gray-700 text-left transition-colors"
+                    >
+                      {t.suggestions.dailyGospel}
+                    </button>
+                    <button
+                      onClick={() => setInput(t.suggestions.bibleReading.replace('📅 ', ''))}
+                      className="px-4 py-2 bg-white/80 hover:bg-[#e8e2d0] border border-gray-200 rounded-xl text-sm text-gray-700 text-left transition-colors"
+                    >
+                      {t.suggestions.bibleReading}
+                    </button>
+                    <button
+                      onClick={() => setInput(t.suggestions.popeTeachings.replace('⛪ ', ''))}
+                      className="px-4 py-2 bg-white/80 hover:bg-[#e8e2d0] border border-gray-200 rounded-xl text-sm text-gray-700 text-left transition-colors"
+                    >
+                      {t.suggestions.popeTeachings}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              {messages.map((m: Message) => (
+                <div key={m.id} className="group">
+                  {m.role === 'user' ? (
+                    /* User Message */
+                    <div className="flex justify-end items-start gap-3">
+                      <div className="flex-1 max-w-4xl">
+                        {editingMessageId === m.id ? (
+                          <div className="bg-white rounded-2xl px-6 py-4 shadow-md">
+                            <textarea
+                              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px]"
+                              value={editContent}
+                              onChange={(e) => setEditContent(e.target.value)}
+                            />
+                            <div className="flex gap-2 mt-2">
+                              <button
+                                onClick={() => saveEdit(m.id)}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
+                              >
+                                {t.actions.save}
+                              </button>
+                              <button
+                                onClick={() => setEditingMessageId(null)}
+                                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg text-sm hover:bg-gray-400"
+                              >
+                                {t.actions.cancel}
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="rounded-2xl px-6 py-4 shadow-md bg-[#8fa9bc] text-white">
+                            <p className="leading-relaxed">{m.content}</p>
+                            {m.attachments && m.attachments.length > 0 && (
+                              <div className="mt-3 flex flex-wrap gap-2">
+                                {m.attachments.map((file, idx) => (
+                                  <div key={idx} className="bg-white/20 rounded-lg px-3 py-2 text-sm flex items-center gap-2">
+                                    {file.type === 'image' ? (
+                                      <>
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <span className="truncate max-w-[150px]">{file.name}</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                        <span className="truncate max-w-[150px]">{file.name}</span>
+                                      </>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      {editingMessageId !== m.id && (
+                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => copyToClipboard(m.content)}
+                            className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+                            title="Copy"
+                          >
+                            <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleEdit(m.id, m.content)}
+                            className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+                            title="Edit"
+                          >
+                            <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    /* Assistant Message */
+                    <div className="flex justify-start items-start gap-3">
+                      <div className="flex-1 max-w-4xl">
+                        <div className={`rounded-2xl px-6 py-4 shadow-md bg-white text-gray-800 ${fontSizeClasses[fontSize]}`}>
+                          <div className="prose prose-sm max-w-none prose-headings:font-semibold prose-p:leading-relaxed prose-strong:text-gray-900">
+                            <ScriptureLinkedMarkdown content={m.content} autoDetectLanguage={true} />
+                          </div>
+                          {/* Action buttons at the bottom of message */}
+                          <div className="flex gap-2 mt-4 pt-3 border-t border-gray-200">
+                            <button
+                              onClick={() => speakText(m.content)}
+                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#8fa9bc]"
+                              aria-label="Read message aloud"
+                              title="Read aloud"
+                            >
+                              <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => copyToClipboard(m.content)}
+                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#8fa9bc]"
+                              aria-label="Copy message"
+                              title="Copy"
+                            >
+                              <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => retryMessage(m.id)}
+                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#8fa9bc]"
+                              aria-label="Retry message"
+                              title="Retry"
+                            >
+                              <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+              
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-white rounded-2xl px-6 py-4 shadow-md">
+                    <div className="flex items-center gap-2 text-gray-500">
+                      <div className="flex gap-1">
+                        <span className="w-2 h-2 bg-[#8fa9bc] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                        <span className="w-2 h-2 bg-[#7a94a7] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                        <span className="w-2 h-2 bg-[#a4becf] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                      </div>
+                      <span className="text-sm">{t.loading}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div ref={messagesEndRef} />
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Bottom Input Form (only shown when there are messages) */}
+      {messages.length > 0 && (
+        <div className="px-6 pb-6">
+          <div className="max-w-4xl mx-auto">
+            {/* Show attached files */}
+            {attachedFiles.length > 0 && (
+              <div className="mb-3 flex flex-wrap gap-2">
+                {attachedFiles.map((file, index) => (
+                  <div key={index} className="flex items-center gap-2 bg-white/90 rounded-lg px-3 py-2 shadow-md">
+                    {file.type === 'image' ? (
+                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                      </svg>
+                    )}
+                    <span className="text-sm text-gray-700 max-w-[150px] truncate">{file.name}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeAttachment(index)}
+                      className="text-gray-500 hover:text-red-600 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            <form onSubmit={handleSubmit} className="relative">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileUpload}
+                accept="image/*,.pdf"
+                multiple
+                className="hidden"
+              />
+              <input
+                className="w-full border-2 border-gray-300 rounded-2xl px-6 py-4 pl-14 pr-16 text-gray-800 bg-white/90 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-[#8fa9bc] focus:border-transparent placeholder-gray-400 shadow-xl hover:shadow-2xl transition-all"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={t.input.placeholderFollowUp}
+                disabled={isLoading}
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 p-3 rounded-xl hover:bg-gray-100 transition-all"
+                title="Attach file"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                </svg>
+              </button>
+              <button 
+                type="submit" 
+                disabled={isLoading || (!input.trim() && attachedFiles.length === 0)} 
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#8fa9bc] text-white p-3 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:bg-[#7a94a7] transition-all"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+      </div>
+
+      {/* Right Sidebar - User Dashboard */}
+      <UserDashboard onShowPricing={() => setShowPricing(true)} />
+
+      {/* Response Mode Selection (when authenticated) */}
+      {user && profile && (
+        <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl shadow-lg p-4 min-w-[280px] z-30">
+          <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">{t.modes.title}</h3>
+          
+          <div className="space-y-2">
+            <button
+              onClick={() => setMode('standard')}
+              className={`w-full flex items-center gap-3 px-3 py-2 border rounded-lg transition-colors text-left ${
+                mode === 'standard' 
+                  ? 'bg-[#F4B400] text-[#333333] border-[#F4B400] shadow-sm' 
+                  : 'bg-white hover:bg-yellow-50 border-gray-200 text-gray-700'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+              <div>
+                <div className="text-sm font-medium">{t.modes.standard.name}</div>
+                <div className="text-xs text-gray-500">{t.modes.standard.description}</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => {
+                const hasAccess = SUBSCRIPTION_TIERS[profile.subscription_tier].limits.modesAccess.includes('deep-research');
+                if (hasAccess) {
+                  setMode('deep-research');
+                } else {
+                  setError('Deep Research mode requires Plus subscription or higher.');
+                  setShowPricing(true);
+                }
+              }}
+              className={`w-full flex items-center gap-3 px-3 py-2 border rounded-lg transition-colors text-left ${
+                mode === 'deep-research' 
+                  ? 'bg-[#F4B400] text-[#333333] border-[#F4B400] shadow-sm' 
+                  : 'bg-white hover:bg-yellow-50 border-gray-200 text-gray-700'
+              } ${!SUBSCRIPTION_TIERS[profile.subscription_tier].limits.modesAccess.includes('deep-research') ? 'opacity-60' : ''}`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <div className="flex-1">
+                <div className="text-sm font-medium flex items-center gap-2">
+                  {t.modes.deepResearch.name}
+                  {!SUBSCRIPTION_TIERS[profile.subscription_tier].limits.modesAccess.includes('deep-research') && (
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Plus+</span>
+                  )}
+                </div>
+                <div className="text-xs text-gray-500">{t.modes.deepResearch.description}</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => {
+                const hasAccess = SUBSCRIPTION_TIERS[profile.subscription_tier].limits.modesAccess.includes('priest');
+                if (hasAccess) {
+                  setMode('priest');
+                } else {
+                  setError('Priest mode requires Plus subscription or higher.');
+                  setShowPricing(true);
+                }
+              }}
+              className={`w-full flex items-center gap-3 px-3 py-2 border rounded-lg transition-colors text-left ${
+                mode === 'priest' 
+                  ? 'bg-[#F4B400] text-[#333333] border-[#F4B400] shadow-sm' 
+                  : 'bg-white hover:bg-yellow-50 border-gray-200 text-gray-700'
+              } ${!SUBSCRIPTION_TIERS[profile.subscription_tier].limits.modesAccess.includes('priest') ? 'opacity-60' : ''}`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <div className="flex-1">
+                <div className="text-sm font-medium flex items-center gap-2">
+                  {t.modes.priest.name}
+                  {!SUBSCRIPTION_TIERS[profile.subscription_tier].limits.modesAccess.includes('priest') && (
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Plus+</span>
+                  )}
+                </div>
+                <div className="text-xs text-gray-500">{t.modes.priest.description}</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => {
+                const hasAccess = SUBSCRIPTION_TIERS[profile.subscription_tier].limits.modesAccess.includes('pope');
+                if (hasAccess) {
+                  setMode('pope');
+                } else {
+                  setError('Papal mode requires Expert subscription.');
+                  setShowPricing(true);
+                }
+              }}
+              className={`w-full flex items-center gap-3 px-3 py-2 border rounded-lg transition-colors text-left ${
+                mode === 'pope' 
+                  ? 'bg-[#F4B400] text-[#333333] border-[#F4B400] shadow-sm' 
+                  : 'bg-white hover:bg-yellow-50 border-gray-200 text-gray-700'
+              } ${!SUBSCRIPTION_TIERS[profile.subscription_tier].limits.modesAccess.includes('pope') ? 'opacity-60' : ''}`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
+              <div className="flex-1">
+                <div className="text-sm font-medium flex items-center gap-2">
+                  {t.modes.pope.name}
+                  {!SUBSCRIPTION_TIERS[profile.subscription_tier].limits.modesAccess.includes('pope') && (
+                    <span className="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded">Expert</span>
+                  )}
+                </div>
+                <div className="text-xs text-gray-500">{t.modes.pope.description}</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => {
+                const hasAccess = SUBSCRIPTION_TIERS[profile.subscription_tier].limits.modesAccess.includes('academic-expert');
+                if (hasAccess) {
+                  setMode('academic-expert');
+                } else {
+                  setError('Academic Expert mode requires Expert subscription.');
+                  setShowPricing(true);
+                }
+              }}
+              className={`w-full flex items-center gap-3 px-3 py-2 border rounded-lg transition-colors text-left ${
+                mode === 'academic-expert' 
+                  ? 'bg-[#F4B400] text-[#333333] border-[#F4B400] shadow-sm' 
+                  : 'bg-white hover:bg-yellow-50 border-gray-200 text-gray-700'
+              } ${!SUBSCRIPTION_TIERS[profile.subscription_tier].limits.modesAccess.includes('academic-expert') ? 'opacity-60' : ''}`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+              </svg>
+              <div className="flex-1">
+                <div className="text-sm font-medium flex items-center gap-2">
+                  Academic Expert
+                  {!SUBSCRIPTION_TIERS[profile.subscription_tier].limits.modesAccess.includes('academic-expert') && (
+                    <span className="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded">Expert</span>
+                  )}
+                </div>
+                <div className="text-xs text-gray-500">Scholarly theology analysis</div>
+              </div>
+            </button>
+          </div>
+
+          <div className="pt-3 border-t border-gray-200 mt-4">
+            <div className="text-xs text-gray-500 space-y-1">
+              <p className="font-medium">Current Mode</p>
+              <p className="capitalize">{mode.replace('-', ' ')}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Pricing Modal for authenticated users */}
+      {showPricing && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold text-gray-900">Choose Your Plan</h2>
+                <button
+                  onClick={() => setShowPricing(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-6">
+              <div className="grid md:grid-cols-3 gap-6">
+                {/* Free Plan */}
+                <div className="border border-gray-200 rounded-xl p-6 bg-gray-50">
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-bold text-gray-900">{SUBSCRIPTION_TIERS.free.name}</h3>
+                    <div className="mt-4">
+                      <span className="text-3xl font-bold text-gray-900">${SUBSCRIPTION_TIERS.free.price}</span>
+                      <span className="text-gray-700">/{SUBSCRIPTION_TIERS.free.interval}</span>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 mb-6">
+                    {SUBSCRIPTION_TIERS.free.features.map((feature, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-sm text-gray-900">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <button 
+                    onClick={() => setShowPricing(false)}
+                    className="w-full bg-gray-300 text-gray-700 py-3 rounded-xl font-medium transition-colors cursor-default"
+                  >
+                    Current Plan
+                  </button>
+                </div>
+
+                {/* Plus Plan */}
+                <div className="border border-blue-200 rounded-xl p-6 bg-blue-50 relative">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-medium">Popular</span>
+                  </div>
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-bold text-blue-900">{SUBSCRIPTION_TIERS.plus.name}</h3>
+                    <div className="mt-4">
+                      <span className="text-3xl font-bold text-blue-900">${SUBSCRIPTION_TIERS.plus.price}</span>
+                      <span className="text-blue-700">/{SUBSCRIPTION_TIERS.plus.interval}</span>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 mb-6">
+                    {SUBSCRIPTION_TIERS.plus.features.map((feature, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <svg className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-sm text-blue-900">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium transition-colors">
+                    Upgrade to Plus
+                  </button>
+                </div>
+
+                {/* Expert Plan */}
+                <div className="border border-purple-200 rounded-xl p-6 bg-purple-50">
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-bold text-purple-900">{SUBSCRIPTION_TIERS.expert.name}</h3>
+                    <div className="mt-4">
+                      <span className="text-3xl font-bold text-purple-900">${SUBSCRIPTION_TIERS.expert.price}</span>
+                      <span className="text-purple-700">/{SUBSCRIPTION_TIERS.expert.interval}</span>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 mb-6">
+                    {SUBSCRIPTION_TIERS.expert.features.map((feature, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <svg className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-sm text-purple-900">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-medium transition-colors">
+                    Upgrade to Expert
+                  </button>
+                </div>
+              </div>
+              
+              <div className="mt-8 text-center">
+                <p className="text-sm text-gray-600">
+                  All plans include multilingual support, Scripture integration, and Catholic orthodoxy guarantee.
+                </p>
+                <p className="text-xs text-gray-500 mt-2">
+                  Secure payment processing powered by Stripe. Cancel anytime.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
