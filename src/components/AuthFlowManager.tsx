@@ -45,7 +45,7 @@ export default function AuthFlowManager({
     initializeAuth()
     
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event: string, session: any) => {
       console.log('AuthFlowManager: Auth state changed:', event, session?.user?.id)
       
       if (session?.user) {
@@ -113,7 +113,7 @@ export default function AuthFlowManager({
       if (requireMFA) {
         try {
           const { data: factors } = await supabase.auth.mfa.listFactors()
-          const activeFactor = factors?.totp?.find(f => f.status === 'verified')
+          const activeFactor = factors?.totp?.find((f: any) => f.status === 'verified')
           mfaVerified = !!activeFactor
           setMfaEnabled(mfaVerified)
         } catch (error) {

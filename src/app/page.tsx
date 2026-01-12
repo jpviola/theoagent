@@ -3,11 +3,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase-client';
-import type { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
 import SantaPalabraLogo from '@/components/SantaPalabraLogo';
 
 export default function HomePage() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,7 +19,7 @@ export default function HomePage() {
     getUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event: AuthChangeEvent, session: Session | null) => {
+      (event: string, session: any) => {
         setUser(session?.user || null);
         setLoading(false);
       }
