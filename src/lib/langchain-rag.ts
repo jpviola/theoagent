@@ -1,4 +1,5 @@
 import { ChatAnthropic } from '@langchain/anthropic';
+import { ChatOpenAI } from '@langchain/openai';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { StringOutputParser } from '@langchain/core/output_parsers';
@@ -8,6 +9,7 @@ import { ChatMessageHistory } from '@langchain/community/stores/message/in_memor
 import { AIMessage, HumanMessage, BaseMessage } from '@langchain/core/messages';
 import { HNSWLib } from '@langchain/community/vectorstores/hnswlib';
 import { OpenAIEmbeddings } from '@langchain/openai';
+import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 
 // Types
 interface CatholicDocument {
@@ -229,7 +231,7 @@ Summary: [Your summary here]
 Key Topics: [topic1, topic2, topic3, etc.]
 `);
 
-  constructor(private llm: ChatAnthropic) {}
+  constructor(private llm: BaseChatModel) {}
 
   async summarizeConversation(messages: BaseMessage[]): Promise<ConversationSummary> {
     if (messages.length < 6) {
@@ -271,17 +273,93 @@ Key Topics: [topic1, topic2, topic3, etc.]
 
 export class TheoAgentRAG {
   private vectorStore: EnhancedVectorStore | null = null;
-  private llm: ChatAnthropic;
+  private llm: BaseChatModel;
   private conversationManager: ConversationManager;
   private isInitialized = false;
 
   constructor() {
-    this.llm = new ChatAnthropic({
-      model: "claude-3-haiku-20240307",
-      temperature: 0.3,
-      anthropicApiKey: process.env.ANTHROPIC_API_KEY,
-    });
+    // Initialize LLM with Vercel AI Gateway support
+    this.llm = this.initializeLLM();
     this.conversationManager = new ConversationManager(this.llm);
+  }
+
+  /**
+   * Initialize LLM with Vercel AI Gateway support
+   * Falls back to direct API calls if gateway is not available
+   */
+  private initializeLLM(): BaseChatModel {
+    const gatewayApiKey = process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN;
+    
+    // Try Vercel AI Gateway first
+    if (gatewayApiKey) {
+      console.log('🔥 Using Vercel AI Gateway');
+      
+      // Try OpenAI through gateway first (often more reliable for deployment)
+      if (process.env.OPENAI_API_KEY) {
+        try {
+          return new ChatOpenAI({
+            apiKey: gatewayApiKey,
+            modelName: 'openai/gpt-4o-mini',
+            temperature: 0.3,
+            configuration: {
+              baseURL: 'https://ai-gateway.vercel.sh/v1',
+            },
+          });
+        } catch (error) {
+          console.warn('⚠️ Failed to initialize OpenAI through AI Gateway:', error);
+        }
+      }
+      
+      // Try Anthropic through gateway
+      if (process.env.ANTHROPIC_API_KEY) {
+        try {
+          return new ChatAnthropic({
+            apiKey: gatewayApiKey,
+            modelName: 'anthropic/claude-3-5-haiku-20241022',
+            temperature: 0.3,
+            clientOptions: {
+              defaultHeaders: {
+                'Authorization': `Bearer ${gatewayApiKey}`,
+              },
+            },
+          });
+        } catch (error) {
+          console.warn('⚠️ Failed to initialize Anthropic through AI Gateway:', error);
+        }
+      }
+    }
+    
+    // Fallback to direct API calls
+    console.log('🔄 Falling back to direct API calls');
+    
+    if (process.env.ANTHROPIC_API_KEY) {
+      console.log('🤖 Using Anthropic Claude directly');
+      return new ChatAnthropic({
+        model: "claude-3-haiku-20240307",
+        temperature: 0.3,
+        anthropicApiKey: process.env.ANTHROPIC_API_KEY,
+      });
+    }
+    
+    if (process.env.OPENAI_API_KEY) {
+      console.log('🤖 Using OpenAI directly');
+      return new ChatOpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+        modelName: 'gpt-4o-mini',
+        temperature: 0.3,
+      });
+    }
+    
+    // Last resort - throw error
+    throw new Error(`
+🚨 No AI model configuration found!
+Please set one of:
+- AI_GATEWAY_API_KEY + (OPENAI_API_KEY or ANTHROPIC_API_KEY) for Vercel AI Gateway
+- ANTHROPIC_API_KEY for direct Anthropic access  
+- OPENAI_API_KEY for direct OpenAI access
+
+For Vercel deployment, AI Gateway is recommended: https://vercel.com/docs/ai-gateway
+    `);
   }
 
   async initialize(documents: CatholicDocument[]): Promise<void> {
@@ -290,11 +368,17 @@ export class TheoAgentRAG {
     try {
       console.log('🚀 Initializing TheoAgent RAG system...');
       
+      // Initialize text splitter
+      const textSplitter = new RecursiveCharacterTextSplitter({
+        chunkSize: 1000,
+        chunkOverlap: 200,
+      });
+      
       // Convert documents to LangChain Document format
       const langchainDocs = await Promise.all(
         documents.map(async (doc) => {
           const chunks = await textSplitter.splitText(doc.content);
-          return chunks.map(chunk => new Document({
+          return chunks.map((chunk: string) => new Document({
             pageContent: chunk,
             metadata: {
               id: doc.id,
@@ -431,12 +515,12 @@ Provide a helpful, doctrinally sound response based on the sources above:`;
         chatHistory = `CONVERSATION SUMMARY: ${summary.summary}\n` +
                      `KEY TOPICS DISCUSSED: ${summary.keyTopics.join(', ')}\n\n` +
                      `RECENT MESSAGES:\n` +
-                     messages.slice(-6).map(msg => 
+                     messages.slice(-6).map((msg: BaseMessage) => 
                        `${msg._getType() === 'human' ? 'User' : 'Assistant'}: ${msg.content}`
                      ).join('\n');
       } else {
         chatHistory = messages
-          .map(msg => `${msg._getType() === 'human' ? 'User' : 'Assistant'}: ${msg.content}`)
+          .map((msg: BaseMessage) => `${msg._getType() === 'human' ? 'User' : 'Assistant'}: ${msg.content}`)
           .join('\n');
       }
 
