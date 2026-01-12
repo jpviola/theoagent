@@ -1,9 +1,4 @@
 {
   "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "npm run build",
-  "functions": {
-    "src/app/**/*.ts": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  "buildCommand": "npm run build"
 }
