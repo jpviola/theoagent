@@ -19,18 +19,9 @@ export const metadata: Metadata = {
   description: "Catequista digital católico especializado en la rica espiritualidad hispanoamericana. Con la sabiduría de Santa Teresa de Ávila, San Juan de la Cruz, CELAM y toda la tradición católica.",
   icons: {
     icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon-96x96.svg', sizes: '96x96', type: 'image/svg+xml' }
+      { url: '/santapalabra-logoSinLeyenda.ico', sizes: 'any' }
     ],
-    shortcut: '/favicon.svg',
-    apple: [
-      { url: '/apple-icon-76x76.svg', sizes: '76x76', type: 'image/svg+xml' }
-    ],
-    other: [
-      { rel: 'icon', url: '/faviconAndroid-icon-144x144.svg', sizes: '144x144', type: 'image/svg+xml' },
-      { rel: 'msapplication-TileImage', url: '/ms-icon-150x150.svg' },
-      { rel: 'msapplication-square310x310logo', url: '/ms-icon-310x310.svg' }
-    ]
+    shortcut: '/santapalabra-logoSinLeyenda.ico'
   },
   appleWebApp: {
     capable: true,
@@ -48,6 +39,8 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
+        <link rel="icon" href="/santapalabra-logoSinLeyenda.ico" sizes="any" />
+        <link rel="shortcut icon" href="/santapalabra-logoSinLeyenda.ico" />
         <meta name="theme-color" content="#eab308" />
         <meta name="msapplication-TileColor" content="#eab308" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

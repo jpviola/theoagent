@@ -273,6 +273,7 @@ Key Topics: [topic1, topic2, topic3, etc.]
 
 export class TheoAgentRAG {
   private vectorStore: EnhancedVectorStore | null = null;
+  private documents: Document[] = [];
   private llm: BaseChatModel;
   private conversationManager: ConversationManager;
   private isInitialized = false;
@@ -288,9 +289,19 @@ export class TheoAgentRAG {
    * Falls back to direct API calls if gateway is not available
    */
   private initializeLLM(): BaseChatModel {
+    // For local development, use OpenAI directly (bypassing Vercel AI Gateway)
+    if (process.env.OPENAI_API_KEY && !process.env.VERCEL) {
+      console.log('🔥 Using OpenAI directly (local development)');
+      return new ChatOpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+        modelName: 'gpt-4o-mini',
+        temperature: 0.3,
+      });
+    }
+    
     const gatewayApiKey = process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN;
     
-    // Try Vercel AI Gateway first
+    // Try Vercel AI Gateway first (for production)
     if (gatewayApiKey) {
       console.log('🔥 Using Vercel AI Gateway');
       
@@ -392,12 +403,15 @@ For Vercel deployment, AI Gateway is recommended: https://vercel.com/docs/ai-gat
 
       const allDocs = langchainDocs.flat();
       
-      // Create enhanced vector store with embeddings
-      this.vectorStore = new EnhancedVectorStore();
-      await this.vectorStore.initialize(allDocs);
+      // Create enhanced vector store with embeddings (DISABLED for faster startup - using keyword search)
+      // this.vectorStore = new EnhancedVectorStore();
+      // await this.vectorStore.initialize(allDocs);
+      
+      // Store documents for keyword-based search
+      this.documents = allDocs;
 
       this.isInitialized = true;
-      console.log(`✅ TheoAgent RAG initialized with ${allDocs.length} document chunks`);
+      console.log(`✅ TheoAgent RAG initialized with ${allDocs.length} document chunks (keyword search mode)`);
     } catch (error) {
       console.error('❌ Failed to initialize TheoAgent RAG:', error);
       throw error;
@@ -412,11 +426,73 @@ For Vercel deployment, AI Gateway is recommended: https://vercel.com/docs/ai-gat
   }
 
   private async retrieveRelevantContext(query: string, topK: number = 5): Promise<RetrievalResult> {
-    if (!this.vectorStore) {
-      throw new Error('Vector store not initialized. Call initialize() first.');
+    // Use keyword-based search with stored documents
+    if (this.documents.length === 0) {
+      throw new Error('Documents not initialized. Call initialize() first.');
     }
 
-    return await this.vectorStore.enhancedSearch(query, topK);
+    // If vector store exists, use it; otherwise use keyword search
+    if (this.vectorStore) {
+      return await this.vectorStore.enhancedSearch(query, topK);
+    }
+    
+    // Fallback to keyword search
+    const expandedQuery = this.expandQueryTerms(query);
+    const queryWords = expandedQuery.flatMap(q => 
+      q.toLowerCase().split(/\s+/).filter(word => word.length > 3)
+    );
+    
+    // Score documents based on keyword matching
+    const scoredDocs = this.documents.map(doc => {
+      const content = doc.pageContent.toLowerCase();
+      const title = doc.metadata.title?.toLowerCase() || '';
+      
+      let score = 0;
+      queryWords.forEach(word => {
+        const titleMatches = (title.match(new RegExp(word, 'gi')) || []).length;
+        score += titleMatches * 3;
+        const contentMatches = (content.match(new RegExp(word, 'gi')) || []).length;
+        score += contentMatches;
+      });
+      
+      return [doc, score] as [Document, number];
+    });
+    
+    // Sort by score and get top K
+    const sortedResults = scoredDocs
+      .filter(([, score]) => score > 0)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, topK);
+    
+    // Normalize scores to 0-1 range
+    const maxScore = sortedResults[0]?.[1] || 1;
+    const normalizedResults = sortedResults.map(([doc, score]) => 
+      [doc, score / maxScore] as [Document, number]
+    );
+    
+    return {
+      documents: normalizedResults.map(([doc]) => doc),
+      sources: normalizedResults.map(([doc]) => doc.metadata.source || 'Unknown'),
+      relevanceScores: normalizedResults.map(([, score]) => score)
+    };
+  }
+  
+  private expandQueryTerms(query: string): string[] {
+    const expansions: string[] = [query];
+    const queryLower = query.toLowerCase();
+    
+    // Basic term expansions for common Catholic terms
+    if (queryLower.includes('oración') || queryLower.includes('prayer')) {
+      expansions.push('rezar', 'pray', 'devotion');
+    }
+    if (queryLower.includes('trinidad') || queryLower.includes('trinity')) {
+      expansions.push('padre hijo espiritu', 'father son spirit', 'three persons');
+    }
+    if (queryLower.includes('evangelio') || queryLower.includes('gospel')) {
+      expansions.push('buena nueva', 'good news', 'scripture');
+    }
+    
+    return expansions;
   }
 
   private createSystemPrompt(context: ChatContext): PromptTemplate {

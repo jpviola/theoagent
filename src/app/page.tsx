@@ -222,51 +222,46 @@ export default function HomePage() {
             transition={{ duration: 2.5, ease: 'circOut' }}
             className="absolute -top-1/3 left-1/2 h-full w-full -translate-x-1/2 rounded-full bg-gradient-to-b from-yellow-200/50 via-amber-100/40 to-transparent blur-3xl"
           />
-          {/* Imágenes decorativas católicas - muy atenuadas */}
+          {/* Imágenes decorativas católicas vectorializadas - distribución simétrica */}
+          {/* Esquina superior izquierda */}
           <motion.div
             initial={{ opacity: 0, rotate: 0 }}
-            animate={{ opacity: 0.40, rotate: 12 }}
+            animate={{ opacity: 0.42, rotate: 12 }}
             transition={{ duration: 2, delay: 0.5 }}
-            className="absolute top-[15%] left-[2%] h-40 w-40 md:h-56 md:w-56 pointer-events-none"
-            style={{ filter: 'sepia(80%) brightness(0.5) contrast(120%) saturate(1.2)' }}
+            className="absolute top-[8%] left-[5%] h-36 w-36 md:h-48 md:w-48 pointer-events-none"
+            style={{ filter: 'sepia(75%) brightness(0.55) contrast(115%) saturate(1.15)' }}
           >
             <Image src="/SantaTeresa.svg" alt="" fill className="object-contain" />
           </motion.div>
+          {/* Esquina superior derecha */}
           <motion.div
             initial={{ opacity: 0, rotate: 0 }}
-            animate={{ opacity: 0.40, rotate: -12 }}
+            animate={{ opacity: 0.42, rotate: -12 }}
             transition={{ duration: 2, delay: 0.7 }}
-            className="absolute top-[35%] right-[2%] h-40 w-40 md:h-56 md:w-56 pointer-events-none"
-            style={{ filter: 'sepia(80%) brightness(0.5) contrast(120%) saturate(1.2)' }}
+            className="absolute top-[8%] right-[5%] h-36 w-36 md:h-48 md:w-48 pointer-events-none"
+            style={{ filter: 'sepia(75%) brightness(0.55) contrast(115%) saturate(1.15)' }}
           >
             <Image src="/san juan.svg" alt="" fill className="object-contain" />
           </motion.div>
+          {/* Esquina inferior izquierda - Guadalupana más grande */}
           <motion.div
             initial={{ opacity: 0, rotate: 0 }}
-            animate={{ opacity: 0.45, rotate: 0 }}
+            animate={{ opacity: 0.42, rotate: 0 }}
             transition={{ duration: 2, delay: 0.9 }}
-            className="absolute top-[45%] left-[1%] h-36 w-36 md:h-52 md:w-52 pointer-events-none"
-            style={{ filter: 'sepia(80%) brightness(0.5) contrast(120%) saturate(1.2)' }}
+            className="absolute bottom-[12%] left-[5%] h-48 w-48 md:h-64 md:w-64 pointer-events-none"
+            style={{ filter: 'sepia(75%) brightness(0.55) contrast(115%) saturate(1.15)' }}
           >
             <Image src="/guadalupana.svg" alt="" fill className="object-contain" />
           </motion.div>
+          {/* Esquina inferior derecha */}
           <motion.div
             initial={{ opacity: 0, rotate: 0 }}
-            animate={{ opacity: 0.45, rotate: 0 }}
+            animate={{ opacity: 0.42, rotate: 0 }}
             transition={{ duration: 2, delay: 1.1 }}
-            className="absolute top-[25%] right-[9%] h-36 w-36 md:h-52 md:w-52 pointer-events-none"
-            style={{ filter: 'sepia(80%) brightness(0.5) contrast(120%) saturate(1.2)' }}
+            className="absolute bottom-[12%] right-[5%] h-36 w-36 md:h-48 md:w-48 pointer-events-none"
+            style={{ filter: 'sepia(75%) brightness(0.55) contrast(115%) saturate(1.15)' }}
           >
             <Image src="/iglesia_transparente.svg" alt="" fill className="object-contain" />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, rotate: 0 }}
-            animate={{ opacity: 0.35, rotate: 8 }}
-            transition={{ duration: 2, delay: 1.3 }}
-            className="absolute top-[70%] left-[3%] h-32 w-32 md:h-48 md:w-48 pointer-events-none"
-            style={{ filter: 'sepia(80%) brightness(0.5) contrast(120%) saturate(1.2)' }}
-          >
-            <Image src="/CELAM.svg" alt="" fill className="object-contain" />
           </motion.div>
         </div>
 
@@ -310,7 +305,7 @@ export default function HomePage() {
             className="mt-10 flex flex-wrap items-center justify-center gap-4"
           >
             <Link
-              href="/catholic-chat"
+              href="/intro"
               className="group inline-flex items-center justify-center rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 px-10 py-5 text-xl font-bold text-white shadow-2xl shadow-yellow-500/40 transition-all duration-300 hover:scale-110 hover:shadow-yellow-500/60"
             >
               <BookOpen className="mr-3 h-7 w-7" />

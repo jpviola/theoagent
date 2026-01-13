@@ -5,9 +5,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase-client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Trash2, Home, LogIn, User, Sparkles, BookOpen, FlaskConical, AlertTriangle, X, Settings, Zap, BarChart2, Clock } from 'lucide-react';
+import { Send, Trash2, Home, LogIn, User, Sparkles, BookOpen, FlaskConical, AlertTriangle, X, Settings, Zap, BarChart2, Clock, Upload, FileText } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageToggle } from '@/components/LanguageToggle';
+import SantaPalabraLogo from '@/components/SantaPalabraLogo';
 
 interface Message {
   id: string;
@@ -27,8 +28,12 @@ export default function CatholicChatPage() {
   const [advancedMode, setAdvancedMode] = useState(false);
   const [implementation, setImplementation] = useState<'LangChain' | 'LlamaIndex'>('LangChain');
   const [showMetrics, setShowMetrics] = useState(false);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [pdfUploading, setPdfUploading] = useState(false);
+  const [isBowing, setIsBowing] = useState(false);
   const { language } = useLanguage();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -54,6 +59,10 @@ export default function CatholicChatPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
+
+    // Activar animación de reverencia
+    setIsBowing(true);
+    setTimeout(() => setIsBowing(false), 4000); // Duración de la animación - 4 segundos para transición suave
 
     const userMessage: Message = {
       id: Date.now().toString() + '_user',
@@ -107,9 +116,39 @@ export default function CatholicChatPage() {
   const clearChat = () => {
     setMessages([]);
     setError(null);
+    setPdfFile(null);
   };
 
-  const sampleQuestions = {
+  const handlePdfUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validar tipo de archivo
+    if (file.type !== 'application/pdf') {
+      setError(language === 'es' ? 'Solo se permiten archivos PDF' : 'Only PDF files are allowed');
+      return;
+    }
+
+    // Validar tamaño (15 MB = 15 * 1024 * 1024 bytes)
+    const maxSize = 15 * 1024 * 1024;
+    if (file.size > maxSize) {
+      setError(language === 'es' ? 'El PDF no debe superar los 15 MB' : 'PDF must not exceed 15 MB');
+      return;
+    }
+
+    setPdfFile(file);
+    setError(null);
+  };
+
+  const removePdf = () => {
+    setPdfFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  // Banco completo de preguntas para aleatorizar
+  const allQuestions = {
     es: [
       "¿Qué enseña la Iglesia Católica sobre la Trinidad?",
       "¿Cómo deben los católicos abordar la oración?", 
@@ -118,7 +157,9 @@ export default function CatholicChatPage() {
       "¿Qué enseña la Iglesia sobre la Virgen María?",
       "¿Qué enseña Santa Teresa de Ávila sobre la oración?",
       "¿Cuál es la noche oscura según San Juan de la Cruz?",
-      "¿Qué dice el CELAM sobre la evangelización en América Latina?"
+      "¿Qué dice el CELAM sobre la evangelización en América Latina?",
+      "¿Qué son los sacramentos de iniciación cristiana?",
+      "¿Cuál es la importancia de la confesión?"
     ],
     en: [
       "What is the Catholic teaching on the Trinity?",
@@ -126,9 +167,26 @@ export default function CatholicChatPage() {
       "What is the significance of the Eucharist?",
       "Tell me about devotion to the Sacred Heart",
       "What does the Church teach about Mary?",
-      "How does the Catholic Church understand salvation?"
+      "How does the Catholic Church understand salvation?",
+      "What are the sacraments of Christian initiation?",
+      "What is the importance of confession?"
     ]
   };
+
+  // Seleccionar 2 preguntas aleatorias + siempre evangelio del día
+  const [sampleQuestions, setSampleQuestions] = useState<string[]>([]);
+
+  useEffect(() => {
+    const gospelQuestion = language === 'es' 
+      ? '¿Me explicas el evangelio del día?' 
+      : 'Can you explain today\'s Gospel to me?';
+    
+    const questions = [...allQuestions[language]];
+    const shuffled = questions.sort(() => Math.random() - 0.5);
+    const selected = shuffled.slice(0, 2);
+    
+    setSampleQuestions([...selected, gospelQuestion]);
+  }, [language]);
 
   const texts = {
     es: {
@@ -149,7 +207,11 @@ export default function CatholicChatPage() {
       simpleMode: 'Modo Simple',
       implementation: 'Motor RAG',
       showMetrics: 'Mostrar métricas',
-      responseTime: 'Tiempo de respuesta'
+      responseTime: 'Tiempo de respuesta',
+      uploadPdf: 'Subir PDF',
+      pdfAttached: 'PDF adjunto',
+      removePdf: 'Quitar PDF',
+      pdfLimits: 'Máx. 15 MB, 20 páginas'
     },
     en: {
       backHome: 'Back to Home',
@@ -169,7 +231,11 @@ export default function CatholicChatPage() {
       simpleMode: 'Simple Mode',
       implementation: 'RAG Engine',
       showMetrics: 'Show metrics',
-      responseTime: 'Response time'
+      responseTime: 'Response time',
+      uploadPdf: 'Upload PDF',
+      pdfAttached: 'PDF attached',
+      removePdf: 'Remove PDF',
+      pdfLimits: 'Max 15 MB, 20 pages'
     }
   };
 
@@ -339,208 +405,312 @@ export default function CatholicChatPage() {
       </AnimatePresence>
 
       {/* Main Chat Area */}
-      <main className="max-w-4xl mx-auto px-4 py-6 flex-1 w-full relative z-10">
-        {/* Welcome Message */}
-        <AnimatePresence>
-          {messages.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="text-center mb-8"
-            >
-              <div className="bg-white rounded-lg shadow-sm p-8 mb-6">
-                <Sparkles className="mx-auto h-10 w-10 text-yellow-500 mb-4" />
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  {currentTexts.welcomeTitle}
-                </h2>
-                <p className="text-gray-600 mb-6">
-                  {currentTexts.welcomeDesc}
-                </p>
-                
-                {/* Sample Questions */}
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">{currentTexts.sampleQuestionsTitle}</h3>
-                  <p className="text-sm text-gray-600 mb-4">{currentTexts.clickToUse}</p>
-                  <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="grid md:grid-cols-2 gap-3"
+      <main className="flex-1 flex items-center justify-center px-4 relative z-10">
+        <div className="w-full max-w-3xl">
+          {/* Logo SantaPalabra - Estático con animación de reverencia */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ 
+              opacity: 1, 
+              y: 0
+            }}
+            className="flex flex-col items-center mb-8"
+          >
+            <div className="relative">
+              <AnimatePresence mode="wait">
+                {isBowing ? (
+                  <motion.div 
+                    key="bowing"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="relative"
                   >
-                    {sampleQuestions[language].map((question, index) => (
-                      <motion.button
-                        key={index}
-                        variants={itemVariants}
-                        whileHover={{ scale: 1.02, borderColor: 'rgb(234 179 8)' }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => handleSampleQuestion(question)}
-                        className="text-left p-3 bg-yellow-50 hover:bg-yellow-100 rounded-lg border border-yellow-200 transition-colors text-sm"
-                      >
-                        {question}
-                      </motion.button>
-                    ))}
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Messages */}
-        <div className="space-y-6 mb-6">
-          <AnimatePresence initial={false}>
-            {messages.map((message, index) => (
-              <motion.div
-                key={message.id}
-                layout
-                initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.9 }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                {/* Avatar - Asistente (izquierda) */}
-                {message.role === 'assistant' && (
-                  <motion.div
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ duration: 0.5, ease: 'backOut' }}
-                    className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center shadow-lg border-2 border-white"
-                  >
-                    <BookOpen className="h-5 w-5 text-white" />
-                  </motion.div>
-                )}
-
-                <div className={`max-w-2xl ${message.role === 'user' ? 'w-auto' : 'w-full'}`}>
-                  <div
-                    className={`rounded-2xl px-4 py-3 shadow-md ${
-                      message.role === 'user'
-                        ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 text-gray-900'
-                        : 'bg-white border-2 border-yellow-100 text-gray-900'
-                    }`}
-                  >
-                    <div className="prose prose-sm max-w-none">
-                      {message.role === 'assistant' ? (
-                        <div 
-                          className="whitespace-pre-wrap leading-relaxed"
-                          dangerouslySetInnerHTML={{ 
-                            __html: message.content.replace(/\n/g, '<br>') 
-                          }}
-                        />
-                      ) : (
-                        <p className="whitespace-pre-wrap font-medium">{message.content}</p>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {/* Advanced Mode Metrics */}
-                  {advancedMode && showMetrics && message.role === 'assistant' && message.responseTime && (
+                    <Image 
+                      src="/santapalabraBowing.gif" 
+                      alt="SantaPalabra haciendo reverencia" 
+                      width={128} 
+                      height={128}
+                      className="brightness-110 drop-shadow-lg rounded-full"
+                      style={{ 
+                        mixBlendMode: 'multiply',
+                        backgroundColor: 'transparent'
+                      }}
+                      unoptimized
+                    />
+                    {/* Leyenda durante animación */}
                     <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      className="mt-2 ml-2 flex items-center gap-3 text-xs text-gray-500"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
                     >
-                      <div className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full">
-                        <Clock className="h-3 w-3" />
-                        <span>{message.responseTime}ms</span>
-                      </div>
-                      <div className="flex items-center gap-1 bg-purple-100 px-2 py-1 rounded-full text-purple-700">
-                        <Zap className="h-3 w-3" />
-                        <span>{message.implementation}</span>
-                      </div>
+                      <span className="text-amber-600 text-sm font-semibold tracking-wide">
+                        SantaPalabra
+                      </span>
                     </motion.div>
-                  )}
-                </div>
-
-                {/* Avatar - Usuario (derecha) */}
-                {message.role === 'user' && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: [0, 1.2, 0] }}
+                      transition={{ duration: 2, repeat: 0 }}
+                      className="absolute inset-0 rounded-full bg-amber-400/30 blur-xl -z-10"
+                    />
+                  </motion.div>
+                ) : (
                   <motion.div
-                    initial={{ scale: 0, rotate: 180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ duration: 0.5, ease: 'backOut' }}
-                    className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center shadow-lg border-2 border-white"
+                    key="static"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <User className="h-5 w-5 text-white" />
+                    <Image 
+                      src="/santapalabra-logo.svg" 
+                      alt="SantaPalabra" 
+                      width={128} 
+                      height={128}
+                    />
                   </motion.div>
                 )}
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+              </AnimatePresence>
+            </div>
+          </motion.div>
 
-        {/* Error Display */}
-        <AnimatePresence>
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 flex items-center justify-between"
-            >
-              <div className="flex items-center">
-                <AlertTriangle className="h-5 w-5 mr-3" />
-                <p>{language === 'es' ? 'Error:' : 'Error:'} {error}</p>
-              </div>
-              <button 
-                onClick={() => setError(null)}
-                className="p-1 rounded-full hover:bg-red-100"
+          {/* Input Form - Centrado */}
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="bg-white rounded-2xl shadow-lg p-4 mb-6"
+          >
+            <form onSubmit={handleSubmit} className="flex items-center gap-2">
+              {/* Botón Upload PDF */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf"
+                onChange={handlePdfUpload}
+                className="hidden"
+              />
+              <motion.button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={`p-3 rounded-full transition-colors shadow-md ${
+                  pdfFile 
+                    ? 'bg-green-500 text-white' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+                title={pdfFile ? currentTexts.pdfAttached : currentTexts.uploadPdf}
               >
-                <X className="h-4 w-4" />
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                {pdfFile ? <FileText className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
+              </motion.button>
 
-        <div ref={messagesEndRef} />
-      </main>
-
-      {/* Input Form */}
-      <motion.div
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="sticky bottom-0 bg-white/90 backdrop-blur-xl border-t border-yellow-200 p-4 z-20"
-      >
-        <div className="max-w-4xl mx-auto">
-          <form onSubmit={handleSubmit} className="flex space-x-4">
-            <div className="flex-1">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={currentTexts.enterMessage}
-                className="w-full px-4 py-3 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                className="flex-1 px-5 py-3 border border-amber-200 rounded-full focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white text-gray-800 placeholder:text-gray-400"
                 disabled={isLoading}
               />
-            </div>
-            <motion.button
-              type="submit"
-              disabled={!input.trim() || isLoading}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-semibold flex items-center gap-2"
-            >
-              {isLoading ? (
+              <motion.button
+                type="submit"
+                disabled={!input.trim() || isLoading}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="p-3 bg-amber-500 text-white rounded-full hover:bg-amber-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-md"
+                title={isLoading ? currentTexts.loading : currentTexts.send}
+              >
+                {isLoading ? (
+                  <motion.div
+                    className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                  />
+                ) : (
+                  <Send className="h-5 w-5" />
+                )}
+              </motion.button>
+            </form>
+
+            {/* PDF Info */}
+            <AnimatePresence>
+              {pdfFile && (
                 <motion.div
-                  className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                />
-              ) : (
-                <Send className="h-5 w-5" />
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="mt-3 flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-3 py-2"
+                >
+                  <div className="flex items-center gap-2 text-sm text-green-700">
+                    <FileText className="h-4 w-4" />
+                    <span className="font-medium">{pdfFile.name}</span>
+                    <span className="text-xs text-green-600">({(pdfFile.size / 1024 / 1024).toFixed(2)} MB)</span>
+                  </div>
+                  <button
+                    onClick={removePdf}
+                    className="text-green-700 hover:text-green-900 p-1 rounded-full hover:bg-green-100"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </motion.div>
               )}
-              {isLoading ? currentTexts.loading : currentTexts.send}
-            </motion.button>
-          </form>
-          <div className="mt-2 text-center text-xs text-gray-500">
-            {language === 'es' 
-              ? 'Respuestas basadas en la enseñanza de la Iglesia Católica • Mejorado con documentos hispanoamericanos'
-              : 'Responses based on Catholic Church teaching • Enhanced with Hispanic-American documents'
-            }
-          </div>
+            </AnimatePresence>
+
+            {/* PDF Limits Info */}
+            <div className="mt-2 text-center text-xs text-gray-400">
+              {currentTexts.pdfLimits}
+            </div>
+          </motion.div>
+
+          {/* Preguntas Sugeridas - Debajo de la barra */}
+          <AnimatePresence>
+            {messages.length === 0 && sampleQuestions.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-2"
+              >
+                <h3 className="text-sm font-medium text-gray-500 text-center uppercase tracking-wide mb-3">
+                  {language === 'es' ? 'Preguntas sugeridas' : 'Suggested questions'}
+                </h3>
+                <motion.div
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="flex flex-col gap-2"
+                >
+                  {sampleQuestions.map((question, index) => (
+                    <motion.button
+                      key={index}
+                      variants={itemVariants}
+                      whileHover={{ scale: 1.01, borderColor: 'rgb(251 191 36)' }}
+                      whileTap={{ scale: 0.99 }}
+                      onClick={() => handleSampleQuestion(question)}
+                      className="text-left px-4 py-2.5 bg-white hover:bg-amber-50 rounded-lg border border-amber-200 transition-all text-sm text-gray-700 shadow-sm"
+                    >
+                      {question}
+                    </motion.button>
+                  ))}
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Messages - Renderizar cuando existan */}
+          {messages.length > 0 && (
+            <div className="mt-6 space-y-4 max-h-[50vh] overflow-y-auto">
+              <AnimatePresence initial={false}>
+                {messages.map((message) => (
+                  <motion.div
+                    key={message.id}
+                    layout
+                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.9 }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                    className={`flex gap-3 ${
+                      message.role === 'user' ? 'justify-end' : 'justify-start'
+                    }`}
+                  >
+                    {message.role === 'assistant' && (
+                      <motion.div
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ duration: 0.5, ease: 'backOut' }}
+                        className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg border-2 border-white"
+                      >
+                        <BookOpen className="h-5 w-5 text-white" />
+                      </motion.div>
+                    )}
+
+                    <div className={`max-w-2xl ${
+                      message.role === 'user' ? 'w-auto' : 'w-full'
+                    }`}>
+                      <div
+                        className={`rounded-2xl px-4 py-3 shadow-md ${
+                          message.role === 'user'
+                            ? 'bg-gradient-to-br from-amber-400 to-amber-500 text-gray-900'
+                            : 'bg-white border-2 border-amber-100 text-gray-900'
+                        }`}
+                      >
+                        <div className="prose prose-sm max-w-none">
+                          {message.role === 'assistant' ? (
+                            <div 
+                              className="whitespace-pre-wrap leading-relaxed"
+                              dangerouslySetInnerHTML={{ 
+                                __html: message.content.replace(/\n/g, '<br>') 
+                              }}
+                            />
+                          ) : (
+                            <p className="whitespace-pre-wrap font-medium">{message.content}</p>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {advancedMode && showMetrics && message.role === 'assistant' && message.responseTime && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          className="mt-2 ml-2 flex items-center gap-3 text-xs text-gray-500"
+                        >
+                          <div className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full">
+                            <Clock className="h-3 w-3" />
+                            <span>{message.responseTime}ms</span>
+                          </div>
+                          <div className="flex items-center gap-1 bg-purple-100 px-2 py-1 rounded-full text-purple-700">
+                            <Zap className="h-3 w-3" />
+                            <span>{message.implementation}</span>
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
+
+                    {message.role === 'user' && (
+                      <motion.div
+                        initial={{ scale: 0, rotate: 180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ duration: 0.5, ease: 'backOut' }}
+                        className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center shadow-lg border-2 border-white"
+                      >
+                        <User className="h-5 w-5 text-white" />
+                      </motion.div>
+                    )}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {/* Error Display */}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 flex items-center justify-between"
+              >
+                <div className="flex items-center">
+                  <AlertTriangle className="h-5 w-5 mr-3" />
+                  <p>{language === 'es' ? 'Error:' : 'Error:'} {error}</p>
+                </div>
+                <button 
+                  onClick={() => setError(null)}
+                  className="p-1 rounded-full hover:bg-red-100"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div ref={messagesEndRef} />
         </div>
-      </motion.div>
+      </main>
     </div>
   );
 }

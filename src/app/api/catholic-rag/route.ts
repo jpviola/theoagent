@@ -34,7 +34,7 @@ async function initializeRAG() {
     const publicDir = path.join(process.cwd(), 'public', 'data');
     const documents: CatholicDocument[] = [];
     
-    // Load available JSON files
+    // Load available JSON files (limiting catechism for faster initialization)
     const files = [
       'catechism.json',
       'papal_magisterium.json', 
@@ -53,7 +53,10 @@ async function initializeRAG() {
         const data = JSON.parse(fileContent);
         
         if (Array.isArray(data)) {
-          data.forEach((item: any, index: number) => {
+          // Limit catechism to first 300 documents for faster loading
+          const itemsToLoad = filename === 'catechism.json' ? data.slice(0, 300) : data;
+          
+          itemsToLoad.forEach((item: any, index: number) => {
             documents.push({
               id: `${filename}-${index}`,
               title: item.title || item.heading || item.name || `Entry ${index + 1}`,
