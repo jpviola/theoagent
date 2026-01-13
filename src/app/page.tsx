@@ -8,7 +8,7 @@ import type { User } from '@supabase/supabase-js';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import SantaPalabraLogo from '@/components/SantaPalabraLogo';
-import { ArrowRight, BookOpen, FlaskConical, UserCircle, Heart, Quote, Check, Facebook, Instagram, Twitter } from 'lucide-react';
+import { ArrowRight, BookOpen, FlaskConical, UserCircle, Heart, Quote, Check, Facebook, Instagram, Twitter, ChevronDown, HelpCircle } from 'lucide-react';
 
 export default function HomePage() {
   const { language, toggleLanguage } = useLanguage();
@@ -17,6 +17,7 @@ export default function HomePage() {
   const [displayedText, setDisplayedText] = useState('');
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [startTypewriter, setStartTypewriter] = useState(false);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   // Definir traducciones y palabras antes de los efectos
   const t = {
@@ -29,6 +30,8 @@ export default function HomePage() {
       testimonialsTitle: 'Lo que dicen nuestros usuarios',
       principlesTitle: 'Nuestro Principio Fundacional',
       principlesText: 'Que tu tono sea caritativo pero firme en la verdad dogmática. Ante dudas complejas, prioriza siempre citas directas del Catecismo de la Iglesia Católica (CIC) y documentos conciliares. Evita alucinaciones teológicas y si no hay respuesta en el Magisterio indícalo con humildad.',
+      faqTitle: 'Preguntas Frecuentes',
+      faqSubtitle: '¿Tienes dudas? Aquí respondemos las consultas más comunes',
       footerText: 'Hecho con amor',
       footerCredits: 'Bits de filosofía',
       footerYear: 'Creando desde 2026',
@@ -42,6 +45,8 @@ export default function HomePage() {
       testimonialsTitle: 'What our users say',
       principlesTitle: 'Our Foundational Principle',
       principlesText: 'Let your tone be charitable but firm in dogmatic truth. When facing complex doubts, always prioritize direct citations from the Catechism of the Catholic Church (CCC) and conciliar documents. Avoid theological hallucinations and if there is no answer in the Magisterium indicate it with humility.',
+      faqTitle: 'Frequently Asked Questions',
+      faqSubtitle: 'Have questions? Here we answer the most common inquiries',
       footerText: 'Made with love',
       footerCredits: 'Bits of Philosophy',
       footerYear: 'Creating since 2026',
@@ -70,6 +75,45 @@ export default function HomePage() {
       author: language === 'es' ? 'Carlos Mendez' : 'Carlos Mendez',
       role: language === 'es' ? 'Laico comprometido' : 'Committed Layperson',
     },
+  ];
+
+  const faqs = [
+    {
+      question: language === 'es' ? '¿Qué es SantaPalabra?' : 'What is SantaPalabra?',
+      answer: language === 'es' 
+        ? 'SantaPalabra es una catequista digital católica especializada en la espiritualidad hispanoamericana. Combina la sabiduría de la Iglesia universal con las enseñanzas del CELAM, Santa Teresa de Ávila, San Juan de la Cruz y toda la rica tradición católica latinoamericana.'
+        : 'SantaPalabra is a Catholic digital catechist specialized in Hispanic-American spirituality. It combines the wisdom of the universal Church with the teachings of CELAM, Saint Teresa of Ávila, Saint John of the Cross, and the entire rich Latin American Catholic tradition.'
+    },
+    {
+      question: language === 'es' ? '¿Las respuestas son confiables?' : 'Are the answers reliable?',
+      answer: language === 'es'
+        ? 'Sí. Todas las respuestas están basadas en el Catecismo de la Iglesia Católica, documentos papales, conciliares y magisteriales. Priorizamos citas directas y evitamos especulaciones teológicas. Si no hay respuesta clara en el Magisterio, lo indicamos con humildad.'
+        : 'Yes. All answers are based on the Catechism of the Catholic Church, papal, conciliar, and magisterial documents. We prioritize direct citations and avoid theological speculation. If there is no clear answer in the Magisterium, we indicate it with humility.'
+    },
+    {
+      question: language === 'es' ? '¿Qué hace especial a SantaPalabra?' : 'What makes SantaPalabra special?',
+      answer: language === 'es'
+        ? 'Nuestra especialización en la espiritualidad hispanoamericana. Integramos documentos del CELAM, la mística española (Teresa de Ávila, Juan de la Cruz), devoción guadalupana y la riqueza teológica latinoamericana, algo único que no encontrarás en otros chatbots católicos.'
+        : 'Our specialization in Hispanic-American spirituality. We integrate CELAM documents, Spanish mysticism (Teresa of Ávila, John of the Cross), Guadalupan devotion, and Latin American theological richness—something unique that you won\'t find in other Catholic chatbots.'
+    },
+    {
+      question: language === 'es' ? '¿Es gratis?' : 'Is it free?',
+      answer: language === 'es'
+        ? 'Actualmente SantaPalabra está en fase de desarrollo y acceso abierto. Nuestro objetivo es hacer la catequesis católica accesible para todos, especialmente para la comunidad hispanoamericana.'
+        : 'Currently, SantaPalabra is in development phase with open access. Our goal is to make Catholic catechesis accessible to all, especially for the Hispanic-American community.'
+    },
+    {
+      question: language === 'es' ? '¿Puedo usar SantaPalabra para catequesis parroquial?' : 'Can I use SantaPalabra for parish catechesis?',
+      answer: language === 'es'
+        ? 'Absolutamente. SantaPalabra es una herramienta complementaria ideal para catequistas, sacerdotes y agentes de pastoral. Puede ayudar a preparar clases, resolver dudas doctrinales y profundizar en temas específicos de fe católica.'
+        : 'Absolutely. SantaPalabra is an ideal complementary tool for catechists, priests, and pastoral agents. It can help prepare classes, resolve doctrinal questions, and deepen specific topics of Catholic faith.'
+    },
+    {
+      question: language === 'es' ? '¿Qué temas puedo consultar?' : 'What topics can I consult?',
+      answer: language === 'es'
+        ? 'Puedes preguntar sobre: doctrina católica, Sagrada Escritura, sacramentos, moral católica, espiritualidad, oración, santos, historia de la Iglesia, documentos del Magisterio, teología latinoamericana, misticismo español y mucho más.'
+        : 'You can ask about: Catholic doctrine, Sacred Scripture, sacraments, Catholic morality, spirituality, prayer, saints, Church history, Magisterium documents, Latin American theology, Spanish mysticism, and much more.'
+    }
   ];
 
   const containerVariants = {
@@ -381,6 +425,78 @@ export default function HomePage() {
               </div>
             </div>
           </motion.div>
+        </motion.div>
+      </section>
+
+      {/* FAQ SECTION */}
+      <section className="bg-white py-20 px-4 md:py-28">
+        <motion.div
+          className="mx-auto max-w-4xl"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <HelpCircle className="h-10 w-10 text-yellow-600" />
+              <h2 className="text-4xl font-black text-gray-900 md:text-5xl">
+                {t.faqTitle}
+              </h2>
+            </div>
+            <p className="text-lg text-gray-600 mt-4">
+              {t.faqSubtitle}
+            </p>
+          </motion.div>
+
+          <div className="space-y-4">
+            {faqs.map((faq, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="border-2 border-yellow-200 rounded-2xl overflow-hidden bg-gradient-to-br from-white to-yellow-50/30"
+              >
+                <button
+                  onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
+                  className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-yellow-50/50 transition-colors"
+                >
+                  <span className="font-bold text-gray-900 text-lg pr-4">
+                    {faq.question}
+                  </span>
+                  <motion.div
+                    animate={{ rotate: openFaqIndex === index ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ChevronDown className="h-6 w-6 text-yellow-600 flex-shrink-0" />
+                  </motion.div>
+                </button>
+                <AnimatePresence>
+                  {openFaqIndex === index && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-6 pb-5 pt-2 text-gray-700 leading-relaxed border-t border-yellow-100">
+                        {faq.answer}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
       </section>
 

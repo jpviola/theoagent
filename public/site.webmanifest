@@ -1,0 +1,46 @@
+{
+  "name": "SantaPalabra - Catequista Digital Hispanoamericano",
+  "short_name": "SantaPalabra",
+  "description": "Catequista digital católico especializado en la rica espiritualidad hispanoamericana",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffbeb",
+  "theme_color": "#eab308",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-96x96.svg",
+      "sizes": "96x96",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/apple-icon-76x76.svg",
+      "sizes": "76x76",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/faviconAndroid-icon-144x144.svg",
+      "sizes": "144x144",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/ms-icon-150x150.svg",
+      "sizes": "150x150",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/ms-icon-310x310.svg",
+      "sizes": "310x310",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["education", "religion", "lifestyle"],
+  "lang": "es-ES",
+  "dir": "ltr"
+}
