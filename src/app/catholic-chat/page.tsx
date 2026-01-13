@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { supabase } from '@/lib/supabase-client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Trash2, Home, LogIn, User, Sparkles, BookOpen, FlaskConical, AlertTriangle, X } from 'lucide-react';
+import { Send, Trash2, Home, LogIn, User, Sparkles, BookOpen, FlaskConical, AlertTriangle, X, Settings, Zap, BarChart2, Clock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageToggle } from '@/components/LanguageToggle';
 
@@ -13,6 +14,8 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  responseTime?: number;
+  implementation?: string;
 }
 
 export default function CatholicChatPage() {
@@ -21,7 +24,10 @@ export default function CatholicChatPage() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { language } = useLanguage(); // Use global language context
+  const [advancedMode, setAdvancedMode] = useState(false);
+  const [implementation, setImplementation] = useState<'LangChain' | 'LlamaIndex'>('LangChain');
+  const [showMetrics, setShowMetrics] = useState(false);
+  const { language } = useLanguage();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -61,26 +67,32 @@ export default function CatholicChatPage() {
     setIsLoading(true);
     setError(null);
 
+    const startTime = Date.now();
+
     try {
-      const response = await fetch('/api/catholic-rag', {
+      const apiEndpoint = advancedMode ? '/api/catholic-simple' : '/api/catholic-rag';
+      const requestBody = advancedMode
+        ? { query: userMessage.content, implementation, mode: 'standard', language }
+        : { query: userMessage.content, implementation: 'Catholic Chat', language };
+
+      const response = await fetch(apiEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: userMessage.content,
-          implementation: 'Catholic Chat',
-          language: language, // Pass language to API
-        })
+        body: JSON.stringify(requestBody)
       });
 
       if (!response.ok) throw new Error('Failed to get response');
       
       const data = await response.json();
+      const responseTime = Date.now() - startTime;
       
       const assistantMessage: Message = {
         id: Date.now().toString() + '_assistant',
         role: 'assistant',
         content: data.response || 'No response received',
-        timestamp: new Date()
+        timestamp: new Date(),
+        responseTime: advancedMode ? responseTime : undefined,
+        implementation: advancedMode ? implementation : undefined
       };
 
       setMessages(prev => [...prev, assistantMessage]);
@@ -132,7 +144,12 @@ export default function CatholicChatPage() {
       enterMessage: 'Escribe tu pregunta teológica...',
       send: 'Enviar',
       loading: 'Pensando...',
-      errorOccurred: 'Ocurrió un error. Por favor intenta de nuevo.'
+      errorOccurred: 'Ocurrió un error. Por favor intenta de nuevo.',
+      advancedMode: 'Modo Avanzado',
+      simpleMode: 'Modo Simple',
+      implementation: 'Motor RAG',
+      showMetrics: 'Mostrar métricas',
+      responseTime: 'Tiempo de respuesta'
     },
     en: {
       backHome: 'Back to Home',
@@ -147,7 +164,12 @@ export default function CatholicChatPage() {
       enterMessage: 'Enter your theological question...',
       send: 'Send',
       loading: 'Thinking...',
-      errorOccurred: 'An error occurred. Please try again.'
+      errorOccurred: 'An error occurred. Please try again.',
+      advancedMode: 'Advanced Mode',
+      simpleMode: 'Simple Mode',
+      implementation: 'RAG Engine',
+      showMetrics: 'Show metrics',
+      responseTime: 'Response time'
     }
   };
 
@@ -179,13 +201,44 @@ export default function CatholicChatPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white flex flex-col relative overflow-hidden">
+      {/* Imágenes decorativas católicas de fondo */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <motion.div
+          initial={{ opacity: 0, rotate: 0 }}
+          animate={{ opacity: 0.15, rotate: 12 }}
+          transition={{ duration: 2, delay: 0.5 }}
+          className="absolute top-[10%] left-[2%] h-32 w-32 md:h-40 md:w-40"
+          style={{ filter: 'sepia(80%) brightness(0.5) contrast(120%) saturate(1.2)' }}
+        >
+          <Image src="/SantaTeresa.svg" alt="" fill className="object-contain" />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, rotate: 0 }}
+          animate={{ opacity: 0.15, rotate: -12 }}
+          transition={{ duration: 2, delay: 0.7 }}
+          className="absolute top-[30%] right-[2%] h-32 w-32 md:h-40 md:w-40"
+          style={{ filter: 'sepia(80%) brightness(0.5) contrast(120%) saturate(1.2)' }}
+        >
+          <Image src="/san juan.svg" alt="" fill className="object-contain" />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, rotate: 0 }}
+          animate={{ opacity: 0.18, rotate: 0 }}
+          transition={{ duration: 2, delay: 0.9 }}
+          className="absolute bottom-[15%] left-[1%] h-28 w-28 md:h-36 md:w-36"
+          style={{ filter: 'sepia(80%) brightness(0.5) contrast(120%) saturate(1.2)' }}
+        >
+          <Image src="/guadalupana.svg" alt="" fill className="object-contain" />
+        </motion.div>
+      </div>
+
       {/* Header */}
       <motion.header
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-yellow-200 sticky top-0 z-10"
+        className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-yellow-200 sticky top-0 z-20"
       >
         <div className="max-w-4xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
@@ -200,15 +253,32 @@ export default function CatholicChatPage() {
             </div>
             <div className="flex items-center space-x-4">
               <LanguageToggle />
+              
+              {/* Advanced Mode Toggle */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setAdvancedMode(!advancedMode)}
+                className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-md transition-colors ${
+                  advancedMode 
+                    ? 'bg-purple-100 text-purple-700 border border-purple-300' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+                title={advancedMode ? currentTexts.simpleMode : currentTexts.advancedMode}
+              >
+                <Settings className="h-4 w-4" />
+                {advancedMode ? <FlaskConical className="h-3 w-3" /> : null}
+              </motion.button>
+
               {user ? (
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <User className="h-4 w-4" />
-                  <span>{user.email}</span>
+                  <span className="hidden md:inline">{user.email}</span>
                 </div>
               ) : (
                 <Link href="/auth-test" className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800">
                   <LogIn className="h-4 w-4" />
-                  {currentTexts.signIn}
+                  <span className="hidden md:inline">{currentTexts.signIn}</span>
                 </Link>
               )}
               <button
@@ -216,15 +286,60 @@ export default function CatholicChatPage() {
                 className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800 px-3 py-1 rounded-md hover:bg-gray-100"
               >
                 <Trash2 className="h-4 w-4" />
-                {currentTexts.clearChat}
+                <span className="hidden md:inline">{currentTexts.clearChat}</span>
               </button>
             </div>
           </div>
         </div>
       </motion.header>
 
+      {/* Advanced Mode Settings Panel */}
+      <AnimatePresence>
+        {advancedMode && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden bg-purple-50/50 border-b border-purple-200"
+          >
+            <div className="max-w-4xl mx-auto px-4 py-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <FlaskConical className="h-4 w-4 text-purple-600" />
+                    <span className="text-sm font-medium text-purple-900">{currentTexts.advancedMode}</span>
+                  </div>
+                  <div className="h-4 w-px bg-purple-300"></div>
+                  <div className="flex items-center gap-2">
+                    <label className="text-xs text-purple-700">{currentTexts.implementation}:</label>
+                    <select
+                      value={implementation}
+                      onChange={(e) => setImplementation(e.target.value as 'LangChain' | 'LlamaIndex')}
+                      className="text-xs border border-purple-300 rounded px-2 py-1 bg-white"
+                    >
+                      <option value="LangChain">LangChain</option>
+                      <option value="LlamaIndex">LlamaIndex</option>
+                    </select>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowMetrics(!showMetrics)}
+                  className={`flex items-center gap-1 text-xs px-2 py-1 rounded ${
+                    showMetrics ? 'bg-purple-200 text-purple-900' : 'text-purple-700 hover:bg-purple-100'
+                  }`}
+                >
+                  <BarChart2 className="h-3 w-3" />
+                  {currentTexts.showMetrics}
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Main Chat Area */}
-      <main className="max-w-4xl mx-auto px-4 py-6 flex-1 w-full">
+      <main className="max-w-4xl mx-auto px-4 py-6 flex-1 w-full relative z-10">
         {/* Welcome Message */}
         <AnimatePresence>
           {messages.length === 0 && (
@@ -283,28 +398,72 @@ export default function CatholicChatPage() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.9 }}
                 transition={{ duration: 0.3, ease: 'easeOut' }}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                <div
-                  className={`max-w-3xl rounded-lg px-4 py-3 shadow-sm ${
-                    message.role === 'user'
-                      ? 'bg-yellow-500 text-gray-900'
-                      : 'bg-white border border-yellow-200 text-gray-900'
-                  }`}
-                >
-                  <div className="prose prose-sm max-w-none">
-                    {message.role === 'assistant' ? (
-                      <div 
-                        className="whitespace-pre-wrap"
-                        dangerouslySetInnerHTML={{ 
-                          __html: message.content.replace(/\n/g, '<br>') 
-                        }}
-                      />
-                    ) : (
-                      <p className="whitespace-pre-wrap">{message.content}</p>
-                    )}
+                {/* Avatar - Asistente (izquierda) */}
+                {message.role === 'assistant' && (
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ duration: 0.5, ease: 'backOut' }}
+                    className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center shadow-lg border-2 border-white"
+                  >
+                    <BookOpen className="h-5 w-5 text-white" />
+                  </motion.div>
+                )}
+
+                <div className={`max-w-2xl ${message.role === 'user' ? 'w-auto' : 'w-full'}`}>
+                  <div
+                    className={`rounded-2xl px-4 py-3 shadow-md ${
+                      message.role === 'user'
+                        ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 text-gray-900'
+                        : 'bg-white border-2 border-yellow-100 text-gray-900'
+                    }`}
+                  >
+                    <div className="prose prose-sm max-w-none">
+                      {message.role === 'assistant' ? (
+                        <div 
+                          className="whitespace-pre-wrap leading-relaxed"
+                          dangerouslySetInnerHTML={{ 
+                            __html: message.content.replace(/\n/g, '<br>') 
+                          }}
+                        />
+                      ) : (
+                        <p className="whitespace-pre-wrap font-medium">{message.content}</p>
+                      )}
+                    </div>
                   </div>
+                  
+                  {/* Advanced Mode Metrics */}
+                  {advancedMode && showMetrics && message.role === 'assistant' && message.responseTime && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="mt-2 ml-2 flex items-center gap-3 text-xs text-gray-500"
+                    >
+                      <div className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full">
+                        <Clock className="h-3 w-3" />
+                        <span>{message.responseTime}ms</span>
+                      </div>
+                      <div className="flex items-center gap-1 bg-purple-100 px-2 py-1 rounded-full text-purple-700">
+                        <Zap className="h-3 w-3" />
+                        <span>{message.implementation}</span>
+                      </div>
+                    </motion.div>
+                  )}
                 </div>
+
+                {/* Avatar - Usuario (derecha) */}
+                {message.role === 'user' && (
+                  <motion.div
+                    initial={{ scale: 0, rotate: 180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ duration: 0.5, ease: 'backOut' }}
+                    className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center shadow-lg border-2 border-white"
+                  >
+                    <User className="h-5 w-5 text-white" />
+                  </motion.div>
+                )}
               </motion.div>
             ))}
           </AnimatePresence>
@@ -341,7 +500,7 @@ export default function CatholicChatPage() {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="sticky bottom-0 bg-white/80 backdrop-blur-xl border-t border-yellow-200 p-4"
+        className="sticky bottom-0 bg-white/90 backdrop-blur-xl border-t border-yellow-200 p-4 z-20"
       >
         <div className="max-w-4xl mx-auto">
           <form onSubmit={handleSubmit} className="flex space-x-4">

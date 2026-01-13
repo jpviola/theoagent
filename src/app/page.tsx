@@ -267,18 +267,11 @@ export default function HomePage() {
           >
             <Link
               href="/catholic-chat"
-              className="group inline-flex items-center justify-center rounded-full bg-yellow-500 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-yellow-500/30 transition-all duration-300 hover:scale-105 hover:bg-yellow-600"
+              className="group inline-flex items-center justify-center rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 px-10 py-5 text-xl font-bold text-white shadow-2xl shadow-yellow-500/40 transition-all duration-300 hover:scale-110 hover:shadow-yellow-500/60"
             >
-              <BookOpen className="mr-3 h-6 w-6" />
+              <BookOpen className="mr-3 h-7 w-7" />
               {t.ctaChat}
-              <ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Link>
-            <Link
-              href="/test-rag"
-              className="inline-flex items-center justify-center rounded-full border-2 border-yellow-500 bg-white/70 px-8 py-4 text-lg font-bold text-yellow-600 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white"
-            >
-              <FlaskConical className="mr-3 h-6 w-6" />
-              {t.ctaRag}
+              <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-1" />
             </Link>
             <AnimatePresence>
               {user && (
@@ -290,7 +283,7 @@ export default function HomePage() {
                 >
                   <Link
                     href="/admin"
-                    className="inline-flex items-center justify-center rounded-full border border-gray-300 bg-white/70 px-6 py-3 text-base font-bold text-gray-700 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white"
+                    className="inline-flex items-center justify-center rounded-full border-2 border-gray-300 bg-white/80 px-6 py-3 text-base font-bold text-gray-700 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white hover:border-gray-400"
                   >
                     <UserCircle className="mr-2 h-5 w-5" />
                     {t.ctaAdmin}
@@ -435,6 +428,17 @@ export default function HomePage() {
               >
                 <Twitter className="h-6 w-6" />
               </a>
+            </div>
+
+            {/* Advanced users link */}
+            <div className="pt-4 border-t border-gray-700 mt-4 w-full max-w-md">
+              <Link
+                href="/test-rag"
+                className="text-xs text-gray-500 hover:text-gray-400 flex items-center justify-center gap-1 transition-colors"
+              >
+                <FlaskConical className="h-3 w-3" />
+                <span>{language === 'es' ? 'Laboratorio RAG (modo desarrollador)' : 'RAG Lab (developer mode)'}</span>
+              </Link>
             </div>
           </div>
         </motion.div>
