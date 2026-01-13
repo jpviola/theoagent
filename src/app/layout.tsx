@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
 import AppChrome from "@/components/AppChrome";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -52,7 +53,31 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AppChrome>{children}</AppChrome>
+        <header className="w-full border-b py-4 px-6 flex items-center justify-between bg-white">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="font-semibold text-lg">SantaPalabra</Link>
+            <nav className="hidden md:flex gap-4 text-sm">
+              <Link href="/catholic-chat">Chat</Link>
+              <Link href="/blog">Blog</Link>
+              <Link href="/support">Apoyar</Link>
+            </nav>
+          </div>
+          <div>
+            <a href="https://www.buymeacoffee.com/santapalabra" target="_blank" rel="noreferrer" className="bg-yellow-400 text-black px-4 py-2 rounded-md text-sm">Donar ☕</a>
+          </div>
+        </header>
+
+        <main className="min-h-screen">
+          <AppChrome>{children}</AppChrome>
+        </main>
+
+        <footer className="w-full border-t py-6 px-6 text-center text-sm bg-white">
+          <div>© {new Date().getFullYear()} SantaPalabra · Una iniciativa de evangelización digital</div>
+          <div className="mt-2">
+            <a href="https://www.buymeacoffee.com/santapalabra" target="_blank" rel="noreferrer" className="underline">Invítanos un café</a>
+          </div>
+        </footer>
+
         <SpeedInsights />
       </body>
     </html>
