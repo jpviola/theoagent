@@ -12,6 +12,9 @@ interface DonationStats {
   average_amount_cents: number
 }
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export default function DonationsAdminPage() {
   const [stats, setStats] = useState<DonationStats | null>(null)
   const [donations, setDonations] = useState<Donation[]>([])
