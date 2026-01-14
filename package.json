@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "vercel-build": "npm ci --legacy-peer-deps && next build"
+    "vercel-build": "npm ci --legacy-peer-deps && next build",
+    "create-paypal-webhook": "node scripts/create_paypal_webhook.js"
   },
   "dependencies": {
     "@langchain/anthropic": "^1.3.7",
@@ -24,11 +25,13 @@
     "ai": "^6.0.28",
     "framer-motion": "^12.26.1",
     "lucide-react": "^0.562.0",
+    "mercadopago": "^2.12.0",
     "next": "16.0.10",
     "react": "19.2.1",
     "react-dom": "19.2.1",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
+    "stripe": "^20.1.2",
     "zod": "^3.25.76"
   },
   "devDependencies": {

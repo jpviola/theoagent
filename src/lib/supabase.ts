@@ -127,6 +127,58 @@ export interface Database {
           message_count?: number
         }
       }
+      donations: {
+        Row: {
+          id: string
+          user_id: string | null
+          payment_provider: 'stripe' | 'paypal'
+          payment_id: string
+          session_id: string | null
+          amount_cents: number
+          currency: string
+          status: 'pending' | 'completed' | 'failed' | 'refunded' | 'cancelled'
+          donor_email: string | null
+          donor_name: string | null
+          message: string | null
+          is_anonymous: boolean
+          metadata: any
+          webhook_verified: boolean
+          created_at: string
+          updated_at: string
+          completed_at: string | null
+        }
+        Insert: {
+          user_id?: string | null
+          payment_provider: 'stripe' | 'paypal'
+          payment_id: string
+          session_id?: string | null
+          amount_cents: number
+          currency?: string
+          status?: 'pending' | 'completed' | 'failed' | 'refunded' | 'cancelled'
+          donor_email?: string | null
+          donor_name?: string | null
+          message?: string | null
+          is_anonymous?: boolean
+          metadata?: any
+          webhook_verified?: boolean
+        }
+        Update: {
+          user_id?: string | null
+          payment_provider?: 'stripe' | 'paypal'
+          payment_id?: string
+          session_id?: string | null
+          amount_cents?: number
+          currency?: string
+          status?: 'pending' | 'completed' | 'failed' | 'refunded' | 'cancelled'
+          donor_email?: string | null
+          donor_name?: string | null
+          message?: string | null
+          is_anonymous?: boolean
+          metadata?: any
+          webhook_verified?: boolean
+          completed_at?: string | null
+        }
+      }
     }
     Views: {
       [_ in never]: never
@@ -145,6 +197,8 @@ export interface Database {
       subscription_tier: 'free' | 'plus' | 'expert'
       subscription_status: 'active' | 'canceled' | 'past_due'
       source_type: 'catechism' | 'papal' | 'biblical' | 'patristic' | 'conciliar'
+      payment_provider: 'stripe' | 'paypal'
+      donation_status: 'pending' | 'completed' | 'failed' | 'refunded' | 'cancelled'
     }
   }
 }
