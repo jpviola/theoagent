@@ -7,7 +7,7 @@ import path from 'path';
 
 // Service role client for bypassing RLS when creating profiles
 const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
