@@ -20,7 +20,6 @@ export default function HomePage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [displayedText, setDisplayedText] = useState('');
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [startTypewriter, setStartTypewriter] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   
@@ -30,7 +29,7 @@ export default function HomePage() {
   const { progress, newAchievement, setNewAchievement, addXP, unlockAchievement, updateStreak, trackReferral } = useUserProgress();
 
   // Definir traducciones y palabras antes de los efectos
-  const t = {
+  const translations = {
     es: {
       heroTitle: 'Conversa con tu catequista digital',
       heroCta: 'Una catequista digital hispanoamericana: Escritura, Tradición, Magisterio y espiritualidad latinoamericana en una experiencia nueva.',
@@ -61,7 +60,9 @@ export default function HomePage() {
       footerCredits: 'Bits of Philosophy',
       footerYear: 'Creating since 2026',
     },
-  }[language];
+  };
+
+  const t = translations[language as keyof typeof translations] || translations.es;
 
   const testimonials = [
     {
@@ -144,11 +145,6 @@ export default function HomePage() {
     },
   };
 
-  // Carrusel de palabras para el subtítulo
-  const words = language === 'es' 
-    ? ['Sagradas Escrituras', 'Tradición', 'Magisterio', 'Espiritualidad']
-    : ['Scripture', 'Tradition', 'Magisterium', 'Spirituality'];
-
   // Efectos
   useEffect(() => {
     const getUser = async () => {
@@ -187,14 +183,6 @@ export default function HomePage() {
     }, 30);
     return () => clearInterval(intervalId);
   }, [fullText, startTypewriter]);
-
-  // Carrusel de palabras
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentWordIndex((prev) => (prev + 1) % words.length);
-    }, 2500);
-    return () => clearInterval(intervalId);
-  }, [words.length]);
 
   // Efectos para personalización y gamificación
   useEffect(() => {
@@ -357,23 +345,12 @@ export default function HomePage() {
             <SantaPalabraLogo className="h-64 w-64 text-yellow-600 md:h-96 md:w-96" />
           </motion.div>
 
-          <motion.div
+          <motion.p
             variants={itemVariants}
-            className="mt-6 flex flex-wrap items-center justify-center gap-2 text-lg text-gray-700 md:text-xl"
+            className="mt-6 text-lg text-gray-700 md:text-xl max-w-3xl mx-auto"
           >
-            <span>{language === 'es' ? 'Una catequista digital hispanoamericana:' : 'A Hispanic-American digital catechist:'}</span>
-            <motion.span
-              key={currentWordIndex}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="font-bold text-yellow-700"
-            >
-              {words[currentWordIndex]}
-            </motion.span>
-            <span>{language === 'es' ? 'en una experiencia nueva.' : 'in a new kind of experience.'}</span>
-          </motion.div>
+            {t.heroCta}
+          </motion.p>
 
           <motion.div
             variants={itemVariants}

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
-export type AppLanguage = 'es' | 'en';
+export type AppLanguage = 'es' | 'en' | 'pt';
 
 type LanguageContextValue = {
   language: AppLanguage;
@@ -15,13 +15,27 @@ const STORAGE_KEY = 'santapalabra_language';
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 function normalizeLanguage(value: unknown): AppLanguage | null {
-  if (value === 'es' || value === 'en') return value;
+  if (value === 'es' || value === 'en' || value === 'pt') return value;
   return null;
 }
 
 function getBrowserDefaultLanguage(): AppLanguage {
   if (typeof navigator === 'undefined') return 'es';
-  return navigator.language?.toLowerCase().startsWith('es') ? 'es' : 'es';
+  
+  const lang = navigator.language?.toLowerCase();
+  const locale = lang?.split('-')[0];
+  
+  // Portugués (Brasil y Portugal)
+  if (locale === 'pt') return 'pt';
+  
+  // Español (España, México, Argentina, etc.)
+  if (locale === 'es') return 'es';
+  
+  // Intentar detectar por región si el idioma no es específico
+  if (lang?.includes('br')) return 'pt'; // Brasil
+  
+  // Default a español para Latinoamérica
+  return 'es';
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
@@ -52,7 +66,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return {
       language,
       setLanguage: setLanguageState,
-      toggleLanguage: () => setLanguageState((prev) => (prev === 'es' ? 'en' : 'es')),
+      toggleLanguage: () => setLanguageState((prev) => {
+        if (prev === 'es') return 'pt';
+        if (prev === 'pt') return 'en';
+        return 'es';
+      }),
     };
   }, [language]);
 

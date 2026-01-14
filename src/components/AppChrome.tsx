@@ -1,10 +1,11 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import AuthFlowManager from '@/components/AuthFlowManager';
 import { LanguageProvider, useLanguage } from '@/contexts/LanguageContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
 import { Globe } from 'lucide-react';
+import Header from '@/components/Header';
 
 function LanguageToggle() {
   const { language, setLanguage } = useLanguage();
@@ -40,15 +41,16 @@ function LanguageToggle() {
 }
 
 export default function AppChrome({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-
-  // Páginas que necesitan selector de idioma flotante
-  const showLanguageToggle = pathname === '/catholic-chat' || pathname === '/test-rag';
+  // Páginas que necesitan selector de idioma flotante (removido ya que está en Header)
+  const showLanguageToggle = false;
 
   return (
-    <LanguageProvider>
-      {showLanguageToggle && <LanguageToggle />}
-      <AuthFlowManager>{children}</AuthFlowManager>
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <Header />
+        {showLanguageToggle && <LanguageToggle />}
+        <AuthFlowManager>{children}</AuthFlowManager>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }

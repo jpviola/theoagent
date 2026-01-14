@@ -96,7 +96,7 @@ async function initializeRAG() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { query, language = 'es' } = await request.json();
+    const { query, language = 'es', model } = await request.json();
     
     if (!query || typeof query !== 'string') {
       return NextResponse.json({
@@ -110,17 +110,20 @@ export async function POST(request: NextRequest) {
     
     // Generate response
     console.log(`🙏 Processing Catholic query: ${query.substring(0, 100)}...`);
+    const userId = request.headers.get('x-user-id') || 'anonymous';
+
     const response = await rag.generateResponse(query, {
-      userId: 'anonymous',
+      userId,
       mode: 'standard',
-      language: language as 'en' | 'es'
+      language: language as 'en' | 'es',
+      model: model as any,
     }) as any; // Temporary type assertion until we fix the return type
     
     return NextResponse.json({
       response: typeof response === 'string' ? response : (response.answer || response),
       sources: response.sources || [],
       confidence: response.confidence || 0.8,
-      model: 'Enhanced Catholic RAG with Vercel AI Gateway',
+      model: model || 'default',
       timestamp: new Date().toISOString()
     });
     
@@ -129,11 +132,21 @@ export async function POST(request: NextRequest) {
     
     // Detailed error response for debugging
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    const isConfigError = errorMessage.includes('No AI model configuration');
+    const isConfigError =
+      errorMessage.includes('No AI model configuration') ||
+      errorMessage.includes('Missing OPENAI_API_KEY') ||
+      errorMessage.includes('Missing ANTHROPIC_API_KEY') ||
+      errorMessage.includes('Missing GOOGLE_API_KEY') ||
+      errorMessage.includes('Missing LLAMA_OPENAI_COMPAT_') ||
+      errorMessage.includes('Missing GROQ_') ||
+      errorMessage.includes('Missing TOGETHER_') ||
+      errorMessage.includes('not configured yet');
     
     return NextResponse.json({
-      error: isConfigError 
-        ? 'AI service configuration incomplete. Please check environment variables.'
+      error: isConfigError
+        ? (process.env.NODE_ENV === 'development'
+          ? errorMessage
+          : 'AI service configuration incomplete. Please check environment variables.')
         : 'Internal server error processing your Catholic query',
       details: process.env.NODE_ENV === 'development' ? errorMessage : undefined,
       code: isConfigError ? 'CONFIG_ERROR' : 'PROCESSING_ERROR',

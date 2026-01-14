@@ -1,5 +1,6 @@
 import { ChatAnthropic } from '@langchain/anthropic';
 import { ChatOpenAI } from '@langchain/openai';
+import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { StringOutputParser } from '@langchain/core/output_parsers';
@@ -10,6 +11,8 @@ import { AIMessage, HumanMessage, BaseMessage } from '@langchain/core/messages';
 import { HNSWLib } from '@langchain/community/vectorstores/hnswlib';
 import { OpenAIEmbeddings } from '@langchain/openai';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
+
+type SupportedChatModel = 'anthropic' | 'openai' | 'gemini' | 'llama';
 
 // Types
 interface CatholicDocument {
@@ -24,6 +27,7 @@ interface ChatContext {
   userId: string;
   mode: 'standard' | 'advanced';
   language: 'en' | 'es';
+  model?: SupportedChatModel;
 }
 
 interface RetrievalResult {
@@ -282,6 +286,159 @@ export class SantaPalabraRAG {
     // Initialize LLM with Vercel AI Gateway support
     this.llm = this.initializeLLM();
     this.conversationManager = new ConversationManager(this.llm);
+  }
+
+  private getGatewayApiKey(): string | undefined {
+    return process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN;
+  }
+
+  private createOpenAILLM(): BaseChatModel {
+    const gatewayApiKey = this.getGatewayApiKey();
+
+    // Prefer direct OpenAI locally (simplest + most reliable)
+    if (process.env.OPENAI_API_KEY && !process.env.VERCEL) {
+      return new ChatOpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+        modelName: 'gpt-4o-mini',
+        temperature: 0.3,
+      });
+    }
+
+    // If gateway is configured, use it (works well on Vercel)
+    if (gatewayApiKey) {
+      return new ChatOpenAI({
+        apiKey: gatewayApiKey,
+        modelName: 'openai/gpt-4o-mini',
+        temperature: 0.3,
+        configuration: {
+          baseURL: 'https://ai-gateway.vercel.sh/v1',
+        },
+      });
+    }
+
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('Missing OPENAI_API_KEY');
+    }
+
+    return new ChatOpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+      modelName: 'gpt-4o-mini',
+      temperature: 0.3,
+    });
+  }
+
+  private createAnthropicLLM(): BaseChatModel {
+    const gatewayApiKey = this.getGatewayApiKey();
+
+    // Use direct Anthropic locally when available
+    if (process.env.ANTHROPIC_API_KEY && !process.env.VERCEL) {
+      return new ChatAnthropic({
+        model: 'claude-3-haiku-20240307',
+        temperature: 0.3,
+        anthropicApiKey: process.env.ANTHROPIC_API_KEY,
+      });
+    }
+
+    // If gateway is configured, use it
+    if (gatewayApiKey) {
+      return new ChatAnthropic({
+        apiKey: gatewayApiKey,
+        modelName: 'anthropic/claude-3-5-haiku-20241022',
+        temperature: 0.3,
+        clientOptions: {
+          defaultHeaders: {
+            Authorization: `Bearer ${gatewayApiKey}`,
+          },
+        },
+      });
+    }
+
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error('Missing ANTHROPIC_API_KEY');
+    }
+
+    return new ChatAnthropic({
+      model: 'claude-3-haiku-20240307',
+      temperature: 0.3,
+      anthropicApiKey: process.env.ANTHROPIC_API_KEY,
+    });
+  }
+
+  private createLLMForModel(model?: SupportedChatModel): BaseChatModel {
+    if (!model) return this.llm;
+
+    switch (model) {
+      case 'openai':
+        return this.createOpenAILLM();
+      case 'anthropic':
+        return this.createAnthropicLLM();
+      case 'gemini':
+        return this.createGeminiLLM();
+      case 'llama':
+        return this.createLlamaOpenAICompatibleLLM();
+      default: {
+        const exhaustiveCheck: never = model;
+        throw new Error(`Unsupported model: ${exhaustiveCheck}`);
+      }
+    }
+  }
+
+  private createGeminiLLM(): BaseChatModel {
+    const apiKey = process.env.GOOGLE_API_KEY;
+    if (!apiKey) {
+      throw new Error('Missing GOOGLE_API_KEY');
+    }
+
+    const model = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+    return new ChatGoogleGenerativeAI({
+      apiKey,
+      model,
+      temperature: 0.3,
+    });
+  }
+
+  private createLlamaOpenAICompatibleLLM(): BaseChatModel {
+    const baseURL =
+      process.env.LLAMA_OPENAI_COMPAT_BASE_URL ||
+      (process.env.GROQ_API_KEY ? 'https://api.groq.com/openai/v1' : undefined) ||
+      (process.env.TOGETHER_API_KEY ? 'https://api.together.xyz/v1' : undefined);
+
+    const apiKey =
+      process.env.LLAMA_OPENAI_COMPAT_API_KEY ||
+      process.env.GROQ_API_KEY ||
+      process.env.TOGETHER_API_KEY;
+
+    const model =
+      process.env.LLAMA_OPENAI_COMPAT_MODEL ||
+      process.env.GROQ_MODEL ||
+      process.env.TOGETHER_MODEL;
+
+    if (!baseURL) {
+      throw new Error(
+        'Missing LLAMA_OPENAI_COMPAT_BASE_URL (or set GROQ_API_KEY / TOGETHER_API_KEY to use a default base URL).'
+      );
+    }
+
+    if (!apiKey) {
+      throw new Error(
+        'Missing LLAMA_OPENAI_COMPAT_API_KEY (or GROQ_API_KEY / TOGETHER_API_KEY).'
+      );
+    }
+
+    if (!model) {
+      throw new Error(
+        'Missing LLAMA_OPENAI_COMPAT_MODEL (or GROQ_MODEL / TOGETHER_MODEL).'
+      );
+    }
+
+    return new ChatOpenAI({
+      apiKey,
+      modelName: model,
+      temperature: 0.3,
+      configuration: {
+        baseURL,
+      },
+    });
   }
 
   /**
@@ -561,6 +718,9 @@ Provide a helpful, doctrinally sound response based on the sources above:`;
 
       console.log('💭 Generating response for:', userMessage.substring(0, 100) + '...');
 
+      const llm = this.createLLMForModel(context.model);
+      const conversationManager = new ConversationManager(llm);
+
       // Retrieve relevant documents with enhanced search
       const retrievalResult = await this.retrieveRelevantContext(userMessage);
       const { documents, sources, relevanceScores } = retrievalResult;
@@ -585,7 +745,7 @@ Provide a helpful, doctrinally sound response based on the sources above:`;
       // Use summarized conversation history for better context management
       let chatHistory = '';
       if (messages.length > 12) {
-        const summary = await this.conversationManager.summarizeConversation(messages);
+        const summary = await conversationManager.summarizeConversation(messages);
         conversationSummaries.set(context.userId, summary);
         
         chatHistory = `CONVERSATION SUMMARY: ${summary.summary}\n` +
@@ -606,7 +766,7 @@ Provide a helpful, doctrinally sound response based on the sources above:`;
       // Create the chain
       const chain = RunnableSequence.from([
         systemPrompt,
-        this.llm,
+        llm,
         new StringOutputParser()
       ]);
 

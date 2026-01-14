@@ -2,6 +2,43 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
+  // Handle legacy/implicit favicon requests early (avoid Supabase work and 404s)
+  // Browsers (and some manifest generators) commonly request these default paths.
+  const pathname = request.nextUrl.pathname;
+
+  if (pathname === '/favicon.ico') {
+    return NextResponse.redirect(new URL('/santapalabra-logoSinLeyenda.ico', request.url));
+  }
+
+  if (pathname === '/favicon.svg') {
+    return NextResponse.redirect(new URL('/santapalabra-logo.svg', request.url));
+  }
+
+  // Some tools reference PNG favicons that may not exist in this repo.
+  // Return a tiny valid transparent PNG to prevent console 404 noise.
+  if (
+    pathname === '/favicon-16x16.png' ||
+    pathname === '/favicon-32x32.png' ||
+    pathname === '/favicon-48x48.png' ||
+    pathname === '/apple-touch-icon.png' ||
+    pathname === '/android-chrome-192x192.png' ||
+    pathname === '/android-chrome-512x512.png'
+  ) {
+    const base64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+uZ5sAAAAASUVORK5CYII=';
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+
+    return new NextResponse(bytes, {
+      headers: {
+        'content-type': 'image/png',
+        'cache-control': 'public, max-age=31536000, immutable',
+      },
+    });
+  }
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -70,7 +107,14 @@ export async function middleware(request: NextRequest) {
   // Handle API routes authentication
   if (request.nextUrl.pathname.startsWith('/api/')) {
     // Skip auth check for public API routes
-    const publicApiRoutes = ['/api/health', '/api/webhook']
+    const publicApiRoutes = [
+      '/api/health',
+      '/api/webhook',
+      '/api/catholic-rag',
+      '/api/catholic-simple',
+      '/api/tts',
+      '/api/elevenlabs/single-use-token',
+    ]
     const isPublicApiRoute = publicApiRoutes.some(route => 
       request.nextUrl.pathname.startsWith(route)
     )
@@ -108,9 +152,8 @@ export const config = {
      * Match all request paths except for the ones starting with:
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
      * - public folder
      */
-    '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+    '/((?!_next/static|_next/image|public/).*)',
   ],
 }

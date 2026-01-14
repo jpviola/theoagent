@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase-client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Beaker, BookCopy, ChevronRight, Home, LogIn, Zap, BarChart2, AlertTriangle, CheckCircle, Loader, Settings, Languages, MessageSquare, Play } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, type AppLanguage } from '@/contexts/LanguageContext';
 
 interface TestResult {
   query: string;
@@ -53,19 +53,25 @@ export default function RAGTestingInterface() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const sampleQueries = {
+  const sampleQueries: Record<AppLanguage, string[]> = {
     es: [
       '¿Qué enseña la Iglesia sobre la oración?',
       'Explica la transubstanciación en la Eucaristía.',
       '¿Cuál es el rol de la Virgen María en la salvación?',
       '¿Qué dice el CELAM sobre la opción por los pobres?',
     ],
+    pt: [
+      'O que a Igreja ensina sobre a oração?',
+      'Explique a transubstanciação na Eucaristia.',
+      'Qual é o papel da Virgem Maria na salvação?',
+      'O que o CELAM diz sobre a opção pelos pobres?',
+    ],
     en: [
       'What is the Catholic teaching on the Trinity?',
       'How should Catholics approach prayer?',
       'What is the significance of the Eucharist?',
       'Can you explain Catholic teaching on salvation?',
-    ]
+    ],
   };
 
   const testSingleQuery = async () => {
@@ -309,11 +315,12 @@ export default function RAGTestingInterface() {
                     <label className="flex items-center gap-2 text-gray-800 text-sm font-semibold mb-3"><Languages className="h-4 w-4" />Idioma</label>
                     <select
                       value={language}
-                      onChange={(e) => setLanguage(e.target.value as 'en' | 'es')}
+                      onChange={(e) => setLanguage(e.target.value as 'en' | 'es' | 'pt')}
                       className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                     >
                       <option value="en">🇺🇸 English</option>
                       <option value="es">🇪🇸 Español</option>
+                      <option value="pt">🇧🇷 Português</option>
                     </select>
                   </div>
                 </div>

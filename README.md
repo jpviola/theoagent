@@ -6,6 +6,19 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+## Environment variables
+
+For the Catholic chat to work, you must configure at least one LLM provider.
+
+- Copy `.env.local.example` to `.env.local`
+- Set at least one of: `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`
+
+Optional:
+- Gemini: set `GOOGLE_API_KEY` (and optionally `GEMINI_MODEL`)
+- Llama (OpenAI-compatible): set `LLAMA_OPENAI_COMPAT_BASE_URL`, `LLAMA_OPENAI_COMPAT_API_KEY`, `LLAMA_OPENAI_COMPAT_MODEL` (or use `GROQ_*` / `TOGETHER_*`)
+
+Then start the dev server.
+
 First, run the development server:
 
 ```bash

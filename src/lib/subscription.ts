@@ -1,3 +1,5 @@
+import { supabase } from './supabase-client';
+
 export type SubscriptionTier = 'free' | 'plus' | 'expert';
 
 export interface SubscriptionLimits {
@@ -8,6 +10,18 @@ export interface SubscriptionLimits {
   temperature: number;
   academicFeatures: boolean;
   priority: boolean;
+}
+
+export interface EmailSubscriptionData {
+  email: string;
+  language: string;
+  subscribed_at: string;
+  preferences?: {
+    newsletter: boolean;
+    xp_tracking: boolean;
+    chat_history: boolean;
+    new_features: boolean;
+  };
 }
 
 export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionLimits> = {
@@ -121,3 +135,74 @@ export const PRICING_INFO = {
     ]
   }
 };
+
+// Email Subscription Functions
+export async function subscribeToNewsletter(email: string, language: string = 'es'): Promise<void> {
+  try {
+    const subscriptionData: EmailSubscriptionData = {
+      email,
+      language,
+      subscribed_at: new Date().toISOString(),
+      preferences: {
+        newsletter: true,
+        xp_tracking: true,
+        chat_history: true,
+        new_features: true,
+      }
+    };
+
+    // Intentar insertar en Supabase si está disponible
+    try {
+      const { error } = await supabase
+        .from('email_subscriptions')
+        .upsert(subscriptionData as any, { 
+          onConflict: 'email' 
+        });
+
+      if (error) {
+        console.warn('Supabase subscription failed, using localStorage:', error);
+        // Fallback a localStorage si Supabase falla
+        localStorage.setItem('santapalabra_subscription', JSON.stringify(subscriptionData));
+      }
+    } catch (supabaseError) {
+      console.warn('Supabase not available, using localStorage fallback:', supabaseError);
+      // Fallback a localStorage
+      localStorage.setItem('santapalabra_subscription', JSON.stringify(subscriptionData));
+    }
+
+    // Guardar en localStorage como backup
+    localStorage.setItem('santapalabra_subscription', JSON.stringify(subscriptionData));
+    
+    // Marcar como suscrito para evitar mostrar el modal de nuevo
+    localStorage.setItem('santapalabra_subscription_status', 'subscribed');
+    
+  } catch (error) {
+    console.error('Subscription failed:', error);
+    throw new Error('Failed to subscribe');
+  }
+}
+
+export function isUserSubscribed(): boolean {
+  if (typeof window === 'undefined') return false;
+  
+  const status = localStorage.getItem('santapalabra_subscription_status');
+  return status === 'subscribed';
+}
+
+export function getEmailSubscriptionData(): EmailSubscriptionData | null {
+  if (typeof window === 'undefined') return null;
+  
+  const data = localStorage.getItem('santapalabra_subscription');
+  return data ? JSON.parse(data) : null;
+}
+
+export function markSubscriptionSkipped(): void {
+  localStorage.setItem('santapalabra_subscription_status', 'skipped');
+}
+
+export function shouldShowSubscriptionModal(): boolean {
+  if (typeof window === 'undefined') return false;
+  
+  const status = localStorage.getItem('santapalabra_subscription_status');
+  return status !== 'subscribed' && status !== 'skipped';
+}
