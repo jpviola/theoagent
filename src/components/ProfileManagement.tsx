@@ -208,13 +208,13 @@ export default function ProfileManagement({
   if (loading) {
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+        <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 dark:bg-gray-900 dark:text-gray-100">
           <div className="flex items-center justify-center">
             <svg className="animate-spin h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span className="ml-2 text-gray-600">Loading profile...</span>
+            <span className="ml-2 text-gray-600 dark:text-gray-300">Loading profile...</span>
           </div>
         </div>
       </div>
@@ -227,11 +227,11 @@ export default function ProfileManagement({
       onClick={(e) => e.target === e.currentTarget && onClose?.()}
     >
       <div 
-        className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[95vh] overflow-hidden"
+        className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[95vh] overflow-hidden dark:bg-gray-900 dark:text-gray-100"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="relative p-6 border-b border-gray-200">
+        <div className="relative p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
@@ -240,8 +240,8 @@ export default function ProfileManagement({
                 </svg>
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Profile Settings</h2>
-                <p className="text-sm text-gray-600">Manage your account and preferences</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Profile Settings</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-300">Manage your account and preferences</p>
               </div>
             </div>
             {onClose && (
@@ -257,7 +257,7 @@ export default function ProfileManagement({
           </div>
 
           {/* Tabs */}
-          <div className="flex space-x-1 mt-6 bg-gray-100 rounded-lg p-1">
+          <div className="flex space-x-1 mt-6 bg-gray-100 rounded-lg p-1 dark:bg-gray-800">
             {[
               { id: 'profile', name: 'Profile', icon: '👤' },
               { id: 'security', name: 'Security', icon: '🔒' },
@@ -268,8 +268,8 @@ export default function ProfileManagement({
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex-1 flex items-center justify-center space-x-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-800 dark:text-white'
+                    : 'text-gray-600 hover:text-gray-900 dark:text-gray-300'
                 }`}
               >
                 <span>{tab.icon}</span>
@@ -282,7 +282,7 @@ export default function ProfileManagement({
         <div className="p-6 overflow-y-auto max-h-[70vh]">
           {/* Error/Success Messages */}
           {error && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl dark:bg-red-900/60 dark:border-red-700 dark:text-red-200">
               <div className="flex items-start space-x-3">
                 <svg className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -293,7 +293,7 @@ export default function ProfileManagement({
           )}
 
           {success && (
-            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl">
+            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl dark:bg-green-900/60 dark:border-green-700 dark:text-green-200">
               <div className="flex items-start space-x-3">
                 <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -308,7 +308,7 @@ export default function ProfileManagement({
             <div className="space-y-6">
               <form onSubmit={handleUpdateProfile} className="space-y-4">
                 <div>
-                  <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Full Name
                   </label>
                   <input
@@ -316,14 +316,14 @@ export default function ProfileManagement({
                     id="full_name"
                     value={formData.full_name}
                     onChange={(e) => setFormData(prev => ({ ...prev, full_name: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
                     placeholder="Your full name"
                     required
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="institution_name" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="institution_name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Institution <span className="text-gray-400">(Optional)</span>
                   </label>
                   <input
@@ -331,20 +331,20 @@ export default function ProfileManagement({
                     id="institution_name"
                     value={formData.institution_name}
                     onChange={(e) => setFormData(prev => ({ ...prev, institution_name: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
                     placeholder="Seminary, University, Parish, etc."
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Email Address
                   </label>
                   <input
                     type="email"
                     id="email"
                     value={formData.email}
-                    className="w-full px-4 py-3 border border-gray-300 bg-gray-50 rounded-xl cursor-not-allowed"
+                    className="w-full px-4 py-3 border border-gray-300 bg-gray-50 rounded-xl cursor-not-allowed dark:bg-gray-800 dark:text-gray-100"
                     disabled
                   />
                   <p className="text-xs text-gray-500 mt-1">
@@ -355,7 +355,7 @@ export default function ProfileManagement({
                 <button
                   type="submit"
                   disabled={updating}
-                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed"
+                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed dark:bg-blue-500 dark:hover:bg-blue-600"
                 >
                   {updating ? (
                     <div className="flex items-center justify-center space-x-2">

@@ -4,12 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import WelcomeQuiz from '@/components/WelcomeQuiz';
 
 export default function IntroPage() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoEnded, setVideoEnded] = useState(false);
   const [canSkip, setCanSkip] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
   const { language } = useLanguage();
 
   const welcomeText = language === 'es' ? '¡Bienvenidos!' : 'Welcome!';
@@ -20,9 +22,9 @@ export default function IntroPage() {
       setCanSkip(true);
     }, 2000);
 
-    // Redirección automática después de 5 segundos
+    // Mostrar quiz automáticamente después de 5 segundos
     const autoRedirectTimer = setTimeout(() => {
-      router.push('/catholic-chat');
+      setShowQuiz(true);
     }, 5000);
 
     return () => {
@@ -33,17 +35,27 @@ export default function IntroPage() {
 
   const handleVideoEnd = () => {
     setVideoEnded(true);
-    // Redirigir automáticamente al chat después del video
+    // Mostrar quiz automáticamente después del video
     setTimeout(() => {
-      router.push('/catholic-chat');
+      setShowQuiz(true);
     }, 500);
   };
 
   const handleSkip = () => {
     if (canSkip) {
-      router.push('/catholic-chat');
+      setShowQuiz(true);
     }
   };
+
+  const handleQuizComplete = (profile: any) => {
+    localStorage.setItem('santapalabra_profile', JSON.stringify(profile));
+    router.push('/catholic-chat');
+  };
+
+  // Mostrar quiz si fue activado
+  if (showQuiz) {
+    return <WelcomeQuiz onComplete={handleQuizComplete} />;
+  }
 
   return (
     <div className="relative min-h-screen w-full bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 flex items-center justify-center overflow-hidden">
@@ -116,8 +128,6 @@ export default function IntroPage() {
         </AnimatePresence>
       </div>
 
-
-
       {/* Logo SantaPalabra en la esquina superior izquierda */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -132,6 +142,21 @@ export default function IntroPage() {
         </svg>
         <span className="text-lg font-bold text-amber-800">SantaPalabra</span>
       </motion.div>
+
+      {/* Botón para saltar (visible después de 2 seg) */}
+      <AnimatePresence>
+        {canSkip && (
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            onClick={handleSkip}
+            className="absolute bottom-8 right-8 px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-full transition-colors"
+          >
+            {language === 'es' ? 'Siguiente' : 'Next'}
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Partículas decorativas de fondo */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">

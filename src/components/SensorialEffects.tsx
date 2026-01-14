@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
@@ -62,33 +63,29 @@ export function GoldenParticles() {
 }
 
 // Botón con efecto de bendición
+type BlessedButtonProps = {
+  children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+  href?: string;
+  [key: string]: any;
+};
+
 export function BlessedButton({ 
   children, 
   className = '', 
   onClick,
+  href,
   ...props 
-}: {
-  children: React.ReactNode;
-  className?: string;
-  onClick?: () => void;
-  [key: string]: any;
-}) {
+}: BlessedButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
 
-  return (
-    <motion.button
-      className={`relative overflow-hidden ${className}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={onClick}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.98 }}
-      {...props}
-    >
+  const content = (
+    <>
       {/* Efecto de luz de bendición */}
       {isHovered && (
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-200/30 to-transparent"
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent mix-blend-screen pointer-events-none"
           initial={{ x: '-100%' }}
           animate={{ x: '100%' }}
           transition={{ duration: 0.8, ease: 'easeInOut' }}
@@ -123,6 +120,41 @@ export function BlessedButton({
       )}
       
       {children}
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className={`relative inline-flex overflow-hidden ${className}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onClick={onClick}
+        passHref
+      >
+        <motion.span
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.98 }}
+          {...props}
+        >
+          {content}
+        </motion.span>
+      </Link>
+    );
+  }
+
+  return (
+    <motion.button
+      className={`relative inline-flex overflow-hidden ${className}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.98 }}
+      {...props}
+    >
+      {content}
     </motion.button>
   );
 }
@@ -154,5 +186,30 @@ export function BreathingImage({
       }}
       {...props}
     />
+  );
+}
+
+// Botón simple sin efectos sensoriales - para mantener claridad
+export function SimpleButton({ 
+  children, 
+  className = '', 
+  onClick,
+  ...props 
+}: {
+  children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+  [key: string]: any;
+}) {
+  return (
+    <motion.button
+      className={`relative overflow-hidden ${className}`}
+      onClick={onClick}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      {...props}
+    >
+      {children}
+    </motion.button>
   );
 }

@@ -30,29 +30,37 @@ export default function Header() {
   if (isChatPage) {
     // Header especial para la página de chat: solo logo grande + leyenda, con donación/café destacados
     return (
-      <header className="sticky top-0 z-50 w-full border-b border-yellow-200 bg-white/95 backdrop-blur-xl shadow-sm dark:bg-gray-900/95 dark:border-gray-700">
-        <div className="mx-auto max-w-7xl px-4 py-3">
+      <header className={`relative sticky top-0 z-50 w-full ${isDarkMode ? 'border-b border-transparent' : 'border-b border-yellow-200'} bg-white/95 backdrop-blur-xl shadow-sm ${isDarkMode ? 'dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 dark:bg-opacity-95' : ''}`}>
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-transparent to-black/10 dark:from-black/10 dark:to-black/20" />
+          <div className="mx-auto max-w-7xl px-4 py-3 relative z-10">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             {/* Logo x2 y leyenda en dos líneas */}
             <div className="flex w-full items-center justify-center gap-4 sm:w-auto sm:justify-start">
-              <div className="relative h-14 w-14 md:h-16 md:w-16 rounded-2xl bg-gradient-to-br from-yellow-50 to-amber-100 p-2 shadow-md dark:from-gray-800 dark:to-gray-700">
-                <img src="/santapalabra-logo.svg" alt="SantaPalabra" className="h-full w-full object-contain" />
+              <div className="relative h-14 w-14 md:h-16 md:w-16 rounded-2xl bg-gradient-to-br from-yellow-50 to-amber-100 p-2 shadow-md dark:from-gray-700 dark:to-gray-600">
+                <img src="/santapalabra-logo.svg" alt="SantaPalabra" className="h-full w-full object-contain dark:brightness-125 dark:contrast-125" />
               </div>
               <div className="leading-tight">
-                <div className="text-xl md:text-2xl font-black text-gray-900 tracking-tight dark:text-white">
+                <div className="text-xl md:text-2xl font-black text-gray-900 tracking-tight dark:text-white/90">
                   SantaPalabra,
                 </div>
-                <div className="text-sm md:text-base text-gray-700 font-semibold dark:text-gray-200">
+                <div className="text-sm md:text-base text-gray-700 font-semibold dark:text-white/70">
                   ¡Ruega por nosotros!
                 </div>
               </div>
             </div>
 
-            {/* Botones de donación y café más protagonistas */}
+            {/* Botones de acción y tema en chat */}
             <div className="flex w-full flex-wrap items-center justify-center gap-3 sm:w-auto sm:justify-end md:gap-4">
+              <button
+                onClick={toggleDarkMode}
+                className="inline-flex items-center gap-2 rounded-full border border-yellow-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-yellow-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-800"
+                aria-label="Alternar tema"
+              >
+                {isDarkMode ? '☀️ Claro' : '🌙 Oscuro'}
+              </button>
               <Link
                 href="/support"
-                className="group inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-black px-5 py-2.5 rounded-full text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 dark:text-black"
+                className="group inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-black px-5 py-2.5 rounded-full text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 dark:text-gray-100 dark:from-yellow-500 dark:to-amber-600 dark:hover:from-yellow-600 dark:hover:to-amber-700"
               >
                 <span className="group-hover:animate-pulse text-xl">❤️</span>
                 <span>¡Quiero donar!</span>
@@ -61,10 +69,10 @@ export default function Header() {
                 href="https://www.buymeacoffee.com/santapalabra"
                 target="_blank"
                 rel="noreferrer"
-                className="group inline-flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 dark:text-white"
+                className="group inline-flex items-center gap-2 bg-[#ffdd00] hover:bg-[#f2cf00] text-black px-5 py-2.5 rounded-full text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 dark:text-gray-100 dark:bg-[#ffd800] dark:hover:bg-[#ffcf00]"
               >
                 <span className="group-hover:animate-bounce text-xl">☕</span>
-                <span>¡Quiero un café!</span>
+                <span>Buy Me a Coffee</span>
               </a>
             </div>
           </div>
@@ -75,78 +83,65 @@ export default function Header() {
 
   // Header normal para otras páginas
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-yellow-200 bg-white/90 backdrop-blur-xl shadow-sm dark:bg-gray-900/90 dark:border-gray-700">
-      <div className="mx-auto max-w-7xl px-4 py-3">
+    <header className={`relative sticky top-0 z-50 w-full ${isDarkMode ? 'border-b border-transparent' : 'border-b border-yellow-100'} bg-white/85 backdrop-blur-xl shadow-sm ${isDarkMode ? 'dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 dark:bg-opacity-85' : ''}`}>
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-transparent to-black/8 dark:from-black/8 dark:to-black/18" />
+      <div className="mx-auto max-w-7xl px-4 py-2.5 relative z-10">
         <div className="flex items-center justify-between">
-          {/* Logo y título principal - más grande y prominente */}
-          <Link href="/" className="flex items-center gap-4 group transition-transform hover:scale-[1.02]">
-            <div className="relative h-14 w-14 rounded-2xl bg-gradient-to-br from-yellow-50 to-amber-100 p-2 shadow-md group-hover:shadow-lg transition-shadow dark:from-gray-800 dark:to-gray-700">
-              <img src="/santapalabra-logo.svg" alt="SantaPalabra" className="h-full w-full object-contain" />
+          {/* Logo y título principal */}
+          <Link href="/" className="flex items-center gap-3 group transition-transform hover:scale-[1.01]">
+            <div className="relative h-12 w-12 rounded-xl bg-gradient-to-br from-yellow-50 to-amber-100 p-2 shadow-sm group-hover:shadow-md transition-shadow dark:from-gray-700 dark:to-gray-600">
+              <img src="/santapalabra-logo.svg" alt="SantaPalabra" className="h-full w-full object-contain dark:brightness-125 dark:contrast-125" />
             </div>
             <div className="leading-tight">
-              <div className="text-2xl font-black text-gray-900 tracking-tight dark:text-white">SantaPalabra</div>
-              <div className="text-sm text-gray-600 font-medium dark:text-gray-300">Catequista digital hispanoamericano</div>
+              <div className="text-xl font-black text-gray-900 tracking-tight dark:text-white/90">SantaPalabra</div>
+              <div className="text-xs text-gray-600 font-medium dark:text-white/70">Catequista digital hispanoamericano</div>
             </div>
           </Link>
 
-          {/* Navegación principal - más atractiva */}
-          <nav className="hidden lg:flex items-center gap-1 bg-yellow-50 rounded-full p-2 border border-yellow-200 dark:bg-gray-800 dark:border-gray-600">
-            <Link href="/catholic-chat" className="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-white hover:shadow-sm transition-all duration-200 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700">
-              <span className="text-lg">💬</span>
-              Chat Católico
-            </Link>
-            <Link href="/blog" className="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-white hover:shadow-sm transition-all duration-200 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700">
-              <span className="text-lg">📖</span>
+          {/* Navegación principal minimalista */}
+          <nav className="hidden lg:flex items-center gap-2 text-sm font-semibold text-gray-800 dark:text-white">
+            <Link href="/blog" style={{ color: 'var(--foreground)' }} className="px-3 py-2 rounded-lg hover:bg-yellow-50 hover:text-gray-900 transition-colors dark:text-white dark:hover:bg-gray-700 dark:hover:text-white">
               Blog
             </Link>
-            <Link href="/support" className="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-white hover:shadow-sm transition-all duration-200 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700">
-              <span className="text-lg">🙏</span>
-              Apoyar
+            <Link href="/sobre-nosotros" style={{ color: 'var(--foreground)' }} className="px-3 py-2 rounded-lg hover:bg-yellow-50 hover:text-gray-900 transition-colors dark:text-white dark:hover:bg-gray-700 dark:hover:text-white">
+              Sobre nosotros
             </Link>
-            <Link href="/admin" className="flex items-center gap-1 px-4 py-2.5 rounded-full text-xs font-bold text-amber-700 hover:text-amber-800 hover:bg-amber-50 hover:shadow-sm transition-all duration-200 border border-amber-200 dark:text-amber-400 dark:hover:text-amber-300 dark:hover:bg-gray-700 dark:border-amber-600">
+            <Link href="/admin" className="ml-2 flex items-center gap-1 px-3 py-2 rounded-lg border border-yellow-200 text-xs font-bold text-amber-700 hover:bg-amber-50 hover:text-amber-800 transition-colors dark:border-amber-600 dark:text-amber-300 dark:bg-transparent dark:hover:bg-gray-700 dark:hover:text-amber-200">
               <span className="text-sm">⚙️</span>
               Panel
             </Link>
           </nav>
 
           {/* Navegación móvil */}
-          <nav className="flex lg:hidden items-center gap-2">
-            <Link href="/catholic-chat" className="p-2 rounded-lg hover:bg-yellow-50 transition-colors dark:hover:bg-gray-800">
-              <span className="text-xl">💬</span>
+          <nav className="flex lg:hidden items-center gap-1.5">
+            <Link href="/blog" style={{ color: 'var(--foreground)' }} className="p-2 rounded-lg hover:bg-yellow-50 transition-colors dark:bg-transparent dark:hover:bg-gray-700">
+              <span className="text-lg dark:text-white">📖</span>
             </Link>
-            <Link href="/blog" className="p-2 rounded-lg hover:bg-yellow-50 transition-colors dark:hover:bg-gray-800">
-              <span className="text-xl">📖</span>
+            <Link href="/sobre-nosotros" style={{ color: 'var(--foreground)' }} className="p-2 rounded-lg hover:bg-yellow-50 transition-colors dark:bg-transparent dark:hover:bg-gray-700">
+              <span className="text-lg dark:text-white">ℹ️</span>
             </Link>
-            <Link href="/support" className="p-2 rounded-lg hover:bg-yellow-50 transition-colors dark:hover:bg-gray-800">
-              <span className="text-xl">🙏</span>
-            </Link>
-            <Link href="/admin" className="p-1.5 rounded-lg hover:bg-amber-50 transition-colors border border-amber-200 dark:hover:bg-gray-800 dark:border-amber-600">
-              <span className="text-sm">⚙️</span>
+            <Link href="/admin" style={{ color: 'var(--foreground)' }} className="p-1.5 rounded-lg border border-amber-200 hover:bg-amber-50 transition-colors dark:border-amber-600 dark:bg-transparent dark:hover:bg-gray-700">
+              <span className="text-sm dark:text-white">⚙️</span>
             </Link>
           </nav>
 
-          {/* Botones de acción - más dinámicos */}
-          <div className="flex items-center gap-3">
+          {/* Controles rápidos */}
+          <div className="flex items-center gap-2">
             <button
               onClick={toggleDarkMode}
-              className="px-4 py-2 rounded-full text-sm font-semibold text-gray-600 hover:bg-yellow-100/50 transition-colors border border-yellow-200 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-800"
+              className="h-9 w-9 rounded-full border border-yellow-200 text-base text-gray-600 hover:bg-yellow-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700"
+              aria-label="Alternar tema"
             >
               {isDarkMode ? '☀️' : '🌙'}
             </button>
             <button
               onClick={toggleLanguage}
-              className="px-4 py-2 rounded-full text-sm font-semibold text-gray-600 hover:bg-yellow-100/50 transition-colors border border-yellow-200 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-800"
+              style={{ color: 'var(--foreground)' }}
+              className="h-9 px-3 rounded-full border border-yellow-200 text-sm font-semibold text-gray-700 hover:bg-yellow-50 transition-colors dark:text-white dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700"
+              aria-label="Cambiar idioma"
             >
               {language === 'es' ? 'EN' : 'ES'}
             </button>
-            <Link href="/support" className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-black px-5 py-2.5 rounded-full text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 dark:text-black">
-              <span className="group-hover:animate-pulse">❤️</span>
-              <span className="hidden sm:inline">¡Quiero donar!</span>
-            </Link>
-            <a href="https://www.buymeacoffee.com/santapalabra" target="_blank" rel="noreferrer" className="group relative hidden sm:inline-flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 dark:text-white">
-              <span className="group-hover:animate-bounce">☕</span>
-              <span>¡Quiero un café!</span>
-            </a>
           </div>
         </div>
       </div>

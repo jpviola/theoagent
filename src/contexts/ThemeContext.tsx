@@ -12,15 +12,19 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  // Apply theme class to <html>
+  const applyTheme = (dark: boolean) => {
+    const method = dark ? 'add' : 'remove';
+    document.documentElement.classList[method]('dark');
+    document.body.classList[method]('dark');
+  };
+
   useEffect(() => {
-    const savedDarkMode = localStorage.getItem('santapalabra_dark_mode');
-    const dark = savedDarkMode === 'true';
+    const saved = localStorage.getItem('santapalabra_dark_mode');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const dark = saved === null ? systemPrefersDark : saved === 'true';
     setIsDarkMode(dark);
-    if (dark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    applyTheme(dark);
   }, []);
 
   const toggleDarkMode = () => {
@@ -28,14 +32,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     console.log('ThemeProvider: Toggling dark mode:', newDarkMode);
     setIsDarkMode(newDarkMode);
     localStorage.setItem('santapalabra_dark_mode', newDarkMode.toString());
-    if (newDarkMode) {
-      document.documentElement.classList.add('dark');
-      console.log('ThemeProvider: Added dark class');
-    } else {
-      document.documentElement.classList.remove('dark');
-      console.log('ThemeProvider: Removed dark class');
-    }
+    applyTheme(newDarkMode);
   };
+
+  // Sync class when state changes from any source
+  useEffect(() => {
+    applyTheme(isDarkMode);
+  }, [isDarkMode]);
 
   return (
     <ThemeContext.Provider value={{ isDarkMode, toggleDarkMode }}>

@@ -64,20 +64,20 @@ export function ProgressBar({ progress }: { progress: UserProgress }) {
   const progressPercent = (progress.xp / progress.xpToNext) * 100;
 
   return (
-    <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl p-6 border-2 border-yellow-200 shadow-lg">
+    <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl p-6 border-2 border-yellow-200 shadow-lg dark:from-neutral-800 dark:to-neutral-700 dark:bg-none dark:bg-gradient-to-r dark:border-gray-700">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-yellow-500 rounded-full text-white">
             <Award className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="font-bold text-gray-900">Nivel {progress.level}</h3>
-            <p className="text-sm text-gray-600">Peregrino Espiritual</p>
+            <h3 className="font-bold text-gray-900 dark:text-gray-100">Nivel {progress.level}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300">Peregrino Espiritual</p>
           </div>
         </div>
         <div className="text-right">
-          <p className="text-2xl font-bold text-yellow-600">{progress.xp} XP</p>
-          <p className="text-xs text-gray-500">{progress.xpToNext - progress.xp} para siguiente nivel</p>
+          <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{progress.xp} XP</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{progress.xpToNext - progress.xp} para siguiente nivel</p>
         </div>
       </div>
 
@@ -91,7 +91,7 @@ export function ProgressBar({ progress }: { progress: UserProgress }) {
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
       </div>
 
-      <div className="flex items-center justify-between text-sm text-gray-600">
+      <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300">
         <span>🔥 Racha: {progress.streak} días</span>
         <span>📖 Consultas: {progress.totalInteractions}</span>
       </div>
@@ -112,7 +112,7 @@ export function AchievementNotification({ achievement, onClose }: { achievement:
       exit={{ opacity: 0, y: -50, scale: 0.9 }}
       className="fixed top-4 right-4 z-50 max-w-sm"
     >
-      <div className="bg-gradient-to-r from-yellow-500 to-amber-600 text-white p-4 rounded-2xl shadow-2xl border-2 border-yellow-300">
+      <div className="bg-gradient-to-r from-yellow-500 to-amber-600 text-white p-4 rounded-2xl shadow-2xl border-2 border-yellow-300 dark:from-yellow-700 dark:to-amber-700 dark:border-yellow-700">
         <div className="flex items-center gap-3 mb-2">
           <div className="p-2 bg-white/20 rounded-full">
             {achievement.icon}
@@ -123,7 +123,7 @@ export function AchievementNotification({ achievement, onClose }: { achievement:
           </div>
         </div>
         <h3 className="font-bold text-lg">{achievement.name}</h3>
-        <p className="text-yellow-100 text-sm">{achievement.description}</p>
+        <p className="text-yellow-100 text-sm dark:text-yellow-200">{achievement.description}</p>
       </div>
     </motion.div>
   );
@@ -135,24 +135,24 @@ export function AchievementsList({ userProgress }: { userProgress: UserProgress 
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-bold text-gray-900 mb-4">🏆 Tus Logros Espirituales</h3>
+      <h3 className="text-xl font-bold text-gray-900 mb-4 dark:text-gray-100">🏆 Tus Logros Espirituales</h3>
       
       {/* Logros desbloqueados */}
       {unlockedAchievements.length > 0 && (
         <div className="space-y-2">
-          <h4 className="font-semibold text-yellow-700">Desbloqueados</h4>
+          <h4 className="font-semibold text-yellow-700 dark:text-yellow-400">Desbloqueados</h4>
           {unlockedAchievements.map((achievement) => (
             <motion.div
               key={achievement.id}
-              className="flex items-center gap-4 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl border-2 border-yellow-200"
+              className="flex items-center gap-4 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl border-2 border-yellow-200 dark:from-neutral-800 dark:to-neutral-700 dark:border-gray-700"
               whileHover={{ scale: 1.02 }}
             >
               <div className="p-2 bg-yellow-500 text-white rounded-full">
                 {achievement.icon}
               </div>
               <div className="flex-1">
-                <h4 className="font-bold text-gray-900">{achievement.name}</h4>
-                <p className="text-sm text-gray-600">{achievement.description}</p>
+                <h4 className="font-bold text-gray-900 dark:text-gray-100">{achievement.name}</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-300">{achievement.description}</p>
               </div>
               <div className="text-yellow-600 font-bold">+{achievement.xp} XP</div>
             </motion.div>
@@ -163,20 +163,20 @@ export function AchievementsList({ userProgress }: { userProgress: UserProgress 
       {/* Logros por desbloquear */}
       {lockedAchievements.length > 0 && (
         <div className="space-y-2">
-          <h4 className="font-semibold text-gray-500">Por desbloquear</h4>
+          <h4 className="font-semibold text-gray-500 dark:text-gray-300">Por desbloquear</h4>
           {lockedAchievements.map((achievement) => (
             <div
               key={achievement.id}
-              className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 opacity-60"
+              className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border-2 border-gray-200 opacity-60 dark:bg-gray-800 dark:border-gray-700 dark:opacity-80"
             >
-              <div className="p-2 bg-gray-300 text-gray-600 rounded-full">
+              <div className="p-2 bg-gray-300 text-gray-600 rounded-full dark:bg-gray-700 dark:text-gray-200">
                 {achievement.icon}
               </div>
               <div className="flex-1">
-                <h4 className="font-bold text-gray-700">{achievement.name}</h4>
-                <p className="text-sm text-gray-500">{achievement.description}</p>
+                <h4 className="font-bold text-gray-700 dark:text-gray-100">{achievement.name}</h4>
+                <p className="text-sm text-gray-500 dark:text-gray-300">{achievement.description}</p>
               </div>
-              <div className="text-gray-400 font-bold">+{achievement.xp} XP</div>
+              <div className="text-gray-400 font-bold dark:text-gray-400">+{achievement.xp} XP</div>
             </div>
           ))}
         </div>

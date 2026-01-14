@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase-client'
 import type { Database } from '@/lib/supabase'
-import { AuthProvider } from '@/contexts/AuthContext'
+import { AuthProvider } from '@/lib/auth-context'
 import AuthModal from './AuthModal'
 import OnboardingFlow from './OnboardingFlow'
 import MFASetup from './MFASetup'
@@ -296,7 +296,7 @@ export default function AuthFlowManager({
         )}
 
         {/* Pass auth handlers via context */}
-        <AuthProvider value={authContextValue}>
+        <AuthProvider>
           {children}
         </AuthProvider>
       </div>
@@ -398,7 +398,7 @@ export default function AuthFlowManager({
     };
     
     return (
-      <AuthProvider value={authContextValue}>
+      <AuthProvider>
         {/* Show email verification banner if not verified but not required */}
         {!emailVerified && !requireVerification && (
           <EmailVerificationBanner

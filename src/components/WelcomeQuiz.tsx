@@ -194,7 +194,7 @@ export default function WelcomeQuiz({ onComplete }: { onComplete: (profile: User
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="relative mx-4 max-w-lg w-full bg-gradient-to-br from-yellow-50 to-amber-50 rounded-3xl shadow-2xl p-8 border-2 border-yellow-200"
+            className="relative mx-4 max-w-lg w-full bg-gradient-to-br from-yellow-50 to-amber-50 rounded-3xl shadow-2xl p-8 border-2 border-yellow-200 dark:from-gray-800 dark:to-gray-700 dark:border-amber-600 dark:bg-gradient-to-br"
           >
             {/* Botón cerrar */}
             <button
@@ -244,7 +244,7 @@ export default function WelcomeQuiz({ onComplete }: { onComplete: (profile: User
                     <motion.button
                       key={answer.id}
                       onClick={() => handleAnswer(questions[currentQuestion].id, answer.id)}
-                      className="w-full flex items-center gap-4 p-4 rounded-2xl border-2 border-yellow-200 bg-white hover:bg-yellow-50 hover:border-yellow-400 transition-all duration-200 text-left group"
+                      className="w-full flex items-center gap-4 p-4 rounded-2xl border-2 border-yellow-200 bg-white hover:bg-yellow-50 hover:border-yellow-400 transition-all duration-200 text-left group dark:bg-gray-800 dark:border-amber-700 dark:hover:bg-amber-900/10"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >

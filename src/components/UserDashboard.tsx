@@ -85,29 +85,29 @@ export default function UserDashboard({ onShowPricing }: UserDashboardProps) {
   const isAtLimit = profile.usage_count_today >= currentTier.limits.dailyMessages && currentTier.limits.dailyMessages !== -1
 
   return (
-    <div className="w-80 bg-white border-l border-gray-200 p-6 overflow-y-auto">
+    <div className="w-80 bg-white border-l border-gray-200 p-6 overflow-y-auto dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200">
       {/* User Info Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="font-semibold text-lg text-gray-800">
+          <h3 className="font-semibold text-lg text-gray-800 dark:text-white">
             {profile.full_name || 'User'}
           </h3>
           <button
             onClick={handleSignOut}
-            className="text-xs text-gray-500 hover:text-red-600"
+            className="text-xs text-gray-500 hover:text-red-600 dark:text-gray-400"
           >
             Sign out
           </button>
         </div>
         {profile.institution_name && (
-          <p className="text-sm text-gray-600">{profile.institution_name}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{profile.institution_name}</p>
         )}
       </div>
 
       {/* Subscription Status */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700">Current Plan</span>
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Current Plan</span>
           {profile.subscription_tier !== 'free' && (
             <span className={`px-2 py-1 text-xs rounded-full ${
               profile.subscription_status === 'active'
@@ -120,19 +120,19 @@ export default function UserDashboard({ onShowPricing }: UserDashboardProps) {
             </span>
           )}
         </div>
-        <div className="p-3 border rounded-lg bg-gray-50">
+        <div className="p-3 border rounded-lg bg-gray-50 dark:bg-gray-900 dark:border-gray-700">
           <div className="flex items-center justify-between mb-1">
-            <span className="font-medium text-gray-800">{currentTier.name}</span>
+            <span className="font-medium text-gray-800 dark:text-white">{currentTier.name}</span>
             {profile.subscription_tier !== 'expert' && (
               <button
                 onClick={onShowPricing}
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                className="text-xs text-blue-600 hover:text-blue-800 font-medium dark:text-blue-300"
               >
                 Upgrade
               </button>
             )}
           </div>
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-gray-600 dark:text-gray-400">
             ${currentTier.price}/{currentTier.interval}
           </p>
         </div>
@@ -141,14 +141,14 @@ export default function UserDashboard({ onShowPricing }: UserDashboardProps) {
       {/* Usage Tracking */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700">Daily Usage</span>
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Daily Usage</span>
           <span className={`text-sm ${isAtLimit ? 'text-red-600 font-semibold' : isNearLimit ? 'text-yellow-600' : 'text-gray-600'}`}>
             {profile.usage_count_today}{currentTier.limits.dailyMessages === -1 ? '' : `/${currentTier.limits.dailyMessages}`}
           </span>
         </div>
         
         {currentTier.limits.dailyMessages !== -1 ? (
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+          <div className="w-full bg-gray-200 rounded-full h-2 mb-2 dark:bg-gray-700">
             <div
               className={`h-2 rounded-full ${
                 isAtLimit ? 'bg-red-500' : isNearLimit ? 'bg-yellow-500' : 'bg-blue-500'
@@ -161,30 +161,30 @@ export default function UserDashboard({ onShowPricing }: UserDashboardProps) {
         )}
 
         {isAtLimit && (
-          <div className="bg-red-50 border border-red-200 rounded p-2 mb-2">
-            <p className="text-xs text-red-700">
+          <div className="bg-red-50 border border-red-200 rounded p-2 mb-2 dark:bg-red-900 dark:border-red-700">
+            <p className="text-xs text-red-700 dark:text-red-300">
               Daily limit reached! Upgrade to continue using santaPalabra.
             </p>
           </div>
         )}
 
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-gray-500 dark:text-gray-400">
           Resets daily at midnight UTC
         </p>
       </div>
 
       {/* Available Features */}
       <div className="mb-6">
-        <h4 className="text-sm font-medium text-gray-700 mb-2">Available Features</h4>
+        <h4 className="text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Available Features</h4>
         <ul className="space-y-1">
           {currentTier.features.slice(0, 3).map((feature, index) => (
-            <li key={index} className="text-xs text-gray-600 flex items-start">
+            <li key={index} className="text-xs text-gray-600 flex items-start dark:text-gray-300">
               <span className="text-green-500 mr-1">✓</span>
               <span>{feature}</span>
             </li>
           ))}
           {currentTier.features.length > 3 && (
-            <li className="text-xs text-gray-500">
+            <li className="text-xs text-gray-500 dark:text-gray-400">
               +{currentTier.features.length - 3} more features
             </li>
           )}
@@ -193,7 +193,7 @@ export default function UserDashboard({ onShowPricing }: UserDashboardProps) {
 
       {/* Response Modes Access */}
       <div className="mb-6">
-        <h4 className="text-sm font-medium text-gray-700 mb-2">Response Modes</h4>
+        <h4 className="text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Response Modes</h4>
         <div className="space-y-1">
           {[
             { id: 'standard', name: 'Standard', icon: '📖' },

@@ -195,7 +195,7 @@ export function PersonalizedRecommendations({ profile }: { profile: UserProfile 
         exit={{ opacity: 0, y: -20 }}
         className="fixed bottom-4 right-4 max-w-sm z-40"
       >
-        <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl shadow-2xl border-2 border-yellow-200 p-6">
+          <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl shadow-2xl border-2 border-yellow-200 p-6 dark:from-gray-800 dark:to-gray-700 dark:border-amber-600">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-yellow-600" />
@@ -217,7 +217,7 @@ export function PersonalizedRecommendations({ profile }: { profile: UserProfile 
                 whileHover={{ scale: 1.02 }}
               >
                 <div className="flex items-start gap-3">
-                  <div className="p-2 bg-yellow-100 rounded-lg text-yellow-700 group-hover:bg-yellow-200 transition-colors">
+                    <div className="p-2 bg-yellow-100 rounded-lg text-yellow-700 group-hover:bg-yellow-200 transition-colors dark:bg-amber-900/10 dark:text-yellow-300">
                     {item.icon}
                   </div>
                   <div className="flex-1">

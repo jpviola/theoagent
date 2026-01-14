@@ -100,7 +100,7 @@ export default function ShareSantaPalabra({ onShare, onReferralTracked }: ShareS
       {/* Botón para abrir el modal de compartir */}
       <motion.button
         onClick={() => setIsOpen(true)}
-        className="group inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+        className="group inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 dark:from-sky-600 dark:to-violet-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -126,7 +126,7 @@ export default function ShareSantaPalabra({ onShare, onReferralTracked }: ShareS
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-3xl p-8 max-w-md w-full shadow-2xl border-2 border-yellow-200"
+              className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-3xl p-8 max-w-md w-full shadow-2xl border-2 border-yellow-200 dark:from-gray-800 dark:to-gray-700 dark:border-amber-700"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
@@ -134,20 +134,20 @@ export default function ShareSantaPalabra({ onShare, onReferralTracked }: ShareS
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
                   <Heart className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                   ¡Comparte la Fe!
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-300">
                   Ayuda a más personas a descubrir SantaPalabra y gana XP por cada referido
                 </p>
               </div>
 
               {/* Preview del mensaje */}
-              <div className="bg-white rounded-2xl p-4 mb-6 border-2 border-yellow-200">
-                <p className="text-sm text-gray-700 leading-relaxed">
+              <div className="bg-white rounded-2xl p-4 mb-6 border-2 border-yellow-200 dark:bg-gray-800 dark:border-amber-700 dark:text-gray-200">
+                <p className="text-sm text-gray-700 leading-relaxed dark:text-gray-200">
                   {shareText}
                 </p>
-                <p className="text-xs text-blue-600 mt-2 font-mono">
+                <p className="text-xs text-blue-600 mt-2 font-mono dark:text-blue-300">
                   {shareUrl}
                 </p>
               </div>
@@ -181,12 +181,12 @@ export default function ShareSantaPalabra({ onShare, onReferralTracked }: ShareS
               </div>
 
               {/* Información sobre recompensas */}
-              <div className="bg-gradient-to-r from-yellow-100 to-amber-100 rounded-2xl p-4 mb-6">
-                <h4 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
+              <div className="bg-gradient-to-r from-yellow-100 to-amber-100 rounded-2xl p-4 mb-6 dark:from-amber-900 dark:to-amber-800 dark:text-gray-200">
+                <h4 className="font-bold text-gray-900 mb-2 flex items-center gap-2 dark:text-white">
                   <Star className="h-5 w-5 text-yellow-600" />
                   Recompensas por Referidos
                 </h4>
-                <div className="space-y-1 text-sm text-gray-700">
+                <div className="space-y-1 text-sm text-gray-700 dark:text-gray-200">
                   <div className="flex justify-between">
                     <span>Primer referido:</span>
                     <span className="font-semibold text-yellow-700">+50 XP</span>
@@ -205,7 +205,7 @@ export default function ShareSantaPalabra({ onShare, onReferralTracked }: ShareS
               {/* Botón cerrar */}
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-full py-3 text-gray-600 hover:text-gray-800 transition-colors font-semibold"
+                className="w-full py-3 text-gray-600 dark:text-gray-300 hover:text-gray-800 transition-colors font-semibold"
               >
                 Cerrar
               </button>

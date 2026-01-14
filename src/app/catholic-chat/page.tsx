@@ -128,16 +128,31 @@ export default function CatholicChatPage() {
   }, [progress, addXP]);
 
   useEffect(() => {
+    let isMounted = true;
+
     const getUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user || null);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (isMounted) setUser(session?.user || null);
+      } catch (err: any) {
+        if (err?.name === 'AbortError') return;
+        console.error('CatholicChat: getSession error', err);
+        if (isMounted) setUser(null);
+      }
     };
+
     getUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => setUser(session?.user || null)
+      (_event, session) => {
+        if (isMounted) setUser(session?.user || null);
+      }
     );
-    return () => subscription.unsubscribe();
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const stripHtmlForSpeech = (html: string) => {
@@ -1325,7 +1340,7 @@ export default function CatholicChatPage() {
                 disabled={!input.trim() || isLoading}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="p-3 bg-amber-500 text-white rounded-full hover:bg-amber-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-md"
+                className="p-3 bg-amber-500 text-white rounded-full hover:bg-amber-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-md dark:bg-amber-500 dark:hover:bg-amber-600 dark:disabled:bg-gray-600"
                 title={isLoading ? currentTexts.loading : currentTexts.send}
               >
                 {isLoading ? (

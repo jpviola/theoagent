@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase-client';
@@ -9,10 +9,9 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import SantaPalabraLogo from '@/components/SantaPalabraLogo';
 import { ArrowRight, BookOpen, FlaskConical, UserCircle, Heart, Quote, Check, Facebook, Instagram, Twitter, ChevronDown, HelpCircle } from 'lucide-react';
-import { GoldenParticles, BlessedButton, BreathingImage } from '@/components/SensorialEffects';
-import WelcomeQuiz from '@/components/WelcomeQuiz';
+import { GoldenParticles, BlessedButton, BreathingImage, SimpleButton } from '@/components/SensorialEffects';
 import { ProgressBar, AchievementNotification, useUserProgress } from '@/components/GamificationSystem';
-import { PersonalizedRecommendations, SmartNotifications } from '@/components/PersonalizationEngine';
+import { SmartNotifications } from '@/components/PersonalizationEngine';
 import ShareSantaPalabra from '@/components/ShareSantaPalabra';
 
 export default function HomePage() {
@@ -25,8 +24,8 @@ export default function HomePage() {
   
   // Estados para personalización y gamificación
   const [userProfile, setUserProfile] = useState<any>(null);
-  const [showWelcomeQuiz, setShowWelcomeQuiz] = useState(false);
   const { progress, newAchievement, setNewAchievement, addXP, unlockAchievement, updateStreak, trackReferral } = useUserProgress();
+  const profileInitializedRef = useRef(false);
 
   // Definir traducciones y palabras antes de los efectos
   const translations = {
@@ -147,22 +146,44 @@ export default function HomePage() {
 
   // Efectos
   useEffect(() => {
+    let isMounted = true;
+    const failSafe = setTimeout(() => {
+      if (isMounted) setLoading(false);
+    }, 3000);
+
     const getUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user || null);
-      setLoading(false);
+      // Si Supabase no está configurado, no bloqueamos la carga
+      if (!supabase) {
+        if (isMounted) {
+          setUser(null);
+          setLoading(false);
+        }
+        return;
+      }
+
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (isMounted) {
+          setUser(session?.user || null);
+        }
+      } catch (error) {
+        console.error('Error fetching session:', error);
+        if (isMounted) {
+          setUser(null);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
     };
 
     getUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user || null);
-        setLoading(false);
-      }
-    );
-
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      clearTimeout(failSafe);
+    };
   }, []);
 
   // Typewriter effect para principio fundacional
@@ -184,29 +205,24 @@ export default function HomePage() {
     return () => clearInterval(intervalId);
   }, [fullText, startTypewriter]);
 
-  // Efectos para personalización y gamificación
+  // Efectos para personalización y gamificación (ejecutar una sola vez)
   useEffect(() => {
-    // Verificar si existe perfil del usuario
-    const savedProfile = localStorage.getItem('santapalabra_profile');
-    if (savedProfile) {
-      const profile = JSON.parse(savedProfile);
-      setUserProfile(profile);
-      updateStreak(); // Actualizar racha de visitas
-    } else {
-      // Mostrar quiz de bienvenida después de 3 segundos
-      setTimeout(() => {
-        setShowWelcomeQuiz(true);
-      }, 3000);
+    if (profileInitializedRef.current) return;
+    profileInitializedRef.current = true;
+
+    try {
+      const savedProfile = localStorage.getItem('santapalabra_profile');
+      if (savedProfile) {
+        const profile = JSON.parse(savedProfile);
+        setUserProfile(profile);
+      }
+      // Actualizar racha de visitas una vez por montaje
+      updateStreak();
+    } catch (err) {
+      console.error('Error initializing profile/gamification:', err);
     }
   }, []);
 
-  // Manejar completación del quiz
-  const handleQuizComplete = (profile: any) => {
-    setUserProfile(profile);
-    setShowWelcomeQuiz(false);
-    unlockAchievement('first_question');
-    addXP(50, 'Completar perfil personalizado');
-  };
 
   // Función para manejar interacciones que dan XP
   const handleInteraction = (type: 'question' | 'donation' | 'navigation') => {
@@ -226,7 +242,7 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[calc(100vh-56px)] items-center justify-center bg-gradient-to-b from-amber-50 via-yellow-50 to-white">
+      <div className="flex min-h-[calc(100vh-56px)] items-center justify-center bg-gradient-to-b from-amber-50 via-yellow-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -257,10 +273,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
-      {/* Efectos sensoriales globales */}
-      <GoldenParticles />
-      
+    <div className="flex min-h-screen flex-col bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200">
       {/* Notificaciones y elementos personalizados */}
       <SmartNotifications profile={userProfile} />
       {newAchievement && (
@@ -269,15 +282,10 @@ export default function HomePage() {
           onClose={() => setNewAchievement(null)} 
         />
       )}
-      <PersonalizedRecommendations profile={userProfile} />
       
-      {/* Quiz de bienvenida */}
-      {showWelcomeQuiz && (
-        <WelcomeQuiz onComplete={handleQuizComplete} />
-      )}
 
       {/* HERO SECTION */}
-      <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-amber-50 via-yellow-50 to-white px-4 py-16 text-center">
+      <section className="hero-section relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-amber-50 via-yellow-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-16 text-center">
         <div className="pointer-events-none absolute inset-0">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -336,7 +344,7 @@ export default function HomePage() {
         >
           <motion.h1
             variants={itemVariants}
-            className="text-5xl font-black tracking-tighter text-gray-900 sm:text-6xl md:text-7xl"
+            className="text-5xl font-black tracking-tighter text-gray-900 dark:text-white sm:text-6xl md:text-7xl"
           >
             {t.heroTitle}
           </motion.h1>
@@ -347,44 +355,48 @@ export default function HomePage() {
 
           <motion.p
             variants={itemVariants}
-            className="mt-6 text-lg text-gray-700 md:text-xl max-w-3xl mx-auto"
+            className="mt-6 text-lg text-gray-700 dark:text-gray-300 md:text-xl max-w-3xl mx-auto"
           >
             {t.heroCta}
           </motion.p>
 
           <motion.div
             variants={itemVariants}
-            className="mt-10 flex flex-wrap items-center justify-center gap-6"
+            className="mt-10 flex flex-col items-center gap-4 w-full max-w-3xl mx-auto"
           >
-            <BlessedButton
-              href="/intro"
-              onClick={() => handleInteraction('question')}
-              className="group inline-flex items-center justify-center rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 px-10 py-5 text-xl font-bold text-white shadow-2xl shadow-yellow-500/40 transition-all duration-300 hover:scale-105 hover:shadow-yellow-500/60"
-            >
-              <BookOpen className="mr-3 h-7 w-7" />
-              {t.ctaChat}
-              <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-1" />
-            </BlessedButton>
-            <BlessedButton
-              href="/support"
-              onClick={() => handleInteraction('donation')}
-              className="group inline-flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-8 py-4 text-lg font-bold text-white shadow-2xl shadow-green-500/40 transition-all duration-300 hover:scale-105 hover:shadow-green-500/60"
-            >
-              <Heart className="mr-3 h-6 w-6" />
-              {language === 'es' ? '¡Quiero donar!' : '¡I want to donate!'}
-            </BlessedButton>
-            
-            {/* Botón de compartir */}
-            <ShareSantaPalabra 
-              onShare={() => handleInteraction('navigation')}
-              onReferralTracked={handleReferralShare}
-            />
+            <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-4">
+              <BlessedButton
+                href="/catholic-chat"
+                onClick={() => handleInteraction('question')}
+                className="group w-full sm:w-[20rem] flex flex-row items-center justify-center gap-3 rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 px-8 sm:px-12 py-3 text-base md:text-lg font-bold text-white shadow-2xl shadow-yellow-500/40 transition-all duration-300 hover:scale-105 hover:shadow-yellow-500/60 whitespace-nowrap preserve-light-bg-yellow"
+              >
+                <BookOpen className="inline-block h-6 w-6 md:h-7 md:w-7" />
+                <span className="inline-block">{t.ctaChat}</span>
+                <ArrowRight className="inline-block h-5 w-5 md:h-6 md:w-6 transition-transform group-hover:translate-x-1" />
+              </BlessedButton>
+
+              <BlessedButton
+                href="/support"
+                onClick={() => handleInteraction('donation')}
+                className="group w-full sm:w-[20rem] flex flex-row items-center justify-center gap-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-8 sm:px-12 py-3 text-base md:text-lg font-bold text-white shadow-2xl shadow-green-500/40 transition-all duration-300 hover:scale-105 hover:shadow-green-500/60 whitespace-nowrap preserve-light-bg-green"
+              >
+                <Heart className="inline-block h-6 w-6 md:h-7 md:w-7" />
+                <span className="inline-block">{language === 'es' ? '¡Quiero donar!' : '¡I want to donate!'}</span>
+              </BlessedButton>
+            </div>
+
+            <div className="w-full flex justify-center mt-2">
+              <ShareSantaPalabra
+                onShare={() => handleInteraction('navigation')}
+                onReferralTracked={handleReferralShare}
+              />
+            </div>
           </motion.div>
 
           <motion.div variants={itemVariants} className="mt-8">
             <Link
               href="/test-rag"
-              className="inline-flex items-center justify-center rounded-full border-2 border-yellow-300 bg-white/60 px-6 py-2 text-sm font-semibold text-gray-700 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/80 hover:border-yellow-400"
+              className="inline-flex items-center justify-center rounded-full border-2 border-yellow-300 bg-white/60 px-6 py-2 text-sm font-semibold text-gray-700 dark:bg-gray-800/60 dark:border-amber-600 dark:text-gray-200 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/80 hover:border-yellow-400"
             >
               <FlaskConical className="mr-2 h-4 w-4" />
               {language === 'es' ? 'Laboratorio RAG (modo desarrollador)' : 'RAG Lab (developer mode)'}
@@ -481,7 +493,7 @@ export default function HomePage() {
       </section>
 
       {/* PRINCIPLES SECTION */}
-      <section className="bg-gradient-to-br from-amber-50 to-yellow-50 py-20 px-4 md:py-28">
+      <section className="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-gray-900 dark:to-gray-800 py-20 px-4 md:py-28">
         <motion.div
           className="mx-auto max-w-4xl"
           initial={{ opacity: 0 }}
@@ -591,7 +603,7 @@ export default function HomePage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-blue-900 px-4 py-12 text-center text-white md:py-16">
+      <footer className="bg-gradient-to-r from-amber-900 to-yellow-800 dark:from-gray-900 dark:to-gray-800 px-4 py-8 text-center text-white">
         <motion.div
           className="mx-auto max-w-6xl"
           initial={{ opacity: 0 }}
@@ -599,72 +611,52 @@ export default function HomePage() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <div className="flex flex-col items-center justify-center gap-8">
-            {/* Logo y título */}
-            <div className="flex items-center gap-3 mb-4">
-              <SantaPalabraLogo className="h-12 w-12 text-yellow-300" />
-              <h3 className="text-2xl font-bold">SantaPalabra</h3>
-            </div>
-
+          <div className="flex flex-col items-center justify-center gap-6">
             {/* Botón de donación prominente */}
-            <Link
-              href="/support"
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-8 py-4 text-lg font-bold text-white shadow-2xl shadow-green-500/40 transition-all duration-300 hover:scale-110 hover:shadow-green-500/60"
+            <BlessedButton
+              onClick={() => window.location.href = '/support'}
+              className="inline-flex items-center justify-center rounded-full preserve-light-bg-green bg-gradient-to-r from-green-500 to-emerald-500 px-6 py-2 text-base font-bold text-white shadow-lg shadow-green-500/40 transition-all duration-300 hover:shadow-green-500/60"
             >
-              <Heart className="mr-3 h-6 w-6" />
-              {language === 'es' ? '¡Sí, quiero apoyar este proyecto!' : '¡Yes, I want to support this project!'}
-            </Link>
+              <Heart className="mr-2 h-5 w-5" />
+              {language === 'es' ? 'Apoyar proyecto' : 'Support project'}
+            </BlessedButton>
 
-            {/* Redes sociales */}
-            <div className="flex gap-6">
+            {/* Redes sociales - PROMINENTES */}
+            <div className="flex gap-6 text-white">
               <a
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-colors hover:text-yellow-300"
+                className="transition-all hover:scale-125 hover:text-yellow-300 dark:hover:text-yellow-300 text-white dark:text-gray-200"
               >
-                <Facebook className="h-7 w-7" />
+                <Facebook className="h-8 w-8" />
               </a>
               <a
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-colors hover:text-yellow-300"
+                className="transition-all hover:scale-125 hover:text-yellow-300 dark:hover:text-yellow-300 text-white dark:text-gray-200"
               >
-                <Instagram className="h-7 w-7" />
+                <Instagram className="h-8 w-8" />
               </a>
               <a
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-colors hover:text-yellow-300"
+                className="transition-all hover:scale-125 hover:text-yellow-300 dark:hover:text-yellow-300 text-white dark:text-gray-200"
               >
-                <Twitter className="h-7 w-7" />
+                <Twitter className="h-8 w-8" />
               </a>
             </div>
 
-            {/* Navegación */}
-            <nav className="flex flex-wrap gap-6 text-lg">
-              <Link href="/intro" className="hover:text-yellow-300 transition-colors">
-                {language === 'es' ? 'Chat Católico' : 'Catholic Chat'}
-              </Link>
-              <Link href="/blog" className="hover:text-yellow-300 transition-colors">
-                Blog
-              </Link>
-              <Link href="/support" className="hover:text-yellow-300 transition-colors">
-                {language === 'es' ? '¡Quiero donar!' : '¡I want to donate!'}
-              </Link>
-            </nav>
-
-            {/* Créditos actualizados */}
-            <div className="border-t border-blue-700 pt-6 w-full max-w-2xl">
-              <p className="flex items-center justify-center gap-2 text-base md:text-lg mb-2">
-                <span>© {new Date().getFullYear()} - {language === 'es' ? 'Hecho con' : 'Made with'}</span>
-                <Heart className="h-5 w-5 text-red-400 fill-red-400" />
-                <span>{language === 'es' ? 'por La prensa de Tales' : 'by La prensa de Tales'}</span>
-              </p>
-              <p className="text-sm text-blue-200">
-                {language === 'es' ? 'Catequista digital hispanoamericano' : 'Hispanic-American digital catechist'}
+            {/* Créditos minimalistas */}
+            <div className="border-t border-amber-700 dark:border-amber-600 pt-4 w-full max-w-xl text-xs text-white dark:text-gray-300">
+              <p className="flex items-center justify-center gap-1">
+                <span>© {new Date().getFullYear()}</span>
+                <span>·</span>
+                <span>{language === 'es' ? 'Powered con' : 'Powered by'}</span>
+                <Heart className="h-3 w-3 text-red-300 fill-red-300" />
+                <span>{language === 'es' ? 'por La prensa de Tales' : 'La prensa de Tales'}</span>
               </p>
             </div>
           </div>

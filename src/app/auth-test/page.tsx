@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase-client'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@/lib/auth-context'
 
 export default function AuthDebugDashboard() {
   const [user, setUser] = useState<any>(null)

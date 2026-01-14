@@ -53,13 +53,11 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200`}
       >
-        <main className="min-h-screen">
+        <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200">
           <AppChrome>{children}</AppChrome>
         </main>
-
-
 
         <SpeedInsights />
       </body>
