@@ -32,6 +32,9 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest'
 };
 
+// Force dynamic rendering to prevent prerendering issues with Supabase
+export const dynamic = 'force-dynamic';
+
 export default function RootLayout({
   children,
 }: Readonly<{
