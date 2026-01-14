@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
           metadata: { test: true, created_via: 'api_test' }
         }
 
-        const { data: testData, error: testError } = await supabase
+        const { data: testData, error: testError } = await supabaseAdmin
           .from('donations')
           .insert(testDonation)
           .select()
