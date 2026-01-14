@@ -1,5 +1,10 @@
-import { supabase } from '@/lib/supabase-client'
+import { createClient } from '@supabase/supabase-js'
 import { NextResponse, NextRequest } from 'next/server'
+
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
@@ -18,7 +23,7 @@ export async function GET(request: NextRequest) {
 
   if (code) {
     try {
-      const { error: exchangeError, data } = await supabase.auth.exchangeCodeForSession(code)
+      const { error: exchangeError, data } = await supabaseAdmin.auth.exchangeCodeForSession(code)
       
       if (exchangeError) {
         console.error('Code exchange error:', exchangeError)

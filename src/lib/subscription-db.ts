@@ -1,5 +1,10 @@
-import { supabase } from './supabase'
+import { createClient } from '@supabase/supabase-js'
 import type { Database } from './supabase'
+
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
 type Profile = Database['public']['Tables']['profiles']['Row']
 
@@ -93,7 +98,7 @@ export const PRICING_INFO = {
 
 // Database-backed subscription functions
 export async function getUserSubscription(userId: string): Promise<Profile | null> {
-  const { data: profile, error } = await supabase
+  const { data: profile, error } = await supabaseAdmin
     .from('profiles')
     .select('*')
     .eq('id', userId)
@@ -113,7 +118,7 @@ export async function updateSubscription(
   status: 'active' | 'canceled' | 'past_due' = 'active',
   stripeCustomerId?: string
 ): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from('profiles')
     .update({
       subscription_tier: tier,
@@ -186,7 +191,7 @@ export async function checkUsageLimit(userId: string): Promise<{
   
   if (today !== resetDate) {
     // Reset usage for new day
-    await supabase
+    await supabaseAdmin
       .from('profiles')
       .update({
         usage_count_today: 0,
@@ -212,7 +217,7 @@ export async function checkUsageLimit(userId: string): Promise<{
 
 export async function incrementUsage(userId: string): Promise<boolean> {
   // Get current usage first
-  const { data: profile } = await supabase
+  const { data: profile } = await supabaseAdmin
     .from('profiles')
     .select('usage_count_today')
     .eq('id', userId)
@@ -220,7 +225,7 @@ export async function incrementUsage(userId: string): Promise<boolean> {
   
   if (!profile) return false;
   
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from('profiles')
     .update({
       usage_count_today: profile.usage_count_today + 1
@@ -240,7 +245,7 @@ export async function createConversationRecord(
   mode: string,
   messageCount: number = 1
 ): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from('conversations')
     .insert({
       user_id: userId,
