@@ -1,4 +1,4 @@
-import { getTheoAgentRAG } from '@/lib/langchain-rag';
+import { getSantaPalabraRAG } from '@/lib/langchain-rag';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseAdmin = createClient(
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       return new Response('User not found', { status: 404 });
     }
     
-    const rag = await getTheoAgentRAG();
+    const rag = await getSantaPalabraRAG();
     
     switch (action) {
       case 'clear_history':

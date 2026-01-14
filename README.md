@@ -1,4 +1,4 @@
-# TheoAgent - Catholic Theological Assistant
+# santaPalabra - Catholic Theological Assistant
 
 A sophisticated AI-powered Catholic theological assistant with freemium subscription tiers.
 

@@ -2,7 +2,7 @@
 
 ## 🎯 Important: Configure These Environment Variables in Vercel
 
-Go to your **theoAgent** project in Vercel Dashboard and add these environment variables:
+Go to your **santaPalabra** project in Vercel Dashboard and add these environment variables:
 
 ### 🔑 **REQUIRED for AI Gateway (Recommended)**
 ```bash
@@ -35,13 +35,13 @@ NEXTAUTH_URL=https://your-vercel-domain.vercel.app
 
 ### 1. **Get Vercel AI Gateway Key**
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
-2. Select your **theoAgent** project
+2. Select your **santaPalabra** project
 3. Go to **Settings** → **AI Gateway** 
 4. Click **"Generate API Key"**
 5. Copy the key and add as `AI_GATEWAY_API_KEY`
 
 ### 2. **Add Environment Variables**
-1. In your theoAgent project → **Settings** → **Environment Variables**
+1. In your santaPalabra project → **Settings** → **Environment Variables**
 2. Add each variable above
 3. Make sure to select **Production**, **Preview**, and **Development** for each
 

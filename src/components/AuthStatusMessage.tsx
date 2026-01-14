@@ -13,7 +13,7 @@ export default function AuthStatusMessage() {
     
     switch (messageParam) {
       case 'auth_success':
-        setMessage('Successfully signed in! Welcome to TheoAgent.')
+        setMessage('Successfully signed in! Welcome to santaPalabra.')
         setType('success')
         break
       case 'email_confirmed':

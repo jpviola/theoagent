@@ -159,7 +159,7 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
                 <span className="text-3xl">⛪</span>
               </div>
             </div>
-            <h1 className="text-2xl font-bold mb-2">Welcome to TheoAgent!</h1>
+            <h1 className="text-2xl font-bold mb-2">Welcome to santaPalabra!</h1>
             <p className="text-white/90">Let's personalize your theological assistant</p>
           </div>
 
@@ -199,7 +199,7 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
           {currentStep === 1 && (
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">What's your role?</h2>
-              <p className="text-gray-600 mb-8">This helps us tailor TheoAgent to your needs</p>
+              <p className="text-gray-600 mb-8">This helps us tailor santaPalabra to your needs</p>
               
               <div className="space-y-3">
                 {ROLE_OPTIONS.map((role) => (

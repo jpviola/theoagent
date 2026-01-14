@@ -1,4 +1,4 @@
-import { getTheoAgentRAG } from '@/lib/langchain-rag';
+import { getSantaPalabraRAG } from '@/lib/langchain-rag';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseAdmin = createClient(
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     }
     
     // Clear conversation history for all users
-    const rag = await getTheoAgentRAG();
+    const rag = await getSantaPalabraRAG();
     let clearedCount = 0;
     
     for (const user of users) {

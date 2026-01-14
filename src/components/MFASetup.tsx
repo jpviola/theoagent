@@ -63,8 +63,8 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
     try {
       const { data, error } = await supabase.auth.mfa.enroll({
         factorType: 'totp',
-        issuer: 'TheoAgent',
-        friendlyName: `TheoAgent - ${user.email}`
+        issuer: 'santaPalabra',
+        friendlyName: `santaPalabra - ${user.email}`
       })
       
       if (error) throw error
@@ -183,7 +183,7 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
 
   const downloadRecoveryCodes = () => {
     const codesText = [
-      'TheoAgent Recovery Codes',
+      'santaPalabra Recovery Codes',
       '========================',
       '',
       'Save these codes in a safe place. You can use them to access your account',
@@ -201,7 +201,7 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'theoagent-recovery-codes.txt'
+    a.download = 'santapalabra-recovery-codes.txt'
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -247,7 +247,7 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
                'Two-Factor Authentication'}
             </h1>
             <p className="text-white/90 mt-2 text-sm">
-              {enforced ? 'Required for your account security' : 'Protect your TheoAgent account'}
+              {enforced ? 'Required for your account security' : 'Protect your santaPalabra account'}
             </p>
           </div>
 

@@ -1,4 +1,4 @@
-import { getTheoAgentRAG, initializeWithCatholicDocuments } from './langchain-rag';
+import { getSantaPalabraRAG, initializeWithCatholicDocuments } from './langchain-rag';
 // import { getTheoAgentLlamaIndex, initializeLlamaIndexWithCatholicDocuments } from './llamaindex-rag';
 import fs from 'fs/promises';
 import path from 'path';

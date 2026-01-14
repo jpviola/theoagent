@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { TheoAgentRAG } from '../../../lib/langchain-rag';
+import { SantaPalabraRAG } from '../../../lib/langchain-rag';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -19,7 +19,7 @@ interface RAGResponse {
 }
 
 // Initialize RAG system once
-let ragSystem: TheoAgentRAG | null = null;
+let ragSystem: SantaPalabraRAG | null = null;
 let isInitialized = false;
 
 async function initializeRAG() {
@@ -79,7 +79,7 @@ async function initializeRAG() {
     console.log(`📚 Total documents loaded: ${documents.length}`);
     
     // Initialize RAG system with improved error handling
-    ragSystem = new TheoAgentRAG();
+    ragSystem = new SantaPalabraRAG();
     await ragSystem.initialize(documents);
     
     isInitialized = true;

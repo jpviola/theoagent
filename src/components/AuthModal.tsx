@@ -351,7 +351,7 @@ export default function AuthModal({
             </div>
             <h2 className="text-2xl font-bold text-gray-900">
               {mode === 'signin' && 'Welcome Back'}
-              {mode === 'signup' && 'Join TheoAgent'}
+              {mode === 'signup' && 'Join santaPalabra'}
               {mode === 'reset' && 'Reset Password'}
               {mode === 'verify-email' && 'Check Your Email'}
             </h2>
@@ -609,7 +609,7 @@ export default function AuthModal({
                   </div>
                 ) : (
                   <>
-                    {mode === 'signin' && 'Sign In to TheoAgent'}
+                    {mode === 'signin' && 'Sign In to santaPalabra'}
                     {mode === 'signup' && 'Create Free Account'}
                     {mode === 'reset' && 'Send Reset Link'}
                   </>

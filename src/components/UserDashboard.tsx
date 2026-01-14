@@ -163,7 +163,7 @@ export default function UserDashboard({ onShowPricing }: UserDashboardProps) {
         {isAtLimit && (
           <div className="bg-red-50 border border-red-200 rounded p-2 mb-2">
             <p className="text-xs text-red-700">
-              Daily limit reached! Upgrade to continue using TheoAgent.
+              Daily limit reached! Upgrade to continue using santaPalabra.
             </p>
           </div>
         )}
@@ -246,7 +246,7 @@ export default function UserDashboard({ onShowPricing }: UserDashboardProps) {
       <div className="mt-6 pt-4 border-t border-gray-200">
         <p className="text-xs text-gray-500 text-center">
           Need help? Contact our{' '}
-          <a href="mailto:support@theoagent.ai" className="text-blue-600 hover:underline">
+          <a href="mailto:support@santapalabra.ai" className="text-blue-600 hover:underline">
             {currentTier.limits.supportLevel} support
           </a>
         </p>

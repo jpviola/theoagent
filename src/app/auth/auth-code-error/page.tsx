@@ -82,7 +82,7 @@ function AuthErrorContent() {
             href="/"
             className="w-full block bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl font-medium transition-colors"
           >
-            Return to TheoAgent
+            Return to santaPalabra
           </Link>
           
           <button 

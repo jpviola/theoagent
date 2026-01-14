@@ -271,7 +271,7 @@ Key Topics: [topic1, topic2, topic3, etc.]
   }
 }
 
-export class TheoAgentRAG {
+export class SantaPalabraRAG {
   private vectorStore: EnhancedVectorStore | null = null;
   private documents: Document[] = [];
   private llm: BaseChatModel;
@@ -377,7 +377,7 @@ For Vercel deployment, AI Gateway is recommended: https://vercel.com/docs/ai-gat
     if (this.isInitialized) return;
 
     try {
-      console.log('🚀 Initializing TheoAgent RAG system...');
+      console.log('🚀 Initializing santaPalabra RAG system...');
       
       // Initialize text splitter
       const textSplitter = new RecursiveCharacterTextSplitter({
@@ -411,9 +411,9 @@ For Vercel deployment, AI Gateway is recommended: https://vercel.com/docs/ai-gat
       this.documents = allDocs;
 
       this.isInitialized = true;
-      console.log(`✅ TheoAgent RAG initialized with ${allDocs.length} document chunks (keyword search mode)`);
+      console.log(`✅ santaPalabra RAG initialized with ${allDocs.length} document chunks (keyword search mode)`);
     } catch (error) {
-      console.error('❌ Failed to initialize TheoAgent RAG:', error);
+      console.error('❌ Failed to initialize santaPalabra RAG:', error);
       throw error;
     }
   }
@@ -497,7 +497,7 @@ For Vercel deployment, AI Gateway is recommended: https://vercel.com/docs/ai-gat
 
   private createSystemPrompt(context: ChatContext): PromptTemplate {
     const systemMessage = context.language === 'es' 
-      ? `Eres TheoAgent, un asistente de IA católico especializado en teología, doctrina y enseñanzas de la Iglesia Católica.
+      ? `Eres santaPalabra, un asistente de IA católico especializado en teología, doctrina y enseñanzas de la Iglesia Católica.
 
 IDENTIDAD Y PROPÓSITO:
 - Proporcionas respuestas precisas basadas en la doctrina católica oficial
@@ -519,7 +519,7 @@ HISTORIAL DE CONVERSACIÓN:
 {chat_history}
 
 Responde a la siguiente pregunta del usuario de manera útil y doctrinalmente correcta:`
-      : `You are TheoAgent, a Catholic AI assistant specialized in theology, doctrine, and Church teachings.
+      : `You are santaPalabra, a Catholic AI assistant specialized in theology, doctrine, and Church teachings.
 
 IDENTITY & PURPOSE:
 - Provide accurate answers based on official Catholic doctrine
@@ -556,7 +556,7 @@ Provide a helpful, doctrinally sound response based on the sources above:`;
   ): Promise<string> {
     try {
       if (!this.isInitialized) {
-        throw new Error('TheoAgent RAG not initialized');
+        throw new Error('santaPalabra RAG not initialized');
       }
 
       console.log('💭 Generating response for:', userMessage.substring(0, 100) + '...');
@@ -689,17 +689,17 @@ Provide a helpful, doctrinally sound response based on the sources above:`;
 }
 
 // Singleton instance
-let theoAgentRAG: TheoAgentRAG | null = null;
+let santaPalabraRAG: SantaPalabraRAG | null = null;
 
-export async function getTheoAgentRAG(): Promise<TheoAgentRAG> {
-  if (!theoAgentRAG) {
-    theoAgentRAG = new TheoAgentRAG();
+export async function getSantaPalabraRAG(): Promise<SantaPalabraRAG> {
+  if (!santaPalabraRAG) {
+    santaPalabraRAG = new SantaPalabraRAG();
   }
-  return theoAgentRAG;
+  return santaPalabraRAG;
 }
 
-export async function initializeWithCatholicDocuments(documents: CatholicDocument[]): Promise<TheoAgentRAG> {
-  const rag = await getTheoAgentRAG();
+export async function initializeWithCatholicDocuments(documents: CatholicDocument[]): Promise<SantaPalabraRAG> {
+  const rag = await getSantaPalabraRAG();
   await rag.initialize(documents);
   return rag;
 }

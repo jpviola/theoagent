@@ -9,7 +9,7 @@
 
 2. **Project Configuration**
    - **Organization**: Select or create one
-   - **Name**: `theoagent-prod` (or your preferred name)
+   - **Name**: `santaPalabra-prod` (or your preferred name)
    - **Database Password**: Generate a strong password (save it!)
    - **Region**: Choose closest to your users
    - **Pricing Plan**: Start with Free tier

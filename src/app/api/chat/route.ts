@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getTheoAgentRAG, initializeWithCatholicDocuments } from '@/lib/langchain-rag';
+import { getSantaPalabraRAG, initializeWithCatholicDocuments } from '@/lib/langchain-rag';
 import { SUBSCRIPTION_TIERS } from '@/lib/subscription-db';
 import { createClient } from '@supabase/supabase-js';
 import fs from 'fs/promises';
