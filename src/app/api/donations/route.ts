@@ -1,6 +1,11 @@
 import { NextRequest } from 'next/server'
 import { getDonationStats, getRecentDonations, getUserDonations } from '@/lib/donations'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -46,7 +51,7 @@ export async function GET(req: NextRequest) {
       case 'admin':
         console.log('🔧 Getting admin donations...')
         // Obtener todas las donaciones (solo para admin)
-        const { data: allDonations, error: adminError } = await supabase
+        const { data: allDonations, error: adminError } = await supabaseAdmin
           .from('donations')
           .select('*')
           .order('created_at', { ascending: false })
