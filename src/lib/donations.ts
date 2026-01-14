@@ -1,4 +1,9 @@
-import { supabase } from './supabase'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
 // ==============================================
 // TIPOS DE TYPESCRIPT
@@ -76,7 +81,7 @@ export async function createDonation(data: CreateDonationData): Promise<{ data: 
       webhook_verified: false
     }
 
-    const { data: donation, error } = await supabase
+    const { data: donation, error } = await supabaseAdmin
       .from('donations')
       .insert(donationData)
       .select()
@@ -111,7 +116,7 @@ export async function updateDonationStatus(
       updateData.completed_at = new Date().toISOString()
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('donations')
       .update(updateData)
       .eq('payment_provider', payment_provider)
@@ -134,7 +139,7 @@ export async function getDonationByPaymentId(
   payment_id: string
 ): Promise<{ data: Donation | null; error: any }> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('donations')
       .select('*')
       .eq('payment_provider', payment_provider)
@@ -153,7 +158,7 @@ export async function getDonationByPaymentId(
  */
 export async function getUserDonations(user_id: string): Promise<{ data: Donation[] | null; error: any }> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('donations')
       .select('*')
       .eq('user_id', user_id)
@@ -171,7 +176,7 @@ export async function getUserDonations(user_id: string): Promise<{ data: Donatio
  */
 export async function getDonationStats(): Promise<{ data: DonationStats | null; error: any }> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('donations')
       .select('payment_provider, status, amount_cents')
 
@@ -203,7 +208,7 @@ export async function getRecentDonations(limit: number = 10): Promise<{ data: Do
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('donations')
       .select('*')
       .gte('created_at', thirtyDaysAgo.toISOString())
@@ -225,7 +230,7 @@ export async function donationExists(
   payment_id: string
 ): Promise<boolean> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('donations')
       .select('id')
       .eq('payment_provider', payment_provider)
