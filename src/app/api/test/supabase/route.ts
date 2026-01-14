@@ -1,11 +1,16 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
 export async function GET() {
   try {
     console.log('🧪 Testing Supabase connection...')
     
     // Test básico de conectividad
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('profiles')  // Esta tabla ya existe
       .select('count')
       .limit(1)
