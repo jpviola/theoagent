@@ -152,7 +152,7 @@ export async function subscribeToNewsletter(email: string, language: string = 'e
     };
 
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('email_subscriptions')
         .upsert(subscriptionData, { 
           onConflict: 'email' 
@@ -160,12 +160,10 @@ export async function subscribeToNewsletter(email: string, language: string = 'e
 
       if (error) {
         console.warn('Supabase subscription failed, using localStorage:', error);
-        // Fallback a localStorage si Supabase falla
         localStorage.setItem('santapalabra_subscription', JSON.stringify(subscriptionData));
       }
     } catch (supabaseError) {
       console.warn('Supabase not available, using localStorage fallback:', supabaseError);
-      // Fallback a localStorage
       localStorage.setItem('santapalabra_subscription', JSON.stringify(subscriptionData));
     }
 

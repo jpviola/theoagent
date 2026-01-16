@@ -179,6 +179,41 @@ export interface Database {
           completed_at?: string | null
         }
       }
+      email_subscriptions: {
+        Row: {
+          email: string
+          language: string
+          subscribed_at: string
+          preferences: {
+            newsletter: boolean
+            xp_tracking: boolean
+            chat_history: boolean
+            new_features: boolean
+          } | null
+        }
+        Insert: {
+          email: string
+          language?: string
+          subscribed_at?: string
+          preferences?: {
+            newsletter: boolean
+            xp_tracking: boolean
+            chat_history: boolean
+            new_features: boolean
+          } | null
+        }
+        Update: {
+          email?: string
+          language?: string
+          subscribed_at?: string
+          preferences?: {
+            newsletter: boolean
+            xp_tracking: boolean
+            chat_history: boolean
+            new_features: boolean
+          } | null
+        }
+      }
     }
     Views: {
       [_ in never]: never
