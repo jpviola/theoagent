@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
 import { Globe } from 'lucide-react';
 import Header from '@/components/Header';
+import { AuthProvider } from '@/lib/auth-context';
 
 function LanguageToggle() {
   const { language, setLanguage } = useLanguage();
@@ -47,9 +48,11 @@ export default function AppChrome({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>
       <LanguageProvider>
-        <Header />
-        {showLanguageToggle && <LanguageToggle />}
-        <AuthFlowManager>{children}</AuthFlowManager>
+        <AuthProvider>
+          <Header />
+          {showLanguageToggle && <LanguageToggle />}
+          <AuthFlowManager>{children}</AuthFlowManager>
+        </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>
   );

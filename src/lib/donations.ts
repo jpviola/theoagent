@@ -26,7 +26,7 @@ export interface Donation {
   donor_name?: string | null
   message?: string | null
   is_anonymous: boolean
-  metadata: Record<string, any>
+  metadata: Record<string, unknown>
   webhook_verified: boolean
   created_at: string
   updated_at: string
@@ -44,7 +44,7 @@ export interface CreateDonationData {
   donor_name?: string
   message?: string
   is_anonymous?: boolean
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface DonationStats {
@@ -63,7 +63,7 @@ export interface DonationStats {
 /**
  * Crear una nueva donación
  */
-export async function createDonation(data: CreateDonationData): Promise<{ data: Donation | null; error: any }> {
+export async function createDonation(data: CreateDonationData): Promise<{ data: Donation | null; error: unknown }> {
   try {
     const donationData = {
       user_id: data.user_id || null,
@@ -102,10 +102,15 @@ export async function updateDonationStatus(
   payment_id: string,
   status: DonationStatus,
   webhook_verified: boolean = false,
-  metadata: Record<string, any> = {}
-): Promise<{ data: Donation | null; error: any }> {
+  metadata: Record<string, unknown> = {}
+): Promise<{ data: Donation | null; error: unknown }> {
   try {
-    const updateData: any = {
+    const updateData: Partial<Donation> & {
+      status: DonationStatus
+      webhook_verified: boolean
+      metadata: Record<string, unknown>
+      updated_at: string
+    } = {
       status,
       webhook_verified,
       metadata,
@@ -137,7 +142,7 @@ export async function updateDonationStatus(
 export async function getDonationByPaymentId(
   payment_provider: PaymentProvider,
   payment_id: string
-): Promise<{ data: Donation | null; error: any }> {
+): Promise<{ data: Donation | null; error: unknown }> {
   try {
     const { data, error } = await supabaseAdmin
       .from('donations')
@@ -156,7 +161,7 @@ export async function getDonationByPaymentId(
 /**
  * Obtener todas las donaciones de un usuario
  */
-export async function getUserDonations(user_id: string): Promise<{ data: Donation[] | null; error: any }> {
+export async function getUserDonations(user_id: string): Promise<{ data: Donation[] | null; error: unknown }> {
   try {
     const { data, error } = await supabaseAdmin
       .from('donations')
@@ -174,7 +179,7 @@ export async function getUserDonations(user_id: string): Promise<{ data: Donatio
 /**
  * Obtener estadísticas generales de donaciones
  */
-export async function getDonationStats(): Promise<{ data: DonationStats | null; error: any }> {
+export async function getDonationStats(): Promise<{ data: DonationStats | null; error: unknown }> {
   try {
     const { data, error } = await supabaseAdmin
       .from('donations')
@@ -203,7 +208,7 @@ export async function getDonationStats(): Promise<{ data: DonationStats | null; 
 /**
  * Obtener donaciones recientes (últimos 30 días)
  */
-export async function getRecentDonations(limit: number = 10): Promise<{ data: Donation[] | null; error: any }> {
+export async function getRecentDonations(limit: number = 10): Promise<{ data: Donation[] | null; error: unknown }> {
   try {
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
@@ -238,7 +243,7 @@ export async function donationExists(
       .single()
 
     return !!data && !error
-  } catch (error) {
+  } catch {
     return false
   }
 }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Gift, Sparkles, Clock, MessageSquare, Check } from 'lucide-react';
+import { X, Mail, Sparkles, Check } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface EmailSubscriptionModalProps {

@@ -72,12 +72,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single()
 
       if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching profile:', error)
+        // Avoid noisy Next.js error overlay when the error object is empty
+        // (network/CORS failures can surface as empty error objects).
+        console.warn('Error fetching profile (will fallback to null):', error)
+        setProfile(null)
       } else if (data) {
         setProfile(data as Profile)
       }
     } catch (error) {
-      console.error('Error fetching profile:', error)
+      console.warn('Error fetching profile (exception):', error)
     } finally {
       setLoading(false)
     }

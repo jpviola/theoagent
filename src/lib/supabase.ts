@@ -141,7 +141,7 @@ export interface Database {
           donor_name: string | null
           message: string | null
           is_anonymous: boolean
-          metadata: any
+          metadata: Record<string, unknown>
           webhook_verified: boolean
           created_at: string
           updated_at: string
@@ -159,7 +159,7 @@ export interface Database {
           donor_name?: string | null
           message?: string | null
           is_anonymous?: boolean
-          metadata?: any
+          metadata?: Record<string, unknown>
           webhook_verified?: boolean
         }
         Update: {
@@ -174,7 +174,7 @@ export interface Database {
           donor_name?: string | null
           message?: string | null
           is_anonymous?: boolean
-          metadata?: any
+          metadata?: Record<string, unknown>
           webhook_verified?: boolean
           completed_at?: string | null
         }
@@ -189,7 +189,7 @@ export interface Database {
         Returns: void
       }
       reset_daily_usage: {
-        Args: {}
+        Args: Record<string, never>
         Returns: void
       }
     }

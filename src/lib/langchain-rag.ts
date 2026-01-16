@@ -1,6 +1,5 @@
 import { ChatAnthropic } from '@langchain/anthropic';
 import { ChatOpenAI } from '@langchain/openai';
-import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { StringOutputParser } from '@langchain/core/output_parsers';
@@ -12,7 +11,7 @@ import { HNSWLib } from '@langchain/community/vectorstores/hnswlib';
 import { OpenAIEmbeddings } from '@langchain/openai';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 
-type SupportedChatModel = 'anthropic' | 'openai' | 'gemini' | 'llama';
+type SupportedChatModel = 'anthropic' | 'openai' | 'llama';
 
 // Types
 interface CatholicDocument {
@@ -207,15 +206,17 @@ class EnhancedVectorStore {
   }
 }
 
-// Text splitter for documents
-const textSplitter = new RecursiveCharacterTextSplitter({
-  chunkSize: 1000,
-  chunkOverlap: 200,
-});
-
 // In-memory conversation storage (in production, use Redis or database)
 const conversationStore = new Map<string, ChatMessageHistory>();
 const conversationSummaries = new Map<string, ConversationSummary>();
+const modelUsageStore = new Map<
+  string,
+  {
+    requestedModel?: SupportedChatModel;
+    actualModel: SupportedChatModel | 'default';
+    fallbackUsed: boolean;
+  }
+>();
 
 // Conversation summarization utility
 class ConversationManager {
@@ -372,8 +373,6 @@ export class SantaPalabraRAG {
         return this.createOpenAILLM();
       case 'anthropic':
         return this.createAnthropicLLM();
-      case 'gemini':
-        return this.createGeminiLLM();
       case 'llama':
         return this.createLlamaOpenAICompatibleLLM();
       default: {
@@ -383,51 +382,35 @@ export class SantaPalabraRAG {
     }
   }
 
-  private createGeminiLLM(): BaseChatModel {
-    const apiKey = process.env.GOOGLE_API_KEY;
-    if (!apiKey) {
-      throw new Error('Missing GOOGLE_API_KEY');
-    }
-
-    const model = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
-    return new ChatGoogleGenerativeAI({
-      apiKey,
-      model,
-      temperature: 0.3,
-    });
-  }
-
   private createLlamaOpenAICompatibleLLM(): BaseChatModel {
     const baseURL =
+      process.env.VLLM_BASE_URL ||
       process.env.LLAMA_OPENAI_COMPAT_BASE_URL ||
       (process.env.GROQ_API_KEY ? 'https://api.groq.com/openai/v1' : undefined) ||
       (process.env.TOGETHER_API_KEY ? 'https://api.together.xyz/v1' : undefined);
 
     const apiKey =
+      process.env.VLLM_API_KEY ||
       process.env.LLAMA_OPENAI_COMPAT_API_KEY ||
       process.env.GROQ_API_KEY ||
-      process.env.TOGETHER_API_KEY;
+      process.env.TOGETHER_API_KEY ||
+      'dummy-key';
 
     const model =
+      process.env.VLLM_MODEL ||
       process.env.LLAMA_OPENAI_COMPAT_MODEL ||
       process.env.GROQ_MODEL ||
       process.env.TOGETHER_MODEL;
 
     if (!baseURL) {
       throw new Error(
-        'Missing LLAMA_OPENAI_COMPAT_BASE_URL (or set GROQ_API_KEY / TOGETHER_API_KEY to use a default base URL).'
-      );
-    }
-
-    if (!apiKey) {
-      throw new Error(
-        'Missing LLAMA_OPENAI_COMPAT_API_KEY (or GROQ_API_KEY / TOGETHER_API_KEY).'
+        'Missing VLLM_BASE_URL or LLAMA_OPENAI_COMPAT_BASE_URL (or set GROQ_API_KEY / TOGETHER_API_KEY).'
       );
     }
 
     if (!model) {
       throw new Error(
-        'Missing LLAMA_OPENAI_COMPAT_MODEL (or GROQ_MODEL / TOGETHER_MODEL).'
+        'Missing VLLM_MODEL or LLAMA_OPENAI_COMPAT_MODEL (or GROQ_MODEL / TOGETHER_MODEL).'
       );
     }
 
@@ -652,6 +635,30 @@ For Vercel deployment, AI Gateway is recommended: https://vercel.com/docs/ai-gat
     return expansions;
   }
 
+  private isRetriableLLMError(error: unknown): boolean {
+    if (!error) return false;
+    let message = '';
+    if (typeof error === 'string') {
+      message = error;
+    } else if (error instanceof Error) {
+      message = error.message;
+    } else {
+      const maybeToString = (error as { toString?: () => string }).toString;
+      if (typeof maybeToString === 'function') {
+        message = maybeToString.call(error);
+      }
+    }
+    const lower = message.toLowerCase();
+    return (
+      lower.includes('rate limit') ||
+      lower.includes('model_rate_limit') ||
+      lower.includes('429') ||
+      lower.includes('too many requests') ||
+      lower.includes('overloaded') ||
+      lower.includes('temporarily unavailable')
+    );
+  }
+
   private createSystemPrompt(context: ChatContext): PromptTemplate {
     const systemMessage = context.language === 'es' 
       ? `Eres santaPalabra, un asistente de IA católico especializado en teología, doctrina y enseñanzas de la Iglesia Católica.
@@ -763,18 +770,48 @@ Provide a helpful, doctrinally sound response based on the sources above:`;
       // Create prompt template
       const systemPrompt = this.createSystemPrompt(context);
 
-      // Create the chain
-      const chain = RunnableSequence.from([
-        systemPrompt,
-        llm,
-        new StringOutputParser()
-      ]);
+      const runWithLLM = async (currentLLM: BaseChatModel): Promise<string> => {
+        const chain = RunnableSequence.from([
+          systemPrompt,
+          currentLLM,
+          new StringOutputParser()
+        ]);
 
-      // Generate response
-      const response = await chain.invoke({
-        context: contextText,
-        chat_history: chatHistory,
-        input: userMessage
+        const result = await chain.invoke({
+          context: contextText,
+          chat_history: chatHistory,
+          input: userMessage
+        });
+
+        return result;
+      };
+
+      let response: string;
+      let actualModel: SupportedChatModel | 'default' =
+        context.model ?? 'default';
+      let fallbackUsed = false;
+
+      if (context.model === 'llama') {
+        try {
+          response = await runWithLLM(llm);
+        } catch (primaryError) {
+          if (!this.isRetriableLLMError(primaryError)) {
+            throw primaryError;
+          }
+          console.warn('⚠️ Llama model error, attempting Anthropic fallback:', primaryError);
+          const fallbackLLM = this.createLLMForModel('anthropic');
+          response = await runWithLLM(fallbackLLM);
+          actualModel = 'anthropic';
+          fallbackUsed = true;
+        }
+      } else {
+        response = await runWithLLM(llm);
+      }
+
+      modelUsageStore.set(context.userId, {
+        requestedModel: context.model,
+        actualModel,
+        fallbackUsed,
       });
 
       console.log('✅ Response generated successfully');
@@ -793,6 +830,7 @@ Provide a helpful, doctrinally sound response based on the sources above:`;
   async clearConversationHistory(userId: string): Promise<void> {
     const history = this.getConversationHistory(userId);
     await history.clear();
+    modelUsageStore.delete(userId);
     console.log(`🗑️ Cleared conversation history for user ${userId}`);
   }
 
@@ -801,6 +839,15 @@ Provide a helpful, doctrinally sound response based on the sources above:`;
     if (!history) return 0;
     const messages = await history.getMessages();
     return messages.length;
+  }
+
+  getLastModelUsage(userId: string): {
+    requestedModel?: SupportedChatModel;
+    actualModel: SupportedChatModel | 'default';
+    fallbackUsed: boolean;
+  } | null {
+    const usage = modelUsageStore.get(userId) || null;
+    return usage;
   }
 
   // Advanced mode with better model

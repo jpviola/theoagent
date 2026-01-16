@@ -1,19 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Cross, Book, Globe, Star, ChevronRight, X } from 'lucide-react';
-
-interface QuizAnswer {
-  id: string;
-  text: string;
-  icon: React.ReactNode;
-  weight: {
-    devotion: string;
-    interest: string;
-    country?: string;
-  };
-}
 
 const questions = [
   {

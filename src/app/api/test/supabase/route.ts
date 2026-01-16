@@ -31,11 +31,12 @@ export async function GET() {
       timestamp: new Date().toISOString()
     })
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Supabase test error:', error)
+    const message = error instanceof Error ? error.message : 'Unknown error'
     return Response.json({ 
       status: 'error',
-      message: error.message 
+      message 
     }, { status: 500 })
   }
 }

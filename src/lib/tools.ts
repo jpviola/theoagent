@@ -73,69 +73,6 @@ async function* searchCatechism({ query, limit = 5 }: { query: string; limit?: n
   return output;
 }
 
-// Tool 3: Vatican News & Current Pope Information
-async function* getVaticanNews({ query = 'pope' }: { query?: string }) {
-  yield `Fetching latest information from Vatican News...`;
-
-  try {
-    // Try to fetch from Vatican News RSS feed for English
-    const response = await fetch('https://www.vaticannews.va/en.rss.xml', {
-      headers: {
-        'User-Agent': 'TheoAgent/1.0',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    const rssText = await response.text();
-    
-    // Extract recent headlines (simple regex approach)
-    const titleMatches = rssText.match(/<title><!\[CDATA\[([^\]]+)\]\]><\/title>/g) || [];
-    const headlines = titleMatches
-      .slice(1, 6) // Skip first (channel title), get next 5
-      .map(match => match.replace(/<title><!\[CDATA\[/, '').replace(/\]\]><\/title>/, ''));
-
-    let output = `**Current Pope (December 2025):**\n`;
-    output += `The reigning Holy Father is **Pope Leo XIV**, elected in 2025 following the passing of Pope Francis.\n\n`;
-    output += `**Recent Papal Documents:**\n`;
-    output += `Pope Leo XIV has published his first apostolic exhortation, "Dilexi me" (2025), on devotion to the Sacred Heart of Jesus.\n\n`;
-    
-    if (headlines.length > 0) {
-      output += `**Recent Vatican News Headlines:**\n`;
-      headlines.forEach((headline, idx) => {
-        output += `${idx + 1}. ${headline}\n`;
-      });
-      output += `\n`;
-    }
-    
-    output += `**For more information:**\n`;
-    output += `- **Pope Leo XIV Official Page**: https://www.vatican.va/content/leo-xiv/\n`;
-    output += `- **Vatican News**: https://www.vaticannews.va\n\n`;
-    
-    output += `**Historical Papal Teachings in Database:**\n`;
-    output += `This system includes encyclicals and teachings from Pope Francis (2013-2025), Benedict XVI, John Paul II, and earlier popes back to Leo XIII (1878-1903).`;
-    
-    return output;
-  } catch (error) {
-    // Fallback if fetch fails
-    return `**Current Pope (December 2025):**
-The reigning Holy Father is **Pope Leo XIV**, elected in 2025 following the passing of Pope Francis.
-
-**Recent Papal Documents:**
-Pope Leo XIV has published his first apostolic exhortation, "Dilexi me" (2025), on devotion to the Sacred Heart of Jesus.
-
-**For the latest news and information:**
-- **Pope Leo XIV Official Page**: https://www.vatican.va/content/leo-xiv/
-- **Vatican News**: https://www.vaticannews.va
-- **Holy See Official**: https://www.vatican.va
-
-**Historical Papal Teachings:**
-This system includes a comprehensive database of papal encyclicals from Pope Francis (2013-2025) through Leo XIII (1878-1903). Ask me about any specific encyclical or papal teaching.`;
-  }
-}
-
 // Export tools for Vercel AI
 export const tools = {
   get_bible_passage: {

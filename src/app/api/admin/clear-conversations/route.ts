@@ -8,7 +8,7 @@ const supabaseAdmin = createClient(
 
 export const maxDuration = 30;
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
     console.log('🗑️ Admin: Clearing all conversation histories');
     

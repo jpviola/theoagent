@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type User } from '@supabase/supabase-js'
 import { SUBSCRIPTION_TIERS } from '@/lib/subscription-db'
 
 interface ProfileManagementProps {
-  user: any
+  user: User
   onClose?: () => void
   onProfileUpdated?: () => void
 }
@@ -54,17 +54,40 @@ export default function ProfileManagement({
   })
 
   useEffect(() => {
-    if (user) {
-      loadProfile()
-      setFormData({
-        full_name: user.user_metadata?.full_name || '',
-        institution_name: user.user_metadata?.institution_name || '',
-        email: user.email || ''
-      })
-    }
-  }, [user])
+    if (!user) return
 
-  const loadProfile = async () => {
+    const loadProfile = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single()
+
+        if (error) {
+          console.error('Error loading profile:', error)
+          setError('Failed to load profile data')
+        } else {
+          setProfile(data as UserProfile)
+        }
+      } catch (error) {
+        console.error('Profile loading error:', error)
+        setError('An unexpected error occurred')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    void loadProfile()
+
+    setFormData({
+      full_name: (user.user_metadata as { full_name?: string } | null)?.full_name || '',
+      institution_name: (user.user_metadata as { institution_name?: string } | null)?.institution_name || '',
+      email: user.email || ''
+    })
+  }, [user, supabase])
+
+  const reloadProfile = async () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -76,13 +99,11 @@ export default function ProfileManagement({
         console.error('Error loading profile:', error)
         setError('Failed to load profile data')
       } else {
-        setProfile(data)
+        setProfile(data as UserProfile)
       }
     } catch (error) {
       console.error('Profile loading error:', error)
       setError('An unexpected error occurred')
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -118,10 +139,11 @@ export default function ProfileManagement({
       onProfileUpdated?.()
       
       // Reload profile data
-      await loadProfile()
+      await reloadProfile()
 
-    } catch (error: any) {
-      setError(error.message || 'Failed to update profile')
+    } catch (error) {
+      console.error('Profile update error:', error)
+      setError('Failed to update profile')
     } finally {
       setUpdating(false)
     }
@@ -159,8 +181,9 @@ export default function ProfileManagement({
         confirmPassword: ''
       })
 
-    } catch (error: any) {
-      setError(error.message || 'Failed to update password')
+    } catch (error) {
+      console.error('Password update error:', error)
+      setError('Failed to update password')
     } finally {
       setUpdating(false)
     }
@@ -181,10 +204,11 @@ export default function ProfileManagement({
 
     try {
       // Note: This would typically involve a server-side endpoint for complete deletion
-      // For now, we'll just sign out the user
+      // For now, we&apos;ll just sign out the user
       await supabase.auth.signOut()
       window.location.href = '/'
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Account deletion error:', error)
       setError('Failed to delete account. Please contact support.')
       setUpdating(false)
     }
@@ -265,7 +289,7 @@ export default function ProfileManagement({
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as 'profile' | 'security' | 'billing')}
                 className={`flex-1 flex items-center justify-center space-x-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                   activeTab === tab.id
                     ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-800 dark:text-white'

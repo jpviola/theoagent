@@ -6,10 +6,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import WelcomeQuiz from '@/components/WelcomeQuiz';
 
+const particleConfigs = [
+  { width: 180, height: 180, left: '10%', top: '15%', xOffset: -40, yOffset: 10, duration: 9 },
+  { width: 220, height: 220, left: '70%', top: '20%', xOffset: 35, yOffset: -15, duration: 11 },
+  { width: 200, height: 200, left: '20%', top: '70%', xOffset: -25, yOffset: 20, duration: 10 },
+  { width: 160, height: 160, left: '80%', top: '70%', xOffset: 30, yOffset: -20, duration: 12 },
+  { width: 190, height: 190, left: '5%', top: '40%', xOffset: -20, yOffset: 15, duration: 10 },
+  { width: 210, height: 210, left: '85%', top: '45%', xOffset: 25, yOffset: -10, duration: 9 }
+];
+
 export default function IntroPage() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoEnded, setVideoEnded] = useState(false);
   const [canSkip, setCanSkip] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const { language } = useLanguage();
@@ -34,8 +42,6 @@ export default function IntroPage() {
   }, [router]);
 
   const handleVideoEnd = () => {
-    setVideoEnded(true);
-    // Mostrar quiz automáticamente después del video
     setTimeout(() => {
       setShowQuiz(true);
     }, 500);
@@ -47,7 +53,7 @@ export default function IntroPage() {
     }
   };
 
-  const handleQuizComplete = (profile: any) => {
+  const handleQuizComplete = (profile: unknown) => {
     localStorage.setItem('santapalabra_profile', JSON.stringify(profile));
     router.push('/catholic-chat');
   };
@@ -58,7 +64,7 @@ export default function IntroPage() {
   }
 
   return (
-    <div className="relative min-h-screen w-full bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 flex items-center justify-center overflow-hidden">
+    <div className="relative min-h-screen w-full bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center overflow-hidden">
       {/* Video de fondo integrado - más pequeño y sutil */}
       <div className="absolute inset-0 flex items-center justify-center">
         <motion.div
@@ -158,30 +164,29 @@ export default function IntroPage() {
         )}
       </AnimatePresence>
 
-      {/* Partículas decorativas de fondo */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(6)].map((_, i) => (
+        {particleConfigs.map((config, index) => (
           <motion.div
-            key={i}
+          key={index}
             initial={{ opacity: 0 }}
             animate={{ 
               opacity: [0.1, 0.3, 0.1],
               scale: [1, 1.2, 1],
-              x: [0, Math.random() * 100 - 50, 0],
-              y: [0, Math.random() * 100 - 50, 0],
+              x: [0, config.xOffset, 0],
+              y: [0, config.yOffset, 0],
             }}
             transition={{
-              duration: 8 + Math.random() * 4,
+              duration: config.duration,
               repeat: Infinity,
-              delay: i * 0.5,
+              delay: index * 0.5,
               ease: 'easeInOut'
             }}
             className="absolute rounded-full bg-yellow-300/20 blur-2xl"
             style={{
-              width: `${100 + Math.random() * 200}px`,
-              height: `${100 + Math.random() * 200}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              width: `${config.width}px`,
+              height: `${config.height}px`,
+              left: config.left,
+              top: config.top
             }}
           />
         ))}

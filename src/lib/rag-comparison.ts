@@ -1,4 +1,4 @@
-import { getSantaPalabraRAG, initializeWithCatholicDocuments } from './langchain-rag';
+import { initializeWithCatholicDocuments } from './langchain-rag';
 // import { getTheoAgentLlamaIndex, initializeLlamaIndexWithCatholicDocuments } from './llamaindex-rag';
 import fs from 'fs/promises';
 import path from 'path';
@@ -28,6 +28,28 @@ interface ComparisonReport {
   };
 }
 
+interface RAGEngine {
+  generateResponse: (
+    query: string,
+    context: {
+      userId: string;
+      mode: 'standard';
+      language: 'en';
+    }
+  ) => Promise<string>;
+}
+
+interface CatechismEntry {
+  id: string | number;
+  text: string;
+}
+
+interface PapalEntry {
+  title?: string;
+  content: string;
+  source?: string;
+}
+
 export class RAGComparison {
   private testQueries = [
     'What is the Catholic teaching on the Trinity?',
@@ -44,14 +66,19 @@ export class RAGComparison {
 
   async loadTestDocuments() {
     const publicDir = path.join(process.cwd(), 'public', 'data');
-    const documents = [];
+    const documents: Array<{
+      id: string;
+      title: string;
+      content: string;
+      source: string;
+      category: 'catechism' | 'papal';
+    }> = [];
     
     try {
-      // Load sample documents for testing
       const catechismData = await fs.readFile(path.join(publicDir, 'catechism.json'), 'utf-8');
-      const catechismEntries = JSON.parse(catechismData).slice(0, 50); // First 50 for testing
+      const catechismEntries = (JSON.parse(catechismData) as CatechismEntry[]).slice(0, 50);
       
-      documents.push(...catechismEntries.map((entry: any) => ({
+      documents.push(...catechismEntries.map((entry) => ({
         id: `catechism-${entry.id}`,
         title: `Catechism ${entry.id}`,
         content: entry.text,
@@ -59,11 +86,11 @@ export class RAGComparison {
         category: 'catechism' as const
       })));
 
-      // Load papal documents sample
       const papalData = await fs.readFile(path.join(publicDir, 'papal_magisterium.json'), 'utf-8');
-      const papalEntries = JSON.parse(papalData).slice(0, 20);
+      const papalJson = JSON.parse(papalData) as { papal_documents?: PapalEntry[] };
+      const papalEntries = (papalJson.papal_documents || []).slice(0, 20);
       
-      documents.push(...papalEntries.map((entry: any, index: number) => ({
+      documents.push(...papalEntries.map((entry, index: number) => ({
         id: `papal-${index}`,
         title: entry.title || `Papal Document ${index}`,
         content: entry.content,
@@ -82,7 +109,7 @@ export class RAGComparison {
 
   async benchmarkImplementation(
     implementation: 'LangChain' | 'LlamaIndex', 
-    ragInstance: any,
+    ragInstance: RAGEngine,
     queries: string[]
   ): Promise<BenchmarkResult[]> {
     const results: BenchmarkResult[] = [];
@@ -138,8 +165,8 @@ export class RAGComparison {
     const langchainRAG = await initializeWithCatholicDocuments(documents);
 
     console.log('⚙️ LlamaIndex temporarily disabled...');
-    let llamaIndexRAG: any = null;
-    let llamaIndexAvailable = false;
+    const llamaIndexRAG: RAGEngine | null = null;
+    const llamaIndexAvailable = false;
 
     // LlamaIndex temporarily disabled
     // try {

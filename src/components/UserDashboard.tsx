@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase-client'
-import type { Database } from '@/lib/supabase'
 import { SUBSCRIPTION_TIERS } from '@/lib/subscription-db'
 import ConversationManager from './ConversationManager'
 

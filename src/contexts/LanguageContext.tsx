@@ -39,16 +39,15 @@ function getBrowserDefaultLanguage(): AppLanguage {
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<AppLanguage>('es');
-
-  useEffect(() => {
+  const [language, setLanguageState] = useState<AppLanguage>(() => {
+    if (typeof window === 'undefined') return 'es';
     try {
       const stored = normalizeLanguage(window.localStorage.getItem(STORAGE_KEY));
-      setLanguageState(stored ?? getBrowserDefaultLanguage());
+      return stored ?? getBrowserDefaultLanguage();
     } catch {
-      setLanguageState('es');
+      return 'es';
     }
-  }, []);
+  });
 
   useEffect(() => {
     try {

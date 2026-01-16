@@ -6,14 +6,10 @@ import { motion } from 'framer-motion';
 
 // Partículas doradas que siguen el cursor
 export function GoldenParticles() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, opacity: number}>>([]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-      
-      // Crear nueva partícula ocasionalmente
       if (Math.random() > 0.95) {
         const newParticle = {
           id: Date.now() + Math.random(),
@@ -39,7 +35,7 @@ export function GoldenParticles() {
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-10">
+    <div className="fixed inset-0 pointer-events-none z-10 hidden dark:hidden">
       {particles.map((particle) => (
         <motion.div
           key={particle.id}
@@ -62,14 +58,12 @@ export function GoldenParticles() {
   );
 }
 
-// Botón con efecto de bendición
 type BlessedButtonProps = {
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
   href?: string;
-  [key: string]: any;
-};
+} & Record<string, unknown>;
 
 export function BlessedButton({ 
   children, 
@@ -159,7 +153,6 @@ export function BlessedButton({
   );
 }
 
-// Imagen que "respira" sutilmente
 export function BreathingImage({ 
   src, 
   alt, 
@@ -169,8 +162,7 @@ export function BreathingImage({
   src: string;
   alt: string;
   className?: string;
-  [key: string]: any;
-}) {
+} & Record<string, unknown>) {
   return (
     <motion.img
       src={src}
@@ -189,7 +181,6 @@ export function BreathingImage({
   );
 }
 
-// Botón simple sin efectos sensoriales - para mantener claridad
 export function SimpleButton({ 
   children, 
   className = '', 
@@ -199,8 +190,7 @@ export function SimpleButton({
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
-  [key: string]: any;
-}) {
+} & Record<string, unknown>) {
   return (
     <motion.button
       className={`relative overflow-hidden ${className}`}

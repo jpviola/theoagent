@@ -1,5 +1,6 @@
 'use client';
 
+import type { ComponentPropsWithoutRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { linkifyScripture, detectLanguage, type BibleLanguage } from '@/lib/scriptureLinks';
@@ -11,29 +12,27 @@ interface ScriptureLinkedMarkdownProps {
   autoDetectLanguage?: boolean;
 }
 
-/**
- * Markdown component that automatically converts scripture references to links
- */
+type CodeProps = ComponentPropsWithoutRef<'code'> & {
+  inline?: boolean;
+  node?: unknown;
+};
+
 export default function ScriptureLinkedMarkdown({ 
   content, 
   language = 'english',
   autoDetectLanguage = true 
 }: ScriptureLinkedMarkdownProps) {
-  // Auto-detect language if enabled
   const detectedLanguage = autoDetectLanguage ? detectLanguage(content) : language;
   
-  // Convert scripture references to markdown links
   let linkedContent = linkifyScripture(content, detectedLanguage);
   
-  // Convert Vatican document references to markdown links
   linkedContent = linkifyVaticanDocuments(linkedContent);
   
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
-        // Custom link styling for scripture references - bold and prominent
-        a: ({ node, ...props }) => {
+        a: ({ ...props }) => {
           const isBibleLink = props.href?.includes('bible.usccb.org') || 
                              props.href?.includes('vatican.va') ||
                              props.href?.includes('biblegateway.com');
@@ -53,29 +52,28 @@ export default function ScriptureLinkedMarkdown({
             </a>
           );
         },
-        // Style other markdown elements
-        p: ({ node, ...props }) => (
+        p: ({ ...props }) => (
           <p className="mb-3 leading-relaxed" {...props} />
         ),
-        strong: ({ node, ...props }) => (
+        strong: ({ ...props }) => (
           <strong className="font-bold text-gray-900 dark:text-gray-100" {...props} />
         ),
-        em: ({ node, ...props }) => (
+        em: ({ ...props }) => (
           <em className="italic text-gray-800 dark:text-gray-200" {...props} />
         ),
-        ul: ({ node, ...props }) => (
+        ul: ({ ...props }) => (
           <ul className="list-disc list-inside mb-3 space-y-1" {...props} />
         ),
-        ol: ({ node, ...props }) => (
+        ol: ({ ...props }) => (
           <ol className="list-decimal list-inside mb-3 space-y-1" {...props} />
         ),
-        blockquote: ({ node, ...props }) => (
+        blockquote: ({ ...props }) => (
           <blockquote 
             className="border-l-4 border-blue-500 pl-4 py-2 my-3 italic text-gray-800 bg-blue-50/50" 
             {...props} 
           />
         ),
-        code: ({ node, inline, ...props }: any) => 
+        code: ({ inline, ...props }: CodeProps) => 
           inline ? (
             <code 
               className="bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono text-purple-700 dark:text-purple-300" 
@@ -87,13 +85,13 @@ export default function ScriptureLinkedMarkdown({
               {...props} 
             />
           ),
-        h1: ({ node, ...props }) => (
+        h1: ({ ...props }) => (
           <h1 className="text-2xl font-bold mb-3 mt-4" {...props} />
         ),
-        h2: ({ node, ...props }) => (
+        h2: ({ ...props }) => (
           <h2 className="text-xl font-bold mb-2 mt-3" {...props} />
         ),
-        h3: ({ node, ...props }) => (
+        h3: ({ ...props }) => (
           <h3 className="text-lg font-bold mb-2 mt-2" {...props} />
         ),
       }}

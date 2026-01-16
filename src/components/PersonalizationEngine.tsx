@@ -13,13 +13,21 @@ interface PersonalizedContent {
   relevanceScore: number;
 }
 
-interface UserProfile {
+export interface UserProfile {
   devotion: string;
   interest: string;
   country: string;
   level: number;
   completedAt: Date;
 }
+
+type SmartNotification = {
+  id: string;
+  title: string;
+  message: string;
+  type: 'devotion' | 'reminder' | 'achievement';
+  timestamp: Date;
+};
 
 const contentDatabase = {
   devotion: {
@@ -116,74 +124,104 @@ const contentDatabase = {
   }
 };
 
+const generatePersonalizedContent = (profile: UserProfile): PersonalizedContent[] => {
+  const content: PersonalizedContent[] = [];
+
+  if (contentDatabase.devotion[profile.devotion as keyof typeof contentDatabase.devotion]) {
+    const devotionContent = contentDatabase.devotion[profile.devotion as keyof typeof contentDatabase.devotion];
+    content.push({
+      type: 'devotion',
+      title: devotionContent[0].title,
+      content: devotionContent[0].content,
+      icon: <Heart className="h-5 w-5" />,
+      tags: devotionContent[0].tags,
+      relevanceScore: devotionContent[0].relevanceScore
+    });
+  }
+
+  if (contentDatabase.interest[profile.interest as keyof typeof contentDatabase.interest]) {
+    const interestContent = contentDatabase.interest[profile.interest as keyof typeof contentDatabase.interest];
+    content.push({
+      type: 'teaching',
+      title: interestContent[0].title,
+      content: interestContent[0].content,
+      icon: <Book className="h-5 w-5" />,
+      tags: interestContent[0].tags,
+      relevanceScore: interestContent[0].relevanceScore
+    });
+  }
+
+  if (contentDatabase.country[profile.country as keyof typeof contentDatabase.country]) {
+    const countryContent = contentDatabase.country[profile.country as keyof typeof contentDatabase.country];
+    content.push({
+      type: 'reflection',
+      title: countryContent[0].title,
+      content: countryContent[0].content,
+      icon: <Star className="h-5 w-5" />,
+      tags: countryContent[0].tags,
+      relevanceScore: countryContent[0].relevanceScore
+    });
+  }
+
+  content.push({
+    type: 'gospel',
+    title: 'Evangelio de Hoy',
+    content: 'Reflexión personalizada sobre el Evangelio del día según tus intereses espirituales...',
+    icon: <Calendar className="h-5 w-5" />,
+    tags: ['evangelio', 'diario', 'reflexion'],
+    relevanceScore: 1.0
+  });
+
+  return content.sort((a, b) => b.relevanceScore - a.relevanceScore);
+};
+
+const getPersonalizedMorningMessage = (profile: UserProfile) => {
+  const messages = {
+    guadalupana: 'Que la Virgen de Guadalupe te acompañe en este nuevo día',
+    teresiana: 'Como dice Santa Teresa: "Que nada te turbe, que nada te espante"',
+    juanista: 'Que encuentres a Dios en el silencio de tu corazón como San Juan',
+    general: 'Que Dios bendiga tu jornada de hoy'
+  };
+  
+  return messages[profile.devotion as keyof typeof messages] || messages.general;
+};
+
+const generateSmartNotifications = (profile: UserProfile): SmartNotification[] => {
+  const notifications: SmartNotification[] = [];
+  const now = new Date();
+
+  if (now.getHours() >= 6 && now.getHours() <= 10) {
+    notifications.push({
+      id: 'morning',
+      title: 'Buenos días 🌅',
+      message: getPersonalizedMorningMessage(profile),
+      type: 'devotion',
+      timestamp: now
+    });
+  }
+
+  if (now.getHours() === 12 || now.getHours() === 18) {
+    notifications.push({
+      id: 'angelus',
+      title: 'Hora del Ángelus 🔔',
+      message: 'Es momento de elevar tu corazón al cielo con la oración del Ángelus',
+      type: 'reminder',
+      timestamp: now
+    });
+  }
+
+  return notifications;
+};
+
 export function PersonalizedRecommendations({ profile }: { profile: UserProfile | null }) {
-  const [recommendations, setRecommendations] = useState<PersonalizedContent[]>([]);
   const [isVisible, setIsVisible] = useState(false);
+  const recommendations = profile ? generatePersonalizedContent(profile) : [];
 
   useEffect(() => {
     if (!profile) return;
 
-    const content = generatePersonalizedContent(profile);
-    setRecommendations(content);
-    
-    // Mostrar recomendaciones después de un momento
     setTimeout(() => setIsVisible(true), 2000);
   }, [profile]);
-
-  const generatePersonalizedContent = (profile: UserProfile): PersonalizedContent[] => {
-    const content: PersonalizedContent[] = [];
-
-    // Contenido basado en devoción
-    if (contentDatabase.devotion[profile.devotion as keyof typeof contentDatabase.devotion]) {
-      const devotionContent = contentDatabase.devotion[profile.devotion as keyof typeof contentDatabase.devotion];
-      content.push({
-        type: 'devotion',
-        title: devotionContent[0].title,
-        content: devotionContent[0].content,
-        icon: <Heart className="h-5 w-5" />,
-        tags: devotionContent[0].tags,
-        relevanceScore: devotionContent[0].relevanceScore
-      });
-    }
-
-    // Contenido basado en interés
-    if (contentDatabase.interest[profile.interest as keyof typeof contentDatabase.interest]) {
-      const interestContent = contentDatabase.interest[profile.interest as keyof typeof contentDatabase.interest];
-      content.push({
-        type: 'teaching',
-        title: interestContent[0].title,
-        content: interestContent[0].content,
-        icon: <Book className="h-5 w-5" />,
-        tags: interestContent[0].tags,
-        relevanceScore: interestContent[0].relevanceScore
-      });
-    }
-
-    // Contenido basado en país
-    if (contentDatabase.country[profile.country as keyof typeof contentDatabase.country]) {
-      const countryContent = contentDatabase.country[profile.country as keyof typeof contentDatabase.country];
-      content.push({
-        type: 'reflection',
-        title: countryContent[0].title,
-        content: countryContent[0].content,
-        icon: <Star className="h-5 w-5" />,
-        tags: countryContent[0].tags,
-        relevanceScore: countryContent[0].relevanceScore
-      });
-    }
-
-    // Evangelio del día (siempre relevante)
-    content.push({
-      type: 'gospel',
-      title: 'Evangelio de Hoy',
-      content: 'Reflexión personalizada sobre el Evangelio del día según tus intereses espirituales...',
-      icon: <Calendar className="h-5 w-5" />,
-      tags: ['evangelio', 'diario', 'reflexion'],
-      relevanceScore: 1.0
-    });
-
-    return content.sort((a, b) => b.relevanceScore - a.relevanceScore);
-  };
 
   if (!isVisible || recommendations.length === 0) return null;
 
@@ -253,61 +291,7 @@ export function PersonalizedRecommendations({ profile }: { profile: UserProfile 
 }
 
 export function SmartNotifications({ profile }: { profile: UserProfile | null }) {
-  const [notifications, setNotifications] = useState<Array<{
-    id: string;
-    title: string;
-    message: string;
-    type: 'devotion' | 'reminder' | 'achievement';
-    timestamp: Date;
-  }>>([]);
-
-  useEffect(() => {
-    if (!profile) return;
-
-    // Generar notificaciones inteligentes basadas en el perfil
-    const smartNotifications = generateSmartNotifications(profile);
-    setNotifications(smartNotifications);
-  }, [profile]);
-
-  const generateSmartNotifications = (profile: UserProfile) => {
-    const notifications = [];
-    const now = new Date();
-
-    // Notificación matutina personalizada
-    if (now.getHours() >= 6 && now.getHours() <= 10) {
-      notifications.push({
-        id: 'morning',
-        title: 'Buenos días 🌅',
-        message: getPersonalizedMorningMessage(profile),
-        type: 'devotion' as const,
-        timestamp: now
-      });
-    }
-
-    // Recordatorio de oración angelus
-    if (now.getHours() === 12 || now.getHours() === 18) {
-      notifications.push({
-        id: 'angelus',
-        title: 'Hora del Ángelus 🔔',
-        message: 'Es momento de elevar tu corazón al cielo con la oración del Ángelus',
-        type: 'reminder' as const,
-        timestamp: now
-      });
-    }
-
-    return notifications;
-  };
-
-  const getPersonalizedMorningMessage = (profile: UserProfile) => {
-    const messages = {
-      guadalupana: 'Que la Virgen de Guadalupe te acompañe en este nuevo día',
-      teresiana: 'Como dice Santa Teresa: "Que nada te turbe, que nada te espante"',
-      juanista: 'Que encuentres a Dios en el silencio de tu corazón como San Juan',
-      general: 'Que Dios bendiga tu jornada de hoy'
-    };
-    
-    return messages[profile.devotion as keyof typeof messages] || messages.general;
-  };
+  const notifications = profile ? generateSmartNotifications(profile) : [];
 
   return (
     <div className="fixed top-4 left-4 z-50 space-y-2">

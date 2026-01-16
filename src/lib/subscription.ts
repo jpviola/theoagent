@@ -151,7 +151,6 @@ export async function subscribeToNewsletter(email: string, language: string = 'e
       }
     };
 
-    // Intentar insertar en Supabase si está disponible
     try {
       const { error } = await supabase
         .from('email_subscriptions')

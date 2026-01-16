@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AppChrome from "@/components/AppChrome";
+import DonationModal from '@/components/DonationModal';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
@@ -44,7 +45,8 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/santapalabra-logoSinLeyenda.ico" sizes="any" />
         <link rel="shortcut icon" href="/santapalabra-logoSinLeyenda.ico" />
-        <meta name="theme-color" content="#eab308" />
+        <meta name="theme-color" content="#eab308" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#1f2937" media="(prefers-color-scheme: dark)" />
         <meta name="msapplication-TileColor" content="#eab308" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -57,6 +59,8 @@ export default function RootLayout({
       >
         <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200">
           <AppChrome>{children}</AppChrome>
+        
+          <DonationModal />
         </main>
 
         <SpeedInsights />

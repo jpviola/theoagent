@@ -2,11 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase-client'
-import type { Database } from '@/lib/supabase'
 import { authAnalytics } from '../lib/auth-analytics'
 
+interface VerificationUser {
+  email?: string | null
+  email_confirmed_at?: string | null
+}
+
 interface EmailVerificationBannerProps {
-  user: any
+  user: VerificationUser | null
   onVerified?: () => void
   autoRefreshInterval?: number // Auto-refresh interval in seconds (default: 30)
   className?: string
@@ -38,7 +42,6 @@ export default function EmailVerificationBanner({
   const [resendCount, setResendCount] = useState(0)
   const [cooldownSeconds, setCooldownSeconds] = useState(0)
   const [isCheckingStatus, setIsCheckingStatus] = useState(false)
-  const [lastResendTime, setLastResendTime] = useState<number | null>(null)
 
   const emailProvider = user?.email ? getEmailProvider(user.email) : null
   const maxResends = 3
@@ -55,8 +58,7 @@ export default function EmailVerificationBanner({
       const lastResendKey = `email-verification-last-resend-${user.email}`
       const storedLastResend = localStorage.getItem(lastResendKey)
       if (storedLastResend) {
-        const lastResend = parseInt(storedLastResend)
-        setLastResendTime(lastResend)
+        const lastResend = parseInt(storedLastResend, 10)
         
         // Check if still in cooldown
         const timeSinceLastResend = (Date.now() - lastResend) / 1000
@@ -141,7 +143,6 @@ export default function EmailVerificationBanner({
       setCooldownSeconds(cooldownTime)
       
       const currentTime = Date.now()
-      setLastResendTime(currentTime)
       
       if (typeof window !== 'undefined') {
         localStorage.setItem(`email-verification-last-resend-${user.email}`, currentTime.toString())
@@ -150,8 +151,8 @@ export default function EmailVerificationBanner({
       // Auto-hide success message
       setTimeout(() => setIsResent(false), 5000)
       
-    } catch (error: any) {
-      console.error('Resend verification error:', error)
+    } catch (err) {
+      console.error('Resend verification error:', err)
     } finally {
       setIsResending(false)
     }

@@ -49,12 +49,11 @@ export default function DonationsAdminPage() {
       const donationsData = await donationsResponse.json()
       console.log(`✅ Received ${donationsData.data?.length || 0} donations`)
       setDonations(donationsData.data || [])
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('❌ Error fetching data:', err)
-      setError(err.message)
-      
-      // Si es un error de tabla no existente, mostrar mensaje específico
-      if (err.message && err.message.includes('Database table not created yet')) {
+      const message = err instanceof Error ? err.message : String(err)
+      setError(message)
+      if (message.includes('Database table not created yet')) {
         setError('La tabla de donaciones no existe en Supabase. Por favor, ejecuta el SQL schema.')
       }
     } finally {
@@ -83,8 +82,9 @@ export default function DonationsAdminPage() {
       
       alert('✅ Test donation created!')
       fetchData() // Refresh data
-    } catch (err: any) {
-      alert(`❌ Error: ${err.message}`)
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err)
+      alert(`❌ Error: ${message}`)
     }
   }
 
@@ -94,10 +94,10 @@ export default function DonationsAdminPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-vatican-red mb-4"></div>
-          <p className="text-gray-600">Cargando datos de donaciones...</p>
+          <p className="text-gray-600 dark:text-gray-300">Cargando datos de donaciones...</p>
         </div>
       </div>
     )
@@ -105,9 +105,9 @@ export default function DonationsAdminPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-red-600 mb-4">❌ Error: {error}</div>
+          <div className="text-red-600 dark:text-red-400 mb-4">❌ Error: {error}</div>
           <button 
             onClick={fetchData}
             className="px-4 py-2 bg-vatican-red text-white rounded hover:bg-opacity-90"
@@ -120,39 +120,39 @@ export default function DonationsAdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Panel de Donaciones</h1>
-          <p className="text-gray-600">Administración y estadísticas de donaciones de SantaPalabra</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Panel de Donaciones</h1>
+          <p className="text-gray-600 dark:text-gray-300">Administración y estadísticas de donaciones de SantaPalabra</p>
         </div>
 
         {/* Estadísticas */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-8">
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="text-sm font-medium text-gray-500 mb-2">Total Donaciones</h3>
-              <p className="text-2xl font-bold text-gray-900">{stats.total_donations}</p>
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Total Donaciones</h3>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.total_donations}</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="text-sm font-medium text-gray-500 mb-2">Total Recaudado</h3>
-              <p className="text-2xl font-bold text-green-600">{formatCentsToDollars(stats.total_amount_cents)}</p>
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Total Recaudado</h3>
+              <p className="text-2xl font-bold text-green-600 dark:text-green-400">{formatCentsToDollars(stats.total_amount_cents)}</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="text-sm font-medium text-gray-500 mb-2">Completadas</h3>
-              <p className="text-2xl font-bold text-green-500">{stats.completed_donations}</p>
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Completadas</h3>
+              <p className="text-2xl font-bold text-green-500 dark:text-green-300">{stats.completed_donations}</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="text-sm font-medium text-gray-500 mb-2">Stripe</h3>
-              <p className="text-2xl font-bold text-blue-500">{stats.stripe_donations}</p>
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Stripe</h3>
+              <p className="text-2xl font-bold text-blue-500 dark:text-blue-300">{stats.stripe_donations}</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="text-sm font-medium text-gray-500 mb-2">PayPal</h3>
-              <p className="text-2xl font-bold text-yellow-500">{stats.paypal_donations}</p>
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">PayPal</h3>
+              <p className="text-2xl font-bold text-yellow-500 dark:text-yellow-300">{stats.paypal_donations}</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="text-sm font-medium text-gray-500 mb-2">Promedio</h3>
-              <p className="text-2xl font-bold text-gray-700">{formatCentsToDollars(stats.average_amount_cents)}</p>
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Promedio</h3>
+              <p className="text-2xl font-bold text-gray-700 dark:text-gray-100">{formatCentsToDollars(stats.average_amount_cents)}</p>
             </div>
           </div>
         )}
@@ -174,28 +174,28 @@ export default function DonationsAdminPage() {
         </div>
 
         {/* Tabla de donaciones */}
-        <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Donaciones Recientes</h2>
-            <p className="text-sm text-gray-600">Últimas {donations.length} donaciones</p>
+        <div className="bg-white dark:bg-gray-900 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Donaciones Recientes</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Últimas {donations.length} donaciones</p>
           </div>
           
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+              <thead className="bg-gray-50 dark:bg-gray-900">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Donante</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Proveedor</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verificado</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Fecha</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Donante</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Cantidad</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Proveedor</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Estado</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Verificado</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
                 {donations.map((donation) => (
                   <tr key={donation.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                       {new Date(donation.created_at).toLocaleDateString('es-ES', {
                         day: '2-digit',
                         month: '2-digit',
@@ -205,14 +205,14 @@ export default function DonationsAdminPage() {
                       })}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
+                      <div className="text-sm text-gray-900 dark:text-gray-100">
                         {donation.donor_name || 'Anónimo'}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
                         {donation.donor_email || '-'}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
                       {formatCentsToDollars(donation.amount_cents)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -232,14 +232,14 @@ export default function DonationsAdminPage() {
                         {getStatusText(donation.status)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                       {donation.webhook_verified ? '✅' : '⏳'}
                     </td>
                   </tr>
                 ))}
                 {donations.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                    <td colSpan={6} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                       No hay donaciones registradas
                     </td>
                   </tr>

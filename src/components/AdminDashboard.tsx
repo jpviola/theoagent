@@ -57,7 +57,7 @@ export default function AdminDashboard() {
         if (!usersError && userData) {
           users = userData;
         }
-      } catch (usersFetchError) {
+      } catch {
         console.warn('Profiles table not accessible, using fallback data');
       }
       
@@ -71,7 +71,7 @@ export default function AdminDashboard() {
         if (!convError && convData) {
           conversations = convData;
         }
-      } catch (convFetchError) {
+      } catch {
         console.warn('Conversations table not accessible, using fallback data');
       }
       
@@ -145,47 +145,47 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-xl text-gray-600">Loading admin dashboard...</div>
+      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex items-center justify-center">
+        <div className="text-xl text-gray-600 dark:text-gray-300">Loading admin dashboard...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-xl text-red-600">Error: {error}</div>
+      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex items-center justify-center">
+        <div className="text-xl text-red-600 dark:text-red-400">Error: {error}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">santaPalabra Admin Dashboard</h1>
-          <p className="text-gray-600">Enhanced with LangChain RAG System</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">santaPalabra Admin Dashboard</h1>
+          <p className="text-gray-600 dark:text-gray-300">Enhanced with LangChain RAG System</p>
         </div>
 
         {/* Key Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Users</h3>
-            <p className="text-3xl font-bold text-blue-600">{stats?.totalUsers || 0}</p>
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Total Users</h3>
+            <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{stats?.totalUsers || 0}</p>
           </div>
           
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Conversations</h3>
-            <p className="text-3xl font-bold text-green-600">{stats?.totalConversations || 0}</p>
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Total Conversations</h3>
+            <p className="text-3xl font-bold text-green-600 dark:text-green-400">{stats?.totalConversations || 0}</p>
           </div>
           
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Avg Response Time</h3>
-            <p className="text-3xl font-bold text-purple-600">{stats?.averageResponseTime || 0}ms</p>
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Avg Response Time</h3>
+            <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{stats?.averageResponseTime || 0}ms</p>
           </div>
           
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Document Chunks</h3>
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Document Chunks</h3>
             <p className="text-3xl font-bold text-orange-600">
               {Object.values(docStats).reduce((a, b) => a + b, 0)}
             </p>
@@ -194,20 +194,20 @@ export default function AdminDashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Subscription Distribution */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Subscription Distribution</h3>
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Subscription Distribution</h3>
             <div className="space-y-3">
               {Object.entries(stats?.subscriptionDistribution || {}).map(([tier, count]) => (
                 <div key={tier} className="flex justify-between items-center">
-                  <span className="capitalize text-gray-700">{tier}</span>
+                  <span className="capitalize text-gray-700 dark:text-gray-300">{tier}</span>
                   <div className="flex items-center space-x-2">
-                    <div className="w-24 bg-gray-200 rounded-full h-2">
+                    <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <div 
-                        className="bg-blue-600 h-2 rounded-full"
+                        className="bg-blue-600 dark:bg-blue-400 h-2 rounded-full"
                         style={{ width: `${(count / (stats?.totalUsers || 1)) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm text-gray-600 w-8 text-right">{count}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400 w-8 text-right">{count}</span>
                   </div>
                 </div>
               ))}
@@ -215,20 +215,20 @@ export default function AdminDashboard() {
           </div>
 
           {/* Document Distribution */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Knowledge Base Distribution</h3>
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Knowledge Base Distribution</h3>
             <div className="space-y-3">
               {Object.entries(docStats).map(([type, count]) => (
                 <div key={type} className="flex justify-between items-center">
-                  <span className="capitalize text-gray-700">{type}</span>
+                  <span className="capitalize text-gray-700 dark:text-gray-300">{type}</span>
                   <div className="flex items-center space-x-2">
-                    <div className="w-24 bg-gray-200 rounded-full h-2">
+                    <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <div 
-                        className="bg-green-600 h-2 rounded-full"
+                        className="bg-green-600 dark:bg-green-400 h-2 rounded-full"
                         style={{ width: `${(count / Object.values(docStats).reduce((a, b) => a + b, 0)) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm text-gray-600 w-12 text-right">{count}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400 w-12 text-right">{count}</span>
                   </div>
                 </div>
               ))}
@@ -237,39 +237,39 @@ export default function AdminDashboard() {
         </div>
 
         {/* Top Queries */}
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Popular Query Patterns</h3>
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 mb-8 border border-gray-200 dark:border-gray-700">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Popular Query Patterns</h3>
           <div className="space-y-2">
             {stats?.topQueries.map((query, index) => (
-              <div key={index} className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-700">{query.query}</span>
-                <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-sm">{query.count}</span>
+              <div key={index} className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-800">
+                <span className="text-gray-700 dark:text-gray-300">{query.query}</span>
+                <span className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-2 py-1 rounded text-sm">{query.count}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Admin Actions */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Admin Actions</h3>
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Admin Actions</h3>
           <div className="flex flex-wrap gap-4">
             <button
               onClick={() => fetchAdminStats()}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+              className="bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
             >
               Refresh Statistics
             </button>
             
             <button
               onClick={clearAllConversations}
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+              className="bg-red-600 dark:bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 dark:hover:bg-red-600 transition-colors"
             >
               Clear All Conversations
             </button>
             
             <button
               onClick={() => alert('Document management feature coming soon!')}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors"
+              className="bg-green-600 dark:bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 dark:hover:bg-green-600 transition-colors"
             >
               Manage Documents
             </button>
@@ -277,9 +277,9 @@ export default function AdminDashboard() {
         </div>
 
         {/* LangChain Status */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
-          <h3 className="text-lg font-semibold text-blue-900 mb-2">🧠 LangChain RAG System Status</h3>
-          <div className="text-blue-800">
+        <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mt-8">
+          <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-200 mb-2">🧠 LangChain RAG System Status</h3>
+          <div className="text-blue-800 dark:text-blue-100">
             <p>✅ Enhanced conversation memory enabled</p>
             <p>✅ Vector search with semantic similarity</p>
             <p>✅ Multilingual support (EN/ES)</p>

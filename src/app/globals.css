@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #ffffff;
@@ -16,10 +17,9 @@
 }
 
 .dark {
-  /* Slightly lighter neutral dark palette to preserve translucency */
-  --background: #1f2937; /* slate-800 — less deep than slate-900 */
-  --foreground: #e6eef6; /* soft gray for text */
-  --vatican-cream: #0b1220;
+  --background: #1f2937;
+  --foreground: #e5e7eb;
+  --vatican-cream: #111827;
 }
 
 body {
@@ -97,12 +97,20 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, var(--gold-400), var(--amber-500));
+  background: #cbd5e1; /* slate-300 */
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, var(--gold-300), var(--gold-400));
+  background: #94a3b8; /* slate-400 */
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563; /* gray-600 */
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280; /* gray-500 */
 }
 
 /* RAG Test Lab Animations */
@@ -146,58 +154,21 @@ body {
   animation: shake 0.5s ease-out;
 }
 
-/* Dark-mode overrides for utility classes that didn't include dark: variants.
-   Use a neutral slate/gray palette to avoid overly blue hues and ensure
-   good contrast for text, images and UI elements. These pragmatic
-   fallbacks cover components that still use hard-coded Tailwind colors. */
-.dark .bg-white { background-color: #0f1724 !important; }
-.dark .bg-gradient-to-b, .dark .bg-gradient-to-br, .dark .bg-gradient-to-r {
-  /* Softer overlay so translucent hero art remains visible */
-  background-image: linear-gradient(180deg, rgba(31,41,55,0.86), rgba(15,23,42,0.86)) !important;
-}
-.dark .from-amber-50, .dark .from-yellow-50, .dark .from-amber-900, .dark .from-amber-500 { background-image: none !important; }
-.dark .border-yellow-200, .dark .border-amber-200 { border-color: rgba(255,255,255,0.06) !important; }
-.dark .shadow-yellow-500\/40, .dark .shadow-green-500\/40 { box-shadow: 0 10px 25px rgba(0,0,0,0.6) !important; }
-.dark .bg-green-50, .dark .bg-green-900\/20, .dark .bg-amber-50 { background-color: rgba(255,255,255,0.02) !important; }
-
-/* Map commonly used blue/saturated utilities to muted dark tones */
-.dark .from-blue-500, .dark .from-sky-500, .dark .bg-blue-500, .dark .text-blue-800,
-.dark .to-blue-600, .dark .bg-sky-500, .dark .from-blue-600 {
-  background-image: linear-gradient(180deg, rgba(30,41,59,0.9), rgba(15,23,42,0.9)) !important;
-  background-color: rgba(255,255,255,0.02) !important;
+/* Dark-mode support: keep background/text consistent and slightly soften the palette
+   while preserving readability on components that still use light-only utilities. */
+.dark body,
+.dark main {
+  background: var(--background) !important;
   color: var(--foreground) !important;
 }
 
-/* Ensure images and SVGs remain visible in dark mode */
-.dark img, .dark svg {
-  /* Ensure decorative/translucent images remain visible over dark backgrounds */
-  filter: brightness(1.08) saturate(1.05) contrast(1.02) !important;
-  opacity: 1 !important;
+.dark .text-gray-900 {
+  color: var(--foreground) !important;
 }
 
-/* Ensure body and main background/text variables apply */
-.dark body, .dark main { background: var(--background) !important; color: var(--foreground) !important; }
-
-/* Dark theme variables — neutral, higher-contrast values.
-   These are intentionally conservative to preserve translucency on
-   hero images while improving text legibility (lighter text, muted
-   surfaces). Keep changes localized rather than forcing every
-   element via `!important`. */
-.dark {
-  --background: #0b1220; /* deep neutral navy */
-  --foreground: #e6eef6; /* soft light gray for text */
-  --vatican-cream: #0b1220;
-}
-
-/* Less aggressive utility fallbacks for components still using
-   hard-coded Tailwind utility classes without `dark:` variants. */
-.dark .bg-white { background-color: #071021 !important; }
-.dark .bg-gray-50 { background-color: rgba(255,255,255,0.02) !important; }
-.dark .text-gray-900 { color: var(--foreground) !important; }
-
-/* Keep images/SVGs visible but avoid globally forcing styles on all elements. */
-.dark img, .dark svg {
-  filter: brightness(1.08) saturate(1.05) contrast(1.02) !important;
+.dark img,
+.dark svg {
+  filter: brightness(1.05) saturate(1.02) contrast(1.02) !important;
 }
 
 /* Remove persistent header hairline and shadow in dark mode that can
@@ -270,6 +241,7 @@ body {
 .dark .hero-section {
   background-image: none !important;
   background-color: var(--background) !important;
+  background: var(--background) !important;
   position: relative;
 }
 .dark .hero-section::before {

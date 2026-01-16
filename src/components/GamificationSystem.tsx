@@ -64,7 +64,7 @@ export function ProgressBar({ progress }: { progress: UserProgress }) {
   const progressPercent = (progress.xp / progress.xpToNext) * 100;
 
   return (
-    <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl p-6 border-2 border-yellow-200 shadow-lg dark:from-neutral-800 dark:to-neutral-700 dark:bg-none dark:bg-gradient-to-r dark:border-gray-700">
+    <div className="rounded-2xl p-6 border-2 border-yellow-200 shadow-lg bg-white dark:border-gray-700 dark:bg-gray-900">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-yellow-500 rounded-full text-white">
@@ -187,25 +187,34 @@ export function AchievementsList({ userProgress }: { userProgress: UserProgress 
 
 // Hook para manejar progreso del usuario
 export function useUserProgress() {
-  const [progress, setProgress] = useState<UserProgress>({
-    level: 1,
-    xp: 0,
-    xpToNext: 100,
-    achievements: [],
-    streak: 0,
-    totalInteractions: 0
+  const [progress, setProgress] = useState<UserProgress>(() => {
+    const defaultProgress: UserProgress = {
+      level: 1,
+      xp: 0,
+      xpToNext: 100,
+      achievements: [],
+      streak: 0,
+      totalInteractions: 0
+    };
+
+    if (typeof window === 'undefined') {
+      return defaultProgress;
+    }
+
+    const saved = localStorage.getItem('santapalabra_progress');
+    if (saved) {
+      try {
+        return JSON.parse(saved) as UserProgress;
+      } catch {
+        return defaultProgress;
+      }
+    }
+
+    return defaultProgress;
   });
   const [newAchievement, setNewAchievement] = useState<Achievement | null>(null);
 
-  useEffect(() => {
-    // Cargar progreso desde localStorage
-    const saved = localStorage.getItem('santapalabra_progress');
-    if (saved) {
-      setProgress(JSON.parse(saved));
-    }
-  }, []);
-
-  const addXP = (amount: number, reason?: string) => {
+  const addXP = (amount: number) => {
     setProgress(prev => {
       const newXP = prev.xp + amount;
       let newLevel = prev.level;
@@ -270,15 +279,15 @@ export function useUserProgress() {
     // Desbloquear logros por referidos
     if (newReferralCount === 1) {
       unlockAchievement('first_referral');
-      addXP(50, 'Primer referido');
+      addXP(50);
     } else if (newReferralCount === 5) {
       unlockAchievement('multiple_referrals');
-      addXP(150, '5 referidos');
+      addXP(150);
     } else if (newReferralCount === 10) {
       unlockAchievement('referral_master');
-      addXP(200, '10 referidos');
+      addXP(200);
     } else {
-      addXP(10, 'Nuevo referido');
+      addXP(10);
     }
     
     return newReferralCount;

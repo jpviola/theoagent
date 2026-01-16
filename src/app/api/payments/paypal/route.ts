@@ -1,3 +1,8 @@
+type PayPalOrderLink = {
+  rel?: string
+  href?: string
+}
+
 async function getAccessToken() {
   const client = process.env.PAYPAL_CLIENT_ID
   const secret = process.env.PAYPAL_SECRET
@@ -54,14 +59,16 @@ export async function POST(req: Request) {
     const data = await orderRes.json()
     if (!orderRes.ok) return new Response(JSON.stringify({ error: data }), { status: 500 })
 
-    const approve = Array.isArray(data.links) ? data.links.find((l: any) => l.rel === 'approve')?.href : undefined
+    const links = Array.isArray(data.links) ? (data.links as PayPalOrderLink[]) : []
+    const approve = links.find((l) => l.rel === 'approve')?.href
     return new Response(JSON.stringify({ 
       order: data, 
       orderId: data.id,  // Ensure we always return orderId
       approveUrl: approve 
     }), { status: 200 })
-  } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message || String(err) }), { status: 500 })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    return new Response(JSON.stringify({ error: message }), { status: 500 })
   }
 }
 

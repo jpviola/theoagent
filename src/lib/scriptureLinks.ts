@@ -112,7 +112,7 @@ export function extractBibleReferences(text: string): BibleReference[] {
   let match;
   
   while ((match = BIBLE_REFERENCE_REGEX.exec(text)) !== null) {
-    const [fullText, prefix = '', bookName, chapter, verseStart, dashOrColon, verseEnd] = match;
+    const [fullText, prefix = '', bookName, chapter, verseStart, , verseEnd] = match;
     
     // Normalize book name
     const normalizedBook = normalizeBookName((prefix + bookName).trim());
@@ -236,9 +236,6 @@ export function linkifyScripture(text: string, language: BibleLanguage = 'englis
   
   // Sort by position (longest first to avoid partial replacements)
   references.sort((a, b) => b.fullText.length - a.fullText.length);
-  
-  // Track replaced positions to avoid double-linking
-  const replacedRanges: Array<{start: number, end: number}> = [];
   
   for (const ref of references) {
     // Route to appropriate Bible source based on language

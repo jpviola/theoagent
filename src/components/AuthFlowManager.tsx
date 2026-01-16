@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase-client'
 import type { Database } from '@/lib/supabase'
-import { AuthProvider } from '@/lib/auth-context'
+import type { User } from '@supabase/supabase-js'
 import AuthModal from './AuthModal'
 import OnboardingFlow from './OnboardingFlow'
 import MFASetup from './MFASetup'
@@ -25,157 +25,109 @@ interface AuthFlowManagerProps {
 
 type AuthStep = 'loading' | 'unauthenticated' | 'verification' | 'mfa' | 'onboarding' | 'authenticated'
 
+type ProfileRow = Database['public']['Tables']['profiles']['Row']
+
 export default function AuthFlowManager({ 
   children, 
   requireMFA = false, 
   requireVerification = true 
 }: AuthFlowManagerProps) {
   const [currentStep, setCurrentStep] = useState<AuthStep>('loading')
-  const [user, setUser] = useState<any>(null)
-  const [session, setSession] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authMode, setAuthMode] = useState<'signin' | 'signup' | 'reset'>('signin')
 
-  // User status flags
   const [emailVerified, setEmailVerified] = useState(false)
-  const [mfaEnabled, setMfaEnabled] = useState(false)
-  const [onboardingCompleted, setOnboardingCompleted] = useState(false)
+
+  const checkUserStatus = useCallback(
+    async (user: User) => {
+      console.log('AuthFlowManager: Checking user status for:', user.id)
+      try {
+        const isEmailVerified = !!user.email_confirmed_at
+        setEmailVerified(isEmailVerified)
+        console.log('AuthFlowManager: Email verified:', isEmailVerified, 'requireVerification:', requireVerification)
+
+        let mfaVerified = false
+        if (requireMFA) {
+          try {
+            const { data: factors } = await supabase.auth.mfa.listFactors()
+            const activeFactor = factors?.totp?.find((f) => f.status === 'verified')
+            mfaVerified = !!activeFactor
+          } catch (error) {
+            console.error('MFA check error:', error)
+            mfaVerified = false
+          }
+        } else {
+          mfaVerified = true
+        }
+
+        let onboardingDone = false
+        try {
+          onboardingDone = user.user_metadata?.onboarding_completed || false
+
+          if (!onboardingDone) {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('onboarding_completed')
+              .eq('id', user.id)
+              .single()
+
+            const typedProfile = profile as ProfileRow | null
+            onboardingDone = typedProfile?.onboarding_completed || false
+          }
+        } catch (error) {
+          console.log('Onboarding check error:', error)
+          onboardingDone = false
+        }
+
+        console.log('AuthFlowManager: Onboarding status - completed:', onboardingDone)
+
+        console.log('AuthFlowManager: Determining auth step with:', {
+          isEmailVerified,
+          requireVerification,
+          mfaVerified,
+          requireMFA,
+          onboardingDone
+        })
+
+        if (!isEmailVerified && requireVerification) {
+          console.log('AuthFlowManager: Moving to verification step')
+          setCurrentStep('verification')
+        } else if (!mfaVerified && requireMFA) {
+          console.log('AuthFlowManager: Moving to MFA step')
+          setCurrentStep('mfa')
+        } else if (!onboardingDone) {
+          console.log('AuthFlowManager: Moving to onboarding step - onboardingDone:', onboardingDone)
+          setCurrentStep('onboarding')
+        } else {
+          console.log('AuthFlowManager: User fully authenticated - moving to authenticated step')
+          setCurrentStep('authenticated')
+        }
+      } catch (error) {
+        console.error('User status check error:', error)
+        setCurrentStep('authenticated')
+      }
+    },
+    [requireMFA, requireVerification]
+  )
 
   useEffect(() => {
-    initializeAuth()
-    
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event: string, session: any) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('AuthFlowManager: Auth state changed:', event, session?.user?.id)
-      
+
       if (session?.user) {
         console.log('AuthFlowManager: User found in session, setting user and checking status')
         setUser(session.user)
-        setSession(session)
         await checkUserStatus(session.user)
       } else {
         console.log('AuthFlowManager: No user in session, setting to unauthenticated')
         setUser(null)
-        setSession(null)
         setCurrentStep('unauthenticated')
       }
     })
 
     return () => subscription.unsubscribe()
-  }, [])
-
-  const initializeAuth = async () => {
-    console.log('AuthFlowManager: Initializing authentication...');
-    
-    // Test Supabase connection
-    try {
-      const { data, error } = await supabase.from('profiles').select('count', { count: 'exact', head: true });
-      console.log('AuthFlowManager: Supabase connection test:', { success: !error, error: error?.message });
-    } catch (connError) {
-      console.log('AuthFlowManager: Supabase connection failed:', connError);
-    }
-    
-    try {
-      const { data: { session }, error } = await supabase.auth.getSession()
-      
-      console.log('AuthFlowManager: Session check result:', { session: !!session, error, userId: session?.user?.id });
-      
-      if (error) {
-        console.error('Session error:', error)
-        setCurrentStep('unauthenticated')
-        return
-      }
-
-      if (session?.user) {
-        setUser(session.user)
-        setSession(session)
-        await checkUserStatus(session.user)
-      } else {
-        console.log('AuthFlowManager: No session found, setting to unauthenticated');
-        setCurrentStep('unauthenticated')
-      }
-    } catch (error) {
-      console.error('Auth initialization error:', error)
-      setCurrentStep('unauthenticated')
-    }
-  }
-
-  const checkUserStatus = async (user: any) => {
-    console.log('AuthFlowManager: Checking user status for:', user.id)
-    try {
-      // Check email verification
-      const isEmailVerified = !!user.email_confirmed_at
-      setEmailVerified(isEmailVerified)
-      console.log('AuthFlowManager: Email verified:', isEmailVerified, 'requireVerification:', requireVerification)
-
-      // Check MFA status
-      let mfaVerified = false
-      if (requireMFA) {
-        try {
-          const { data: factors } = await supabase.auth.mfa.listFactors()
-          const activeFactor = factors?.totp?.find((f: any) => f.status === 'verified')
-          mfaVerified = !!activeFactor
-          setMfaEnabled(mfaVerified)
-        } catch (error) {
-          console.error('MFA check error:', error)
-          mfaVerified = false
-        }
-      } else {
-        mfaVerified = true // Skip MFA check if not required
-        setMfaEnabled(true)
-      }
-
-      // Check onboarding status
-      let onboardingDone = false
-      try {
-        // Check user metadata first
-        onboardingDone = user.user_metadata?.onboarding_completed || false
-        
-        // If not in metadata, check the profiles table
-        if (!onboardingDone) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('onboarding_completed')
-            .eq('id', user.id)
-            .single()
-          
-          onboardingDone = (profile as any)?.onboarding_completed || false
-        }
-      } catch (error) {
-        console.log('Onboarding check error:', error)
-        onboardingDone = false
-      }
-      
-      setOnboardingCompleted(onboardingDone)
-      console.log('AuthFlowManager: Onboarding status - completed:', onboardingDone)
-
-      // Determine auth step
-      console.log('AuthFlowManager: Determining auth step with:', {
-        isEmailVerified,
-        requireVerification,
-        mfaVerified,
-        requireMFA,
-        onboardingDone
-      })
-      
-      if (!isEmailVerified && requireVerification) {
-        console.log('AuthFlowManager: Moving to verification step')
-        setCurrentStep('verification')
-      } else if (!mfaVerified && requireMFA) {
-        console.log('AuthFlowManager: Moving to MFA step')
-        setCurrentStep('mfa')
-      } else if (!onboardingDone) {
-        console.log('AuthFlowManager: Moving to onboarding step - onboardingDone:', onboardingDone)
-        setCurrentStep('onboarding')
-      } else {
-        console.log('AuthFlowManager: User fully authenticated - moving to authenticated step')
-        setCurrentStep('authenticated')
-      }
-    } catch (error) {
-      console.error('User status check error:', error)
-      setCurrentStep('authenticated') // Fail open
-    }
-  }
+  }, [checkUserStatus])
 
   const handleSignUp = () => {
     console.log('AuthFlowManager: handleSignUp called');
@@ -249,7 +201,7 @@ export default function AuthFlowManager({
   // Render loading state
   if (currentStep === 'loading') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-yellow-50 to-amber-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-yellow-50 to-amber-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 bg-gradient-to-r from-[#F4B400] to-[#FFCC00] rounded-2xl flex items-center justify-center mb-4 mx-auto">
             <div className="animate-spin">
@@ -274,18 +226,9 @@ export default function AuthFlowManager({
       handleSignIn: typeof handleSignIn,
       handlePasswordReset: typeof handlePasswordReset
     });
-    
-    const authContextValue = {
-      onSignUp: handleSignUp,
-      onSignIn: handleSignIn,
-      onPasswordReset: handlePasswordReset,
-      user: null,
-      session: null
-    };
-    
+
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-yellow-50 to-amber-50">
-        {/* Auth modals */}
+      <div className="min-h-screen">
         {showAuthModal && (
           <AuthModal
             isOpen={showAuthModal}
@@ -295,10 +238,7 @@ export default function AuthFlowManager({
           />
         )}
 
-        {/* Pass auth handlers via context */}
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        {children}
       </div>
     )
   }
@@ -306,7 +246,7 @@ export default function AuthFlowManager({
   // Render email verification step
   if (currentStep === 'verification') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-yellow-50 to-amber-50">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-yellow-50 to-amber-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <EmailVerificationBanner
           user={user}
           onVerified={handleVerificationComplete}
@@ -321,7 +261,7 @@ export default function AuthFlowManager({
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Verify Your Email</h1>
             <p className="text-lg text-gray-600 mb-8">
-              We've sent a verification email to <strong>{user?.email}</strong>. 
+              We&apos;ve sent a verification email to <strong>{user?.email}</strong>. 
               Please check your inbox and click the verification link to continue.
             </p>
             
@@ -363,6 +303,9 @@ export default function AuthFlowManager({
 
   // Render MFA step
   if (currentStep === 'mfa') {
+    if (!user) {
+      return null
+    }
     return (
       <MFASetup
         user={user}
@@ -375,6 +318,9 @@ export default function AuthFlowManager({
 
   // Render onboarding step
   if (currentStep === 'onboarding') {
+    if (!user) {
+      return null
+    }
     return (
       <OnboardingFlow
         user={user}
@@ -388,18 +334,8 @@ export default function AuthFlowManager({
   if (currentStep === 'authenticated') {
     console.log('AuthFlowManager: Rendering authenticated state with user:', user?.id)
     
-    const authContextValue = {
-      user,
-      session,
-      onSignOut: handleSignOut,
-      onSignIn: handleSignIn,
-      onSignUp: handleSignUp,
-      onPasswordReset: handlePasswordReset
-    };
-    
     return (
-      <AuthProvider>
-        {/* Show email verification banner if not verified but not required */}
+      <>
         {!emailVerified && !requireVerification && (
           <EmailVerificationBanner
             user={user}
@@ -407,7 +343,7 @@ export default function AuthFlowManager({
           />
         )}
         {children}
-      </AuthProvider>
+      </>
     )
   }
 

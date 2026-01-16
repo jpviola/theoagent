@@ -3,19 +3,12 @@ import { SantaPalabraRAG } from '../../../lib/langchain-rag';
 import fs from 'fs/promises';
 import path from 'path';
 
-// Types
 interface CatholicDocument {
   id: string;
   title: string;
   content: string;
   source: string;
   category: 'catechism' | 'papal' | 'scripture' | 'custom';
-}
-
-interface RAGResponse {
-  answer: string;
-  sources: string[];
-  confidence: number;
 }
 
 // Initialize RAG system once
@@ -56,11 +49,12 @@ async function initializeRAG() {
           // Limit catechism to first 300 documents for faster loading
           const itemsToLoad = filename === 'catechism.json' ? data.slice(0, 300) : data;
           
-          itemsToLoad.forEach((item: any, index: number) => {
+          itemsToLoad.forEach((item: { title?: string; heading?: string; name?: string; text?: string; content?: string; passage?: string } | unknown, index: number) => {
+            const typedItem = item as { title?: string; heading?: string; name?: string; text?: string; content?: string; passage?: string };
             documents.push({
               id: `${filename}-${index}`,
-              title: item.title || item.heading || item.name || `Entry ${index + 1}`,
-              content: item.text || item.content || item.passage || JSON.stringify(item),
+              title: typedItem.title || typedItem.heading || typedItem.name || `Entry ${index + 1}`,
+              content: typedItem.text || typedItem.content || typedItem.passage || JSON.stringify(typedItem),
               source: filename.replace('.json', ''),
               category: filename.includes('catechism') ? 'catechism' :
                        filename.includes('papal') ? 'papal' :
@@ -116,14 +110,20 @@ export async function POST(request: NextRequest) {
       userId,
       mode: 'standard',
       language: language as 'en' | 'es',
-      model: model as any,
-    }) as any; // Temporary type assertion until we fix the return type
+      model: model as 'anthropic' | 'openai' | 'llama' | undefined,
+    });
     
+    const modelUsage = rag.getLastModelUsage
+      ? rag.getLastModelUsage(userId)
+      : null;
+
     return NextResponse.json({
-      response: typeof response === 'string' ? response : (response.answer || response),
-      sources: response.sources || [],
-      confidence: response.confidence || 0.8,
+      response,
+      sources: [],
+      confidence: 0.8,
       model: model || 'default',
+      actualModel: modelUsage?.actualModel || (model || 'default'),
+      fallbackUsed: modelUsage?.fallbackUsed ?? false,
       timestamp: new Date().toISOString()
     });
     
@@ -141,18 +141,25 @@ export async function POST(request: NextRequest) {
       errorMessage.includes('Missing GROQ_') ||
       errorMessage.includes('Missing TOGETHER_') ||
       errorMessage.includes('not configured yet');
+
+    const isRateLimitError =
+      errorMessage.includes('MODEL_RATE_LIMIT') ||
+      errorMessage.includes('429') ||
+      errorMessage.toLowerCase().includes('rate limit');
     
     return NextResponse.json({
       error: isConfigError
         ? (process.env.NODE_ENV === 'development'
           ? errorMessage
           : 'AI service configuration incomplete. Please check environment variables.')
+        : isRateLimitError
+        ? 'The selected AI model is temporarily rate limited. Please wait a moment, or switch to another model (e.g. Anthropic or OpenAI).'
         : 'Internal server error processing your Catholic query',
       details: process.env.NODE_ENV === 'development' ? errorMessage : undefined,
-      code: isConfigError ? 'CONFIG_ERROR' : 'PROCESSING_ERROR',
+      code: isConfigError ? 'CONFIG_ERROR' : isRateLimitError ? 'RATE_LIMIT' : 'PROCESSING_ERROR',
       timestamp: new Date().toISOString()
     }, { 
-      status: isConfigError ? 503 : 500 
+      status: isConfigError ? 503 : isRateLimitError ? 429 : 500 
     });
   }
 }

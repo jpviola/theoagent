@@ -1,74 +1,86 @@
 import { NextRequest } from 'next/server';
-import { getSantaPalabraRAG, initializeWithCatholicDocuments } from '@/lib/langchain-rag';
+import { initializeWithCatholicDocuments } from '@/lib/langchain-rag';
 import { SUBSCRIPTION_TIERS } from '@/lib/subscription-db';
 import { createClient } from '@supabase/supabase-js';
 import fs from 'fs/promises';
 import path from 'path';
 
-// Service role client for bypassing RLS when creating profiles
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+interface CatholicDocument {
+  id: string;
+  title: string;
+  content: string;
+  source: string;
+  category: 'catechism' | 'papal' | 'scripture' | 'custom';
+}
+
 export const maxDuration = 60;
 
-// Cache for document loading
 let documentsLoaded = false;
-let theoAgent: any = null;
+let theoAgent: Awaited<ReturnType<typeof initializeWithCatholicDocuments>> | null = null;
 
 async function loadCatholicDocuments() {
   if (documentsLoaded && theoAgent) return theoAgent;
 
   try {
     const publicDir = path.join(process.cwd(), 'public', 'data');
-    
-    // Load all Catholic documents
-    const documents = [];
-    
-    // Load Catechism
+    const documents: CatholicDocument[] = [];
+
     const catechismData = await fs.readFile(path.join(publicDir, 'catechism.json'), 'utf-8');
-    const catechismEntries = JSON.parse(catechismData);
-    documents.push(...catechismEntries.map((entry: any) => ({
-      id: `catechism-${entry.id}`,
-      title: `Catechism ${entry.id}`,
-      content: entry.text,
-      source: 'Catechism of the Catholic Church',
-      category: 'catechism' as const
-    })));
+    const catechismEntries = JSON.parse(catechismData) as Array<{ id: string | number; text: string }>;
+    documents.push(
+      ...catechismEntries.map((entry) => ({
+        id: `catechism-${entry.id}`,
+        title: `Catechism ${entry.id}`,
+        content: entry.text,
+        source: 'Catechism of the Catholic Church',
+        category: 'catechism' as const,
+      }))
+    );
 
-    // Load Papal Documents
     const papalData = await fs.readFile(path.join(publicDir, 'papal_magisterium.json'), 'utf-8');
-    const papalEntries = JSON.parse(papalData);
-    documents.push(...papalEntries.map((entry: any, index: number) => ({
-      id: `papal-${index}`,
-      title: entry.title || `Papal Document ${index}`,
-      content: entry.content,
-      source: entry.source || 'Papal Magisterium',
-      category: 'papal' as const
-    })));
+    const papalEntries = JSON.parse(papalData) as Array<{ title?: string; content: string; source?: string }>;
+    documents.push(
+      ...papalEntries.map((entry, index) => ({
+        id: `papal-${index}`,
+        title: entry.title || `Papal Document ${index}`,
+        content: entry.content,
+        source: entry.source || 'Papal Magisterium',
+        category: 'papal' as const,
+      }))
+    );
 
-    // Load Scripture Passages
     const scriptureData = await fs.readFile(path.join(publicDir, 'gospel_passages_greek.json'), 'utf-8');
-    const scriptureEntries = JSON.parse(scriptureData);
-    documents.push(...scriptureEntries.map((entry: any, index: number) => ({
-      id: `scripture-${index}`,
-      title: entry.citation || `Scripture Passage ${index}`,
-      content: `${entry.greek}\n\n${entry.english}`,
-      source: entry.citation || 'Sacred Scripture',
-      category: 'scripture' as const
-    })));
+    const scriptureEntries = JSON.parse(scriptureData) as Array<{
+      citation?: string;
+      greek: string;
+      english: string;
+    }>;
+    documents.push(
+      ...scriptureEntries.map((entry, index) => ({
+        id: `scripture-${index}`,
+        title: entry.citation || `Scripture Passage ${index}`,
+        content: `${entry.greek}\n\n${entry.english}`,
+        source: entry.citation || 'Sacred Scripture',
+        category: 'scripture' as const,
+      }))
+    );
 
-    // Load Custom Teachings
     const customData = await fs.readFile(path.join(publicDir, 'custom_teachings.json'), 'utf-8');
-    const customEntries = JSON.parse(customData);
-    documents.push(...customEntries.map((entry: any, index: number) => ({
-      id: `custom-${index}`,
-      title: entry.title || `Teaching ${index}`,
-      content: entry.content,
-      source: entry.source || 'Church Teaching',
-      category: 'custom' as const
-    })));
+    const customEntries = JSON.parse(customData) as Array<{ title?: string; content: string; source?: string }>;
+    documents.push(
+      ...customEntries.map((entry, index) => ({
+        id: `custom-${index}`,
+        title: entry.title || `Teaching ${index}`,
+        content: entry.content,
+        source: entry.source || 'Church Teaching',
+        category: 'custom' as const,
+      }))
+    );
 
     console.log(`📚 Loaded ${documents.length} Catholic documents for RAG system`);
 

@@ -3,29 +3,28 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase-client'
 import { useAuth } from '@/lib/auth-context'
+import type { User } from '@supabase/supabase-js'
 
 export default function AuthDebugDashboard() {
-  const [user, setUser] = useState<any>(null)
-  const [session, setSession] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [showSignIn, setShowSignIn] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
+  const { profile } = useAuth()
 
   useEffect(() => {
     const getSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession()
-      setSession(session)
-      setUser(session?.user || null)
+      const { data } = await supabase.auth.getSession()
+      setUser(data.session?.user || null)
       setLoading(false)
     }
 
     getSession()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session)
+      async (_event, session) => {
         setUser(session?.user || null)
         setLoading(false)
       }
@@ -39,7 +38,7 @@ export default function AuthDebugDashboard() {
     setMessage('')
     
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
@@ -62,7 +61,7 @@ export default function AuthDebugDashboard() {
     setMessage('')
     
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
       })
@@ -202,7 +201,7 @@ export default function AuthDebugDashboard() {
             >
               Test Catholic AI
             </a>
-            {user && (
+            {user && profile?.subscription_tier === 'expert' && (
               <a
                 href="/admin"
                 className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"

@@ -104,9 +104,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(redirectTo, request.url))
   }
 
-  // Handle API routes authentication
   if (request.nextUrl.pathname.startsWith('/api/')) {
-    // Skip auth check for public API routes
     const publicApiRoutes = [
       '/api/health',
       '/api/webhook',
@@ -114,6 +112,8 @@ export async function middleware(request: NextRequest) {
       '/api/catholic-simple',
       '/api/tts',
       '/api/elevenlabs/single-use-token',
+      '/api/payments',
+      '/api/webhooks',
     ]
     const isPublicApiRoute = publicApiRoutes.some(route => 
       request.nextUrl.pathname.startsWith(route)

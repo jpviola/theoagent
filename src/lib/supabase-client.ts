@@ -5,15 +5,34 @@ import type { Database } from './supabase'
 
 let supabaseClient: ReturnType<typeof createClient<Database>> | null = null
 
-// Minimal mock to avoid runtime crashes when env vars are missing in dev
+type MockResult = {
+  data: null
+  error: Error
+}
+
+interface MockQueryBuilder {
+  select: () => Promise<MockResult>
+  insert: () => Promise<MockResult>
+  upsert: () => Promise<MockResult>
+  update: () => MockQueryBuilder
+  delete: () => MockQueryBuilder
+  eq: () => MockQueryBuilder
+  single: () => Promise<MockResult>
+  order: () => MockQueryBuilder
+  limit: () => MockQueryBuilder
+}
+
 const createMockSupabase = () => {
-  const asyncError = async (action: string) => ({ data: null, error: new Error(`Supabase no configurado: ${action}`) })
+  const asyncError = async (action: string): Promise<MockResult> => ({
+    data: null,
+    error: new Error(`Supabase no configurado: ${action}`)
+  })
   const subscription = { unsubscribe: () => {} }
 
-  const mockResult = { data: null, error: new Error('Supabase no configurado') }
+  const mockResult: MockResult = { data: null, error: new Error('Supabase no configurado') }
 
-  const createQueryBuilder = () => {
-    const builder: any = {
+  const createQueryBuilder = (): MockQueryBuilder => {
+    const builder: MockQueryBuilder = {
       select: async () => mockResult,
       insert: async () => mockResult,
       upsert: async () => mockResult,
@@ -34,7 +53,7 @@ const createMockSupabase = () => {
       getUser: async () => ({ data: { user: null }, error: null }),
       refreshSession: async () => asyncError('refreshSession'),
       resend: async () => asyncError('resend'),
-      onAuthStateChange: (cb: any) => ({ data: { subscription } }),
+      onAuthStateChange: () => ({ data: { subscription } }),
       signInWithPassword: async () => asyncError('signInWithPassword'),
       signInWithOAuth: async () => asyncError('signInWithOAuth'),
       signUp: async () => asyncError('signUp'),

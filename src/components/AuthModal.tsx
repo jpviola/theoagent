@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase-client'
-import type { Database } from '@/lib/supabase'
 import { authAnalytics } from '@/lib/auth-analytics'
 
 interface AuthModalProps {
@@ -50,11 +49,8 @@ export default function AuthModal({
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [passwordStrength, setPasswordStrength] = useState(0)
-  const [rememberMe, setRememberMe] = useState(true)
   const [agreedToTerms, setAgreedToTerms] = useState(false)
-  const [mfaToken, setMfaToken] = useState('')
   const [isEmailValid, setIsEmailValid] = useState(true)
   const [socialLoading, setSocialLoading] = useState<string | null>(null)
 
@@ -122,15 +118,7 @@ export default function AuthModal({
     return 'Excellent'
   }
 
-  const getPasswordRequirements = () => [
-    { met: password.length >= 8, text: 'At least 8 characters' },
-    { met: /[A-Z]/.test(password), text: 'One uppercase letter' },
-    { met: /[a-z]/.test(password), text: 'One lowercase letter' },
-    { met: /[0-9]/.test(password), text: 'One number' },
-    { met: /[^A-Za-z0-9]/.test(password), text: 'One special character' }
-  ]
-
-  const getErrorMessage = (error: string | any): string => {
+  const getErrorMessage = (error: unknown): string => {
     if (typeof error === 'string') {
       const errorMappings: Record<string, string> = {
         'Invalid login credentials': 'Invalid email or password. Please double-check your credentials.',
@@ -152,7 +140,12 @@ export default function AuthModal({
       }
       return error
     }
-    if (error?.message) return error.message
+
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      const message = String((error as { message?: unknown }).message ?? '')
+      if (message) return message
+    }
+
     return 'An unexpected error occurred. Please try again.'
   }
 
@@ -174,8 +167,9 @@ export default function AuthModal({
       authAnalytics.signupStarted(email || 'social', provider)
       onSuccess?.()
       
-    } catch (error: any) {
-      setError(getErrorMessage(error))
+    } catch (error) {
+      const friendly = getErrorMessage(error)
+      setError(friendly)
     } finally {
       setSocialLoading(null)
     }
@@ -219,9 +213,10 @@ export default function AuthModal({
         }, 1000)
       }
       
-    } catch (error: any) {
-      setError(getErrorMessage(error))
-      authAnalytics.signinFailed(email, error.message, 'email')
+    } catch (error) {
+      const friendly = getErrorMessage(error)
+      setError(friendly)
+      authAnalytics.signinFailed(email, friendly, 'email')
     } finally {
       setLoading(false)
     }
@@ -294,9 +289,10 @@ export default function AuthModal({
       setMode('verify-email')
       onSuccess?.()
       
-    } catch (error: any) {
-      setError(getErrorMessage(error))
-      authAnalytics.signinFailed(email, error.message, 'email')
+    } catch (error) {
+      const friendly = getErrorMessage(error)
+      setError(friendly)
+      authAnalytics.signinFailed(email, friendly, 'email')
     } finally {
       setLoading(false)
     }
@@ -325,7 +321,7 @@ export default function AuthModal({
         setMode('signin')
       }, 3000)
       
-    } catch (error: any) {
+    } catch (error) {
       setError(getErrorMessage(error))
     } finally {
       setLoading(false)
@@ -428,7 +424,7 @@ export default function AuthModal({
                   We sent a verification link to <strong>{email}</strong>
                 </p>
                 <p className="text-xs text-gray-500 mt-2">
-                  Didn't receive the email? Check your spam folder or contact support.
+                  Didn’t receive the email? Check your spam folder or contact support.
                 </p>
               </div>
               <div className="space-y-2">

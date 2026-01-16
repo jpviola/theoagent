@@ -2,6 +2,37 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 
+type CatechismEntry = {
+  id: string | number;
+  text: string;
+};
+
+type PapalPassage = {
+  paragraph: string | number;
+  text: string;
+  theme: string;
+};
+
+type PapalDocument = {
+  title: string;
+  pope: string;
+  year: string | number;
+  key_passages?: PapalPassage[];
+};
+
+type DeiVerbumPassage = {
+  paragraph: string | number;
+  title: string;
+  text: string;
+  theme?: string;
+};
+
+type GospelReflection = {
+  gospel_text?: string;
+  liturgical_day?: string;
+  gospel_citation?: string;
+};
+
 // Function to retrieve Catholic documents from multiple sources
 async function getCatholicTeaching(topic: string): Promise<{ catechism: string, papal: string, deiVerbum: string, gospels: string, sources: string[] }> {
   try {
@@ -10,14 +41,14 @@ async function getCatholicTeaching(topic: string): Promise<{ catechism: string, 
     let papalContent = '';
     let deiVerbumContent = '';
     let gospelsContent = '';
-    let sources: string[] = [];
+    const sources: string[] = [];
     
     // Load Catechism data
     try {
       const catechismData = await fs.readFile(path.join(publicDir, 'catechism.json'), 'utf-8');
-      const catechismEntries = JSON.parse(catechismData);
+      const catechismEntries = JSON.parse(catechismData) as CatechismEntry[];
       
-      const relevantCatechism = catechismEntries.filter((entry: any) => {
+      const relevantCatechism = catechismEntries.filter((entry) => {
         if (!entry.text) return false;
         const text = entry.text.toLowerCase();
         const topicKeywords = topic.toLowerCase();
@@ -33,21 +64,32 @@ async function getCatholicTeaching(topic: string): Promise<{ catechism: string, 
       });
       
       if (relevantCatechism.length > 0) {
-        catechismContent = relevantCatechism.slice(0, 3).map((entry: any) => 
-          `**CCC ${entry.id}**: ${entry.text}`
-        ).join('\n\n');
+        catechismContent = relevantCatechism
+          .slice(0, 3)
+          .map((entry) => `**CCC ${entry.id}**: ${entry.text}`)
+          .join('\n\n');
         sources.push('Catechism of the Catholic Church');
       }
-    } catch (error) {
+    } catch {
       console.log('Catechism not available');
     }
 
     // Load Papal Magisterium
     try {
       const papalData = await fs.readFile(path.join(publicDir, 'papal_magisterium.json'), 'utf-8');
-      const papalDocs = JSON.parse(papalData);
+      const papalDocs = JSON.parse(papalData) as {
+        papal_documents?: PapalDocument[];
+      };
       
-      const relevantPapal = [];
+      const relevantPapal: {
+        document: string;
+        pope: string;
+        year: string | number;
+        paragraph: string | number;
+        text: string;
+        theme: string;
+      }[] = [];
+
       for (const doc of papalDocs.papal_documents || []) {
         if (doc.key_passages) {
           for (const passage of doc.key_passages) {
@@ -75,21 +117,25 @@ async function getCatholicTeaching(topic: string): Promise<{ catechism: string, 
       }
       
       if (relevantPapal.length > 0) {
-        papalContent = relevantPapal.slice(0, 2).map(p => 
-          `**${p.document}** (${p.pope}, ${p.year}), §${p.paragraph}: ${p.text}`
-        ).join('\n\n');
+        papalContent = relevantPapal
+          .slice(0, 2)
+          .map(
+            (p) =>
+              `**${p.document}** (${p.pope}, ${p.year}), §${p.paragraph}: ${p.text}`,
+          )
+          .join('\n\n');
         sources.push('Papal Magisterium');
       }
-    } catch (error) {
+    } catch {
       console.log('Papal documents not available');
     }
 
     // Load Dei Verbum passages
     try {
       const deiVerbumData = await fs.readFile(path.join(publicDir, 'dei_verbum_passages.json'), 'utf-8');
-      const deiVerbumPassages = JSON.parse(deiVerbumData);
+      const deiVerbumPassages = JSON.parse(deiVerbumData) as DeiVerbumPassage[];
       
-      const relevantDeiVerbum = deiVerbumPassages.filter((passage: any) => {
+      const relevantDeiVerbum = deiVerbumPassages.filter((passage) => {
         const text = passage.text.toLowerCase();
         const theme = passage.theme?.toLowerCase() || '';
         const topicKeywords = topic.toLowerCase();
@@ -102,21 +148,25 @@ async function getCatholicTeaching(topic: string): Promise<{ catechism: string, 
       });
       
       if (relevantDeiVerbum.length > 0) {
-        deiVerbumContent = relevantDeiVerbum.slice(0, 2).map((passage: any) => 
-          `**Dei Verbum §${passage.paragraph}** (${passage.title}): ${passage.text}`
-        ).join('\n\n');
+        deiVerbumContent = relevantDeiVerbum
+          .slice(0, 2)
+          .map(
+            (passage) =>
+              `**Dei Verbum §${passage.paragraph}** (${passage.title}): ${passage.text}`,
+          )
+          .join('\n\n');
         sources.push('Dei Verbum (Vatican II)');
       }
-    } catch (error) {
+    } catch {
       console.log('Dei Verbum not available');
     }
 
     // Load Gospel reflections
     try {
       const gospelData = await fs.readFile(path.join(publicDir, 'daily_gospel_reflections.json'), 'utf-8');
-      const gospelReflections = JSON.parse(gospelData);
+      const gospelReflections = JSON.parse(gospelData) as GospelReflection[];
       
-      const relevantGospels = gospelReflections.filter((reflection: any) => {
+      const relevantGospels = gospelReflections.filter((reflection) => {
         const gospel = reflection.gospel_text?.toLowerCase() || '';
         const liturgical = reflection.liturgical_day?.toLowerCase() || '';
         const topicKeywords = topic.toLowerCase();
@@ -129,12 +179,16 @@ async function getCatholicTeaching(topic: string): Promise<{ catechism: string, 
       });
       
       if (relevantGospels.length > 0) {
-        gospelsContent = relevantGospels.slice(0, 1).map((ref: any) => 
-          `**Gospel: ${ref.gospel_citation}** (${ref.liturgical_day}): ${ref.gospel_text.substring(0, 300)}...`
-        ).join('\n\n');
+        gospelsContent = relevantGospels
+          .slice(0, 1)
+          .map((ref) => {
+            const gospelText = ref.gospel_text || '';
+            return `**Gospel: ${ref.gospel_citation}** (${ref.liturgical_day}): ${gospelText.substring(0, 300)}...`;
+          })
+          .join('\n\n');
         sources.push('Daily Gospel Reflections');
       }
-    } catch (error) {
+    } catch {
       console.log('Gospel reflections not available');
     }
     
@@ -145,7 +199,7 @@ async function getCatholicTeaching(topic: string): Promise<{ catechism: string, 
       gospels: gospelsContent,
       sources
     };
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error loading Catholic documents:', error);
     return { catechism: '', papal: '', deiVerbum: '', gospels: '', sources: [] };
   }
@@ -154,7 +208,7 @@ async function getCatholicTeaching(topic: string): Promise<{ catechism: string, 
 // Comprehensive Catholic responses for common topics
 function getCatholicResponse(query: string, documents: { catechism: string, papal: string, deiVerbum: string, gospels: string, sources: string[] }): string {
   const lowerQuery = query.toLowerCase();
-  const { catechism, papal, deiVerbum, gospels, sources } = documents;
+  const { catechism, papal, deiVerbum, gospels } = documents;
   
   // Helper function to format sources section
   const formatSources = () => {

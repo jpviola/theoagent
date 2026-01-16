@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function SobreNosotrosPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-yellow-50 text-gray-900 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
         <div className="mb-10 text-center">
           <p className="text-sm font-semibold uppercase tracking-wide text-amber-600">Sobre nosotros</p>

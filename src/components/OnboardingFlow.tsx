@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { useState } from 'react'
+import { createClient, type User } from '@supabase/supabase-js'
 
 interface OnboardingFlowProps {
-  user: any
+  user: User
   onComplete: () => void
   onSkip?: () => void
 }
@@ -23,7 +23,17 @@ interface OnboardingData {
   }
 }
 
-const ROLE_OPTIONS = [
+type RoleId = OnboardingData['role']
+type ExperienceLevel = OnboardingData['experience']
+type PrimaryUse = OnboardingData['primaryUse']
+type PreferredLanguage = OnboardingData['preferredLanguage']
+
+const ROLE_OPTIONS: Array<{
+  id: RoleId
+  name: string
+  description: string
+  icon: string
+}> = [
   { id: 'student', name: 'Student', description: 'Seminary student or theology student', icon: '🎓' },
   { id: 'educator', name: 'Educator', description: 'Teacher, professor, or catechist', icon: '👨‍🏫' },
   { id: 'priest', name: 'Priest/Religious', description: 'Ordained minister or religious', icon: '👨‍💼' },
@@ -41,6 +51,40 @@ const TOPIC_OPTIONS = [
   'Daily Gospel Readings', 'Saint of the Day', 'Papal Teaching', 'Conciliar Documents',
   'Prayer & Spirituality', 'Bioethics', 'Marriage & Family', 'Social Justice',
   'Ecumenism', 'Interfaith Dialogue', 'Church Law (Canon Law)', 'Theology of the Body'
+]
+
+const EXPERIENCE_LEVELS: Array<{
+  id: ExperienceLevel
+  name: string
+  desc: string
+}> = [
+  { id: 'beginner', name: 'Beginner', desc: 'New to formal theological study' },
+  { id: 'intermediate', name: 'Intermediate', desc: 'Some theological education or experience' },
+  { id: 'advanced', name: 'Advanced', desc: 'Extensive theological training or study' }
+]
+
+const USE_CASE_OPTIONS: Array<{
+  id: PrimaryUse
+  name: string
+  desc: string
+}> = [
+  { id: 'personal_study', name: 'Personal Study', desc: 'Growing in faith and knowledge' },
+  { id: 'teaching', name: 'Teaching & Education', desc: 'Preparing lessons or courses' },
+  { id: 'pastoral_care', name: 'Pastoral Care', desc: 'Ministry and spiritual guidance' },
+  { id: 'academic_research', name: 'Academic Research', desc: 'Scholarly work and writing' },
+  { id: 'general', name: 'General Questions', desc: 'Various theological inquiries' }
+]
+
+const LANGUAGE_OPTIONS: Array<{
+  id: PreferredLanguage
+  name: string
+  flag: string
+}> = [
+  { id: 'en', name: 'English', flag: '🇺🇸' },
+  { id: 'es', name: 'Español', flag: '🇪🇸' },
+  { id: 'it', name: 'Italiano', flag: '🇮🇹' },
+  { id: 'fr', name: 'Français', flag: '🇫🇷' },
+  { id: 'pt', name: 'Português', flag: '🇵🇹' }
 ]
 
 export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingFlowProps) {
@@ -119,7 +163,7 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
 
       onComplete()
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Onboarding save error:', error)
       setError('Failed to save onboarding data. You can complete this later in settings.')
       setTimeout(() => onComplete(), 2000)
@@ -160,7 +204,7 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
               </div>
             </div>
             <h1 className="text-2xl font-bold mb-2">Welcome to santaPalabra!</h1>
-            <p className="text-white/90">Let's personalize your theological assistant</p>
+            <p className="text-white/90">Let&apos;s personalize your theological assistant</p>
           </div>
 
           {/* Progress Bar */}
@@ -198,14 +242,14 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
           {/* Step 1: Role Selection */}
           {currentStep === 1 && (
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">What's your role?</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">What&apos;s your role?</h2>
               <p className="text-gray-600 mb-8">This helps us tailor santaPalabra to your needs</p>
               
               <div className="space-y-3">
                 {ROLE_OPTIONS.map((role) => (
                   <button
                     key={role.id}
-                    onClick={() => setData(prev => ({ ...prev, role: role.id as any }))}
+                    onClick={() => setData(prev => ({ ...prev, role: role.id }))}
                     className={`w-full p-4 rounded-xl border-2 transition-all text-left hover:shadow-md ${
                       data.role === role.id
                         ? 'border-blue-500 bg-blue-50 shadow-md'
@@ -274,14 +318,10 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Your theology background:</h3>
                     <div className="grid grid-cols-1 gap-3">
-                      {[
-                        { id: 'beginner', name: 'Beginner', desc: 'New to formal theological study' },
-                        { id: 'intermediate', name: 'Intermediate', desc: 'Some theological education or experience' },
-                        { id: 'advanced', name: 'Advanced', desc: 'Extensive theological training or study' }
-                      ].map((level) => (
+                      {EXPERIENCE_LEVELS.map((level) => (
                         <button
                           key={level.id}
-                          onClick={() => setData(prev => ({ ...prev, experience: level.id as any }))}
+                          onClick={() => setData(prev => ({ ...prev, experience: level.id }))}
                           className={`p-4 rounded-xl border-2 transition-all text-left ${
                             data.experience === level.id
                               ? 'border-blue-500 bg-blue-50'
@@ -307,16 +347,10 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Primary use case:</h3>
                     <div className="grid grid-cols-1 gap-3">
-                      {[
-                        { id: 'personal_study', name: 'Personal Study', desc: 'Growing in faith and knowledge' },
-                        { id: 'teaching', name: 'Teaching & Education', desc: 'Preparing lessons or courses' },
-                        { id: 'pastoral_care', name: 'Pastoral Care', desc: 'Ministry and spiritual guidance' },
-                        { id: 'academic_research', name: 'Academic Research', desc: 'Scholarly work and writing' },
-                        { id: 'general', name: 'General Questions', desc: 'Various theological inquiries' }
-                      ].map((use) => (
+                      {USE_CASE_OPTIONS.map((use) => (
                         <button
                           key={use.id}
-                          onClick={() => setData(prev => ({ ...prev, primaryUse: use.id as any }))}
+                          onClick={() => setData(prev => ({ ...prev, primaryUse: use.id }))}
                           className={`p-4 rounded-xl border-2 transition-all text-left ${
                             data.primaryUse === use.id
                               ? 'border-green-500 bg-green-50'
@@ -347,7 +381,7 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
           {currentStep === 4 && (
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">What topics interest you?</h2>
-              <p className="text-gray-600 mb-8">Select areas you'd like to explore (optional but helpful)</p>
+              <p className="text-gray-600 mb-8">Select areas you&apos;d like to explore (optional but helpful)</p>
               
               <div className="grid grid-cols-2 gap-3">
                 {TOPIC_OPTIONS.map((topic) => (
@@ -385,16 +419,10 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4 text-left">Preferred Language:</h3>
                     <div className="grid grid-cols-2 gap-3">
-                      {[
-                        { id: 'en', name: 'English', flag: '🇺🇸' },
-                        { id: 'es', name: 'Español', flag: '🇪🇸' },
-                        { id: 'it', name: 'Italiano', flag: '🇮🇹' },
-                        { id: 'fr', name: 'Français', flag: '🇫🇷' },
-                        { id: 'pt', name: 'Português', flag: '🇵🇹' }
-                      ].map((lang) => (
+                      {LANGUAGE_OPTIONS.map((lang) => (
                         <button
                           key={lang.id}
-                          onClick={() => setData(prev => ({ ...prev, preferredLanguage: lang.id as any }))}
+                          onClick={() => setData(prev => ({ ...prev, preferredLanguage: lang.id }))}
                           className={`p-3 rounded-xl border-2 transition-all ${
                             data.preferredLanguage === lang.id
                               ? 'border-blue-500 bg-blue-50'

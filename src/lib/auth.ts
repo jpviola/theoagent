@@ -69,7 +69,7 @@ export async function updateUserUsage(userId: string) {
   console.log('Usage update handled in API route for user:', userId)
 }
 
-export async function checkUsageLimits(userId: string): Promise<{ canUse: boolean, currentUsage: number, limit: number }> {
+export async function checkUsageLimits(): Promise<{ canUse: boolean, currentUsage: number, limit: number }> {
   const profile = await getUserProfile()
   
   if (!profile) {
@@ -163,7 +163,9 @@ export function validatePassword(password: string): {
   }
 }
 
-export async function updateUserProfile(updates: any) {
+export async function updateUserProfile(
+  updates: Database['public']['Tables']['profiles']['Update']
+) {
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

@@ -4,6 +4,12 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Share2, Copy, MessageCircle, Facebook, Twitter, Mail, Check, Heart, Star } from 'lucide-react';
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 interface ShareSantaPalabraProps {
   onShare?: () => void;
   onReferralTracked?: () => void;
@@ -31,9 +37,8 @@ export default function ShareSantaPalabra({ onShare, onReferralTracked }: ShareS
     onShare?.();
     onReferralTracked?.();
     
-    // Tracking para analytics
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'share', {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'share', {
         method: platform,
         content_type: 'referral',
         item_id: 'santapalabra_app'

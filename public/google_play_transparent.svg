@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60" aria-hidden="true">
+	<rect width="200" height="60" fill="none" />
+	<g transform="translate(8,6)">
+		<!-- Play triangle -->
+		<polygon points="0,0 28,18 0,36" fill="#34A853" />
+		<polygon points="0,0 18,18 0,36" fill="#4285F4" transform="translate(10,0)" />
+	</g>
+	<g transform="translate(60,10)">
+		<text x="0" y="10" font-family="Arial, Helvetica, sans-serif" font-size="8" fill="#6b7280">GET IT ON</text>
+		<text x="0" y="30" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="16" fill="#000">Google Play</text>
+	</g>
+</svg>

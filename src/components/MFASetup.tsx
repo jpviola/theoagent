@@ -1,13 +1,21 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
+import type { User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase-client'
 
 interface MFASetupProps {
-  user: any
+  user: User
   onClose: () => void
   onSuccess?: () => void
-  enforced?: boolean // Whether MFA is required
+  enforced?: boolean
+}
+
+type TotpFactor = {
+  id: string
+  status?: string
+  factor_type?: string
 }
 
 export default function MFASetup({ user, onClose, onSuccess, enforced = false }: MFASetupProps) {
@@ -23,38 +31,39 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
   const [recoveryCodes, setRecoveryCodes] = useState<string[]>([])
   
   // Challenge state
-  const [challengeId, setChallengeId] = useState('')
   const [challengeCode, setChallengeCode] = useState('')
   
   // Current MFA factors
-  const [mfaFactors, setMfaFactors] = useState<any[]>([])
+  const [mfaFactors, setMfaFactors] = useState<TotpFactor[]>([])
   const [hasActiveMFA, setHasActiveMFA] = useState(false)
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   useEffect(() => {
-    checkMFAStatus()
-  }, [])
+    const checkMFAStatus = async () => {
+      try {
+        const { data: factors, error } = await supabase.auth.mfa.listFactors()
+        if (error) throw error
 
-  const checkMFAStatus = async () => {
-    try {
-      const { data: factors, error } = await supabase.auth.mfa.listFactors()
-      if (error) throw error
-      
-      setMfaFactors(factors?.totp || [])
-      const activeFactor = factors?.totp?.find(f => f.status === 'verified')
-      setHasActiveMFA(!!activeFactor)
-      
-      if (activeFactor && !enforced) {
-        setStep('verify')
-      } else if (!activeFactor) {
-        setStep('setup')
+        const totpFactors = (factors?.totp ?? []) as TotpFactor[]
+        setMfaFactors(totpFactors)
+
+        const activeFactor = totpFactors.find(f => f.status === 'verified')
+        setHasActiveMFA(!!activeFactor)
+
+        if (activeFactor && !enforced) {
+          setStep('verify')
+        } else if (!activeFactor) {
+          setStep('setup')
+        }
+      } catch (error) {
+        console.error('MFA status check error:', error)
+        setError('Failed to check MFA status')
       }
-    } catch (error: any) {
-      console.error('MFA status check error:', error)
-      setError('Failed to check MFA status')
     }
-  }
+
+    void checkMFAStatus()
+  }, [enforced])
 
   const enrollMFA = async () => {
     setLoading(true)
@@ -72,9 +81,9 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
       setQrCode(data.totp.qr_code)
       setSecret(data.totp.secret)
       setStep('challenge')
-    } catch (error: any) {
+    } catch (error) {
       console.error('MFA enrollment error:', error)
-      setError(error.message || 'Failed to setup MFA')
+      setError('Failed to setup MFA')
     } finally {
       setLoading(false)
     }
@@ -85,7 +94,7 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
     setError('')
     
     try {
-      const { data, error } = await supabase.auth.mfa.challengeAndVerify({
+      const { error } = await supabase.auth.mfa.challengeAndVerify({
         factorId: mfaFactors[0]?.id,
         code: verificationCode
       })
@@ -97,35 +106,9 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
         onSuccess?.()
         onClose()
       }, 1500)
-    } catch (error: any) {
+    } catch (error) {
       console.error('MFA verification error:', error)
       setError('Invalid verification code. Please try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const challengeMFA = async () => {
-    setLoading(true)
-    setError('')
-    
-    try {
-      const factorId = mfaFactors[0]?.id
-      if (!factorId) {
-        throw new Error('No MFA factor found')
-      }
-
-      const { data, error } = await supabase.auth.mfa.challenge({
-        factorId: factorId
-      })
-      
-      if (error) throw error
-      
-      setChallengeId(data.id)
-      setStep('challenge')
-    } catch (error: any) {
-      console.error('MFA challenge error:', error)
-      setError(error.message || 'Failed to create MFA challenge')
     } finally {
       setLoading(false)
     }
@@ -139,11 +122,12 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
       // First get the factor ID from enrollment
       const { data: factors, error: factorError } = await supabase.auth.mfa.listFactors()
       if (factorError) throw factorError
-      
-      const unverifiedFactor = factors?.totp?.find(f => f.factor_type === 'totp')
+
+      const totpFactors = (factors?.totp ?? []) as TotpFactor[]
+      const unverifiedFactor = totpFactors.find(f => f.factor_type === 'totp')
       if (!unverifiedFactor) throw new Error('No unverified factor found')
 
-      const { data, error } = await supabase.auth.mfa.challengeAndVerify({
+      const { error } = await supabase.auth.mfa.challengeAndVerify({
         factorId: unverifiedFactor.id,
         code: challengeCode
       })
@@ -155,7 +139,7 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
       
       setSuccess('MFA setup completed successfully!')
       setStep('recovery')
-    } catch (error: any) {
+    } catch (error) {
       console.error('MFA setup completion error:', error)
       setError('Invalid code. Please check your authenticator app and try again.')
     } finally {
@@ -352,7 +336,7 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
                   <div>
                     <h4 className="font-medium text-gray-900">Scan QR Code</h4>
                     <p className="text-sm text-gray-600 mt-1">
-                      Use your authenticator app to scan the QR code we'll show you.
+                      Use your authenticator app to scan the QR code we&apos;ll show you.
                     </p>
                   </div>
                 </div>
@@ -384,9 +368,11 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Scan QR Code</h3>
                 <div className="bg-white p-4 rounded-xl border-2 border-gray-200 inline-block">
-                  <img 
+                  <Image 
                     src={qrCode} 
                     alt="MFA QR Code" 
+                    width={192}
+                    height={192}
                     className="w-48 h-48 mx-auto"
                   />
                 </div>
@@ -417,7 +403,7 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
                 </div>
 
                 <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
-                  <p className="font-medium mb-1">Can't scan the QR code?</p>
+                  <p className="font-medium mb-1">Can&apos;t scan the QR code?</p>
                   <p className="mb-2">Enter this code manually in your authenticator app:</p>
                   <code className="bg-white px-2 py-1 rounded text-gray-800 font-mono break-all">
                     {secret}

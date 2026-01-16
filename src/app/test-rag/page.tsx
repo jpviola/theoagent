@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { supabase } from '@/lib/supabase-client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Beaker, BookCopy, ChevronRight, Home, LogIn, Zap, BarChart2, AlertTriangle, CheckCircle, Loader, Settings, Languages, MessageSquare, Play } from 'lucide-react';
+import { Beaker, BookCopy, Home, Zap, BarChart2, AlertTriangle, CheckCircle, Loader, Settings, Languages, MessageSquare, Play } from 'lucide-react';
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { useLanguage, type AppLanguage } from '@/contexts/LanguageContext';
 
 interface TestResult {
@@ -28,7 +30,7 @@ interface ComparisonResult {
 }
 
 export default function RAGTestingInterface() {
-  const [user, setUser] = useState<any>(null);
+  const [, setUser] = useState<SupabaseUser | null>(null);
   const [query, setQuery] = useState('');
   const [implementation, setImplementation] = useState<'LangChain' | 'LlamaIndex'>('LangChain');
   const [mode, setMode] = useState<'standard' | 'advanced'>('standard');
@@ -141,29 +143,8 @@ export default function RAGTestingInterface() {
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-white relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -190,12 +171,18 @@ export default function RAGTestingInterface() {
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className="relative z-50 px-6 py-4"
       >
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl border border-yellow-200 shadow-lg px-6 py-4">
+          <div className="max-w-7xl mx-auto">
+          <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-yellow-200 dark:border-gray-700 shadow-lg px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-6">
                 <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-                  <img src="/santapalabra-logo.svg" alt="SantaPalabra" className="h-10" />
+                  <Image
+                    src="/santapalabra-logo.svg"
+                    alt="SantaPalabra"
+                    width={40}
+                    height={40}
+                    className="h-10 w-10"
+                  />
                 </Link>
                 <div className="h-6 w-px bg-gray-300"></div>
                 <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2"><Beaker className="text-yellow-600" />Laboratorio RAG</h1>
@@ -252,7 +239,7 @@ export default function RAGTestingInterface() {
 
         {/* Tab Navigation */}
         <div className="flex justify-center mb-12">
-          <div className="relative bg-white/80 backdrop-blur-xl rounded-2xl p-2 border border-yellow-200 inline-flex shadow-lg">
+          <div className="relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl p-2 border border-yellow-200 dark:border-gray-700 inline-flex shadow-lg">
             <motion.div
               className="absolute top-2 bottom-2 left-2 w-[164px] bg-gradient-to-r from-yellow-400 to-amber-500 rounded-xl shadow-lg"
               animate={{ x: activeTab === 'single' ? 0 : 168 }}

@@ -41,8 +41,9 @@ export async function POST(req: Request) {
     if (!capRes.ok) return new Response(JSON.stringify({ error: data }), { status: 500 })
 
     return new Response(JSON.stringify({ capture: data }), { status: 200 })
-  } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message || String(err) }), { status: 500 })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    return new Response(JSON.stringify({ error: message }), { status: 500 })
   }
 }
 

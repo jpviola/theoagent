@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 
@@ -10,22 +11,11 @@ export default function Header() {
   const pathname = usePathname();
   const { language, toggleLanguage } = useLanguage();
   const { isDarkMode, toggleDarkMode } = useTheme();
-  const [selectedModel, setSelectedModel] = useState<'anthropic' | 'openai' | 'gemini' | 'llama'>('anthropic');
+  const { profile } = useAuth();
+  const isAdmin = !!profile && profile.subscription_tier === 'expert';
   const isChatPage =
     (pathname || '').startsWith('/catholic-chat') ||
     (typeof window !== 'undefined' && window.location.pathname.startsWith('/catholic-chat'));
-
-  // Sincronizar el modelo seleccionado con localStorage para que esté disponible en la página de chat
-  useEffect(() => {
-    const savedModel = localStorage.getItem('santapalabra_selected_model');
-    if (savedModel) {
-      setSelectedModel(savedModel as typeof selectedModel);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('santapalabra_selected_model', selectedModel);
-  }, [selectedModel]);
 
   if (isChatPage) {
     // Header especial para la página de chat: solo logo grande + leyenda, con donación/café destacados
@@ -34,10 +24,16 @@ export default function Header() {
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-transparent to-black/10 dark:from-black/10 dark:to-black/20" />
           <div className="mx-auto max-w-7xl px-4 py-3 relative z-10">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            {/* Logo x2 y leyenda en dos líneas */}
-            <div className="flex w-full items-center justify-center gap-4 sm:w-auto sm:justify-start">
+            <Link href="/" className="flex w-full items-center justify-center gap-4 sm:w-auto sm:justify-start">
               <div className="relative h-14 w-14 md:h-16 md:w-16 rounded-2xl bg-gradient-to-br from-yellow-50 to-amber-100 p-2 shadow-md dark:from-gray-700 dark:to-gray-600">
-                <img src="/santapalabra-logo.svg" alt="SantaPalabra" className="h-full w-full object-contain dark:brightness-125 dark:contrast-125" />
+                <Image
+                  src="/santapalabra-logo.svg"
+                  alt="SantaPalabra"
+                  width={64}
+                  height={64}
+                  className="h-full w-full object-contain dark:brightness-125 dark:contrast-125"
+                  priority
+                />
               </div>
               <div className="leading-tight">
                 <div className="text-xl md:text-2xl font-black text-gray-900 tracking-tight dark:text-white/90">
@@ -47,16 +43,15 @@ export default function Header() {
                   ¡Ruega por nosotros!
                 </div>
               </div>
-            </div>
+            </Link>
 
-            {/* Botones de acción y tema en chat */}
             <div className="flex w-full flex-wrap items-center justify-center gap-3 sm:w-auto sm:justify-end md:gap-4">
               <button
                 onClick={toggleDarkMode}
-                className="inline-flex items-center gap-2 rounded-full border border-yellow-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-yellow-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-800"
+                className="h-9 w-9 rounded-full border border-yellow-200 text-base text-gray-600 hover:bg-yellow-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700"
                 aria-label="Alternar tema"
               >
-                {isDarkMode ? '☀️ Claro' : '🌙 Oscuro'}
+                {isDarkMode ? '☀️' : '🌙'}
               </button>
               <Link
                 href="/support"
@@ -90,7 +85,14 @@ export default function Header() {
           {/* Logo y título principal */}
           <Link href="/" className="flex items-center gap-3 group transition-transform hover:scale-[1.01]">
             <div className="relative h-12 w-12 rounded-xl bg-gradient-to-br from-yellow-50 to-amber-100 p-2 shadow-sm group-hover:shadow-md transition-shadow dark:from-gray-700 dark:to-gray-600">
-              <img src="/santapalabra-logo.svg" alt="SantaPalabra" className="h-full w-full object-contain dark:brightness-125 dark:contrast-125" />
+              <Image
+                src="/santapalabra-logo.svg"
+                alt="SantaPalabra"
+                width={48}
+                height={48}
+                className="h-full w-full object-contain dark:brightness-125 dark:contrast-125"
+                priority
+              />
             </div>
             <div className="leading-tight">
               <div className="text-xl font-black text-gray-900 tracking-tight dark:text-white/90">SantaPalabra</div>
@@ -106,10 +108,12 @@ export default function Header() {
             <Link href="/sobre-nosotros" style={{ color: 'var(--foreground)' }} className="px-3 py-2 rounded-lg hover:bg-yellow-50 hover:text-gray-900 transition-colors dark:text-white dark:hover:bg-gray-700 dark:hover:text-white">
               Sobre nosotros
             </Link>
-            <Link href="/admin" className="ml-2 flex items-center gap-1 px-3 py-2 rounded-lg border border-yellow-200 text-xs font-bold text-amber-700 hover:bg-amber-50 hover:text-amber-800 transition-colors dark:border-amber-600 dark:text-amber-300 dark:bg-transparent dark:hover:bg-gray-700 dark:hover:text-amber-200">
-              <span className="text-sm">⚙️</span>
-              Panel
-            </Link>
+            {isAdmin && (
+              <Link href="/admin" className="ml-2 flex items-center gap-1 px-3 py-2 rounded-lg border border-yellow-200 text-xs font-bold text-amber-700 hover:bg-amber-50 hover:text-amber-800 transition-colors dark:border-amber-600 dark:text-amber-300 dark:bg-transparent dark:hover:bg-gray-700 dark:hover:text-amber-200">
+                <span className="text-sm">⚙️</span>
+                Panel
+              </Link>
+            )}
           </nav>
 
           {/* Navegación móvil */}
@@ -120,9 +124,11 @@ export default function Header() {
             <Link href="/sobre-nosotros" style={{ color: 'var(--foreground)' }} className="p-2 rounded-lg hover:bg-yellow-50 transition-colors dark:bg-transparent dark:hover:bg-gray-700">
               <span className="text-lg dark:text-white">ℹ️</span>
             </Link>
-            <Link href="/admin" style={{ color: 'var(--foreground)' }} className="p-1.5 rounded-lg border border-amber-200 hover:bg-amber-50 transition-colors dark:border-amber-600 dark:bg-transparent dark:hover:bg-gray-700">
-              <span className="text-sm dark:text-white">⚙️</span>
-            </Link>
+            {isAdmin && (
+              <Link href="/admin" style={{ color: 'var(--foreground)' }} className="p-1.5 rounded-lg border border-amber-200 hover:bg-amber-50 transition-colors dark:border-amber-600 dark:bg-transparent dark:hover:bg-gray-700">
+                <span className="text-sm dark:text-white">⚙️</span>
+              </Link>
+            )}
           </nav>
 
           {/* Controles rápidos */}

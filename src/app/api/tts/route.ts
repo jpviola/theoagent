@@ -17,6 +17,10 @@ function getOptionalIntEnv(name: string): number | null {
   return Number.isFinite(n) && n > 0 ? Math.floor(n) : null;
 }
 
+type ElevenLabsVoicesResponse = {
+  voices?: Array<{ voice_id?: string }>
+}
+
 async function resolveDefaultVoiceId(apiKey: string): Promise<{ voiceId: string | null; debug?: string }> {
   const now = Date.now();
   if (cachedDefaultVoiceId && (now - cachedDefaultVoiceIdAt) < DEFAULT_VOICE_TTL_MS) {
@@ -46,8 +50,8 @@ async function resolveDefaultVoiceId(apiKey: string): Promise<{ voiceId: string 
       throw new Error(msg);
     }
 
-    const data = await upstream.json().catch(() => null) as any;
-    return Array.isArray(data?.voices) ? data.voices : [];
+    const data = await upstream.json().catch(() => null) as ElevenLabsVoicesResponse | null
+    return Array.isArray(data?.voices) ? data.voices : []
   };
 
   // Prefer a user-selected/saved voice if available, otherwise fall back to defaults.

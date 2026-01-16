@@ -10,32 +10,41 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      const saved = window.localStorage.getItem('santapalabra_dark_mode');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      return saved === null ? systemPrefersDark : saved === 'true';
+    } catch {
+      return false;
+    }
+  });
 
-  // Apply theme class to <html>
   const applyTheme = (dark: boolean) => {
+    if (typeof document === 'undefined') return;
     const method = dark ? 'add' : 'remove';
     document.documentElement.classList[method]('dark');
     document.body.classList[method]('dark');
+    
+    // Update meta theme-color
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', dark ? '#1f2937' : '#eab308');
+    }
   };
-
-  useEffect(() => {
-    const saved = localStorage.getItem('santapalabra_dark_mode');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const dark = saved === null ? systemPrefersDark : saved === 'true';
-    setIsDarkMode(dark);
-    applyTheme(dark);
-  }, []);
 
   const toggleDarkMode = () => {
     const newDarkMode = !isDarkMode;
     console.log('ThemeProvider: Toggling dark mode:', newDarkMode);
     setIsDarkMode(newDarkMode);
-    localStorage.setItem('santapalabra_dark_mode', newDarkMode.toString());
-    applyTheme(newDarkMode);
+    try {
+      window.localStorage.setItem('santapalabra_dark_mode', newDarkMode.toString());
+    } catch {
+      // ignore
+    }
   };
 
-  // Sync class when state changes from any source
   useEffect(() => {
     applyTheme(isDarkMode);
   }, [isDarkMode]);

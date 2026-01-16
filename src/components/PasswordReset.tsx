@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase-client'
-import type { Database } from '@/lib/supabase'
 
 interface PasswordResetProps {
   onClose: () => void
@@ -126,9 +125,13 @@ export default function PasswordReset({ onClose, onSuccess, onBackToSignin, init
       
       setSuccess('Password reset link sent! Check your email.')
       setStep('success')
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Password reset request error:', error)
-      setError(error.message || 'Failed to send reset email')
+      if (error instanceof Error) {
+        setError(error.message || 'Failed to send reset email')
+      } else {
+        setError('Failed to send reset email')
+      }
     } finally {
       setLoading(false)
     }
@@ -174,9 +177,13 @@ export default function PasswordReset({ onClose, onSuccess, onBackToSignin, init
         onSuccess?.()
         onClose()
       }, 2000)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Password reset confirmation error:', error)
-      setError(error.message || 'Failed to reset password')
+      if (error instanceof Error) {
+        setError(error.message || 'Failed to reset password')
+      } else {
+        setError('Failed to reset password')
+      }
     } finally {
       setLoading(false)
     }
@@ -242,7 +249,7 @@ export default function PasswordReset({ onClose, onSuccess, onBackToSignin, init
           {step === 'request' && (
             <div className="space-y-6">
               <div className="text-center text-gray-600">
-                <p>Enter your email address and we'll send you a link to reset your password.</p>
+                <p>Enter your email address and we&apos;ll send you a link to reset your password.</p>
               </div>
 
               <div>
@@ -374,13 +381,13 @@ export default function PasswordReset({ onClose, onSuccess, onBackToSignin, init
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Check Your Email</h3>
                 <p className="text-gray-600 mb-6">
-                  We've sent a password reset link to <strong>{email}</strong>. 
+                  We&apos;ve sent a password reset link to <strong>{email}</strong>. 
                   Click the link in the email to set your new password.
                 </p>
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-left">
-                <h4 className="font-medium text-blue-900 mb-2">Didn't receive the email?</h4>
+                <h4 className="font-medium text-blue-900 mb-2">Didn&apos;t receive the email?</h4>
                 <ul className="text-sm text-blue-700 space-y-1">
                   <li>• Check your spam/junk folder</li>
                   <li>• Make sure {email} is correct</li>

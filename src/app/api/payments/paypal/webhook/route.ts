@@ -1,3 +1,8 @@
+type PayPalWebhookEvent = {
+  event_type?: string
+  [key: string]: unknown
+}
+
 async function getAccessToken() {
   const client = process.env.PAYPAL_CLIENT_ID
   const secret = process.env.PAYPAL_SECRET
@@ -39,11 +44,10 @@ export async function POST(req: Request) {
 
   try {
     const payloadText = await req.text()
-    let webhookEvent: any
+    let webhookEvent: PayPalWebhookEvent
     try {
-      webhookEvent = JSON.parse(payloadText)
+      webhookEvent = JSON.parse(payloadText) as PayPalWebhookEvent
     } catch {
-      // if body is not JSON, respond with error
       return new Response(JSON.stringify({ error: 'Invalid JSON payload' }), { status: 400 })
     }
 
@@ -86,8 +90,9 @@ export async function POST(req: Request) {
     }
 
     return new Response(JSON.stringify({ received: true }), { status: 200 })
-  } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message || String(err) }), { status: 500 })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    return new Response(JSON.stringify({ error: message }), { status: 500 })
   }
 }
 

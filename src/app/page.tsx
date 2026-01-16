@@ -2,16 +2,15 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { supabase } from '@/lib/supabase-client';
 import type { User } from '@supabase/supabase-js';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import SantaPalabraLogo from '@/components/SantaPalabraLogo';
-import { ArrowRight, BookOpen, FlaskConical, UserCircle, Heart, Quote, Check, Facebook, Instagram, Twitter, ChevronDown, HelpCircle } from 'lucide-react';
-import { GoldenParticles, BlessedButton, BreathingImage, SimpleButton } from '@/components/SensorialEffects';
+import { ArrowRight, BookOpen, FlaskConical, Heart, Quote, Check, Facebook, Instagram, Twitter, ChevronDown, HelpCircle } from 'lucide-react';
+import { BlessedButton, BreathingImage } from '@/components/SensorialEffects';
 import { ProgressBar, AchievementNotification, useUserProgress } from '@/components/GamificationSystem';
-import { SmartNotifications } from '@/components/PersonalizationEngine';
+import { SmartNotifications, type UserProfile as PersonalizationUserProfile } from '@/components/PersonalizationEngine';
 import ShareSantaPalabra from '@/components/ShareSantaPalabra';
 
 export default function HomePage() {
@@ -22,8 +21,7 @@ export default function HomePage() {
   const [startTypewriter, setStartTypewriter] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   
-  // Estados para personalización y gamificación
-  const [userProfile, setUserProfile] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<PersonalizationUserProfile | null>(null);
   const { progress, newAchievement, setNewAchievement, addXP, unlockAchievement, updateStreak, trackReferral } = useUserProgress();
   const profileInitializedRef = useRef(false);
 
@@ -144,7 +142,6 @@ export default function HomePage() {
     },
   };
 
-  // Efectos
   useEffect(() => {
     let isMounted = true;
     const failSafe = setTimeout(() => {
@@ -186,7 +183,6 @@ export default function HomePage() {
     };
   }, []);
 
-  // Typewriter effect para principio fundacional
   const fullText = t.principlesText;
   useEffect(() => {
     if (!startTypewriter) {
@@ -205,7 +201,6 @@ export default function HomePage() {
     return () => clearInterval(intervalId);
   }, [fullText, startTypewriter]);
 
-  // Efectos para personalización y gamificación (ejecutar una sola vez)
   useEffect(() => {
     if (profileInitializedRef.current) return;
     profileInitializedRef.current = true;
@@ -216,17 +211,15 @@ export default function HomePage() {
         const profile = JSON.parse(savedProfile);
         setUserProfile(profile);
       }
-      // Actualizar racha de visitas una vez por montaje
       updateStreak();
     } catch (err) {
       console.error('Error initializing profile/gamification:', err);
     }
-  }, []);
+  }, [updateStreak]);
 
 
-  // Función para manejar interacciones que dan XP
   const handleInteraction = (type: 'question' | 'donation' | 'navigation') => {
-    addXP(10, `Interacción: ${type}`);
+    addXP(10);
     
     // Desbloquear logros según el tipo de interacción
     if (type === 'question') {
@@ -234,15 +227,13 @@ export default function HomePage() {
     }
   };
 
-  // Manejar referidos
   const handleReferralShare = () => {
-    const referralCount = trackReferral();
-    addXP(10, 'Compartir en redes sociales');
+    trackReferral();
   };
 
   if (loading) {
     return (
-      <div className="flex min-h-[calc(100vh-56px)] items-center justify-center bg-gradient-to-b from-amber-50 via-yellow-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="flex min-h-[calc(100vh-56px)] items-center justify-center bg-gradient-to-b from-gray-50 via-gray-100 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -285,13 +276,13 @@ export default function HomePage() {
       
 
       {/* HERO SECTION */}
-      <section className="hero-section relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-amber-50 via-yellow-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-16 text-center">
+      <section className="hero-section relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-gray-100 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 dark:bg-none px-4 py-16 text-center">
         <div className="pointer-events-none absolute inset-0">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1.3 }}
             transition={{ duration: 2.5, ease: 'circOut' }}
-            className="absolute -top-1/3 left-1/2 h-full w-full -translate-x-1/2 rounded-full bg-gradient-to-b from-yellow-200/50 via-amber-100/40 to-transparent blur-3xl"
+            className="absolute -top-1/3 left-1/2 h-full w-full -translate-x-1/2 rounded-full bg-gradient-to-b from-gray-200/40 via-gray-100/30 to-transparent blur-3xl dark:from-gray-800/20 dark:via-gray-900/10 dark:to-transparent"
           />
           {/* Imágenes decorativas católicas vectorializadas - distribución simétrica */}
           {/* Esquina superior izquierda - Guadalupana con efecto respiración */}
@@ -350,7 +341,7 @@ export default function HomePage() {
           </motion.h1>
 
           <motion.div variants={itemVariants} className="mt-8 flex justify-center">
-            <SantaPalabraLogo className="h-64 w-64 text-yellow-600 md:h-96 md:w-96" />
+            <SantaPalabraLogo className="h-64 w-64 text-yellow-600 dark:text-yellow-500 md:h-96 md:w-96" />
           </motion.div>
 
           <motion.p
@@ -417,7 +408,7 @@ export default function HomePage() {
 
       {/* PROGRESS SECTION - Solo visible si el usuario ha completado el perfil */}
       {userProfile && progress.level > 1 && (
-        <section className="bg-gradient-to-r from-yellow-50 to-amber-50 py-12 px-4">
+        <section className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-12 px-4">
           <motion.div
             className="mx-auto max-w-4xl"
             initial={{ opacity: 0, y: 20 }}
@@ -431,7 +422,7 @@ export default function HomePage() {
       )}
 
       {/* TESTIMONIALS SECTION */}
-      <section className="bg-white py-20 px-4 md:py-28">
+      <section className="bg-white dark:bg-gray-900 py-20 px-4 md:py-28">
         <motion.div
           className="mx-auto max-w-6xl"
           initial={{ opacity: 0 }}
@@ -453,17 +444,17 @@ export default function HomePage() {
             {testimonials.map((testimonial, idx) => (
               <motion.div
                 key={idx}
-                className="rounded-2xl border border-yellow-200 bg-gradient-to-br from-yellow-50 to-amber-50 p-8 shadow-lg"
+                className="rounded-2xl border border-yellow-200 bg-white p-8 shadow-lg dark:border-gray-700 dark:bg-gray-800"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: idx * 0.15 }}
                 viewport={{ once: true }}
               >
-                <Quote className="mb-4 h-8 w-8 text-yellow-600" />
-                <p className="mb-6 text-base text-gray-700 italic">"{testimonial.text}"</p>
-                <div className="border-t border-yellow-200 pt-4">
-                  <p className="font-bold text-gray-900">{testimonial.author}</p>
-                  <p className="text-sm text-gray-600">{testimonial.role}</p>
+                <Quote className="mb-4 h-8 w-8 text-yellow-600 dark:text-yellow-500" />
+                <p className="mb-6 text-base text-gray-700 dark:text-gray-300 italic">“{testimonial.text}”</p>
+                <div className="border-t border-yellow-200 dark:border-gray-600 pt-4">
+                  <p className="font-bold text-gray-900 dark:text-white">{testimonial.author}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{testimonial.role}</p>
                 </div>
               </motion.div>
             ))}
@@ -493,7 +484,7 @@ export default function HomePage() {
       </section>
 
       {/* PRINCIPLES SECTION */}
-      <section className="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-gray-900 dark:to-gray-800 py-20 px-4 md:py-28">
+      <section className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 dark:bg-none dark:bg-gray-900 py-20 px-4 md:py-28">
         <motion.div
           className="mx-auto max-w-4xl"
           initial={{ opacity: 0 }}
@@ -531,7 +522,7 @@ export default function HomePage() {
       </section>
 
       {/* FAQ SECTION */}
-      <section className="bg-white py-20 px-4 md:py-28">
+      <section className="bg-white dark:bg-gray-900 py-20 px-4 md:py-28">
         <motion.div
           className="mx-auto max-w-4xl"
           initial={{ opacity: 0 }}
@@ -565,20 +556,20 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="border-2 border-yellow-200 rounded-2xl overflow-hidden bg-gradient-to-br from-white to-yellow-50/30"
+                className="border-2 border-yellow-200 rounded-2xl overflow-hidden bg-white dark:border-gray-700 dark:bg-gray-800"
               >
                 <button
                   onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
-                  className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-yellow-50/50 transition-colors"
+                  className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  <span className="font-bold text-gray-900 text-lg pr-4">
+                  <span className="font-bold text-gray-900 dark:text-white text-lg pr-4">
                     {faq.question}
                   </span>
                   <motion.div
                     animate={{ rotate: openFaqIndex === index ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <ChevronDown className="h-6 w-6 text-yellow-600 flex-shrink-0" />
+                    <ChevronDown className="h-6 w-6 text-yellow-600 dark:text-yellow-500 flex-shrink-0" />
                   </motion.div>
                 </button>
                 <AnimatePresence>
@@ -590,7 +581,7 @@ export default function HomePage() {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 pb-5 pt-2 text-gray-700 leading-relaxed border-t border-yellow-100">
+                      <div className="px-6 pb-5 pt-2 text-gray-700 dark:text-gray-300 leading-relaxed border-t border-yellow-100 dark:border-gray-700">
                         {faq.answer}
                       </div>
                     </motion.div>
@@ -640,7 +631,7 @@ export default function HomePage() {
                 <Instagram className="h-8 w-8" />
               </a>
               <a
-                href="https://twitter.com"
+                href="https://x.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-all hover:scale-125 hover:text-yellow-300 dark:hover:text-yellow-300 text-white dark:text-gray-200"

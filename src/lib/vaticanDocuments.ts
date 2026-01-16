@@ -151,7 +151,7 @@ export function extractVaticanReferences(text: string): VaticanDocumentReference
   let match;
   
   while ((match = abbrevPattern.exec(text)) !== null) {
-    const [fullMatch, abbrev, paragraph] = match;
+    const [, abbrev, paragraph] = match;
     const upperAbbrev = abbrev.toUpperCase();
     
     if (VATICAN_II_DOCUMENTS[upperAbbrev]) {

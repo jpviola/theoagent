@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-
-// MercadoPago SDK
-const { MercadoPagoConfig, Preference } = require('mercadopago');
+import { MercadoPagoConfig, Preference } from 'mercadopago';
 
 // MercadoPago configuration for Argentina
 const mercadopagoConfig = {
@@ -57,6 +55,7 @@ export async function POST(request: NextRequest) {
     const preferenceData = {
       items: [
         {
+          id: `santapalabra_donation_${country}_${Date.now()}`,
           title: `Donación a SantaPalabra ${selectedCountry.flag}`,
           description: `Apoyo para la evangelización digital en ${selectedCountry.name} y toda Hispanoamérica`,
           quantity: 1,
@@ -149,13 +148,14 @@ export async function POST(request: NextRequest) {
       message: `MercadoPago preference created successfully for ${selectedCountry.name}! ${selectedCountry.flag}`
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ MercadoPago error:', error);
+    const message = error instanceof Error ? error.message : 'Error creating MercadoPago preference'
     return NextResponse.json(
       { 
         success: false, 
-        error: error.message || 'Error creating MercadoPago preference',
-        details: error.cause || 'MercadoPago SDK error'
+        error: message,
+        details: error instanceof Error && 'cause' in error ? (error as { cause?: unknown }).cause || 'MercadoPago SDK error' : 'MercadoPago SDK error'
       }, 
       { status: 500 }
     );

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-
-// MercadoPago SDK for webhook validation
-const { MercadoPagoConfig, Payment } = require('mercadopago');
+import { MercadoPagoConfig, Payment } from 'mercadopago';
 
 // Initialize MercadoPago client
 const client = new MercadoPagoConfig({ 
@@ -37,6 +35,17 @@ export async function POST(request: NextRequest) {
     
     try {
       const paymentData = await payment.get({ id: paymentId });
+
+      if (!paymentData.id) {
+        console.error('❌ Payment data is missing id:', paymentData);
+        return NextResponse.json({
+          error: 'Invalid payment data: missing id',
+          payment: paymentData
+        }, { status: 400 });
+      }
+
+      const mpStatus = paymentData.status ?? 'unknown';
+      const currencyId = paymentData.currency_id ?? 'USD';
       console.log('💳 Payment data retrieved:', {
         id: paymentData.id,
         status: paymentData.status,
@@ -49,8 +58,8 @@ export async function POST(request: NextRequest) {
       // Update donation in database based on payment status
       const donationUpdate = {
         payment_id: paymentData.id.toString(),
-        status: mapMercadoPagoStatus(paymentData.status),
-        payment_status: paymentData.status,
+        status: mapMercadoPagoStatus(mpStatus),
+        payment_status: mpStatus,
         status_detail: paymentData.status_detail,
         processed_at: new Date().toISOString(),
         webhook_data: {
@@ -58,9 +67,9 @@ export async function POST(request: NextRequest) {
           status: paymentData.status,
           status_detail: paymentData.status_detail,
           payment_method: paymentData.payment_method?.id,
-          payment_type: paymentData.payment_type?.id,
+          payment_type_id: paymentData.payment_type_id,
           transaction_amount: paymentData.transaction_amount,
-          currency_id: paymentData.currency_id,
+          currency_id: currencyId,
           external_reference: paymentData.external_reference,
           processed_at: new Date().toISOString()
         }
@@ -70,8 +79,7 @@ export async function POST(request: NextRequest) {
       let donationResult;
       
       if (paymentData.external_reference) {
-        // Update existing donation
-        const { data: existingDonation, error: findError } = await supabase
+        const { data: existingDonation } = await supabase
           .from('donations')
           .select('*')
           .eq('external_reference', paymentData.external_reference)
@@ -99,12 +107,12 @@ export async function POST(request: NextRequest) {
         const newDonation = {
           ...donationUpdate,
           amount: paymentData.transaction_amount,
-          currency: paymentData.currency_id,
+          currency: currencyId,
           payment_provider: 'mercadopago',
           donor_email: paymentData.payer?.email || 'webhook@santapalabra.app',
           donor_name: `${paymentData.payer?.first_name || ''} ${paymentData.payer?.last_name || ''}`.trim() || 'Donante MercadoPago',
           external_reference: paymentData.external_reference || `mp_${paymentData.id}`,
-          country: extractCountryFromCurrency(paymentData.currency_id),
+          country: extractCountryFromCurrency(currencyId),
           metadata: {
             webhook_created: true,
             payer_info: paymentData.payer,
@@ -150,8 +158,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET endpoint for webhook verification
-export async function GET(request: NextRequest) {
+export async function GET() {
   return NextResponse.json({
     webhook: 'MercadoPago Webhook Endpoint',
     status: 'active',

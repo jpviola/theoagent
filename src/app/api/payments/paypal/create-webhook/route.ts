@@ -1,3 +1,7 @@
+type PayPalWebhook = {
+  url?: string
+}
+
 async function getAccessToken() {
   const client = process.env.PAYPAL_CLIENT_ID
   const secret = process.env.PAYPAL_SECRET
@@ -41,8 +45,9 @@ export async function POST(req: Request) {
     })
 
     if (listRes.ok) {
-      const listData = await listRes.json()
-      const found = Array.isArray(listData.webhooks) ? listData.webhooks.find((w: any) => w.url === webhookUrl) : null
+      const listData = (await listRes.json()) as { webhooks?: PayPalWebhook[] }
+      const webhooks = Array.isArray(listData.webhooks) ? listData.webhooks : []
+      const found = webhooks.find((w) => w.url === webhookUrl) || null
       if (found) return new Response(JSON.stringify({ webhook: found, existed: true }), { status: 200 })
     }
 
@@ -64,8 +69,9 @@ export async function POST(req: Request) {
     if (!createRes.ok) return new Response(JSON.stringify({ error: created }), { status: 500 })
 
     return new Response(JSON.stringify({ webhook: created, existed: false }), { status: 201 })
-  } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message || String(err) }), { status: 500 })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    return new Response(JSON.stringify({ error: message }), { status: 500 })
   }
 }
 

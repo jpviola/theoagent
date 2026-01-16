@@ -6,8 +6,13 @@ interface ConversationManagerProps {
   userId: string;
 }
 
+interface ConversationStats {
+  messageCount: number;
+  subscriptionTier: string;
+}
+
 export default function ConversationManager({ userId }: ConversationManagerProps) {
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<ConversationStats | null>(null);
   const [loading, setLoading] = useState(false);
 
   const fetchStats = async () => {
@@ -19,8 +24,8 @@ export default function ConversationManager({ userId }: ConversationManagerProps
         body: JSON.stringify({ action: 'get_stats', userId })
       });
       
-      const data = await response.json();
-      if (data.success) {
+      const data: { success: boolean; data?: ConversationStats } = await response.json();
+      if (data.success && data.data) {
         setStats(data.data);
       }
     } catch (error) {
@@ -43,7 +48,7 @@ export default function ConversationManager({ userId }: ConversationManagerProps
         body: JSON.stringify({ action: 'clear_history', userId })
       });
       
-      const data = await response.json();
+      const data: { success: boolean } = await response.json();
       if (data.success) {
         alert('Conversation history cleared successfully!');
         setStats(null); // Reset stats

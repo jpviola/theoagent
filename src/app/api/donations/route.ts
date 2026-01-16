@@ -67,18 +67,17 @@ export async function GET(req: NextRequest) {
       default:
         return Response.json({ error: 'Invalid type parameter' }, { status: 400 })
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Donations API error:', error)
-    
-    // Si es un error de tabla no existente, dar una respuesta más clara
-    if (error.message && error.message.includes('relation "donations" does not exist')) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    if (message.includes('relation "donations" does not exist')) {
       return Response.json({ 
         error: 'Database table not created yet. Please apply the SQL schema in Supabase.',
         details: 'Run the SQL from sql/donations_schema.sql in Supabase SQL Editor'
       }, { status: 500 })
     }
     
-    return Response.json({ error: error.message || 'Internal server error' }, { status: 500 })
+    return Response.json({ error: message || 'Internal server error' }, { status: 500 })
   }
 }
 
@@ -117,8 +116,9 @@ export async function POST(req: NextRequest) {
       default:
         return Response.json({ error: 'Invalid action' }, { status: 400 })
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Donations POST error:', error)
-    return Response.json({ error: error.message || 'Internal server error' }, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Internal server error'
+    return Response.json({ error: message }, { status: 500 })
   }
 }

@@ -1,11 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import { 
-  getDailyGospelReflection, 
   getTodaysGospelReflection, 
-  searchDailyGospelByKeyword, 
-  formatDailyGospelContext,
-  type DailyGospelReflection as DailyGospel 
+  formatDailyGospelContext
 } from './dailyGospel';
 import { mentionsVaticanDocuments } from './vaticanDocuments';
 
@@ -59,9 +56,16 @@ export interface GospelPassage {
   reference: string;
   text: string;
   difficulty: string;
-  greek_key_words: Record<string, any>;
+  greek_key_words: Record<string, GreekWordData>;
   interpretation: string;
   tags: string[];
+}
+
+export interface GreekWordData {
+  transliteration?: string;
+  word?: string;
+  meaning?: string;
+  insight?: string;
 }
 
 export interface DifficultPassage {
@@ -94,9 +98,13 @@ export interface PapalDocument {
 
 // Load catechism data
 export function loadCatechism(): CatechismItem[] {
-  const filePath = path.join(process.cwd(), 'public', 'data', 'catechism.json');
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(fileContents);
+  try {
+    const filePath = path.join(process.cwd(), 'public', 'data', 'catechism.json');
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(fileContents);
+  } catch {
+    return [];
+  }
 }
 
 // Load gospel parables
@@ -190,7 +198,7 @@ export function formatCatechismContext(results: CatechismItem[]): string {
   if (results.length === 0) return '';
   
   let context = '\n\n--- RELEVANT CATECHISM REFERENCES ---\n';
-  results.forEach((item, idx) => {
+  results.forEach((item) => {
     context += `\n[CCC ${item.id}]: ${item.text}\n`;
   });
   context += '\n--- END REFERENCES ---\n\n';
@@ -254,9 +262,9 @@ export function searchGospelPassages(query: string, limit: number = 2): GospelPa
       passage.interpretation.toLowerCase().includes(lowerQuery) ||
       passage.tags.some(tag => lowerQuery.includes(tag.toLowerCase())) ||
       // Search Greek words
-      Object.values(passage.greek_key_words || {}).some((wordData: any) =>
-        lowerQuery.includes(wordData.transliteration?.toLowerCase()) ||
-        lowerQuery.includes(wordData.word?.toLowerCase())
+      Object.values(passage.greek_key_words || {}).some((wordData: GreekWordData) =>
+        (wordData.transliteration ? lowerQuery.includes(wordData.transliteration.toLowerCase()) : false) ||
+        (wordData.word ? lowerQuery.includes(wordData.word.toLowerCase()) : false)
       )
     )
     .slice(0, limit);
@@ -352,7 +360,7 @@ export function formatPassageContext(passages: GospelPassage[]): string {
     const greekWords = Object.entries(passage.greek_key_words || {}).slice(0, 3);
     if (greekWords.length > 0) {
       context += `**Key Greek Words:**\n`;
-      greekWords.forEach(([key, data]: [string, any]) => {
+      greekWords.forEach(([, data]) => {
         context += `- ${data.transliteration} (${data.word}): ${data.meaning}\n`;
         context += `  Insight: ${data.insight}\n`;
       });

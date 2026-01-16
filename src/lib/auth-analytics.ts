@@ -1,6 +1,3 @@
-import { supabase } from './supabase-client';
-import type { Database } from './supabase';
-
 export type AuthEventType = 
   | 'signup_started'
   | 'signup_completed' 
@@ -24,7 +21,7 @@ export interface AuthEventData {
   user_agent?: string;
   ip_address?: string;
   error_message?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   timestamp?: string;
   url?: string;
   referrer?: string;

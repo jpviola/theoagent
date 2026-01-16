@@ -4,10 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Home, 
   Plus, 
-  Settings, 
-  User, 
   LogIn, 
   LogOut,
   Zap,
@@ -17,13 +14,19 @@ import {
 import { useLanguage } from '@/contexts/LanguageContext';
 import SantaPalabraLogo from '@/components/SantaPalabraLogo';
 
+interface NavUser {
+  email?: string | null;
+}
+
+type ChatModelId = 'anthropic' | 'openai' | 'llama';
+
 interface NavBarProps {
-  user?: any;
+  user?: NavUser | null;
   onNewChat: () => void;
   onSignIn?: () => void;
   onSignOut?: () => void;
-  selectedModel: 'anthropic' | 'openai' | 'gemini' | 'llama';
-  onModelChange: (model: 'anthropic' | 'openai' | 'gemini' | 'llama') => void;
+  selectedModel: ChatModelId;
+  onModelChange: (model: ChatModelId) => void;
   userXP?: number;
 }
 
@@ -75,7 +78,7 @@ export default function NavBar({
 
   const t = texts[language as keyof typeof texts] || texts.es;
 
-  const models = [
+  const models: { id: ChatModelId; name: string; cost: string; description: string }[] = [
     { 
       id: 'anthropic' as const, 
       name: 'Claude (Anthropic)',
@@ -89,16 +92,10 @@ export default function NavBar({
       description: language === 'es' ? 'Modelo premium' : language === 'pt' ? 'Modelo premium' : 'Premium model'
     },
     { 
-      id: 'gemini' as const, 
-      name: 'Gemini Pro (Google)',
-      cost: '6 XP',
-      description: language === 'es' ? 'Modelo equilibrado' : language === 'pt' ? 'Modelo equilibrado' : 'Balanced model'
-    },
-    { 
       id: 'llama' as const, 
-      name: 'Llama 3.1 (Meta)',
+      name: 'Kimi / Llama (Open Source)',
       cost: '3 XP',
-      description: language === 'es' ? 'Modelo económico' : language === 'pt' ? 'Modelo econômico' : 'Economic model'
+      description: language === 'es' ? 'Modelo económico (Kimi via OpenRouter)' : language === 'pt' ? 'Modelo econômico (Kimi via OpenRouter)' : 'Economic model (Kimi via OpenRouter)'
     }
   ];
 
@@ -201,7 +198,6 @@ export default function NavBar({
                             <span className={`text-xs px-2 py-1 rounded-full ${
                               model.id === 'anthropic' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                               model.id === 'openai' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
-                              model.id === 'gemini' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
                               'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400'
                             }`}>
                               {model.cost}
