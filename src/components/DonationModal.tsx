@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 
 const STORAGE_KEY = "santapalabra_donation_modal_closed";
 
@@ -148,7 +149,15 @@ export default function DonationModal() {
                 </div>
 
                 {/* Secondary Actions */}
-                <div className="flex flex-col gap-3 pt-2">
+                <div className="flex flex-col gap-3 pt-4 border-t border-gray-100">
+                  <Link
+                    href="/support"
+                    className="text-sm font-semibold text-gray-700 hover:text-amber-600 hover:underline transition-colors"
+                    onClick={() => close(false)}
+                  >
+                    Ver más opciones de apoyo (MercadoPago, etc.) &rarr;
+                  </Link>
+
                   <button
                     onClick={() => {
                       try {
@@ -156,9 +165,9 @@ export default function DonationModal() {
                       } catch {}
                       close(true);
                     }}
-                    className="text-sm font-medium text-amber-600 hover:text-amber-700 hover:underline"
+                    className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
                   >
-                    Ya doné / Prefiero probar la app primero
+                    No gracias, prefiero continuar a la app
                   </button>
                 </div>
               </div>
