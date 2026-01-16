@@ -59,11 +59,11 @@ export default function RootLayout({
       >
         <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200">
           <AppChrome>{children}</AppChrome>
-        
-          <DonationModal />
         </main>
+                
+                <DonationModal />
 
-        <SpeedInsights />
+                <SpeedInsights />
       </body>
     </html>
   );
