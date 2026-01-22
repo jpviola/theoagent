@@ -152,7 +152,8 @@ export async function subscribeToNewsletter(email: string, language: string = 'e
     };
 
     try {
-      const { error } = await supabase
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await (supabase as any)
         .from('email_subscriptions')
         .upsert(subscriptionData, { 
           onConflict: 'email' 

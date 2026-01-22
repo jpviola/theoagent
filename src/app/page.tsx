@@ -15,7 +15,7 @@ import ShareSantaPalabra from '@/components/ShareSantaPalabra';
 
 export default function HomePage() {
   const { language, toggleLanguage } = useLanguage();
-  const [user, setUser] = useState<User | null>(null);
+  const [, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [displayedText, setDisplayedText] = useState('');
   const [startTypewriter, setStartTypewriter] = useState(false);

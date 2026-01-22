@@ -6,6 +6,7 @@ function requireEnv(name: string): string {
   return value;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(_request: NextRequest) {
   try {
     const apiKey = requireEnv('ELEVENLABS_API_KEY');

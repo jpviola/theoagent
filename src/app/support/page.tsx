@@ -709,6 +709,7 @@ function SupportHeader({ selectedCountry, onCountryChange }: SupportHeaderProps)
             </a>
           </div>
           <div className="mt-4 flex items-center justify-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="https://play.google.com/intl/en_us/badges/static/images/badges/es_badge_web_generic.png"
               alt="Android (Google Play)"

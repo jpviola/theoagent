@@ -413,7 +413,7 @@ Would you like me to explore any specific aspect of Catholic teaching on this to
 
 export async function POST(req: NextRequest) {
   try {
-    const { query, implementation = 'Catholic Simple', mode = 'standard', language = 'en' } = await req.json();
+    const { query, implementation = 'Catholic Simple' } = await req.json();
     
     if (!query) {
       return NextResponse.json({
