@@ -152,7 +152,7 @@ export async function subscribeToNewsletter(email: string, language: string = 'e
     };
 
     try {
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from('email_subscriptions')
         .upsert(subscriptionData, { 
           onConflict: 'email' 

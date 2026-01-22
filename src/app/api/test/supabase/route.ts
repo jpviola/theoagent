@@ -10,7 +10,7 @@ export async function GET() {
     console.log('🧪 Testing Supabase connection...')
     
     // Test básico de conectividad
-    const { data, error } = await supabaseAdmin
+    const { error } = await supabaseAdmin
       .from('profiles')  // Esta tabla ya existe
       .select('count')
       .limit(1)
