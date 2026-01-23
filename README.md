@@ -51,3 +51,22 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Adding Custom Documents for Study Tracks
+
+To add your own PDF, EPUB, TXT, or MD files to the study tracks:
+
+1. Place your files in the corresponding folder under `documents/raw/`:
+   - `dogmatic/`: For Dogmatic Theology
+   - `biblical/`: For Biblical Theology
+   - `history/`: For Church History
+   - `general/`: For General Custom Library
+   - `bible_study/`: For Bible Study Plans
+
+2. Run the ingestion script:
+   ```bash
+   npm run ingest
+   ```
+
+3. Restart the development server (`npm run dev`) if it was running, to ensure the new JSON files are loaded.
+

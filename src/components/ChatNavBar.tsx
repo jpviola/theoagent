@@ -9,7 +9,8 @@ import {
   LogOut,
   Zap,
   Globe,
-  ChevronDown
+  ChevronDown,
+  Menu
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import SantaPalabraLogo from '@/components/SantaPalabraLogo';
@@ -28,6 +29,7 @@ interface NavBarProps {
   selectedModel: ChatModelId;
   onModelChange: (model: ChatModelId) => void;
   userXP?: number;
+  onToggleSidebar?: () => void;
 }
 
 export default function NavBar({ 
@@ -37,7 +39,8 @@ export default function NavBar({
   onSignOut, 
   selectedModel, 
   onModelChange,
-  userXP = 0 
+  userXP = 0,
+  onToggleSidebar
 }: NavBarProps) {
   const { language, setLanguage } = useLanguage();
   const [showModelSelector, setShowModelSelector] = useState(false);
@@ -117,6 +120,17 @@ export default function NavBar({
         <div className="flex items-center justify-between h-16">
           {/* Left Section - Logo & Home */}
           <div className="flex items-center gap-6">
+            {onToggleSidebar && (
+              <motion.button
+                onClick={onToggleSidebar}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="md:hidden p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              >
+                <Menu className="h-6 w-6" />
+              </motion.button>
+            )}
+
             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <SantaPalabraLogo className="h-8 w-8 text-amber-600" />
               <span className="font-bold text-gray-900 dark:text-white text-lg hidden sm:block">

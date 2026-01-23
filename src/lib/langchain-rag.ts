@@ -11,6 +11,10 @@ import { HNSWLib } from '@langchain/community/vectorstores/hnswlib';
 import { OpenAIEmbeddings } from '@langchain/openai';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 
+function escapeRegExp(string: string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 type SupportedChatModel = 'anthropic' | 'openai' | 'llama';
 
 // Types
@@ -27,6 +31,7 @@ interface ChatContext {
   mode: 'standard' | 'advanced';
   language: 'en' | 'es';
   model?: SupportedChatModel;
+  studyTrack?: string;
 }
 
 interface RetrievalResult {
@@ -71,6 +76,13 @@ class EnhancedVectorStore {
   async initialize(documents: Document[]): Promise<void> {
     this.documents = documents;
     
+    // Safety check: Disable embeddings for large datasets to prevent timeouts and high costs
+    // 3000 documents is a reasonable limit for in-memory vector store generation during dev
+    if (documents.length > 3000) {
+      console.log(`⚠️ Large dataset detected (${documents.length} docs). Disabling embeddings to prevent timeout/cost issues.`);
+      this.useEmbeddings = false;
+    }
+    
     if (this.useEmbeddings && this.embeddings) {
       try {
         console.log('🔍 Creating embeddings for documents...');
@@ -103,25 +115,29 @@ class EnhancedVectorStore {
   // Enhanced keyword-based search as fallback
   private keywordSearchWithScore(query: string, topK: number = 5): [Document, number][] {
     const queryWords = query.toLowerCase().split(/\s+/).filter(word => word.length > 2);
+    // Pre-compile regexes for performance
+    const regexes = queryWords.map(word => new RegExp(escapeRegExp(word), 'gi'));
     
     const scoredDocs = this.documents.map(doc => {
-      const content = doc.pageContent.toLowerCase();
-      const title = doc.metadata.title?.toLowerCase() || '';
+      const content = doc.pageContent; // Avoid toLowerCase() copy
+      const title = doc.metadata.title || '';
       
       // Calculate score based on multiple factors
       let score = 0;
       
-      queryWords.forEach(word => {
+      regexes.forEach((regex, index) => {
+        const word = queryWords[index];
+        
         // Title matches are weighted higher
-        const titleMatches = (title.match(new RegExp(word, 'gi')) || []).length;
+        const titleMatches = (title.match(regex) || []).length;
         score += titleMatches * 3;
         
         // Content matches
-        const contentMatches = (content.match(new RegExp(word, 'gi')) || []).length;
+        const contentMatches = (content.match(regex) || []).length;
         score += contentMatches;
         
-        // Exact phrase bonus
-        if (content.includes(word)) {
+        // Bonus if found at least once (replaces exact phrase check which was redundant/expensive)
+        if (contentMatches > 0) {
           score += 0.5;
         }
         
@@ -279,14 +295,15 @@ Key Topics: [topic1, topic2, topic3, etc.]
 export class SantaPalabraRAG {
   private vectorStore: EnhancedVectorStore | null = null;
   private documents: Document[] = [];
-  private llm: BaseChatModel;
-  private conversationManager: ConversationManager;
+  private llm: BaseChatModel | null;
+  private conversationManager: ConversationManager | null;
   private isInitialized = false;
+  private isMock = false;
 
   constructor() {
     // Initialize LLM with Vercel AI Gateway support
     this.llm = this.initializeLLM();
-    this.conversationManager = new ConversationManager(this.llm);
+    this.conversationManager = this.llm ? new ConversationManager(this.llm) : null;
   }
 
   private getGatewayApiKey(): string | undefined {
@@ -294,6 +311,7 @@ export class SantaPalabraRAG {
   }
 
   private createOpenAILLM(): BaseChatModel {
+    if (this.isMock) return null as any;
     const gatewayApiKey = this.getGatewayApiKey();
 
     // Prefer direct OpenAI locally (simplest + most reliable)
@@ -365,20 +383,47 @@ export class SantaPalabraRAG {
     });
   }
 
-  private createLLMForModel(model?: SupportedChatModel): BaseChatModel {
+  private createLLMForModel(model?: SupportedChatModel): BaseChatModel | null {
+    if (this.isMock) return null;
     if (!model) return this.llm;
 
-    switch (model) {
-      case 'openai':
-        return this.createOpenAILLM();
-      case 'anthropic':
-        return this.createAnthropicLLM();
-      case 'llama':
-        return this.createLlamaOpenAICompatibleLLM();
-      default: {
-        const exhaustiveCheck: never = model;
-        throw new Error(`Unsupported model: ${exhaustiveCheck}`);
+    try {
+      switch (model) {
+        case 'openai':
+          return this.createOpenAILLM();
+        case 'anthropic':
+          return this.createAnthropicLLM();
+        case 'llama':
+          return this.createLlamaOpenAICompatibleLLM();
+        default: {
+          const exhaustiveCheck: never = model;
+          throw new Error(`Unsupported model: ${exhaustiveCheck}`);
+        }
       }
+    } catch (error) {
+      console.warn(`⚠️ Failed to initialize requested model ${model}:`, error);
+      
+      // Fallback Strategy:
+      // 1. Try Groq/Llama (Fastest/Cheapest fallback)
+      if (process.env.GROQ_API_KEY) {
+        console.log(`🔄 Fallback: Switching to Groq/Llama from ${model}`);
+        try { return this.createLlamaOpenAICompatibleLLM(); } catch (e) { console.warn('Groq fallback failed', e); }
+      }
+
+      // 2. Try OpenAI (Reliable standard)
+      if (process.env.OPENAI_API_KEY && model !== 'openai') {
+        console.log(`🔄 Fallback: Switching to OpenAI from ${model}`);
+        try { return this.createOpenAILLM(); } catch (e) { console.warn('OpenAI fallback failed', e); }
+      }
+
+      // 3. Try Anthropic
+      if (process.env.ANTHROPIC_API_KEY && model !== 'anthropic') {
+        console.log(`🔄 Fallback: Switching to Anthropic from ${model}`);
+        try { return this.createAnthropicLLM(); } catch (e) { console.warn('Anthropic fallback failed', e); }
+      }
+
+      // If all fail, rethrow (which will trigger Mock Mode in generateResponse)
+      throw error;
     }
   }
 
@@ -428,7 +473,7 @@ export class SantaPalabraRAG {
    * Initialize LLM with Vercel AI Gateway support
    * Falls back to direct API calls if gateway is not available
    */
-  private initializeLLM(): BaseChatModel {
+  private initializeLLM(): BaseChatModel | null {
     // For local development, use OpenAI directly (bypassing Vercel AI Gateway)
     if (process.env.OPENAI_API_KEY && !process.env.VERCEL) {
       console.log('🔥 Using OpenAI directly (local development)');
@@ -500,17 +545,32 @@ export class SantaPalabraRAG {
         temperature: 0.3,
       });
     }
-    
-    // Last resort - throw error
-    throw new Error(`
-🚨 No AI model configuration found!
-Please set one of:
-- AI_GATEWAY_API_KEY + (OPENAI_API_KEY or ANTHROPIC_API_KEY) for Vercel AI Gateway
-- ANTHROPIC_API_KEY for direct Anthropic access  
-- OPENAI_API_KEY for direct OpenAI access
 
-For Vercel deployment, AI Gateway is recommended: https://vercel.com/docs/ai-gateway
-    `);
+    // Check for Groq / VLLM / OpenRouter
+    if (process.env.GROQ_API_KEY || process.env.VLLM_API_KEY) {
+      console.log('⚡ Using Groq / OpenRouter / VLLM compatible model');
+      
+      const apiKey = process.env.GROQ_API_KEY || process.env.VLLM_API_KEY;
+      const baseURL = process.env.GROQ_API_KEY 
+        ? 'https://api.groq.com/openai/v1' 
+        : (process.env.VLLM_BASE_URL || 'https://openrouter.ai/api/v1');
+      
+      const modelName = process.env.GROQ_MODEL || process.env.VLLM_MODEL || 'llama-3.3-70b-versatile';
+
+      return new ChatOpenAI({
+        apiKey,
+        modelName,
+        temperature: 0.3,
+        configuration: {
+          baseURL,
+        },
+      });
+    }
+    
+    // No keys found - Enable Mock Mode
+    console.warn('⚠️ No AI model configuration found - Enabling MOCK MODE');
+    this.isMock = true;
+    return null;
   }
 
   async initialize(documents: CatholicDocument[]): Promise<void> {
@@ -565,49 +625,121 @@ For Vercel deployment, AI Gateway is recommended: https://vercel.com/docs/ai-gat
     return conversationStore.get(userId)!;
   }
 
-  private async retrieveRelevantContext(query: string, topK: number = 5): Promise<RetrievalResult> {
+  private async retrieveRelevantContext(query: string, topK: number = 5, studyTrack?: string): Promise<RetrievalResult> {
     // Use keyword-based search with stored documents
     if (this.documents.length === 0) {
       throw new Error('Documents not initialized. Call initialize() first.');
     }
 
-    // If vector store exists, use it; otherwise use keyword search
-    if (this.vectorStore) {
-      return await this.vectorStore.enhancedSearch(query, topK);
+    // Filter documents based on study track if provided
+    let searchableDocs = this.documents;
+    
+    if (studyTrack) {
+      console.log(`🔍 Filtering documents for study track: ${studyTrack}`);
+      switch (studyTrack) {
+        case 'dogmatic-theology':
+          searchableDocs = this.documents.filter(doc => 
+            doc.metadata.category === 'catechism' || 
+            doc.metadata.category === 'papal' ||
+            doc.metadata.category === 'dogmatic'
+          );
+          break;
+        case 'church-history':
+          searchableDocs = this.documents.filter(doc => 
+            doc.metadata.category === 'papal' || 
+            doc.metadata.category === 'custom' ||
+            doc.metadata.category === 'history' ||
+            doc.metadata.source === 'church_history'
+          );
+          break;
+        case 'biblical-theology':
+          searchableDocs = this.documents.filter(doc => 
+            doc.metadata.category === 'scripture' ||
+            doc.metadata.source === 'biblical_theology'
+          );
+          break;
+        case 'bible-study-plan':
+          searchableDocs = this.documents.filter(doc => 
+            doc.metadata.category === 'scripture' || 
+            doc.metadata.source === 'daily_gospel_reflections' ||
+            doc.metadata.source === 'bible_study_plan'
+          );
+          break;
+      }
+      console.log(`📚 Filtered to ${searchableDocs.length} documents (from ${this.documents.length})`);
     }
-    
-    // Fallback to keyword search
-    const expandedQuery = this.expandQueryTerms(query);
-    const queryWords = expandedQuery.flatMap(q => 
-      q.toLowerCase().split(/\s+/).filter(word => word.length > 3)
-    );
-    
-    // Score documents based on keyword matching
-    const scoredDocs = this.documents.map(doc => {
-      const content = doc.pageContent.toLowerCase();
-      const title = doc.metadata.title?.toLowerCase() || '';
+
+    // Special handling for "Gospel of the Day"
+    const queryLower = query.toLowerCase();
+    const isDailyGospelQuery = 
+      queryLower.includes('evangelio del día') || 
+      queryLower.includes('daily gospel') || 
+      queryLower.includes('evangelio de hoy') ||
+      queryLower.includes('lectura de hoy');
+
+    let dailyGospelDoc: Document | null = null;
+
+    if (isDailyGospelQuery) {
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      console.log(`📅 Searching for Gospel of the Day: ${today}`);
       
-      let score = 0;
-      queryWords.forEach(word => {
-        const titleMatches = (title.match(new RegExp(word, 'gi')) || []).length;
-        score += titleMatches * 3;
-        const contentMatches = (content.match(new RegExp(word, 'gi')) || []).length;
-        score += contentMatches;
-      });
+      dailyGospelDoc = this.documents.find(doc => {
+        const isGospelSource = doc.metadata.source === 'daily_gospel_reflections';
+        const hasTodayDate = doc.pageContent.includes(`"date":"${today}"`) || doc.pageContent.includes(`"date": "${today}"`);
+        return isGospelSource && hasTodayDate;
+      }) || null;
+
+      if (dailyGospelDoc) {
+        console.log('✨ Found Gospel of the Day document');
+      } else {
+        console.log('⚠️ Gospel of the Day not found for date:', today);
+      }
+    }
+
+    // If vector store exists, use it; otherwise use keyword search
+    let results: [Document, number][] = [];
+    if (this.vectorStore && !studyTrack) { // Disable vector store when filtering for now, or implement filtering in vector store
+      const vectorResults = await this.vectorStore.enhancedSearch(query, topK);
+      results = vectorResults.documents.map((doc, i) => [doc, vectorResults.relevanceScores[i]]);
+    } else {
+      // Fallback to keyword search
+      const expandedQuery = this.expandQueryTerms(query);
+      const queryWords = expandedQuery.flatMap(q => 
+        q.toLowerCase().split(/\s+/).filter(word => word.length > 3)
+      );
       
-      return [doc, score] as [Document, number];
-    });
-    
-    // Sort by score and get top K
-    const sortedResults = scoredDocs
+      // Score documents based on keyword matching
+      results = searchableDocs.map(doc => {
+        const content = doc.pageContent.toLowerCase();
+        const title = doc.metadata.title?.toLowerCase() || '';
+        
+        let score = 0;
+        queryWords.forEach(word => {
+          const titleMatches = (title.match(new RegExp(word, 'gi')) || []).length;
+          score += titleMatches * 3;
+          const contentMatches = (content.match(new RegExp(word, 'gi')) || []).length;
+          score += contentMatches;
+        });
+        
+        return [doc, score] as [Document, number];
+      })
       .filter(([, score]) => score > 0)
       .sort(([, a], [, b]) => b - a)
       .slice(0, topK);
+    }
+
+    // If we found a daily gospel doc, inject it at the top with max score
+    if (dailyGospelDoc) {
+      // Remove it from results if it's already there to avoid duplicate
+      results = results.filter(([doc]) => doc.metadata.id !== dailyGospelDoc!.metadata.id);
+      // Add to top
+      results.unshift([dailyGospelDoc, 100]); // High score to ensure it's "HIGHLY RELEVANT"
+    }
     
     // Normalize scores to 0-1 range
-    const maxScore = sortedResults[0]?.[1] || 1;
-    const normalizedResults = sortedResults.map(([doc, score]) => 
-      [doc, score / maxScore] as [Document, number]
+    const maxScore = results[0]?.[1] || 1;
+    const normalizedResults = results.map(([doc, score]) => 
+      [doc, Math.min(1, score / maxScore)] as [Document, number]
     );
     
     return {
@@ -682,6 +814,9 @@ CONTEXTO RELEVANTE:
 HISTORIAL DE CONVERSACIÓN:
 {chat_history}
 
+PREGUNTA DEL USUARIO:
+{input}
+
 Responde a la siguiente pregunta del usuario de manera útil y doctrinalmente correcta:`
       : `You are santaPalabra, a Catholic AI assistant specialized in theology, doctrine, and Church teachings.
 
@@ -694,11 +829,15 @@ IDENTITY & PURPOSE:
 RESPONSE GUIDELINES:
 1. Base responses on official Catholic teachings from the provided context
 2. Pay special attention to HIGHLY RELEVANT sources marked with 🎯
-3. Cite specific sources when referencing teachings (e.g., "According to CCC 123...")
-4. If context doesn't fully address the question, acknowledge limitations humbly
-5. Offer practical spiritual guidance when appropriate
-6. Keep responses comprehensive yet accessible
-7. When multiple sources conflict, explain the nuances
+3. If context contains "Daily Gospel" (daily_gospel_reflections):
+   - Explain the passage using 'philology' and 'context' sections
+   - Connect with Old Testament using 'old_testament_connections'
+   - Provide pastoral reflection based on 'personal_reflection' and 'practical_application'
+4. Cite specific sources when referencing teachings (e.g., "According to CCC 123...")
+5. If context doesn't fully address the question, acknowledge limitations humbly
+6. Offer practical spiritual guidance when appropriate
+7. Keep responses comprehensive yet accessible
+8. When multiple sources conflict, explain the nuances
 
 CONTEXT SOURCES (use these as your primary references):
 {context}
@@ -714,10 +853,44 @@ Provide a helpful, doctrinally sound response based on the sources above:`;
     return PromptTemplate.fromTemplate(systemMessage);
   }
 
+  private generateMockResponse(context: ChatContext, documents: Document[]): string {
+    console.log('⚠️ Generating MOCK response (fallback/no keys)');
+    const topDocs = documents.slice(0, 3);
+    const docSummary = topDocs.map(d => 
+      `**${d.metadata.title || 'Document'}** (${d.metadata.category})\n"${d.pageContent.substring(0, 200)}..."`
+    ).join('\n\n');
+
+    const mockResponse = context.language === 'es' 
+      ? `[MODO DEMOSTRACIÓN - Sin Claves AI Configuradas]
+
+He encontrado estos pasajes relevantes en los documentos católicos:
+
+${docSummary}
+
+${documents.length === 0 ? 'No se encontraron documentos relevantes para tu búsqueda.' : ''}
+
+Para habilitar el chat con IA completa, por favor configura OPENAI_API_KEY o ANTHROPIC_API_KEY en tu archivo .env.`
+      : `[DEMO MODE - No AI Keys Configured]
+
+I found these relevant passages in the Catholic documents:
+
+${docSummary}
+
+${documents.length === 0 ? 'No relevant documents found for your query.' : ''}
+
+To enable full AI chat, please configure OPENAI_API_KEY or ANTHROPIC_API_KEY in your .env file.`;
+
+    return mockResponse;
+  }
+
   async generateResponse(
     userMessage: string,
     context: ChatContext
   ): Promise<string> {
+    // Retrieve relevant documents with enhanced search
+    // We need these available in the outer scope for error handling fallback
+    let documents: Document[] = [];
+    
     try {
       if (!this.isInitialized) {
         throw new Error('santaPalabra RAG not initialized');
@@ -725,12 +898,49 @@ Provide a helpful, doctrinally sound response based on the sources above:`;
 
       console.log('💭 Generating response for:', userMessage.substring(0, 100) + '...');
 
-      const llm = this.createLLMForModel(context.model);
-      const conversationManager = new ConversationManager(llm);
-
       // Retrieve relevant documents with enhanced search
-      const retrievalResult = await this.retrieveRelevantContext(userMessage);
-      const { documents, sources, relevanceScores } = retrievalResult;
+      const retrievalResult = await this.retrieveRelevantContext(userMessage, 5, context.studyTrack);
+      documents = retrievalResult.documents;
+      const { sources, relevanceScores } = retrievalResult;
+
+      // Check for Mock Mode
+      if (this.isMock) {
+        return this.generateMockResponse(context, documents);
+      }
+
+      let llm: BaseChatModel | null = null;
+      let actualModel: SupportedChatModel | 'default' = context.model ?? 'default';
+      let fallbackUsed = false;
+
+      // Try to create requested LLM, with fallback to Llama/Groq
+      try {
+        llm = this.createLLMForModel(context.model);
+      } catch (error) {
+        console.warn(`Requested model ${context.model} failed initialization:`, error);
+        
+        // If requested model fails (e.g. missing key), try Llama/Groq as fallback
+        if (context.model !== 'llama') {
+          console.log('🔄 Attempting fallback to Llama/Groq...');
+          try {
+            llm = this.createLLMForModel('llama');
+            if (llm) {
+              console.log('✅ Fallback to Llama successful');
+              actualModel = 'llama';
+              fallbackUsed = true;
+            }
+          } catch (e) {
+            console.warn('⚠️ Llama fallback also failed');
+          }
+        }
+      }
+
+      if (!llm) {
+         // Final check: if no LLM could be created, revert to Mock Mode
+         console.warn('❌ All LLM attempts failed. Reverting to Mock Mode.');
+         return this.generateMockResponse(context, documents);
+      }
+
+      const conversationManager = new ConversationManager(llm);
       
       // Create rich context with source attribution and relevance scores
       const contextText = documents
@@ -787,22 +997,38 @@ Provide a helpful, doctrinally sound response based on the sources above:`;
       };
 
       let response: string;
-      let actualModel: SupportedChatModel | 'default' =
-        context.model ?? 'default';
-      let fallbackUsed = false;
+      // Variables actualModel and fallbackUsed are already initialized above
 
-      if (context.model === 'llama') {
+      if (context.model === 'llama' || actualModel === 'llama') {
         try {
           response = await runWithLLM(llm);
         } catch (primaryError) {
           if (!this.isRetriableLLMError(primaryError)) {
             throw primaryError;
           }
-          console.warn('⚠️ Llama model error, attempting Anthropic fallback:', primaryError);
-          const fallbackLLM = this.createLLMForModel('anthropic');
-          response = await runWithLLM(fallbackLLM);
-          actualModel = 'anthropic';
-          fallbackUsed = true;
+          console.warn('⚠️ Llama model error, attempting fallbacks:', primaryError);
+          
+          try {
+            // First fallback: Anthropic
+            const fallbackLLM = this.createLLMForModel('anthropic');
+            if (!fallbackLLM) {
+              throw new Error('Fallback LLM (Anthropic) not available');
+            }
+            response = await runWithLLM(fallbackLLM);
+            actualModel = 'anthropic';
+            fallbackUsed = true;
+          } catch (anthropicError) {
+             console.warn('⚠️ Anthropic fallback failed, attempting OpenAI:', anthropicError);
+             
+             // Second fallback: OpenAI
+             const openaiLLM = this.createLLMForModel('openai');
+             if (!openaiLLM) {
+                throw new Error('Fallback LLM (OpenAI) not available');
+             }
+             response = await runWithLLM(openaiLLM);
+             actualModel = 'openai';
+             fallbackUsed = true;
+          }
         }
       } else {
         response = await runWithLLM(llm);
@@ -822,6 +1048,37 @@ Provide a helpful, doctrinally sound response based on the sources above:`;
 
       return response;
     } catch (error) {
+      // Handle Authentication Errors (401) by falling back to Mock Mode
+      let errorMessage = '';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else {
+        try {
+          errorMessage = JSON.stringify(error);
+        } catch {
+          errorMessage = String(error);
+        }
+      }
+      
+      // Combine message and stringified error for comprehensive checking
+      let errorJson = '';
+      try { errorJson = JSON.stringify(error); } catch {}
+      const fullErrorText = (errorMessage + ' ' + errorJson).toLowerCase();
+      
+      if (
+        fullErrorText.includes('401') || 
+        fullErrorText.includes('authentication') || 
+        fullErrorText.includes('invalid x-api-key') ||
+        fullErrorText.includes('invalid api key') ||
+        fullErrorText.includes('incorrect api key') ||
+        (fullErrorText.includes('missing') && fullErrorText.includes('api_key'))
+      ) {
+        console.warn('⚠️ Authentication error detected (invalid API key). Falling back to Mock Mode response.');
+        return this.generateMockResponse(context, documents);
+      }
+
       console.error('❌ Error generating response:', error);
       throw error;
     }

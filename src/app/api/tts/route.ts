@@ -80,7 +80,7 @@ async function resolveDefaultVoiceId(apiKey: string): Promise<{ voiceId: string 
 
 export async function POST(request: NextRequest) {
   try {
-    const { text, voiceId, modelId, outputFormat } = await request.json();
+    const { text, voiceId, modelId, outputFormat, language } = await request.json();
 
     if (!text || typeof text !== 'string' || !text.trim()) {
       return NextResponse.json(
@@ -101,10 +101,21 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    let resolvedVoiceId =
-      (typeof voiceId === 'string' && voiceId.trim())
-        ? voiceId.trim()
-        : (process.env.ELEVENLABS_VOICE_ID || '').trim();
+    let resolvedVoiceId = (typeof voiceId === 'string' && voiceId.trim()) ? voiceId.trim() : '';
+
+    if (!resolvedVoiceId) {
+      if (language === 'es') {
+        resolvedVoiceId = (process.env.ELEVENLABS_VOICE_SP_ID || '').trim();
+        console.log(`🎤 Language is 'es', using voice ID: ${resolvedVoiceId || 'fallback to default'}`);
+      } else if (language === 'pt') {
+        resolvedVoiceId = (process.env.ELEVENLABS_VOICE_PT_ID || '').trim();
+        console.log(`🎤 Language is 'pt', using voice ID: ${resolvedVoiceId || 'fallback to default'}`);
+      }
+    }
+
+    if (!resolvedVoiceId) {
+      resolvedVoiceId = (process.env.ELEVENLABS_VOICE_ID || '').trim();
+    }
 
     if (!resolvedVoiceId) {
       const fallback = await resolveDefaultVoiceId(apiKey);

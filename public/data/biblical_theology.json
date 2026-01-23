@@ -1,0 +1,44 @@
+[
+  {
+    "id": "bt-inspiration",
+    "title": "Inspiración Divina de la Escritura",
+    "content": "La Iglesia enseña que 'Dios es el autor de la Sagrada Escritura'. Las verdades reveladas en la Biblia han sido consignadas bajo la inspiración del Espíritu Santo. Dios se valió de hombres elegidos (los hagiógrafos) que usaron sus propias facultades y medios, pero actuando Dios en ellos y por ellos, escribieron todo y solo lo que Él quería. (Dei Verbum 11, CCC 105-106).",
+    "source": "biblical_theology",
+    "category": "scripture"
+  },
+  {
+    "id": "bt-canon",
+    "title": "El Canon de las Escrituras",
+    "content": "El Canon es la lista completa de los escritos sagrados que la Tradición Apostólica ha hecho discernir a la Iglesia. Comprende 46 libros del Antiguo Testamento y 27 del Nuevo Testamento. La Iglesia Católica acepta los libros deuterocanónicos (como Tobías, Judit, Sabiduría) que no están en el canon judío ni protestante. (CCC 120).",
+    "source": "biblical_theology",
+    "category": "scripture"
+  },
+  {
+    "id": "bt-senses",
+    "title": "Los Sentidos de la Escritura",
+    "content": "Según una antigua tradición, se pueden distinguir dos sentidos en la Escritura: el sentido literal y el sentido espiritual. El sentido espiritual se subdivide en: alegórico (cómo los eventos prefiguran a Cristo), moral (cómo debemos obrar justamente) y anagógico (su significado eterno o escatológico). (CCC 115-118).",
+    "source": "biblical_theology",
+    "category": "scripture"
+  },
+  {
+    "id": "bt-typology",
+    "title": "Tipología Bíblica",
+    "content": "La tipología discierne en las obras de Dios en la Antigua Alianza prefiguraciones de lo que Dios realizó en la plenitud de los tiempos en la persona de su Hijo encarnado. Por ejemplo, el paso del Mar Rojo es un 'tipo' o figura de la victoria de Cristo y, por tanto, del Bautismo. El Antiguo Testamento es un camino hacia Cristo. (CCC 128-130).",
+    "source": "biblical_theology",
+    "category": "scripture"
+  },
+  {
+    "id": "bt-covenant",
+    "title": "La Teología de la Alianza",
+    "content": "La historia de la salvación se estructura a través de una serie de alianzas entre Dios y la humanidad (Adán, Noé, Abraham, Moisés, David), culminando en la Nueva y Eterna Alianza sellada con la sangre de Cristo. Cada alianza expande la familia de Dios, desde una pareja hasta la Iglesia universal. Cristo es el mediador de esta Nueva Alianza.",
+    "source": "biblical_theology",
+    "category": "scripture"
+  },
+  {
+    "id": "bt-kingdom",
+    "title": "El Reino de Dios",
+    "content": "El tema central de la predicación de Jesús es el Reino de Dios. No es un reino político, sino el reinado de Dios en los corazones y en el mundo. El Reino está 'ya' presente en la persona de Jesús y en la Iglesia (su germen), pero 'todavía no' plenamente consumado hasta el fin de los tiempos. Entramos en él por la fe y la conversión.",
+    "source": "biblical_theology",
+    "category": "scripture"
+  }
+]

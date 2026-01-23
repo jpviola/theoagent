@@ -4,14 +4,12 @@
     "liturgical_day": "Thursday of the Third Week of Advent",
     "gospel_citation": "Luke 7:18b-23",
     "gospel_text": "At that time: John summoned two of his disciples and sent them to the Lord to ask, 'Are you the one who is to come, or should we look for another?' When the men came to Jesus, they said, 'John the Baptist has sent us to you to ask, \"Are you the one who is to come, or should we look for another?\"' At that very time Jesus cured many people of diseases, illnesses, and evil spirits; he also granted sight to many who were blind. And Jesus said to them in reply, 'Go and tell John what you have seen and heard: the blind regain their sight, the lame walk, lepers are cleansed, the deaf hear, the dead are raised, the poor have the good news proclaimed to them. And blessed is the one who takes no offense at me.'",
-    
     "context": {
       "historical": "John the Baptist is imprisoned by Herod Antipas (Luke 3:19-20). From prison, John sends disciples to Jesus, possibly experiencing doubt or seeking confirmation for his followers.",
       "literary": "This passage is part of Luke's narrative showing Jesus' messianic credentials. It follows the raising of the widow's son at Nain (7:11-17).",
       "liturgical": "Advent reading - prepares us to recognize Jesus as the long-awaited Messiah. John's question mirrors our own need to recognize Christ's presence.",
       "canonical": "Jesus' response quotes Isaiah 35:5-6 and 61:1 - messianic prophecies being fulfilled"
     },
-    
     "philology": {
       "greek_terms": [
         {
@@ -29,7 +27,6 @@
       ],
       "hebrew_background": "The phrase 'the one who is to come' (ha-ba) was a recognized messianic title in Jewish expectation, referring to the promised Davidic king and Elijah's return."
     },
-    
     "old_testament_connections": [
       {
         "passage": "Isaiah 35:5-6",
@@ -50,7 +47,6 @@
         "type": "prophecy"
       }
     ],
-    
     "traditional_interpretation": {
       "church_fathers": [
         {
@@ -72,7 +68,6 @@
       "modern_exegesis": "Contemporary scholars debate whether John genuinely doubted (suffering in prison, expectations unmet) or asked for his disciples' sake. Most Catholic exegetes favor the patristic view: John knew but wanted his followers to see Jesus' works directly. The passage emphasizes: (1) Jesus fulfills Isaiah's prophecies, (2) Messiahship is proven by works of mercy, not political power, (3) Faith requires recognizing God's unexpected ways.",
       "magisterial_teaching": "CCC 547: 'Jesus accompanies his words with many miracles, wonders, and signs which manifest that the kingdom is present in him.' The signs Jesus performs are not random but specifically fulfill messianic prophecies."
     },
-    
     "personal_reflection": {
       "questions": [
         "Am I waiting for God to act in ways that match MY expectations, or am I open to recognizing Him in unexpected forms?",
@@ -83,17 +78,73 @@
       ],
       "prayer_prompt": "Lord Jesus, like John I sometimes question and doubt when circumstances are difficult. Help me recognize You in unexpected ways. Open my eyes to see Your work in my life, unstop my ears to hear Your voice, and give me faith to trust Your timing and methods, even when they differ from my expectations. Let me not take offense at Your ways but embrace Your will with joy. Amen."
     },
-    
     "scholars": {
       "ratzinger": "Benedict XVI in 'Jesus of Nazareth' notes that Jesus doesn't give John a direct 'yes' answer but points to His works. Faith must see God's action, not just hear words. The Messianic age is HERE, but not as expected.",
       "hahn": "Scott Hahn emphasizes the connection to Isaiah 35 - this is the 'new exodus' where God leads His people from slavery. Jesus is the new Moses performing signs, but greater signs: healing, not just plagues.",
       "wright": "N.T. Wright argues this passage is crucial for understanding Jesus' self-understanding: He IS the Messiah, but redefines messiahship away from military conquest toward healing, liberation, and good news for the poor."
     },
-    
     "liturgical_connection": "This Advent reading prepares us to recognize Jesus at Christmas. Like John, we must look beyond surface expectations and see God's humble, healing presence. The Incarnation is God coming in unexpected lowliness.",
-    
     "practical_application": "Today, look for Christ in unexpected places: the suffering person who needs help, the small act of mercy, the quiet moment of grace. Don't demand spectacular signs; recognize His presence in works of love and healing.",
-    
     "tags": ["advent", "john-baptist", "messianic-prophecy", "isaiah", "miracles", "faith", "luke"]
+  },
+  {
+    "date": "2026-01-22",
+    "liturgical_day": "Thursday of the Second Week in Ordinary Time",
+    "gospel_citation": "Mark 3:7-12",
+    "gospel_text": "Jesus withdrew with his disciples to the sea, and a great crowd followed, from Galilee and Judea and Jerusalem and Idumea and from beyond the Jordan and from around Tyre and Sidon. When the great crowd heard all that he was doing, they came to him. And he told his disciples to have a boat ready for him because of the crowd, lest they crush him, for he had healed many, so that all who had diseases pressed around him to touch him. And whenever the unclean spirits saw him, they fell down before him and cried out, 'You are the Son of God.' And he strictly ordered them not to make him known.",
+    "context": {
+      "historical": "The popularity of Jesus is reaching a fever pitch. People from Gentile regions (Idumea, Tyre, Sidon) are joining Jews, foreshadowing the universal mission of the Church.",
+      "literary": "Mark highlights the 'Messianic Secret' - Jesus silencing the demons. He wants faith based on understanding his mission of suffering, not just his power as a miracle worker.",
+      "liturgical": "Ordinary Time focuses on the public ministry of Jesus. Here we see the immense human need for healing and Jesus' compassionate yet authoritative response."
+    },
+    "philology": {
+      "greek_terms": [
+        {
+          "word": "μαστίγας",
+          "transliteration": "mastigas",
+          "meaning": "scourges / diseases",
+          "insight": "Literally 'whips' or 'torments'. Disease was seen as a scourge. The crowd 'pressed upon' (epipiptein) him, literally 'fell upon' him."
+        },
+        {
+          "word": "Υἱὸς τοῦ Θεοῦ",
+          "transliteration": "Huios tou Theou",
+          "meaning": "Son of God",
+          "insight": "The demons know his identity even when humans don't. But this is knowledge without love or submission."
+        }
+      ],
+      "hebrew_background": "The 'multitude' recalls the promises to Abraham that his descendants would be countless. The gathering from all nations fulfills prophecies like Isaiah 2:2-3."
+    },
+    "old_testament_connections": [
+      {
+        "passage": "Isaiah 53:4",
+        "text": "Surely he has borne our griefs and carried our sorrows.",
+        "connection": "Jesus bearing the weight of the crowds and healing their diseases fulfills the Suffering Servant prophecy.",
+        "type": "fulfillment"
+      }
+    ],
+    "traditional_interpretation": {
+      "church_fathers": [
+        {
+          "father": "St. Bede the Venerable",
+          "quote": "The crowd following Him to the sea signifies the nations believing in Christ through the turbulent waters of this world.",
+          "source": "Commentary on Mark"
+        }
+      ],
+      "magisterial_teaching": "CCC 517: Christ's whole life is a mystery of redemption. His healings and exorcisms are signs of the Kingdom."
+    },
+    "personal_reflection": {
+      "questions": [
+        "Do I seek Jesus only when I need something (healing, help), or do I seek a relationship with Him?",
+        "The demons knew who Jesus was but didn't love Him. Is my faith just intellectual knowledge, or is it loving obedience?",
+        "Jesus needed a boat to keep some distance. Do I create space for silence and prayer amidst the 'crushing' demands of life?"
+      ],
+      "prayer_prompt": "Lord Jesus, I come to You with my own 'diseases' and needs, but help me to seek You for who You are, not just what You can do. Silence the noise in my life so I can hear Your voice. Heal me and send me out to be a witness of Your mercy. Amen."
+    },
+    "scholars": {
+      "ratzinger": "Benedict XVI in 'Jesus of Nazareth' notes that Jesus doesn't give John a direct 'yes' answer but points to His works. Faith must see God's action, not just hear words. The Messianic age is HERE, but not as expected."
+    },
+    "liturgical_connection": "As we begin Ordinary Time, we are invited to follow Jesus in the 'ordinary' but crowded moments of life, finding Him as the source of all healing.",
+    "practical_application": "Identify one 'crowd' or pressure in your life today. Take 5 minutes to 'withdraw' like Jesus did, perhaps finding a quiet corner to pray or simply breathe in His presence.",
+    "tags": ["healing", "messianic-secret", "crowds", "demons", "mark"]
   }
 ]

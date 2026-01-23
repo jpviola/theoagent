@@ -1,0 +1,2 @@
+public/data/bible_study_plan.json filter=lfs diff=lfs merge=lfs -text
+public/data/dogmatic_theology.json filter=lfs diff=lfs merge=lfs -text

@@ -3,11 +3,12 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, User, BookOpen, FlaskConical, AlertTriangle, X, Zap, BarChart2, Clock, Upload, FileText, Mic, Square, Volume2 } from 'lucide-react';
+import { Send, User, BookOpen, FlaskConical, AlertTriangle, X, Zap, BarChart2, Clock, Upload, FileText, Mic, Square, Volume2, Menu } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import EmailSubscriptionModal from '@/components/EmailSubscriptionModal';
-import { subscribeToNewsletter, shouldShowSubscriptionModal, markSubscriptionSkipped } from '@/lib/subscription';
+import { subscribeToNewsletter, shouldShowSubscriptionModal, markSubscriptionSkipped, SUBSCRIPTION_TIERS } from '@/lib/subscription';
 import { useUserProgress } from '@/components/GamificationSystem';
+import { StudyTracksSidebar } from '@/components/StudyTracksSidebar';
 
 interface Message {
   id: string;
@@ -200,6 +201,9 @@ export default function CatholicChatPage() {
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null);
   const [autoSendVoice, setAutoSendVoice] = useState(false);
+  const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [dailyMessageCount, setDailyMessageCount] = useState(0);
   const { language } = useLanguage();
   const { progress, addXP } = useUserProgress();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -301,6 +305,9 @@ export default function CatholicChatPage() {
       audioRef.current.src = '';
       audioRef.current = null;
     }
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
     setSpeakingMessageId(null);
   };
 
@@ -329,7 +336,7 @@ export default function CatholicChatPage() {
       const response = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: clippedText }),
+        body: JSON.stringify({ text: clippedText, language }),
       });
 
       if (!response.ok) {
@@ -368,7 +375,86 @@ export default function CatholicChatPage() {
 
       await audio.play();
     } catch (err) {
-      console.error('TTS error:', err);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      const isQuotaError = errorMessage.toLowerCase().includes('quota') || 
+                           errorMessage.toLowerCase().includes('credit') ||
+                           errorMessage.includes('429') ||
+                           errorMessage.includes('401');
+
+      if (isQuotaError) {
+        console.warn('ElevenLabs API limit reached, using browser fallback:', errorMessage);
+      } else {
+        console.error('TTS error, attempting fallback:', err);
+      }
+      
+      // Fallback to browser SpeechSynthesis
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+         try {
+           // Cancel any ongoing speech first
+           window.speechSynthesis.cancel();
+
+           const plainText = stripHtmlForSpeech(rawText);
+           const utterance = new SpeechSynthesisUtterance(plainText);
+           
+           // Set language explicitly
+           utterance.lang = language === 'es' ? 'es-ES' : language === 'pt' ? 'pt-BR' : 'en-US';
+
+           // Voice selection strategy
+           let voices = window.speechSynthesis.getVoices();
+           
+           // Attempt to load voices if empty (common in some browsers)
+           if (voices.length === 0) {
+             // Simple polling for a short time
+             await new Promise<void>(resolve => {
+               let attempts = 0;
+               const checkVoices = () => {
+                 voices = window.speechSynthesis.getVoices();
+                 if (voices.length > 0 || attempts > 5) {
+                   resolve();
+                 } else {
+                   attempts++;
+                   setTimeout(checkVoices, 100);
+                 }
+               };
+               checkVoices();
+             });
+           }
+
+           let voice = null;
+           
+           if (voices.length > 0) {
+             if (language === 'es') {
+               voice = voices.find(v => v.lang.startsWith('es-')) || voices.find(v => v.lang.includes('es'));
+             } else if (language === 'pt') {
+               voice = voices.find(v => v.lang.startsWith('pt-')) || voices.find(v => v.lang.includes('pt'));
+             } else {
+               voice = voices.find(v => v.lang.startsWith('en-')) || voices.find(v => v.lang.includes('en'));
+             }
+           }
+           
+           if (voice) {
+             utterance.voice = voice;
+           }
+           
+           utterance.onend = () => setSpeakingMessageId(null);
+           
+           utterance.onerror = (e) => {
+             // Ignore 'canceled' or 'interrupted' as they are often intentional
+             if (e.error === 'canceled' || e.error === 'interrupted') {
+               setSpeakingMessageId(null);
+               return;
+             }
+             console.error('Synthesis error details:', e.error);
+             setSpeakingMessageId(null);
+           };
+           
+           window.speechSynthesis.speak(utterance);
+           return;
+         } catch (fallbackErr) {
+            console.error('Fallback TTS also failed:', fallbackErr);
+         }
+      }
+
       setSpeakingMessageId(null);
       setError(language === 'es'
         ? (err instanceof Error ? err.message : 'Error de audio')
@@ -568,6 +654,15 @@ export default function CatholicChatPage() {
     const trimmed = text.trim();
     if (!trimmed || isLoading) return;
 
+    // Verify Free Limit
+    if (dailyMessageCount >= SUBSCRIPTION_TIERS.free.maxMessagesPerDay) {
+       const limitMsg = language === 'es' ? 'Has alcanzado el límite diario de mensajes gratuitos.' : 
+                        language === 'pt' ? 'Você atingiu o limite diário de mensagens gratuitas.' :
+                        'You have reached the daily free message limit.';
+       setError(limitMsg);
+       return;
+    }
+
     // Verificar XP suficiente para el modelo seleccionado
     const modelCosts = { anthropic: 5, openai: 8, llama: 3 } as Record<string, number>;
     const cost = modelCosts[selectedModel];
@@ -591,6 +686,7 @@ export default function CatholicChatPage() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    setDailyMessageCount(prev => prev + 1);
     setInput('');
     setIsLoading(true);
     setError(null);
@@ -600,8 +696,8 @@ export default function CatholicChatPage() {
     try {
       const apiEndpoint = advancedMode ? '/api/catholic-simple' : '/api/catholic-rag';
       const requestBody = advancedMode
-        ? { query: userMessage.content, implementation, mode: 'standard', language, model: selectedModel }
-        : { query: userMessage.content, implementation: 'Catholic Chat', language, model: selectedModel };
+        ? { query: userMessage.content, implementation, mode: 'standard', language, model: selectedModel, studyTrack: selectedTrackId }
+        : { query: userMessage.content, implementation: 'Catholic Chat', language, model: selectedModel, studyTrack: selectedTrackId };
 
       const controller = new AbortController();
       fetchAbortRef.current = controller;
@@ -1006,8 +1102,68 @@ export default function CatholicChatPage() {
         )}
       </AnimatePresence>
 
-      <main className="flex-1 flex flex-col items-center px-4 pb-6 pt-4 relative z-10">
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSidebarOpen(false)}
+              className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 left-0 bottom-0 w-72 bg-white dark:bg-gray-900 z-50 md:hidden shadow-2xl border-r border-gray-200 dark:border-gray-800"
+            >
+              <div className="absolute top-2 right-2 z-10">
+                 <button 
+                   onClick={() => setIsSidebarOpen(false)} 
+                   className="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+                 >
+                   <X className="h-5 w-5" />
+                 </button>
+              </div>
+              <div className="h-full pt-8">
+                <StudyTracksSidebar 
+                  selectedTrackId={selectedTrackId}
+                  onSelectTrack={(id) => {
+                    setSelectedTrackId(id);
+                    setIsSidebarOpen(false);
+                  }}
+                />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      <div className="flex-1 flex overflow-hidden relative z-10">
+        <div className="hidden md:block h-full border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 z-20">
+           <StudyTracksSidebar 
+              selectedTrackId={selectedTrackId}
+              onSelectTrack={setSelectedTrackId}
+           />
+        </div>
+        <main className="flex-1 flex flex-col items-center px-4 pb-6 pt-4 relative z-10 overflow-hidden">
         <div className="w-full max-w-3xl flex flex-col h-full">
+          {/* Mobile Sidebar Toggle */}
+          <div className="md:hidden w-full flex items-center justify-start mb-4">
+             <button 
+               onClick={() => setIsSidebarOpen(true)}
+               className="flex items-center gap-2 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 px-4 py-2 rounded-full border border-amber-200 dark:border-amber-700 shadow-sm hover:shadow-md transition-all active:scale-95"
+             >
+               <Menu className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+               <span className="text-sm font-medium">
+                 {language === 'es' ? 'Trayectos' : language === 'pt' ? 'Trilhas' : 'Tracks'}
+               </span>
+             </button>
+          </div>
+
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{
@@ -1469,7 +1625,7 @@ export default function CatholicChatPage() {
               >
                 <option value="anthropic">Anthropic (5 XP)</option>
                 <option value="openai">OpenAI (8 XP)</option>
-                <option value="llama">Kimi / Llama (3 XP)</option>
+                <option value="llama">Groq Llama 3 (3 XP)</option>
               </select>
 
               <input
@@ -1633,6 +1789,7 @@ export default function CatholicChatPage() {
           </motion.div>
         </div>
       </main>
+      </div>
     </div>
   );
 }

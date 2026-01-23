@@ -1,3 +1,4 @@
 {
-    "CodeGPT.apiKey": "Mistral"
+    "CodeGPT.apiKey": "Mistral",
+    "css.lint.unknownAtRules": "ignore"
 }

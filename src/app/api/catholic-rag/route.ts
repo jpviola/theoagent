@@ -36,7 +36,12 @@ async function initializeRAG() {
       'daily_gospel_reflections.json',
       'gospel_parables.json',
       'celam_latinoamerica.json',
-      'espiritualidad_hispanoamericana.json'
+      'espiritualidad_hispanoamericana.json',
+      'church_history.json',
+      'biblical_theology.json',
+      'dogmatic_theology.json',
+      'bible_study_plan.json',
+      'custom_library.json'
     ];
     
     for (const filename of files) {
@@ -50,15 +55,22 @@ async function initializeRAG() {
           const itemsToLoad = filename === 'catechism.json' ? data.slice(0, 300) : data;
           
           itemsToLoad.forEach((item: { title?: string; heading?: string; name?: string; text?: string; content?: string; passage?: string } | unknown, index: number) => {
-            const typedItem = item as { title?: string; heading?: string; name?: string; text?: string; content?: string; passage?: string };
+              const typedItem = item as { title?: string; heading?: string; name?: string; text?: string; content?: string; passage?: string; source?: string };
+            
+            // Determine category based on filename
+            let category: 'catechism' | 'papal' | 'scripture' | 'custom' | 'dogmatic' | 'history' = 'custom';
+            if (filename.includes('catechism')) category = 'catechism';
+            else if (filename.includes('papal')) category = 'papal';
+            else if (filename.includes('scripture') || filename.includes('gospel') || filename.includes('dei_verbum') || filename.includes('biblical_theology') || filename.includes('bible_study')) category = 'scripture';
+            else if (filename.includes('dogmatic_theology')) category = 'dogmatic';
+            else if (filename.includes('church_history')) category = 'history';
+            
             documents.push({
               id: `${filename}-${index}`,
               title: typedItem.title || typedItem.heading || typedItem.name || `Entry ${index + 1}`,
               content: typedItem.text || typedItem.content || typedItem.passage || JSON.stringify(typedItem),
-              source: filename.replace('.json', ''),
-              category: filename.includes('catechism') ? 'catechism' :
-                       filename.includes('papal') ? 'papal' :
-                       filename.includes('scripture') || filename.includes('gospel') || filename.includes('dei_verbum') ? 'scripture' : 'custom'
+              source: typedItem.source || filename.replace('.json', ''),
+              category: category as any
             });
           });
         }
@@ -90,7 +102,7 @@ async function initializeRAG() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { query, language = 'es', model } = await request.json();
+    const { query, language = 'es', model, studyTrack } = await request.json();
     
     if (!query || typeof query !== 'string') {
       return NextResponse.json({
@@ -111,6 +123,7 @@ export async function POST(request: NextRequest) {
       mode: 'standard',
       language: language as 'en' | 'es',
       model: model as 'anthropic' | 'openai' | 'llama' | undefined,
+      studyTrack,
     });
     
     const modelUsage = rag.getLastModelUsage
