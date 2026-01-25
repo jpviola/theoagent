@@ -1,5 +1,7 @@
 import { ChatAnthropic } from '@langchain/anthropic';
 import { ChatOpenAI } from '@langchain/openai';
+// import { HuggingFaceEndpoint } from '@langchain/community/llms/hf';
+// import { ChatHuggingFace } from '@langchain/community/chat_models/huggingface';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { StringOutputParser } from '@langchain/core/output_parsers';
@@ -15,7 +17,7 @@ function escapeRegExp(string: string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-type SupportedChatModel = 'anthropic' | 'openai' | 'llama';
+type SupportedChatModel = 'anthropic' | 'openai' | 'llama' | 'gemma';
 
 // Types
 interface CatholicDocument {
@@ -395,6 +397,8 @@ export class SantaPalabraRAG {
           return this.createAnthropicLLM();
         case 'llama':
           return this.createLlamaOpenAICompatibleLLM();
+        case 'gemma':
+          return this.createGemmaLLM();
         default: {
           const exhaustiveCheck: never = model;
           throw new Error(`Unsupported model: ${exhaustiveCheck}`);
@@ -465,6 +469,24 @@ export class SantaPalabraRAG {
       temperature: 0.3,
       configuration: {
         baseURL,
+      },
+    });
+  }
+
+  private createGemmaLLM(): BaseChatModel {
+    if (!process.env.HUGGINGFACE_API_KEY) {
+      throw new Error('Missing HUGGINGFACE_API_KEY');
+    }
+
+    // Use Hugging Face's OpenAI-compatible API
+    // Base URL format: https://api-inference.huggingface.co/models/<model_id>/v1
+    return new ChatOpenAI({
+      apiKey: process.env.HUGGINGFACE_API_KEY,
+      modelName: 'google/gemma-3-27b-it',
+      temperature: 0.3,
+      maxTokens: 1024,
+      configuration: {
+        baseURL: 'https://api-inference.huggingface.co/models/google/gemma-3-27b-it/v1',
       },
     });
   }

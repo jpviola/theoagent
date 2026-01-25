@@ -664,7 +664,7 @@ export default function CatholicChatPage() {
     }
 
     // Verificar XP suficiente para el modelo seleccionado
-    const modelCosts = { anthropic: 5, openai: 8, llama: 3 } as Record<string, number>;
+    const modelCosts = { anthropic: 5, openai: 8, llama: 3, gemma: 0 } as Record<string, number>;
     const cost = modelCosts[selectedModel];
     
     if (userXP < cost) {
@@ -1594,7 +1594,7 @@ export default function CatholicChatPage() {
             transition={{ duration: 0.5, ease: 'easeOut' }}
             className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 mt-4"
           >
-            <form onSubmit={handleSubmit} className="flex items-center gap-2">
+            <form onSubmit={handleSubmit} className="flex flex-col md:flex-row items-stretch md:items-center gap-2">
               <input
                 ref={fileInputRef}
                 type="file"
@@ -1602,106 +1602,112 @@ export default function CatholicChatPage() {
                 onChange={handlePdfUpload}
                 className="hidden"
               />
-              <motion.button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`p-3 rounded-full transition-colors shadow-md ${
-                  pdfFile 
-                    ? 'bg-green-500 text-white' 
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-                title={pdfFile ? currentTexts.pdfAttached : currentTexts.uploadPdf}
-              >
-                {pdfFile ? <FileText className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
-              </motion.button>
+              
+              <div className="flex gap-2 w-full md:w-auto">
+                <motion.button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`p-3 rounded-full transition-colors shadow-md flex-shrink-0 ${
+                    pdfFile 
+                      ? 'bg-green-500 text-white' 
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                  title={pdfFile ? currentTexts.pdfAttached : currentTexts.uploadPdf}
+                >
+                  {pdfFile ? <FileText className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
+                </motion.button>
 
-              {/* Model Selector */}
-              <select
-                value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value as typeof selectedModel)}
-                className="px-3 py-2 border border-amber-200 dark:border-amber-700 rounded-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm focus:ring-2 focus:ring-amber-400 focus:border-transparent"
-              >
-                <option value="anthropic">Anthropic (5 XP)</option>
-                <option value="openai">OpenAI (8 XP)</option>
-                <option value="llama">Groq Llama 3 (3 XP)</option>
-              </select>
+                {/* Model Selector */}
+                <select
+                  value={selectedModel}
+                  onChange={(e) => setSelectedModel(e.target.value as typeof selectedModel)}
+                  className="flex-1 md:flex-none px-3 py-2 border border-amber-200 dark:border-amber-700 rounded-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm focus:ring-2 focus:ring-amber-400 focus:border-transparent w-full md:w-auto"
+                >
+                  <option value="anthropic">Anthropic (5 XP)</option>
+                  <option value="openai">OpenAI (8 XP)</option>
+                  <option value="llama">Groq Llama 3 (3 XP)</option>
+                  <option value="gemma">Gemma 3 27B IT (Gratis)</option>
+                </select>
+              </div>
 
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="¿Qué quieres aprender hoy?"
-                className="flex-1 px-5 py-3 border border-amber-200 dark:border-amber-700 rounded-full focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                disabled={isLoading}
-              />
+              <div className="flex-1 flex gap-2 w-full">
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="¿Qué quieres aprender hoy?"
+                  className="flex-1 px-5 py-3 border border-amber-200 dark:border-amber-700 rounded-full focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500 w-full"
+                  disabled={isLoading}
+                />
 
-              {/* Mic (STT) */}
-              <motion.button
-                type="button"
-                onClick={() => {
-                  if (isRecording) {
-                    void stopTranscription();
-                  } else {
-                    void startTranscription();
+                {/* Mic (STT) */}
+                <motion.button
+                  type="button"
+                  onClick={() => {
+                    if (isRecording) {
+                      void stopTranscription();
+                    } else {
+                      void startTranscription();
+                    }
+                  }}
+                  disabled={isLoading || isTranscribing}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`p-3 rounded-full transition-colors shadow-md flex-shrink-0 ${
+                    isRecording
+                      ? 'bg-red-500 text-white hover:bg-red-600'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  } disabled:bg-gray-300 disabled:cursor-not-allowed`}
+                  title={
+                    isRecording
+                      ? (language === 'es' ? 'Detener' : language === 'pt' ? 'Parar' : 'Stop')
+                      : (language === 'es' ? 'Hablar' : language === 'pt' ? 'Falar' : 'Speak')
                   }
-                }}
-                disabled={isLoading || isTranscribing}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`p-3 rounded-full transition-colors shadow-md ${
-                  isRecording
-                    ? 'bg-red-500 text-white hover:bg-red-600'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                } disabled:bg-gray-300 disabled:cursor-not-allowed`}
-                title={
-                  isRecording
-                    ? (language === 'es' ? 'Detener' : language === 'pt' ? 'Parar' : 'Stop')
-                    : (language === 'es' ? 'Hablar' : language === 'pt' ? 'Falar' : 'Speak')
-                }
-              >
-                {isTranscribing ? (
-                  <motion.div
-                    className="w-5 h-5 border-2 border-current border-t-transparent rounded-full"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                  />
-                ) : isRecording ? (
-                  <Square className="h-5 w-5" />
-                ) : (
-                  <Mic className="h-5 w-5" />
-                )}
-              </motion.button>
+                >
+                  {isTranscribing ? (
+                    <motion.div
+                      className="w-5 h-5 border-2 border-current border-t-transparent rounded-full"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                    />
+                  ) : isRecording ? (
+                    <Square className="h-5 w-5" />
+                  ) : (
+                    <Mic className="h-5 w-5" />
+                  )}
+                </motion.button>
 
-              <motion.button
-                type="submit"
-                disabled={!input.trim() && !isLoading}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={(e) => {
-                  if (isLoading) {
-                    e.preventDefault();
-                    handleStopGeneration();
+                <motion.button
+                  type="submit"
+                  disabled={!input.trim() && !isLoading}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={(e) => {
+                    if (isLoading) {
+                      e.preventDefault();
+                      handleStopGeneration();
+                    }
+                  }}
+                  className="p-3 bg-amber-500 text-white rounded-full hover:bg-amber-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-md dark:bg-amber-500 dark:hover:bg-amber-600 dark:disabled:bg-gray-600 flex-shrink-0"
+                  title={
+                    isLoading
+                      ? language === 'es'
+                        ? 'Detener respuesta'
+                        : language === 'pt'
+                          ? 'Parar resposta'
+                          : 'Stop response'
+                      : currentTexts.send
                   }
-                }}
-                className="p-3 bg-amber-500 text-white rounded-full hover:bg-amber-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-md dark:bg-amber-500 dark:hover:bg-amber-600 dark:disabled:bg-gray-600"
-                title={
-                  isLoading
-                    ? language === 'es'
-                      ? 'Detener respuesta'
-                      : language === 'pt'
-                        ? 'Parar resposta'
-                        : 'Stop response'
-                    : currentTexts.send
-                }
-              >
-                {isLoading ? (
-                  <Square className="h-5 w-5" />
-                ) : (
-                  <Send className="h-5 w-5" />
-                )}
-              </motion.button>
+                >
+                  {isLoading ? (
+                    <Square className="h-5 w-5" />
+                  ) : (
+                    <Send className="h-5 w-5" />
+                  )}
+                </motion.button>
+              </div>
             </form>
 
             <AnimatePresence>
