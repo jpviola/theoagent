@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
       userId,
       mode: 'standard',
       language: language as 'en' | 'es',
-      model: model as 'anthropic' | 'openai' | 'llama' | undefined,
+      model: model as 'anthropic' | 'llama' | 'gemma' | 'auto' | undefined,
       studyTrack,
     });
     

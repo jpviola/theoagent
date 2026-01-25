@@ -17,7 +17,7 @@ function escapeRegExp(string: string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-type SupportedChatModel = 'anthropic' | 'openai' | 'llama' | 'gemma';
+type SupportedChatModel = 'anthropic' | 'openai' | 'llama' | 'gemma' | 'auto';
 
 // Types
 interface CatholicDocument {
@@ -391,14 +391,18 @@ export class SantaPalabraRAG {
 
     try {
       switch (model) {
-        case 'openai':
-          return this.createOpenAILLM();
         case 'anthropic':
           return this.createAnthropicLLM();
         case 'llama':
           return this.createLlamaOpenAICompatibleLLM();
         case 'gemma':
           return this.createGemmaLLM();
+        case 'auto':
+          // Should have been resolved by routeQuery, but just in case:
+          return this.createAnthropicLLM(); 
+        case 'openai':
+          console.warn('OpenAI is deprecated/removed. Falling back to Anthropic.');
+          return this.createAnthropicLLM();
         default: {
           const exhaustiveCheck: never = model;
           throw new Error(`Unsupported model: ${exhaustiveCheck}`);
@@ -414,17 +418,13 @@ export class SantaPalabraRAG {
         try { return this.createLlamaOpenAICompatibleLLM(); } catch (e) { console.warn('Groq fallback failed', e); }
       }
 
-      // 2. Try OpenAI (Reliable standard)
-      if (process.env.OPENAI_API_KEY && model !== 'openai') {
-        console.log(`🔄 Fallback: Switching to OpenAI from ${model}`);
-        try { return this.createOpenAILLM(); } catch (e) { console.warn('OpenAI fallback failed', e); }
-      }
-
-      // 3. Try Anthropic
+      // 2. Try Anthropic (Reliable standard)
       if (process.env.ANTHROPIC_API_KEY && model !== 'anthropic') {
         console.log(`🔄 Fallback: Switching to Anthropic from ${model}`);
         try { return this.createAnthropicLLM(); } catch (e) { console.warn('Anthropic fallback failed', e); }
       }
+      
+      // Removed OpenAI fallback as requested
 
       // If all fail, rethrow (which will trigger Mock Mode in generateResponse)
       throw error;
@@ -905,6 +905,41 @@ To enable full AI chat, please configure OPENAI_API_KEY or ANTHROPIC_API_KEY in 
     return mockResponse;
   }
 
+  private async routeQuery(query: string): Promise<SupportedChatModel> {
+    try {
+      // 1. Simple regex heuristics for speed
+      const lowerQuery = query.toLowerCase();
+      if (lowerQuery.length < 20 || /^(hola|hello|hi|buenos|buenas|gracias|thanks)/.test(lowerQuery)) {
+        return 'gemma'; // Simple greetings -> Gemma (Free)
+      }
+
+      // 2. Use Groq (Fastest) to classify complexity
+      if (process.env.GROQ_API_KEY) {
+        const routerLLM = this.createLlamaOpenAICompatibleLLM();
+        const routerPrompt = PromptTemplate.fromTemplate(`
+          Classify the following query into 'complex' (requires deep theological reasoning, nuance, or detailed explanation) or 'simple' (factual, greetings, straightforward questions).
+          Query: {query}
+          Return ONLY the word 'complex' or 'simple'.
+        `);
+        const chain = routerPrompt.pipe(routerLLM);
+        const result = await chain.invoke({ query });
+        const classification = result.content.toString().toLowerCase().trim();
+        
+        if (classification.includes('complex')) {
+          return 'anthropic';
+        } else {
+          return 'gemma';
+        }
+      }
+
+      // Default if no router available
+      return 'anthropic'; // Default to smart model
+    } catch (e) {
+      console.warn('Router failed, defaulting to Anthropic:', e);
+      return 'anthropic';
+    }
+  }
+
   async generateResponse(
     userMessage: string,
     context: ChatContext
@@ -932,11 +967,22 @@ To enable full AI chat, please configure OPENAI_API_KEY or ANTHROPIC_API_KEY in 
 
       let llm: BaseChatModel | null = null;
       let actualModel: SupportedChatModel | 'default' = context.model ?? 'default';
+      
+      // Auto-routing logic
+      if (!context.model || context.model === 'auto' || (context.model as string) === 'default') {
+        console.log('🔄 Auto-routing query...');
+        const routed = await this.routeQuery(userMessage);
+        console.log(`✅ Routed to: ${routed}`);
+        actualModel = routed;
+        // Update context to use routed model
+        context.model = routed;
+      }
+
       let fallbackUsed = false;
 
       // Try to create requested LLM, with fallback to Llama/Groq
       try {
-        llm = this.createLLMForModel(context.model);
+        llm = this.createLLMForModel(actualModel as SupportedChatModel);
       } catch (error) {
         console.warn(`Requested model ${context.model} failed initialization:`, error);
         

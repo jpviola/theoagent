@@ -194,7 +194,7 @@ export default function CatholicChatPage() {
   const [showMetrics, setShowMetrics] = useState(false);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [isBowing, setIsBowing] = useState(false);
-  const [selectedModel, setSelectedModel] = useState<'anthropic' | 'openai' | 'llama'>('llama');
+  // const [selectedModel, setSelectedModel] = useState<'anthropic' | 'openai' | 'llama'>('llama');
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [userXP, setUserXP] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
@@ -257,6 +257,7 @@ export default function CatholicChatPage() {
   }, [messages]);
 
   // Sincronizar modelo seleccionado con localStorage
+  /*
   useEffect(() => {
     const savedModel = localStorage.getItem('santapalabra_selected_model');
     if (savedModel) {
@@ -267,6 +268,8 @@ export default function CatholicChatPage() {
   useEffect(() => {
     localStorage.setItem('santapalabra_selected_model', selectedModel);
   }, [selectedModel]);
+  */
+
 
   // Mostrar modal de suscripción después de 3 segundos
   useEffect(() => {
@@ -664,13 +667,14 @@ export default function CatholicChatPage() {
     }
 
     // Verificar XP suficiente para el modelo seleccionado
-    const modelCosts = { anthropic: 5, openai: 8, llama: 3, gemma: 0 } as Record<string, number>;
-    const cost = modelCosts[selectedModel];
+    // const modelCosts = { anthropic: 5, openai: 8, llama: 3, gemma: 0 } as Record<string, number>;
+    // const cost = modelCosts[selectedModel];
+    const cost = 5; // Costo estándar para modo automático
     
     if (userXP < cost) {
-      setError(language === 'es' ? `Necesitas ${cost} XP para usar ${selectedModel}. XP actual: ${userXP}` :
-               language === 'pt' ? `Você precisa de ${cost} XP para usar ${selectedModel}. XP atual: ${userXP}` :
-               `You need ${cost} XP to use ${selectedModel}. Current XP: ${userXP}`);
+      setError(language === 'es' ? `Necesitas ${cost} XP para continuar. XP actual: ${userXP}` :
+               language === 'pt' ? `Você precisa de ${cost} XP para continuar. XP atual: ${userXP}` :
+               `You need ${cost} XP to continue. Current XP: ${userXP}`);
       return;
     }
 
@@ -696,8 +700,8 @@ export default function CatholicChatPage() {
     try {
       const apiEndpoint = advancedMode ? '/api/catholic-simple' : '/api/catholic-rag';
       const requestBody = advancedMode
-        ? { query: userMessage.content, implementation, mode: 'standard', language, model: selectedModel, studyTrack: selectedTrackId }
-        : { query: userMessage.content, implementation: 'Catholic Chat', language, model: selectedModel, studyTrack: selectedTrackId };
+        ? { query: userMessage.content, implementation, mode: 'standard', language, model: 'auto', studyTrack: selectedTrackId }
+        : { query: userMessage.content, implementation: 'Catholic Chat', language, model: 'auto', studyTrack: selectedTrackId };
 
       const controller = new AbortController();
       fetchAbortRef.current = controller;
@@ -754,8 +758,12 @@ export default function CatholicChatPage() {
 
       setMessages(prev => [...prev, assistantMessage]);
       
-      // Descontar XP después de respuesta exitosa
-      const newXP = Math.max(0, userXP - cost);
+      // Descontar XP dinámicamente según el modelo realmente usado
+      const modelCosts = { anthropic: 5, openai: 8, llama: 3, gemma: 0, auto: 5 } as Record<string, number>;
+      const actualModelUsed = data.actualModel || 'auto';
+      const realCost = modelCosts[actualModelUsed] ?? 5;
+      
+      const newXP = Math.max(0, userXP - realCost);
       setUserXP(newXP);
       
       // También dar algunos XP por la interacción
@@ -1604,33 +1612,21 @@ export default function CatholicChatPage() {
               />
               
               <div className="flex gap-2 w-full md:w-auto">
-                <motion.button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`p-3 rounded-full transition-colors shadow-md flex-shrink-0 ${
-                    pdfFile 
-                      ? 'bg-green-500 text-white' 
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                  }`}
-                  title={pdfFile ? currentTexts.pdfAttached : currentTexts.uploadPdf}
-                >
-                  {pdfFile ? <FileText className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
-                </motion.button>
-
-                {/* Model Selector */}
-                <select
-                  value={selectedModel}
-                  onChange={(e) => setSelectedModel(e.target.value as typeof selectedModel)}
-                  className="flex-1 md:flex-none px-3 py-2 border border-amber-200 dark:border-amber-700 rounded-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm focus:ring-2 focus:ring-amber-400 focus:border-transparent w-full md:w-auto"
-                >
-                  <option value="anthropic">Anthropic (5 XP)</option>
-                  <option value="openai">OpenAI (8 XP)</option>
-                  <option value="llama">Groq Llama 3 (3 XP)</option>
-                  <option value="gemma">Gemma 3 27B IT (Gratis)</option>
-                </select>
-              </div>
+            <motion.button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`p-3 rounded-full transition-colors shadow-md flex-shrink-0 ${
+                pdfFile 
+                  ? 'bg-green-500 text-white' 
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+              title={pdfFile ? currentTexts.pdfAttached : currentTexts.uploadPdf}
+            >
+              {pdfFile ? <FileText className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
+            </motion.button>
+          </div>
 
               <div className="flex-1 flex gap-2 w-full">
                 <input
