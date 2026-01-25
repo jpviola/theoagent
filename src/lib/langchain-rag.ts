@@ -474,19 +474,24 @@ export class SantaPalabraRAG {
   }
 
   private createGemmaLLM(): BaseChatModel {
-    if (!process.env.HUGGINGFACE_API_KEY) {
-      throw new Error('Missing HUGGINGFACE_API_KEY');
+    const apiKey = process.env.OPENROUTER_GEMMA_API_KEY || process.env.OPENROUTER_API_KEY || process.env.HUGGINGFACE_API_KEY;
+    if (!apiKey) {
+      throw new Error('Missing OPENROUTER_GEMMA_API_KEY (or OPENROUTER_API_KEY)');
     }
 
-    // Use Hugging Face's OpenAI-compatible API
-    // Base URL format: https://api-inference.huggingface.co/models/<model_id>/v1
+    // Use OpenRouter API for Gemma (Free tier)
+    console.log('🤗 Using Gemma via OpenRouter');
     return new ChatOpenAI({
-      apiKey: process.env.HUGGINGFACE_API_KEY,
-      modelName: 'google/gemma-3-27b-it',
+      apiKey: apiKey,
+      modelName: process.env.OPENROUTER_GEMMA_MODEL || 'google/gemma-3-27b-it:free',
       temperature: 0.3,
       maxTokens: 1024,
       configuration: {
-        baseURL: 'https://api-inference.huggingface.co/models/google/gemma-3-27b-it/v1',
+        baseURL: 'https://openrouter.ai/api/v1',
+        defaultHeaders: {
+          'HTTP-Referer': 'https://santapalabra.org', // Recommended by OpenRouter
+          'X-Title': 'Santa Palabra',
+        }
       },
     });
   }
@@ -496,101 +501,75 @@ export class SantaPalabraRAG {
    * Falls back to direct API calls if gateway is not available
    */
   private initializeLLM(): BaseChatModel | null {
-    // For local development, use OpenAI directly (bypassing Vercel AI Gateway)
-    if (process.env.OPENAI_API_KEY && !process.env.VERCEL) {
-      console.log('🔥 Using OpenAI directly (local development)');
-      return new ChatOpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
-        modelName: 'gpt-4o-mini',
-        temperature: 0.3,
-      });
-    }
-    
     const gatewayApiKey = process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN;
     
-    // Try Vercel AI Gateway first (for production)
-    if (gatewayApiKey) {
-      console.log('🔥 Using Vercel AI Gateway');
-      
-      // Try OpenAI through gateway first (often more reliable for deployment)
-      if (process.env.OPENAI_API_KEY) {
-        try {
-          return new ChatOpenAI({
-            apiKey: gatewayApiKey,
-            modelName: 'openai/gpt-4o-mini',
-            temperature: 0.3,
-            configuration: {
-              baseURL: 'https://ai-gateway.vercel.sh/v1',
-            },
-          });
-        } catch (error) {
-          console.warn('⚠️ Failed to initialize OpenAI through AI Gateway:', error);
-        }
-      }
-      
-      // Try Anthropic through gateway
-      if (process.env.ANTHROPIC_API_KEY) {
-        try {
-          return new ChatAnthropic({
-            apiKey: gatewayApiKey,
-            modelName: 'anthropic/claude-3-5-haiku-20241022',
-            temperature: 0.3,
-            clientOptions: {
-              defaultHeaders: {
-                'Authorization': `Bearer ${gatewayApiKey}`,
-              },
-            },
-          });
-        } catch (error) {
-          console.warn('⚠️ Failed to initialize Anthropic through AI Gateway:', error);
-        }
-      }
-    }
-    
-    // Fallback to direct API calls
-    console.log('🔄 Falling back to direct API calls');
-    
+    // 1. Try Anthropic (Primary High Quality Model)
+    // Direct or via Gateway
     if (process.env.ANTHROPIC_API_KEY) {
-      console.log('🤖 Using Anthropic Claude directly');
-      return new ChatAnthropic({
-        model: "claude-3-haiku-20240307",
-        temperature: 0.3,
-        anthropicApiKey: process.env.ANTHROPIC_API_KEY,
-      });
-    }
-    
-    if (process.env.OPENAI_API_KEY) {
-      console.log('🤖 Using OpenAI directly');
-      return new ChatOpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
-        modelName: 'gpt-4o-mini',
-        temperature: 0.3,
-      });
+        if (gatewayApiKey && process.env.VERCEL) {
+             try {
+                console.log('🔥 Using Anthropic via Vercel AI Gateway');
+                return new ChatAnthropic({
+                    apiKey: gatewayApiKey,
+                    modelName: 'anthropic/claude-3-5-haiku-20241022',
+                    temperature: 0.3,
+                    clientOptions: {
+                        defaultHeaders: { Authorization: `Bearer ${gatewayApiKey}` },
+                    },
+                });
+             } catch (e) { console.warn('Gateway Anthropic failed, trying direct', e); }
+        }
+        
+        console.log('🤖 Using Anthropic Claude directly');
+        return new ChatAnthropic({
+            model: "claude-3-haiku-20240307",
+            temperature: 0.3,
+            anthropicApiKey: process.env.ANTHROPIC_API_KEY,
+        });
     }
 
-    // Check for Groq / VLLM / OpenRouter
-    if (process.env.GROQ_API_KEY || process.env.VLLM_API_KEY) {
-      console.log('⚡ Using Groq / OpenRouter / VLLM compatible model');
-      
-      const apiKey = process.env.GROQ_API_KEY || process.env.VLLM_API_KEY;
-      const baseURL = process.env.GROQ_API_KEY 
-        ? 'https://api.groq.com/openai/v1' 
-        : (process.env.VLLM_BASE_URL || 'https://openrouter.ai/api/v1');
-      
-      const modelName = process.env.GROQ_MODEL || process.env.VLLM_MODEL || 'llama-3.3-70b-versatile';
-
-      return new ChatOpenAI({
-        apiKey,
-        modelName,
-        temperature: 0.3,
-        configuration: {
-          baseURL,
-        },
-      });
+    // 2. Try Groq (Fast/Free Llama)
+    if (process.env.GROQ_API_KEY) {
+        console.log('⚡ Using Groq (Llama) directly');
+        return new ChatOpenAI({
+            apiKey: process.env.GROQ_API_KEY,
+            modelName: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
+            temperature: 0.3,
+            configuration: { baseURL: 'https://api.groq.com/openai/v1' },
+        });
     }
     
+    // 3. Try OpenRouter (Gemma)
+    if (process.env.OPENROUTER_GEMMA_API_KEY || process.env.OPENROUTER_API_KEY || process.env.HUGGINGFACE_API_KEY) {
+        console.log('🤗 Using Gemma via OpenRouter');
+        return new ChatOpenAI({
+            apiKey: process.env.OPENROUTER_GEMMA_API_KEY || process.env.OPENROUTER_API_KEY || process.env.HUGGINGFACE_API_KEY,
+            modelName: process.env.OPENROUTER_GEMMA_MODEL || 'google/gemma-3-27b-it:free',
+            temperature: 0.3,
+            maxTokens: 1024,
+            configuration: { 
+                baseURL: 'https://openrouter.ai/api/v1',
+                defaultHeaders: {
+                    'HTTP-Referer': 'https://santapalabra.org',
+                    'X-Title': 'Santa Palabra',
+                }
+            },
+        });
+    }
+
+    // 4. Try VLLM / OpenRouter / Custom
+    if (process.env.VLLM_API_KEY) {
+        console.log('🔌 Using Custom VLLM/OpenRouter');
+         return new ChatOpenAI({
+            apiKey: process.env.VLLM_API_KEY,
+            modelName: process.env.VLLM_MODEL || 'default-model',
+            temperature: 0.3,
+            configuration: { baseURL: process.env.VLLM_BASE_URL || 'https://openrouter.ai/api/v1' },
+        });
+    }
+
     // No keys found - Enable Mock Mode
-    console.warn('⚠️ No AI model configuration found - Enabling MOCK MODE');
+    console.warn('⚠️ No supported AI model keys (Anthropic, Groq, HF) found - Enabling MOCK MODE');
     this.isMock = true;
     return null;
   }
@@ -891,7 +870,7 @@ ${docSummary}
 
 ${documents.length === 0 ? 'No se encontraron documentos relevantes para tu búsqueda.' : ''}
 
-Para habilitar el chat con IA completa, por favor configura OPENAI_API_KEY o ANTHROPIC_API_KEY en tu archivo .env.`
+Para habilitar el chat con IA completa, por favor configura ANTHROPIC_API_KEY o GROQ_API_KEY en tu archivo .env.`
       : `[DEMO MODE - No AI Keys Configured]
 
 I found these relevant passages in the Catholic documents:
@@ -900,7 +879,7 @@ ${docSummary}
 
 ${documents.length === 0 ? 'No relevant documents found for your query.' : ''}
 
-To enable full AI chat, please configure OPENAI_API_KEY or ANTHROPIC_API_KEY in your .env file.`;
+To enable full AI chat, please configure ANTHROPIC_API_KEY or GROQ_API_KEY in your .env file.`;
 
     return mockResponse;
   }
@@ -965,8 +944,8 @@ To enable full AI chat, please configure OPENAI_API_KEY or ANTHROPIC_API_KEY in 
         return this.generateMockResponse(context, documents);
       }
 
-      let llm: BaseChatModel | null = null;
       let actualModel: SupportedChatModel | 'default' = context.model ?? 'default';
+      let fallbackUsed = false;
       
       // Auto-routing logic
       if (!context.model || context.model === 'auto' || (context.model as string) === 'default') {
@@ -978,38 +957,6 @@ To enable full AI chat, please configure OPENAI_API_KEY or ANTHROPIC_API_KEY in 
         context.model = routed;
       }
 
-      let fallbackUsed = false;
-
-      // Try to create requested LLM, with fallback to Llama/Groq
-      try {
-        llm = this.createLLMForModel(actualModel as SupportedChatModel);
-      } catch (error) {
-        console.warn(`Requested model ${context.model} failed initialization:`, error);
-        
-        // If requested model fails (e.g. missing key), try Llama/Groq as fallback
-        if (context.model !== 'llama') {
-          console.log('🔄 Attempting fallback to Llama/Groq...');
-          try {
-            llm = this.createLLMForModel('llama');
-            if (llm) {
-              console.log('✅ Fallback to Llama successful');
-              actualModel = 'llama';
-              fallbackUsed = true;
-            }
-          } catch (e) {
-            console.warn('⚠️ Llama fallback also failed');
-          }
-        }
-      }
-
-      if (!llm) {
-         // Final check: if no LLM could be created, revert to Mock Mode
-         console.warn('❌ All LLM attempts failed. Reverting to Mock Mode.');
-         return this.generateMockResponse(context, documents);
-      }
-
-      const conversationManager = new ConversationManager(llm);
-      
       // Create rich context with source attribution and relevance scores
       const contextText = documents
         .map((doc, index) => {
@@ -1030,15 +977,34 @@ To enable full AI chat, please configure OPENAI_API_KEY or ANTHROPIC_API_KEY in 
       // Use summarized conversation history for better context management
       let chatHistory = '';
       if (messages.length > 12) {
-        const summary = await conversationManager.summarizeConversation(messages);
-        conversationSummaries.set(context.userId, summary);
-        
-        chatHistory = `CONVERSATION SUMMARY: ${summary.summary}\n` +
-                     `KEY TOPICS DISCUSSED: ${summary.keyTopics.join(', ')}\n\n` +
-                     `RECENT MESSAGES:\n` +
-                     messages.slice(-6).map((msg: BaseMessage) => 
-                       `${msg._getType() === 'human' ? 'User' : 'Assistant'}: ${msg.content}`
-                     ).join('\n');
+        try {
+          // Use Llama (fastest) for summarization, fallback to Anthropic
+          let summaryLLM = this.createLlamaOpenAICompatibleLLM();
+          if (!summaryLLM) summaryLLM = this.createAnthropicLLM();
+          
+          if (summaryLLM) {
+            const conversationManager = new ConversationManager(summaryLLM);
+            const summary = await conversationManager.summarizeConversation(messages);
+            conversationSummaries.set(context.userId, summary);
+            
+            chatHistory = `CONVERSATION SUMMARY: ${summary.summary}\n` +
+                         `KEY TOPICS DISCUSSED: ${summary.keyTopics.join(', ')}\n\n` +
+                         `RECENT MESSAGES:\n` +
+                         messages.slice(-6).map((msg: BaseMessage) => 
+                           `${msg._getType() === 'human' ? 'User' : 'Assistant'}: ${msg.content}`
+                         ).join('\n');
+          } else {
+             // Fallback if no LLM available for summary
+             chatHistory = messages
+              .map((msg: BaseMessage) => `${msg._getType() === 'human' ? 'User' : 'Assistant'}: ${msg.content}`)
+              .join('\n');
+          }
+        } catch (e) {
+          console.warn('⚠️ Summarization failed, using raw history:', e);
+          chatHistory = messages
+            .map((msg: BaseMessage) => `${msg._getType() === 'human' ? 'User' : 'Assistant'}: ${msg.content}`)
+            .join('\n');
+        }
       } else {
         chatHistory = messages
           .map((msg: BaseMessage) => `${msg._getType() === 'human' ? 'User' : 'Assistant'}: ${msg.content}`)
@@ -1064,42 +1030,59 @@ To enable full AI chat, please configure OPENAI_API_KEY or ANTHROPIC_API_KEY in 
         return result;
       };
 
-      let response: string;
-      // Variables actualModel and fallbackUsed are already initialized above
+      // Define priority order based on initial selection
+      let attemptOrder: SupportedChatModel[] = [];
+      const initialModel = actualModel as SupportedChatModel;
+      
+      if (initialModel === 'anthropic') {
+        attemptOrder = ['anthropic', 'llama', 'gemma'];
+      } else if (initialModel === 'llama') {
+        attemptOrder = ['llama', 'anthropic', 'gemma'];
+      } else if (initialModel === 'gemma') {
+        attemptOrder = ['gemma', 'llama', 'anthropic'];
+      } else {
+        // Fallback default
+        attemptOrder = ['anthropic', 'llama', 'gemma'];
+      }
 
-      if (context.model === 'llama' || actualModel === 'llama') {
+      // Remove duplicates
+      attemptOrder = [...new Set(attemptOrder)];
+
+      let response: string | null = null;
+
+      // Try models in order
+      for (const modelToTry of attemptOrder) {
+        console.log(`🔄 Attempting to generate response with model: ${modelToTry}`);
         try {
-          response = await runWithLLM(llm);
-        } catch (primaryError) {
-          if (!this.isRetriableLLMError(primaryError)) {
-            throw primaryError;
+          const currentLLM = this.createLLMForModel(modelToTry);
+          if (!currentLLM) {
+             console.warn(`⚠️ Skipped ${modelToTry}: LLM creation returned null`);
+             continue;
           }
-          console.warn('⚠️ Llama model error, attempting fallbacks:', primaryError);
+
+          response = await runWithLLM(currentLLM);
           
-          try {
-            // First fallback: Anthropic
-            const fallbackLLM = this.createLLMForModel('anthropic');
-            if (!fallbackLLM) {
-              throw new Error('Fallback LLM (Anthropic) not available');
+          if (response) {
+            console.log(`✅ Success with model: ${modelToTry}`);
+            actualModel = modelToTry;
+            if (modelToTry !== initialModel) {
+              fallbackUsed = true;
             }
-            response = await runWithLLM(fallbackLLM);
-            actualModel = 'anthropic';
-            fallbackUsed = true;
-          } catch (anthropicError) {
-             console.warn('⚠️ Anthropic fallback failed, attempting OpenAI:', anthropicError);
-             
-             // Second fallback: OpenAI
-             const openaiLLM = this.createLLMForModel('openai');
-             if (!openaiLLM) {
-                throw new Error('Fallback LLM (OpenAI) not available');
-             }
-             response = await runWithLLM(openaiLLM);
-             actualModel = 'openai';
-             fallbackUsed = true;
+            break; // Stop if successful
+          }
+        } catch (err) {
+          console.warn(`❌ Failed with model ${modelToTry}:`, err);
+          // Check if it's an auth error to log specific warning, but continue trying other models
+          const errMsg = String(err).toLowerCase();
+          if (errMsg.includes('401') || errMsg.includes('key')) {
+             console.warn(`⚠️ Auth error with ${modelToTry}, trying next model...`);
           }
         }
-      } else {
-        response = await runWithLLM(llm);
+      }
+
+      if (!response) {
+        console.warn('❌ All LLM attempts failed. Reverting to Mock Mode.');
+        return this.generateMockResponse(context, documents);
       }
 
       modelUsageStore.set(context.userId, {
