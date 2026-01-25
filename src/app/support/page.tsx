@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
+import { DonationButton } from '@/components/DonationButton';
 
 interface MercadoPagoCheckoutOptions {
   preference: {
@@ -841,15 +842,12 @@ function SupportContent({
       </section>
 
       <div className="text-center mb-12">
-        <a
+        <DonationButton
+          provider="buymeacoffee"
           href="https://www.buymeacoffee.com/santapalabra"
-          target="_blank"
-          rel="noreferrer"
-          style={{ background: 'var(--vatican-gold)', color: 'black' }}
-          className="inline-block px-8 py-4 rounded-lg font-bold"
-        >
-          Donar ahora y apoyar la evangelización digital
-        </a>
+          label="Donar ahora y apoyar la evangelización digital"
+          className="px-8 py-4"
+        />
       </div>
 
       <div className="text-center text-sm text-gray-500 dark:text-gray-400">
@@ -901,17 +899,14 @@ function DonationTiersSection({
               <p className="text-sm text-gray-600">{tier.description}</p>
             </div>
             <div className="space-y-3">
-              <button
+              <DonationButton
+                provider="mercadopago"
                 onClick={() => {
                   const localAmount = calculateLocalAmount(tier.amount, selectedCountry);
                   onMercadoPagoPayment(localAmount, selectedCountry);
                 }}
                 disabled={loading || !mpLoaded}
-                className={`w-full font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 ${
-                  loading || !mpLoaded 
-                    ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
-                    : 'bg-blue-600 hover:bg-blue-700 text-white'
-                }`}
+                className="w-full"
                 title={!mpLoaded ? 'Cargando SDK de MercadoPago...' : ''}
               >
                 <span>{mercadopagoCountries[selectedCountry as keyof typeof mercadopagoCountries].flag}</span>
@@ -920,19 +915,21 @@ function DonationTiersSection({
                    !mpLoaded ? 'Cargando MercadoPago...' :
                    `${calculateLocalAmount(tier.amount, selectedCountry)} ${mercadopagoCountries[selectedCountry as keyof typeof mercadopagoCountries].currency} - MercadoPago`}
                 </span>
-              </button>
+              </DonationButton>
 
               <div 
                 id={`paypal-button-container-${index}`}
                 className="w-full"
                 style={{ minHeight: '50px' }}
               >
-                <div className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-6 rounded-lg text-center animate-pulse">
-                  Cargando PayPal...
+                <div className="w-full bg-[#003087] hover:bg-[#00256b] text-white font-semibold py-3 px-6 rounded-full text-center animate-pulse flex items-center justify-center gap-2 shadow-md">
+                  <span className="text-lg">🅿️</span>
+                  <span>Cargando PayPal...</span>
                 </div>
               </div>
 
-              <button
+              <DonationButton
+                provider="paypal"
                 id={`paypal-fallback-${index}`}
                 onClick={async () => {
                   setLoading(true);
@@ -954,11 +951,11 @@ function DonationTiersSection({
                   }
                 }}
                 disabled={loading}
-                className="hidden w-full bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+                className="hidden w-full"
               >
                 <span>🅿️</span>
                 <span>{loading ? 'Procesando...' : 'Pagar con PayPal (Clásico)'}</span>
-              </button>
+              </DonationButton>
             </div>
           </div>
         ))}

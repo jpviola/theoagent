@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { DonationButton } from '@/components/DonationButton';
 
 export default function Header() {
   const pathname = usePathname();
@@ -60,15 +61,12 @@ export default function Header() {
                 <span className="group-hover:animate-pulse text-xl">❤️</span>
                 <span>¡Quiero donar!</span>
               </Link>
-              <a
+              <DonationButton
+                provider="buymeacoffee"
                 href="https://www.buymeacoffee.com/santapalabra"
-                target="_blank"
-                rel="noreferrer"
-                className="group inline-flex items-center gap-2 bg-[#ffdd00] hover:bg-[#f2cf00] text-black px-5 py-2.5 rounded-full text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 dark:text-gray-100 dark:bg-[#ffd800] dark:hover:bg-[#ffcf00]"
-              >
-                <span className="group-hover:animate-bounce text-xl">☕</span>
-                <span>Buy Me a Coffee</span>
-              </a>
+                label="Buy Me a Coffee"
+                className="text-sm px-5 py-2.5"
+              />
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { DonationButton } from "@/components/DonationButton";
 
 const STORAGE_KEY = "santapalabra_donation_modal_closed";
 
@@ -117,35 +118,23 @@ export default function DonationModal() {
               <div className="space-y-4">
                 {/* Donation Options */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <a
+                  <DonationButton
+                    provider="buymeacoffee"
                     href="https://www.buymeacoffee.com/santapalabra"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center justify-center gap-3 rounded-xl bg-[#FFDD00] px-4 py-3 text-sm font-bold text-black shadow-sm transition-transform hover:scale-105 hover:shadow-md"
-                  >
-                    <span className="text-lg">☕</span>
-                    Invítanos un café
-                  </a>
+                    className="w-full"
+                    label="Invítanos un café"
+                  />
 
-                  <a
+                  <DonationButton
+                    provider="paypal"
                     href={
                       process.env.NEXT_PUBLIC_PAYPAL_BUTTON_ID
                         ? `https://www.paypal.com/donate?hosted_button_id=${process.env.NEXT_PUBLIC_PAYPAL_BUTTON_ID}`
                         : "/support"
                     }
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center justify-center gap-3 rounded-xl bg-[#003087] px-4 py-3 text-sm font-bold text-white shadow-sm transition-transform hover:scale-105 hover:shadow-md"
-                  >
-                    <svg
-                      className="h-5 w-5"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.946 5.05-3.691 6.247-6.406 6.247h-1.25l-.31 1.488-.101.468c-.082.382-.416.656-.806.656h-4.14c-.206 0-.378.145-.422.348l-.572 3.596z" />
-                    </svg>
-                    PayPal
-                  </a>
+                    className="w-full"
+                    label="PayPal"
+                  />
                 </div>
 
                 {/* Secondary Actions */}
