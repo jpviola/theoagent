@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SantaPalabraRAG } from '../../../lib/langchain-rag';
-import fs from 'fs/promises';
-import path from 'path';
+// import fs from 'fs/promises';
+// import path from 'path';
 
 interface CatholicDocument {
   id: string;
@@ -20,73 +20,13 @@ async function initializeRAG() {
     return ragSystem;
   }
 
-  console.log('🚀 Initializing Catholic RAG system...');
+  console.log('🚀 Initializing Catholic RAG system (Supabase Mode)...');
   
   try {
-    // Load Catholic documents
-    const publicDir = path.join(process.cwd(), 'public', 'data');
-    const documents: CatholicDocument[] = [];
-    
-    // Load available JSON files (limiting catechism for faster initialization)
-    const files = [
-      'catechism.json',
-      'papal_magisterium.json', 
-      'dei_verbum_passages.json',
-      'custom_teachings.json',
-      'daily_gospel_reflections.json',
-      'gospel_parables.json',
-      'celam_latinoamerica.json',
-      'espiritualidad_hispanoamericana.json',
-      'church_history.json',
-      'biblical_theology.json',
-      'dogmatic_theology.json',
-      'bible_study_plan.json',
-      'custom_library.json'
-    ];
-    
-    for (const filename of files) {
-      try {
-        const filePath = path.join(publicDir, filename);
-        const fileContent = await fs.readFile(filePath, 'utf-8');
-        const data = JSON.parse(fileContent);
-        
-        if (Array.isArray(data)) {
-          // Limit catechism to first 300 documents for faster loading
-          const itemsToLoad = filename === 'catechism.json' ? data.slice(0, 300) : data;
-          
-          itemsToLoad.forEach((item: { title?: string; heading?: string; name?: string; text?: string; content?: string; passage?: string } | unknown, index: number) => {
-              const typedItem = item as { title?: string; heading?: string; name?: string; text?: string; content?: string; passage?: string; source?: string };
-            
-            // Determine category based on filename
-            let category: 'catechism' | 'papal' | 'scripture' | 'custom' | 'dogmatic' | 'history' = 'custom';
-            if (filename.includes('catechism')) category = 'catechism';
-            else if (filename.includes('papal')) category = 'papal';
-            else if (filename.includes('scripture') || filename.includes('gospel') || filename.includes('dei_verbum') || filename.includes('biblical_theology') || filename.includes('bible_study')) category = 'scripture';
-            else if (filename.includes('dogmatic_theology')) category = 'dogmatic';
-            else if (filename.includes('church_history')) category = 'history';
-            
-            documents.push({
-              id: `${filename}-${index}`,
-              title: typedItem.title || typedItem.heading || typedItem.name || `Entry ${index + 1}`,
-              content: typedItem.text || typedItem.content || typedItem.passage || JSON.stringify(typedItem),
-              source: typedItem.source || filename.replace('.json', ''),
-              category: category as any
-            });
-          });
-        }
-        
-        console.log(`✅ Loaded ${filename}: ${Array.isArray(data) ? data.length : 1} documents`);
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        console.warn(`⚠️ Could not load ${filename}:`, errorMessage);
-      }
-    }
-    
-    console.log(`📚 Total documents loaded: ${documents.length}`);
-    
-    // Initialize RAG system with improved error handling
+    // Initialize RAG system directly (data is in Supabase)
+    // We pass an empty array because data is already in the vector database
     ragSystem = new SantaPalabraRAG();
-    await ragSystem.initialize(documents);
+    await ragSystem.initialize([]);
     
     isInitialized = true;
     console.log('✅ Catholic RAG system initialized successfully');

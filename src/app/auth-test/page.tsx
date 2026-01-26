@@ -195,12 +195,6 @@ export default function AuthDebugDashboard() {
         <div className="border-t pt-6 mt-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-3">Catholic Theology System</h2>
           <div className="flex gap-4">
-            <a
-              href="/test-rag"
-              className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
-            >
-              Test Catholic AI
-            </a>
             {user && profile?.subscription_tier === 'expert' && (
               <a
                 href="/admin"

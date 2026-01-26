@@ -31,7 +31,6 @@ export default function HomePage() {
       heroTitle: 'Conversa con tu catequista digital',
       heroCta: 'Una catequista digital hispanoamericana: Escritura, Tradición, Magisterio y espiritualidad latinoamericana en una experiencia nueva.',
       ctaChat: 'Entrar al chat',
-      ctaRag: 'Laboratorio RAG',
       ctaAdmin: 'Panel',
       testimonialsTitle: 'Lo que dicen nuestros usuarios',
       principlesTitle: 'Nuestro Principio Fundacional',
@@ -46,7 +45,6 @@ export default function HomePage() {
       heroTitle: 'Talk to your digital catechist',
       heroCta: 'A Hispanic-American digital catechist: Scripture, Tradition, Magisterium, and Latin American spirituality in a new kind of experience.',
       ctaChat: 'Open chat',
-      ctaRag: 'RAG lab',
       ctaAdmin: 'Dashboard',
       testimonialsTitle: 'What our users say',
       principlesTitle: 'Our Foundational Principle',
@@ -97,12 +95,6 @@ export default function HomePage() {
       answer: language === 'es'
         ? 'Actualmente SantaPalabra está en fase de desarrollo y acceso abierto. Nuestro objetivo es hacer la catequesis católica accesible para todos, especialmente para la comunidad hispanoamericana.'
         : 'Currently, SantaPalabra is in development phase with open access. Our goal is to make Catholic catechesis accessible to all, especially for the Hispanic-American community.'
-    },
-    {
-      question: language === 'es' ? '¿Para qué sirve el Laboratorio RAG (modo desarrollador)?' : 'What is the RAG Laboratory (developer mode) for?',
-      answer: language === 'es'
-        ? 'El Laboratorio RAG es una herramienta avanzada para desarrolladores y usuarios técnicos que permite probar diferentes implementaciones de inteligencia artificial, comparar modelos, ajustar parámetros y experimentar con distintas fuentes de conocimiento católico. Es ideal para investigadores, desarrolladores y expertos que quieren entender cómo funciona SantaPalabra bajo el capó.'
-        : 'The RAG Laboratory is an advanced tool for developers and technical users that allows testing different AI implementations, comparing models, adjusting parameters, and experimenting with various Catholic knowledge sources. It\'s ideal for researchers, developers, and experts who want to understand how SantaPalabra works under the hood.'
     },
     {
       question: language === 'es' ? '¿Las respuestas son confiables?' : 'Are the answers reliable?',
@@ -382,16 +374,6 @@ export default function HomePage() {
                 onReferralTracked={handleReferralShare}
               />
             </div>
-          </motion.div>
-
-          <motion.div variants={itemVariants} className="mt-8">
-            <Link
-              href="/test-rag"
-              className="inline-flex items-center justify-center rounded-full border-2 border-yellow-300 bg-white/60 px-6 py-2 text-sm font-semibold text-gray-700 dark:bg-gray-800/60 dark:border-amber-600 dark:text-gray-200 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/80 hover:border-yellow-400"
-            >
-              <FlaskConical className="mr-2 h-4 w-4" />
-              {language === 'es' ? 'Laboratorio RAG (modo desarrollador)' : 'RAG Lab (developer mode)'}
-            </Link>
           </motion.div>
 
           <motion.div variants={itemVariants} className="mt-12">

@@ -189,7 +189,7 @@ export default function CatholicChatPage() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const advancedMode = false;
+  // advancedMode removed - using RAG by default
   const [implementation, setImplementation] = useState<'LangChain' | 'LlamaIndex'>('LangChain');
   const [showMetrics, setShowMetrics] = useState(false);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
@@ -698,10 +698,16 @@ export default function CatholicChatPage() {
     const startTime = Date.now();
 
     try {
-      const apiEndpoint = advancedMode ? '/api/catholic-simple' : '/api/catholic-rag';
-      const requestBody = advancedMode
-        ? { query: userMessage.content, implementation, mode: 'standard', language, model: 'auto', studyTrack: selectedTrackId }
-        : { query: userMessage.content, implementation: 'Catholic Chat', language, model: 'auto', studyTrack: selectedTrackId };
+      // Using RAG endpoint by default
+      const apiEndpoint = '/api/catholic-rag';
+      // Always use Catholic Chat implementation with auto model
+      const requestBody = { 
+        query: userMessage.content, 
+        implementation: 'Catholic Chat', 
+        language, 
+        model: 'auto', 
+        studyTrack: selectedTrackId 
+      };
 
       const controller = new AbortController();
       fetchAbortRef.current = controller;
@@ -751,8 +757,7 @@ export default function CatholicChatPage() {
         role: 'assistant',
         content: data.response || 'No response received',
         timestamp: new Date(),
-        responseTime: advancedMode ? responseTime : undefined,
-        implementation: advancedMode ? implementation : undefined,
+        // responseTime and implementation removed from UI
         fallbackUsed: Boolean(data.fallbackUsed)
       };
 
