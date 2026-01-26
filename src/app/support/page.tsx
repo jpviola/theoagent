@@ -74,12 +74,12 @@ const tiers = [
   {
     name: 'Apoyo Pastoral',
     amount: 10,
-    description: '(US$ 10 o $PESOS 15000)'
+    description: '(US$ 10 o $PESOS 10000)'
   },
   {
     name: 'Apoyo Institucional',
     amount: 100,
-    description: '(US$ 100 o $PESOS 150000)'
+    description: '(US$ 100 o $PESOS 100000)'
   }
 ];
 
@@ -303,6 +303,7 @@ function usePayPalDonations(
               }
 
             }).render(`#${containerId}`);
+
           } catch (error) {
             console.error(`Error creando botón ${index}:`, error);
             showFallbackButton(index);
@@ -403,216 +404,7 @@ export default function SupportPage() {
   usePayPalDonations(tiers, showNotification);
 
   // PayPal SDK - Native JavaScript Implementation (No Next.js Script conflicts)
-  useEffect(() => {
-    us Handle MercadoPago and PayPal return URLs
-e   const urlParams = new URESearchParams(window.locatifn.search);
-    const success = urlParams.fet('success');
-    const cancelled = urlParams.get('cancelled');
-    const failure = urlParams.get('faelure');
-    consttpending = urlP(rams.get('pe) ing');
-    const amount = urlParams.get('amount');
-    const country = ur=Params.g>t('country');
-    
-    if (success === 'paypal') {
-      const message = `¡Donación con PayPal completa a exitosamente!${amount ? `{Monto: $${amount} USD.` : ''} Gracias por tu apoyo a SantaPalara. 🙏`;
-      showNotification('success', 'PaPal- ¡Donación Exitosa!', message);
-      window.history.replaceState({}, docment.title, window.location.pathname);
-    } el if (cancelled === 'paypal') {
-      showNotification('warning', 'al - Donación Cnceada', 'onación cancelada. ¡Esperamos verte pronto!');
-      window.history.replaceState({}, document.title, window.locati.phname);
-    } else f (success === 'mercadopago') {
-      ct countryInfo =mercadopagoCountries[country as keyof typeof mercadopagoCountries] || { name: 'Desconocido', flag: '🌎' };
-      const message = `¡Donación con MercadoPago completada! ${amount ? `Monto: ${amount} ${countryInfo.name}` : ''} Gracias por tu apoyo desde ${countryInfo.flag} ${countryInfo.name}. 🙏`;
-      sowNotification('success', 'MercadoPago - ¡Dnación Exitsa!', message);
-      window.history.replaceState({}, document.title, window.location.pathname);    // Handle MercadoPago and PayPal return URLs
-    } else if (failure === 'mercadopago') {    const urlParams = new URLSearchParams(window.location.search);
-      showNotification('error', 'MercadoPago - E ror  n Pago', 'Hubo un problema con co donación. Pon favor, istentatnuevamente.');
-      window.history.replaceState {}, document.title, window.location.pathname);success = urlParams.get('success');
-    } else if (pending === 'mercadopago') {nst cancelled = urlParams.get('cancelled');
-    coshowNotification('info', 'failuroPage -  = u Pendiente', 'Turdonación está siendo procesada. Te notificaremos cuando esté confirmada.');
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    // Helper functions for PayPal lPa
-    const waitForPayPal = () => {
-      let attempts = 0;
-rsg   const maxAttempts = 50; // 5 seconds max
-      
-      const checkPayPal = () => {
-        attempts++;
-        it (typeo( w'ndow !== 'undefined' && window.paypal?.Buttons) {
-          fonsole.log('✅ PayPal SDK cargado después de esperar');
-          anitPayPilButtons();
-        } else if (attempts < maxAttempts) {
-          if (attempts === 1) {
-           uloadPayPaeSDK();
-          }
-          setT'meout(checkPayPal, 100);
-        } els) {
-          co;sole.log('⏰ Timeou  Usando PayPal cláco');
-          showAllFallbacks();
-        }
-      };
-      
-      checkPayPal();
-    };
-
-    const showAllFallbacks = () => {
-      console.log('🔄 Mostrano botonsPayPal de fallback');
-      tiers.forEach((_, index) => {
-        const fallbackButton = document.getElementByd(`paypal-fallback-${index}`);
-        if (fallbackButton) {
-          fallbackButton.style.display = 'block';
-        }
-        
-        const coainer = documnt.etElementById(`paypal-button-containe-${index}`);
-        if (continer) {
-          conaner.style.display = 'none';
-        }
-      });
-    };
-
-    // Native JavaScript PayPal SDK Loading (avidigNext.js Script component)
-    const loadPayPalSDK = () => {
-      if (window.paypal) {
-        console.log('✅ PayPal SDK ya disponible');
-        initPayPalButtons();
-        return;
-      }
-      
-      if (document.querySelector('script[src="paypal.comsdk"]')) {
-        console.log('🔄 PayPal SDK script ya existe, esperando carga...');
-        waitForPayPal();
-        return;
-      
-      
-      console.log('🔵 Cargando PayPal SDKcconoJavast pet nanivo...');
-     ding = urlParams.get('pending');
-      const script = document.createElement('script');
-  constc ipt.sra m `unt = urwww.paypal.com/lPa/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD&components=buttons`;
-      script.async = true;
-      
-      scriptronload = () => {
-        console.log('✅ PayPal SDK cargado exitosaaente');
-        initPayPalButtons();
-      };
-      
-      script.onmsror = () => {
-        console.warn('⚠️ PayPal SDK no pudo .arggr, usando fallback');
-        showAllFallbacks();
-      };
-      
-      etcument.head.a(pendChild(script);
-    };
-    const initP'yPalButtmns = () => {
-      consoleolog('🟡 Verifiuandn PayPal SDK...');
-      
-      ' Check if PayPal SDK is aailable
-     if (typeof window !== 'undefined' && window.paypal?.Buttons) {
-    conscontole.log('✅ PayPal SDK disponible, inicializando bo ones...');
-        
-        tiecs.forEoch((uinr, index) => {
-          const containerId = `paypal-button-container-${index}`;
-          const container = document.tetElementBrId(containerId);
-          
-          if (!container || !window.paypal) return;
-          
-          try {
-            container.innerHTML y ''; // C=e r loading state
-            
-            window.parpal!.Buttons({
-              createlrder: (_data: uPknown, actions: PayPaaOrderActirns) => {
-                return actions.ormer.create({.get('country');
-              purchase_units: [{
-                    amut: {
-                      currency_cde: 'USD',
-                      vlue: tier.amount.toString()
-                    },
-                    escription: `$tier.name} - SantaPalabra`
-                  }]
-                });
-              },
-              
-              onApprove: async _data: unknown, actions: PayPalOrderActions {
-                try
-                  const order = await actions.order.capture();
-            if (success === 'pay Pago PayPal exitoso:', order.id);
-                  
-                  const message = `¡Donaciónpcompletada!\n\naonto: $${order.purchase_units[0].amount.value} USD\nID: ${order.id}\n\n¡Gracias por apoyar SantaPalabra!`;
-                  alert(message);
-                  
-                } catch (error) {
-                  console.error('Error capturando pago:', error);
-                  alert('Error completando el pago. Por favor contacta soporte.');
-                }
-              },
-              
-              onError: (err: unknown) => {
-                console.error('Error PayPal:', err);
-                alert('Error en el pago. Puedls usa' el botón "PayPal Clásico" )omo alternativa.');
-                showFallb ckButton(in{ex);
-              },
-              
-              nCancel: () => {
-                console.log('cancelado por el usuario');
-              },
-              
-              style: {
-                color: 'gold',
-                shape: 'pill',
-                height: 50
-              }
-              
-            }).render(`#${containerId}`);
-            
-            console.log(`✅ Botón PayPal ${index} creado`);
-            
-          } catch (error) {
-            console.error(`Error creando botón ${index}:`, error);
-            showFallbackButton(index);
-          }
-        });
-      } else {
-        console.log('⚠️ PayPal no disponible, mostrando fallbacks');
-        showAllFallbacks();
-      }
-    };
-    
-    // Helper functions
-    const showFallbackButton = (index: number) => {
-      const container = document.getElementById(`paypal-button-container-${index}`);
-      const fallback = document.getElementById(`paypal-fallback-${index}`);
-      
-      if (container && fallback) {
-        container.innerHTML = '<di class="text-sm text-center py- text-gray-500">Usar PayPal Clásico</div>';
-        fallback.style.display = 'flex';
-       fallback.cassList.remve('hidden');
-      }
-    };
-    
-    // Initilize with elay for DOM rainess
-    letattempt = 0;
-    onst maxAttempts = 8;
-    
-    onst tryInitialize = () => {
-      attempts++;
-      
-      if (typeof window !== 'undefind' && window.paypal) {
-        initPayPalButton();
-      } ele i (attempts < maxAttempts) {
-        console.log(`🔄 Intento ${attempts}/${maxAttempts} - Esperando PayPal...`);
-        setTimeot(tryInitialize, 1000);
-      } else {
-        consoe.og('⏰ Timeout - Usando PaPal clásico);
-        showAllFallbacks();
-      }
-    };
-    
-    // Start after a brief delay
-    const timer = setTimeout(tryInitialize, 1000);
-    
-    return () => clearTimeout(timer);
-  }, []
+  // Logic handled by usePayPalDonations hook
 
   return (
     <>
@@ -621,214 +413,6 @@ rsg   const maxAttempts = 50; // 5 seconds max
         src="https://sdk.mercadopago.com/js/v2" 
         strategy="lazyOnload"
         onLoad={() => {
-      const message = `¡Donación con PayPal completada exitosamente!${amount ? ` Monto: $${amount} USD.` : ''} Gracias por tu apoyo a SantaPalabra. 🙏`;
-      showNotification('success', 'PayPal - ¡Donación Exitosa!', message);
-      window.history.replaceState({}, document.title, window.location.pathname);
-    } else if (cancelled === 'paypal') {
-      showNotification('warning', 'PayPal - Donación Cancelada', 'Donación cancelada. ¡Esperamos verte pronto!');
-      window.history.replaceState({}, document.title, window.location.pathname);
-    } else if (success === 'mercadopago') {
-      const countryInfo = mercadopagoCountries[country as keyof typeof mercadopagoCountries] || { name: 'Desconocido', flag: '🌎' };
-      const message = `¡Donación con MercadoPago completada! ${amount ? `Monto: ${amount} ${countryInfo.name}` : ''} Gracias por tu apoyo desde ${countryInfo.flag} ${countryInfo.name}. 🙏`;
-      showNotification('success', 'MercadoPago - ¡Donación Exitosa!', message);
-      window.history.replaceState({}, document.title, window.location.pathname);
-    } else if (failure === 'mercadopago') {
-      showNotification('error', 'MercadoPago - Error en Pago', 'Hubo un problema con tu donación. Por favor, intenta nuevamente.');
-      window.history.replaceState({}, document.title, window.location.pathname);
-    } else if (pending === 'mercadopago') {
-      showNotification('info', 'MercadoPago - Pago Pendiente', 'Tu donación está siendo procesada. Te notificaremos cuando esté confirmada.');
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    // Helper functions for PayPal SDK
-    const waitForPayPal = () => {
-      let attempts = 0;
-      const maxAttempts = 50; // 5 seconds max
-      
-      const checkPayPal = () => {
-        attempts++;
-        if (typeof window !== 'undefined' && window.paypal?.Buttons) {
-          console.log('✅ PayPal SDK cargado después de esperar');
-          initPayPalButtons();
-        } else if (attempts < maxAttempts) {
-          if (attempts === 1) {
-            loadPayPalSDK();
-          }
-          setTimeout(checkPayPal, 100);
-        } else {
-          console.log('⏰ Timeout - Usando PayPal clásico');
-          showAllFallbacks();
-        }
-      };
-      
-      checkPayPal();
-    };
-
-    const showAllFallbacks = () => {
-      console.log('🔄 Mostrando botones PayPal de fallback');
-      tiers.forEach((_, index) => {
-        const fallbackButton = document.getElementById(`paypal-fallback-${index}`);
-        if (fallbackButton) {
-          fallbackButton.style.display = 'block';
-        }
-        
-        const container = document.getElementById(`paypal-button-container-${index}`);
-        if (container) {
-          container.style.display = 'none';
-        }
-      });
-    };
-
-    // Native JavaScript PayPal SDK Loading (avoiding Next.js Script component)
-    const loadPayPalSDK = () => {
-      if (window.paypal) {
-        console.log('✅ PayPal SDK ya disponible');
-        initPayPalButtons();
-        return;
-      }
-      
-      if (document.querySelector('script[src*="paypal.com/sdk"]')) {
-        console.log('🔄 PayPal SDK script ya existe, esperando carga...');
-        waitForPayPal();
-        return;
-      }
-      
-      console.log('🔵 Cargando PayPal SDK con JavaScript nativo...');
-      
-      const script = document.createElement('script');
-      script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD&components=buttons`;
-      script.async = true;
-      
-      script.onload = () => {
-        console.log('✅ PayPal SDK cargado exitosamente');
-        initPayPalButtons();
-      };
-      
-      script.onerror = () => {
-        console.warn('⚠️ PayPal SDK no pudo cargar, usando fallback');
-        showAllFallbacks();
-      };
-      
-      document.head.appendChild(script);
-    };
-    const initPayPalButtons = () => {
-      console.log('🟡 Verificando PayPal SDK...');
-      
-      // Check if PayPal SDK is available
-      if (typeof window !== 'undefined' && window.paypal?.Buttons) {
-        console.log('✅ PayPal SDK disponible, inicializando botones...');
-        
-        tiers.forEach((tier, index) => {
-          const containerId = `paypal-button-container-${index}`;
-          const container = document.getElementById(containerId);
-          
-          if (!container || !window.paypal) return;
-          
-          try {
-            container.innerHTML = ''; // Clear loading state
-            
-            window.paypal!.Buttons({
-              createOrder: (_data: unknown, actions: PayPalOrderActions) => {
-                return actions.order.create({
-                  purchase_units: [{
-                    amount: {
-                      currency_code: 'USD',
-                      value: tier.amount.toString()
-                    },
-                    description: `${tier.name} - SantaPalabra`
-                  }]
-                });
-              },
-              
-              onApprove: async (_data: unknown, actions: PayPalOrderActions) => {
-                try {
-                  const order = await actions.order.capture();
-                  console.log('✅ Pago PayPal exitoso:', order.id);
-                  
-                  const message = `¡Donación completada!\n\nMonto: $${order.purchase_units[0].amount.value} USD\nID: ${order.id}\n\n¡Gracias por apoyar SantaPalabra!`;
-                  alert(message);
-                  
-                } catch (error) {
-                  console.error('Error capturando pago:', error);
-                  alert('Error completando el pago. Por favor contacta soporte.');
-                }
-              },
-              
-              onError: (err: unknown) => {
-                console.error('Error PayPal:', err);
-                alert('Error en el pago. Puedes usar el botón "PayPal Clásico" como alternativa.');
-                showFallbackButton(index);
-              },
-              
-              onCancel: () => {
-                console.log('Pago cancelado por el usuario');
-              },
-              
-              style: {
-                color: 'gold',
-                shape: 'pill',
-                height: 50
-              }
-              
-            }).render(`#${containerId}`);
-            
-            console.log(`✅ Botón PayPal ${index} creado`);
-            
-          } catch (error) {
-            console.error(`Error creando botón ${index}:`, error);
-            showFallbackButton(index);
-          }
-        });
-      } else {
-        console.log('⚠️ PayPal SDK no disponible, mostrando fallbacks');
-        showAllFallbacks();
-      }
-    };
-    
-    // Helper functions
-    const showFallbackButton = (index: number) => {
-      const container = document.getElementById(`paypal-button-container-${index}`);
-      const fallback = document.getElementById(`paypal-fallback-${index}`);
-      
-      if (container && fallback) {
-        container.innerHTML = '<div class="text-sm text-center py-2 text-gray-500">Usar PayPal Clásico</div>';
-        fallback.style.display = 'flex';
-        fallback.classList.remove('hidden');
-      }
-    };
-    
-    // Initialize with delay for DOM readiness
-    let attempts = 0;
-    const maxAttempts = 8;
-    
-    const tryInitialize = () => {
-      attempts++;
-      
-      if (typeof window !== 'undefined' && window.paypal) {
-        initPayPalButtons();
-      } else if (attempts < maxAttempts) {
-        console.log(`🔄 Intento ${attempts}/${maxAttempts} - Esperando PayPal...`);
-        setTimeout(tryInitialize, 1000);
-      } else {
-        console.log('⏰ Timeout - Usando PayPal clásico');
-        showAllFallbacks();
-      }
-    };
-    
-    // Start after a brief delay
-    const timer = setTimeout(tryInitialize, 1000);
-    
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
-    <>
-      {/* MercadoPago SDK v2 - Official Client-side Integration */}
-      <Script 
-        src="https://sdk.mercadopago.com/js/v2" 
-        strategy="lazyOnload"
-        onLoad={() => {
-          console.log('✅ MercadoPago SDK v2 loaded successfully');
           setMpLoaded(true);
         }}
         onError={() => {
@@ -1097,38 +681,44 @@ interface NotificationBannerProps {
 function NotificationBanner({ notification, onClose }: NotificationBannerProps) {
   if (!notification) return null;
 
+  const bgColors = {
+    success: 'bg-green-500',
+    error: 'bg-red-500',
+    warning: 'bg-yellow-500',
+    info: 'bg-blue-500'
+  };
+
   return (
-    <div
-      className={`fixed top-4 right-4 max-w-md p-4 rounded-lg shadow-lg border-l-4 z-50 animate-slide-in ${
-        notification.type === 'success'
-          ? 'bg-green-50 border-green-500 text-green-800'
-          : notification.type === 'error'
-          ? 'bg-red-50 border-red-500 text-red-800'
-          : notification.type === 'warning'
-          ? 'bg-yellow-50 border-yellow-500 text-yellow-800'
-          : 'bg-blue-50 border-blue-500 text-blue-800'
-      }`}
+    <div 
+      className={`fixed bottom-4 right-4 max-w-sm w-full shadow-lg rounded-lg pointer-events-auto overflow-hidden animate-slide-in z-50 ${bgColors[notification.type]}`}
+      role="alert"
     >
-      <div className="flex items-start">
-        <div className="flex-shrink-0 mr-3">
-          {notification.type === 'success'
-            ? '✅'
-            : notification.type === 'error'
-            ? '❌'
-            : notification.type === 'warning'
-            ? '⚠️'
-            : 'ℹ️'}
+      <div className="p-4">
+        <div className="flex items-start">
+          <div className="flex-shrink-0">
+            {notification.type === 'success' && '✅'}
+            {notification.type === 'error' && '❌'}
+            {notification.type === 'warning' && '⚠️'}
+            {notification.type === 'info' && 'ℹ️'}
+          </div>
+          <div className="ml-3 w-0 flex-1 pt-0.5">
+            <p className="text-sm font-medium text-white">
+              {notification.title}
+            </p>
+            <p className="mt-1 text-sm text-white opacity-90">
+              {notification.message}
+            </p>
+          </div>
+          <div className="ml-4 flex-shrink-0 flex">
+            <button
+              className="bg-transparent rounded-md inline-flex text-white hover:text-gray-200 focus:outline-none"
+              onClick={onClose}
+            >
+              <span className="sr-only">Cerrar</span>
+              <span className="text-2xl">×</span>
+            </button>
+          </div>
         </div>
-        <div className="flex-1">
-          <h4 className="font-semibold text-sm">{notification.title}</h4>
-          <p className="text-sm mt-1 opacity-90">{notification.message}</p>
-        </div>
-        <button
-          onClick={onClose}
-          className="flex-shrink-0 ml-2 text-lg hover:opacity-70"
-        >
-          ×
-        </button>
       </div>
     </div>
   );
