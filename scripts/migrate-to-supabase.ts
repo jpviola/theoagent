@@ -40,7 +40,7 @@ const embeddings = new OpenAIEmbeddings({
 const DATA_DIR = path.join(process.cwd(), 'public/data');
 
 // Files to migrate - Prioritize the large ones that were causing issues
-const FILES_TO_MIGRATE = [
+const FILES_TO_MIGRATE: string[] = [
   // Already migrated:
   // 'catechism.json',
   // 'papal_magisterium.json',
