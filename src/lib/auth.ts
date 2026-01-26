@@ -66,7 +66,6 @@ export async function getUserProfile(): Promise<Profile | null> {
 
 export async function updateUserUsage(userId: string) {
   // This function is deprecated - usage is now handled in the API route
-  console.log('Usage update handled in API route for user:', userId)
 }
 
 export async function checkUsageLimits(): Promise<{ canUse: boolean, currentUsage: number, limit: number }> {

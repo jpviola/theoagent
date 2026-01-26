@@ -113,14 +113,10 @@ export default function AuthFlowManager({
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('AuthFlowManager: Auth state changed:', event, session?.user?.id)
-
       if (session?.user) {
-        console.log('AuthFlowManager: User found in session, setting user and checking status')
         setUser(session.user)
         await checkUserStatus(session.user)
       } else {
-        console.log('AuthFlowManager: No user in session, setting to unauthenticated')
         setUser(null)
         setCurrentStep('unauthenticated')
       }
@@ -130,13 +126,11 @@ export default function AuthFlowManager({
   }, [checkUserStatus])
 
   const handleSignUp = () => {
-    console.log('AuthFlowManager: handleSignUp called');
     setAuthMode('signup')
     setShowAuthModal(true)
   }
 
   const handleSignIn = () => {
-    console.log('AuthFlowManager: handleSignIn called');
     setAuthMode('signin')
     setShowAuthModal(true)
   }

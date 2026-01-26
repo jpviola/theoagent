@@ -364,13 +364,13 @@ export function useUserProgress() {
     if (lastVisit === yesterday) {
       setProgress(prev => {
         const newProgress = { ...prev, streak: prev.streak + 1 };
-        saveProgress(newProgress);
+        setTimeout(() => saveProgress(newProgress), 0);
         return newProgress;
       });
     } else if (lastVisit !== today) {
       setProgress(prev => {
         const newProgress = { ...prev, streak: 1 };
-        saveProgress(newProgress);
+        setTimeout(() => saveProgress(newProgress), 0);
         return newProgress;
       });
     }
