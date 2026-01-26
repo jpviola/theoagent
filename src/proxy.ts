@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Handle legacy/implicit favicon requests early (avoid Supabase work and 404s)
   // Browsers (and some manifest generators) commonly request these default paths.
   const pathname = request.nextUrl.pathname;
