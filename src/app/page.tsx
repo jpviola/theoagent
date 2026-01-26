@@ -608,10 +608,9 @@ export default function HomePage() {
                 href="https://instagram.com/santapalabra_ok"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 transition-all hover:scale-105 hover:text-yellow-300 dark:hover:text-yellow-300 text-white dark:text-gray-200"
+                className="transition-all hover:scale-125 hover:text-yellow-300 dark:hover:text-yellow-300 text-white dark:text-gray-200"
               >
                 <Instagram className="h-8 w-8" />
-                <span className="font-semibold">@santapalabra_ok</span>
               </a>
               <a
                 href="https://x.com"

@@ -185,6 +185,27 @@ export function AchievementsList({ userProgress }: { userProgress: UserProgress 
   );
 }
 
+// Helper para cookies
+function setCookie(name: string, value: string, days: number) {
+  if (typeof document === 'undefined') return;
+  const date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = "expires=" + date.toUTCString();
+  document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+
+function getCookie(name: string): string | null {
+  if (typeof document === 'undefined') return null;
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
 // Hook para manejar progreso del usuario
 export function useUserProgress() {
   const [progress, setProgress] = useState<UserProgress>(() => {
@@ -201,10 +222,21 @@ export function useUserProgress() {
       return defaultProgress;
     }
 
+    // Intentar recuperar de localStorage primero
     const saved = localStorage.getItem('santapalabra_progress');
     if (saved) {
       try {
         return JSON.parse(saved) as UserProgress;
+      } catch {
+        // Si falla localStorage, intentar cookie
+      }
+    }
+    
+    // Intentar recuperar de cookie si no hay localStorage
+    const cookieSaved = getCookie('santapalabra_progress');
+    if (cookieSaved) {
+      try {
+        return JSON.parse(decodeURIComponent(cookieSaved)) as UserProgress;
       } catch {
         return defaultProgress;
       }
@@ -213,6 +245,37 @@ export function useUserProgress() {
     return defaultProgress;
   });
   const [newAchievement, setNewAchievement] = useState<Achievement | null>(null);
+
+  const saveProgress = (newProgress: UserProgress) => {
+    const json = JSON.stringify(newProgress);
+    localStorage.setItem('santapalabra_progress', json);
+    setCookie('santapalabra_progress', encodeURIComponent(json), 365); // Guardar por 1 año
+    
+    // Notificar a otros componentes
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('santapalabra_progress_updated'));
+    }
+  };
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const saved = localStorage.getItem('santapalabra_progress');
+      if (saved) {
+        try {
+          setProgress(JSON.parse(saved));
+        } catch {}
+      }
+    };
+
+    window.addEventListener('santapalabra_progress_updated', handleStorageChange);
+    // También escuchar storage events para pestañas cruzadas
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('santapalabra_progress_updated', handleStorageChange);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const addXP = (amount: number) => {
     setProgress(prev => {
@@ -234,8 +297,7 @@ export function useUserProgress() {
         totalInteractions: prev.totalInteractions + 1
       };
 
-      // Guardar en localStorage
-      localStorage.setItem('santapalabra_progress', JSON.stringify(newProgress));
+      saveProgress(newProgress);
       
       return newProgress;
     });
@@ -257,8 +319,7 @@ export function useUserProgress() {
       // Mostrar notificación
       setNewAchievement(achievement);
 
-      // Guardar en localStorage
-      localStorage.setItem('santapalabra_progress', JSON.stringify(newProgress));
+      saveProgress(newProgress);
       
       return newProgress;
     });
@@ -275,6 +336,8 @@ export function useUserProgress() {
     });
     
     localStorage.setItem('santapalabra_referrals', JSON.stringify(referrals));
+    // También guardar referidos en cookie (solo conteo para simplificar)
+    setCookie('santapalabra_referral_count', newReferralCount.toString(), 365);
     
     // Desbloquear logros por referidos
     if (newReferralCount === 1) {
@@ -299,12 +362,21 @@ export function useUserProgress() {
     const yesterday = new Date(Date.now() - 86400000).toDateString();
 
     if (lastVisit === yesterday) {
-      setProgress(prev => ({ ...prev, streak: prev.streak + 1 }));
+      setProgress(prev => {
+        const newProgress = { ...prev, streak: prev.streak + 1 };
+        saveProgress(newProgress);
+        return newProgress;
+      });
     } else if (lastVisit !== today) {
-      setProgress(prev => ({ ...prev, streak: 1 }));
+      setProgress(prev => {
+        const newProgress = { ...prev, streak: 1 };
+        saveProgress(newProgress);
+        return newProgress;
+      });
     }
 
     localStorage.setItem('santapalabra_last_visit', today);
+    setCookie('santapalabra_last_visit', today, 365);
   };
 
   return {
@@ -316,4 +388,47 @@ export function useUserProgress() {
     updateStreak,
     trackReferral
   };
+}
+
+export function GamificationModal({ 
+  isOpen, 
+  onClose, 
+  progress 
+}: { 
+  isOpen: boolean; 
+  onClose: () => void; 
+  progress: UserProgress;
+}) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+      >
+        <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <Trophy className="h-6 w-6 text-yellow-500" />
+            Tu Progreso
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <div className="p-6 space-y-6">
+          <ProgressBar progress={progress} />
+          <AchievementsList userProgress={progress} />
+        </div>
+      </motion.div>
+    </div>
+  );
 }

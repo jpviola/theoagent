@@ -131,7 +131,7 @@ export interface Database {
         Row: {
           id: string
           user_id: string | null
-          payment_provider: 'stripe' | 'paypal'
+          payment_provider: 'stripe' | 'paypal' | 'mercadopago'
           payment_id: string
           session_id: string | null
           amount_cents: number
@@ -149,7 +149,7 @@ export interface Database {
         }
         Insert: {
           user_id?: string | null
-          payment_provider: 'stripe' | 'paypal'
+          payment_provider: 'stripe' | 'paypal' | 'mercadopago'
           payment_id: string
           session_id?: string | null
           amount_cents: number
@@ -232,7 +232,7 @@ export interface Database {
       subscription_tier: 'free' | 'plus' | 'expert'
       subscription_status: 'active' | 'canceled' | 'past_due'
       source_type: 'catechism' | 'papal' | 'biblical' | 'patristic' | 'conciliar'
-      payment_provider: 'stripe' | 'paypal'
+      payment_provider: 'stripe' | 'paypal' | 'mercadopago'
       donation_status: 'pending' | 'completed' | 'failed' | 'refunded' | 'cancelled'
     }
   }

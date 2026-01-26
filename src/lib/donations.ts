@@ -9,7 +9,7 @@ const supabaseAdmin = createClient(
 // TIPOS DE TYPESCRIPT
 // ==============================================
 
-export type PaymentProvider = 'stripe' | 'paypal'
+export type PaymentProvider = 'stripe' | 'paypal' | 'mercadopago'
 
 export type DonationStatus = 'pending' | 'completed' | 'failed' | 'refunded' | 'cancelled'
 

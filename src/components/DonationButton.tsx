@@ -46,8 +46,8 @@ export const DonationButton: React.FC<DonationButtonProps> = ({
   title,
   id,
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-bold shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
-  const hoverStyles = disabled ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg hover:scale-105';
+  const baseStyles = 'inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-bold shadow-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 h-[50px]';
+  const hoverStyles = disabled ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg';
   const colorStyles = providerStyles[provider];
   
   const content = children || (

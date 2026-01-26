@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
 import { DonationButton } from '@/components/DonationButton';
+import { DiffusionSupportModal } from '@/components/DiffusionSupportModal';
 
 interface MercadoPagoCheckoutOptions {
   preference: {
@@ -58,9 +59,7 @@ interface PayPalButtonsConfig {
   };
 }
 
-const PAYPAL_BUTTON_URL = process.env.NEXT_PUBLIC_PAYPAL_BUTTON_ID
-  ? `https://www.paypal.com/donate?hosted_button_id=${process.env.NEXT_PUBLIC_PAYPAL_BUTTON_ID}`
-  : 'https://www.paypal.com/donate';
+const PAYPAL_BUTTON_URL = 'https://www.paypal.com/ncp/links/YTAYJCFUN8MCY';
 
 const PAYPAL_CLIENT_ID =
   process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ||
@@ -70,17 +69,17 @@ const tiers = [
   {
     name: 'Contribución Básica',
     amount: 2,
-    description: '(US$ 2 o $ PESOS 2000)'
+    description: '(US$ 2 o $PESOS 2000)'
   },
   {
     name: 'Apoyo Pastoral',
     amount: 10,
-    description: '(US$ 10 o $PESOS 15)'
+    description: '(US$ 10 o $PESOS 15000)'
   },
   {
     name: 'Apoyo Institucional',
     amount: 100,
-    description: '(US$ 100 o $PESOS 150.000)'
+    description: '(US$ 100 o $PESOS 150000)'
   }
 ];
 
@@ -107,7 +106,7 @@ interface NotificationState {
 }
 
 const mercadopagoCountries = {
-  mla: { name: 'Argentina', currency: 'ARS', flag: '🇦🇷', rate: 100 },
+  mla: { name: 'Argentina', currency: 'ARS', flag: '🇦🇷', rate: 1000 },
   mlb: { name: 'Brasil', currency: 'BRL', flag: '🇧🇷', rate: 6 },
   mlm: { name: 'México', currency: 'MXN', flag: '🇲🇽', rate: 17 },
   mco: { name: 'Colombia', currency: 'COP', flag: '🇨🇴', rate: 800 },
@@ -393,6 +392,8 @@ export default function SupportPage() {
     handlePayment: handleMercadoPagoPayment
   } = useMercadoPagoDonations();
 
+  const [showDiffusionModal, setShowDiffusionModal] = useState(false);
+
   // Show notification helper
   const showNotification = (type: NotificationType, title: string, message: string) => {
     setNotification({ type, title, message });
@@ -639,12 +640,18 @@ export default function SupportPage() {
           selectedCountry={selectedCountry}
           onMercadoPagoPayment={handleMercadoPagoPayment}
           setLoading={setLoading}
+          onOpenDiffusionModal={() => setShowDiffusionModal(true)}
         />
       </div>
       
       <NotificationBanner
         notification={notification}
         onClose={() => setNotification(null)}
+      />
+
+      <DiffusionSupportModal 
+        isOpen={showDiffusionModal} 
+        onClose={() => setShowDiffusionModal(false)} 
       />
 
       <style jsx>{`
@@ -749,29 +756,23 @@ interface SupportContentProps {
   selectedCountry: string;
   onMercadoPagoPayment: (amount: number, country: string) => void;
   setLoading: (loading: boolean) => void;
+  onOpenDiffusionModal: () => void;
 }
 
-function SupportContent({
-  loading,
-  mpLoaded,
-  selectedCountry,
-  onMercadoPagoPayment,
-  setLoading,
-}: SupportContentProps) {
+function SupportContent({ loading, mpLoaded, selectedCountry, onMercadoPagoPayment, setLoading, onOpenDiffusionModal }: SupportContentProps) {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12">
-      <div className="text-center mb-12">
-        <a 
-          href="https://www.buymeacoffee.com/santapalabra" 
-          target="_blank" 
-          rel="noreferrer"
-          style={{ background: 'var(--vatican-gold)', color: 'black' }}
-          className="inline-block px-8 py-4 rounded-lg font-bold text-xl hover:opacity-90 transition-opacity"
-        >
-          ☕ Donación Rápida con BuyMeACoffee
-        </a>
+    <main className="max-w-4xl mx-auto px-4 py-8">
+      {/* Hero Section */}
+      <div className="text-center mb-12 animate-fade-in">
+        <h1 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-amber-600 to-yellow-500 bg-clip-text text-transparent drop-shadow-sm">
+          Apoya a SantaPalabra
+        </h1>
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          Tu generosidad nos permite seguir evangelizando y desarrollando herramientas tecnológicas para nuestra fe.
+        </p>
       </div>
 
+      {/* Donation Tiers */}
       <DonationTiersSection
         loading={loading}
         mpLoaded={mpLoaded}
@@ -780,84 +781,21 @@ function SupportContent({
         setLoading={setLoading}
       />
 
-      <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-gray-100">¿En qué se usan las donaciones?</h2>
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div className="rounded-2xl p-4 shadow-md border border-yellow-100 bg-white text-gray-800 dark:bg-gray-800 dark:border-amber-700 dark:text-gray-100">
-            <h3 className="font-semibold">Operación</h3>
-            <p className="text-sm mt-1">Servidores, costos de la API y mantenimiento diario para que la app esté disponible 24/7.</p>
-          </div>
-          <div className="rounded-2xl p-4 shadow-md border border-yellow-100 bg-white text-gray-800 dark:bg-gray-800 dark:border-amber-700 dark:text-gray-100">
-            <h3 className="font-semibold">Desarrollo</h3>
-            <p className="text-sm mt-1">Mejoras en la calidad de respuestas, nuevas funciones y soporte móvil.</p>
-          </div>
-          <div className="rounded-2xl p-4 shadow-md border border-yellow-100 bg-white text-gray-800 dark:bg-gray-800 dark:border-amber-700 dark:text-gray-100">
-            <h3 className="font-semibold">Contenido</h3>
-            <p className="text-sm mt-1">Validación por expertos, traducciones y materiales para catequistas.</p>
-          </div>
-          <div className="rounded-2xl p-4 shadow-md border border-yellow-100 bg-white text-gray-800 dark:bg-gray-800 dark:border-amber-700 dark:text-gray-100">
-            <h3 className="font-semibold">Accesibilidad</h3>
-            <p className="text-sm mt-1">Planes para dar acceso gratuito a parroquias y comunidades en riesgo.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="tiers" className="mb-8 rounded-2xl p-6 shadow-md border border-yellow-100 bg-white text-gray-800 dark:bg-gray-800 dark:border-amber-700 dark:text-gray-100">
-        <h2 className="text-2xl font-semibold mb-3">Niveles de apoyo (sugeridos)</h2>
-        <ul className="space-y-3">
-          <li><strong>Amigo — $2</strong> · Gracias pública en la web.</li>
-          <li><strong>Sostenedor — $10</strong> · Reporte trimestral y acceso anticipado a novedades.</li>
-          <li><strong>Patrono — $250</strong> · Mención destacada y sesión virtual con el equipo.</li>
-          <li><strong>Parroquia / Escuela — $500</strong> · Acceso multiusuario y soporte para integración.</li>
-        </ul>
-      </section>
-
-      <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-gray-100">Testimonios</h2>
-        <div className="space-y-4">
-          <blockquote className="rounded-2xl p-4 shadow-md border border-yellow-100 bg-white text-gray-800 dark:bg-gray-800 dark:border-amber-700 dark:text-gray-100">
-            <p className="italic">“SantaPalabra nos ayudó a preparar la clase de confirmación cuando no había material disponible. Una herramienta que acompaña.”</p>
-            <div className="mt-2 text-sm text-gray-700 dark:text-gray-300">— María, catequista (Parroquia San José)</div>
-          </blockquote>
-
-          <blockquote className="rounded-2xl p-4 shadow-md border border-yellow-100 bg-white text-gray-800 dark:bg-gray-800 dark:border-amber-700 dark:text-gray-100">
-            <p className="italic">“Mi grupo juvenil usa la app para preparar las reuniones y los jóvenes la encuentran cercana y respetuosa.”</p>
-            <div className="mt-2 text-sm text-gray-700 dark:text-gray-300">— Pedro, líder juvenil</div>
-          </blockquote>
-        </div>
-      </section>
-
-      <section className="mb-8 rounded-2xl p-6 shadow-md border border-yellow-100 bg-white text-gray-800 dark:bg-gray-800 dark:border-amber-700 dark:text-gray-100">
-        <h2 className="text-2xl font-semibold mb-3">Preguntas frecuentes</h2>
-        <div className="space-y-3">
-          <div>
-            <strong>¿La app sustituye al sacerdote?</strong>
-            <p className="text-sm">No. Es una herramienta complementaria para ayudar a entender la fe.</p>
-          </div>
-          <div>
-            <strong>¿Quién valida el contenido?</strong>
-            <p className="text-sm">Trabajamos con asesores católicos y usamos documentos oficiales como base.</p>
-          </div>
-        </div>
-      </section>
-
-      <div className="text-center mb-12">
-        <DonationButton
-          provider="buymeacoffee"
-          href="https://www.buymeacoffee.com/santapalabra"
-          label="Donar ahora y apoyar la evangelización digital"
-          className="px-8 py-4"
-        />
+      {/* Diffusion Support Button */}
+      <div className="mt-12 text-center">
+        <button
+          onClick={onOpenDiffusionModal}
+          className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-full font-medium transition-colors border border-indigo-200"
+        >
+          <span className="text-xl">📣</span>
+          <span>No puedo aportar dinero, pero quiero ayudar difundiendo</span>
+        </button>
       </div>
 
-      <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-        ¿Quieres que preparemos materiales personalizados para tu parroquia?{" "}
-        <Link href="/blog" className="underline">
-          Contáctanos
-        </Link>
-        .
-      </div>
-    </div>
+
+
+      {/* FAQ or Additional Info could go here */}
+    </main>
   );
 }
 
@@ -902,27 +840,23 @@ function DonationTiersSection({
               <DonationButton
                 provider="mercadopago"
                 onClick={() => {
+                  if (!mpLoaded) return;
                   const localAmount = calculateLocalAmount(tier.amount, selectedCountry);
                   onMercadoPagoPayment(localAmount, selectedCountry);
                 }}
-                disabled={loading || !mpLoaded}
+                disabled={loading}
                 className="w-full"
-                title={!mpLoaded ? 'Cargando SDK de MercadoPago...' : ''}
               >
                 <span>{mercadopagoCountries[selectedCountry as keyof typeof mercadopagoCountries].flag}</span>
-                <span>
-                  {loading ? 'Procesando...' : 
-                   !mpLoaded ? 'Cargando MercadoPago...' :
-                   `${calculateLocalAmount(tier.amount, selectedCountry)} ${mercadopagoCountries[selectedCountry as keyof typeof mercadopagoCountries].currency} - MercadoPago`}
-                </span>
+                <span>Pagar con MercadoPago</span>
               </DonationButton>
 
               <div 
                 id={`paypal-button-container-${index}`}
-                className="w-full"
+                className="w-full hidden" // Hidden by default, prioritizing the hosted link
                 style={{ minHeight: '50px' }}
               >
-                <div className="w-full bg-[#003087] hover:bg-[#00256b] text-white font-semibold py-3 px-6 rounded-full text-center animate-pulse flex items-center justify-center gap-2 shadow-md">
+                <div className="w-full bg-[#003087] hover:bg-[#00256b] text-white font-semibold py-3 px-6 rounded-full text-center flex items-center justify-center gap-2 shadow-md h-[50px]">
                   <span className="text-lg">🅿️</span>
                   <span>Cargando PayPal...</span>
                 </div>
@@ -931,30 +865,14 @@ function DonationTiersSection({
               <DonationButton
                 provider="paypal"
                 id={`paypal-fallback-${index}`}
-                onClick={async () => {
-                  setLoading(true);
-                  try {
-                    const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?` +
-                      `cmd=_donations&` +
-                      `business=santapalabra@outlook.com&` +
-                      `item_name=Donación ${tier.name} - SantaPalabra&` +
-                      `amount=${tier.amount}&` +
-                      `currency_code=USD&` +
-                      `return=${window.location.origin}/support?success=paypal&amount=${tier.amount}&` +
-                      `cancel_return=${window.location.origin}/support?cancelled=paypal&` +
-                      `notify_url=${window.location.origin}/api/payments/paypal/webhook`;
-                    window.location.href = paypalUrl;
-                  } catch (error) {
-                    console.error('PayPal fallback error:', error);
-                    alert('Error procesando el pago con PayPal');
-                    setLoading(false);
-                  }
+                onClick={() => {
+                   window.open(PAYPAL_BUTTON_URL, '_blank', 'noopener,noreferrer');
                 }}
-                disabled={loading}
-                className="hidden w-full"
+                disabled={false}
+                className="w-full flex" // Always visible now
               >
                 <span>🅿️</span>
-                <span>{loading ? 'Procesando...' : 'Pagar con PayPal (Clásico)'}</span>
+                <span>Pagar con PayPal</span>
               </DonationButton>
             </div>
           </div>

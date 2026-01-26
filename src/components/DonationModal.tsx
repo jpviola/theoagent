@@ -127,11 +127,7 @@ export default function DonationModal() {
 
                   <DonationButton
                     provider="paypal"
-                    href={
-                      process.env.NEXT_PUBLIC_PAYPAL_BUTTON_ID
-                        ? `https://www.paypal.com/donate?hosted_button_id=${process.env.NEXT_PUBLIC_PAYPAL_BUTTON_ID}`
-                        : "/support"
-                    }
+                    href="https://www.paypal.com/ncp/links/YTAYJCFUN8MCY"
                     className="w-full"
                     label="PayPal"
                   />

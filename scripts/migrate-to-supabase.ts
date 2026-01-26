@@ -58,8 +58,8 @@ const FILES_TO_MIGRATE: string[] = [
   // Pending (Small/Medium):
 
   // Large files (Uncomment with caution - expensive/slow):
-  // 'dogmatic_theology.json', // ~73MB
-  // 'bible_study_plan.json', // ~245MB
+  'dogmatic_theology.json', // ~73MB
+  'bible_study_plan.json', // ~245MB
 ];
 
 async function loadAndMigrate() {

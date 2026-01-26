@@ -111,7 +111,8 @@ export async function POST(request: NextRequest) {
       status: 'pending',
       donor_email: donor_email || null,
       donor_name: donor_name || null,
-      external_id: result.id,
+      // external_id: result.id, // Removed as column doesn't exist
+      payment_id: result.id, // Using payment_id standard field for preference_id initially
       metadata: {
         preference_id: result.id,
         external_reference: preferenceData.external_reference,
@@ -148,14 +149,17 @@ export async function POST(request: NextRequest) {
       message: `MercadoPago preference created successfully for ${selectedCountry.name}! ${selectedCountry.flag}`
     });
 
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error('❌ MercadoPago error:', error);
-    const message = error instanceof Error ? error.message : 'Error creating MercadoPago preference'
+    // Extract meaningful error message from MP response if available
+    const message = error?.message || error?.cause?.description || 'Error creating MercadoPago preference';
+    const details = error?.cause || error?.response?.data || error;
+    
     return NextResponse.json(
       { 
         success: false, 
         error: message,
-        details: error instanceof Error && 'cause' in error ? (error as { cause?: unknown }).cause || 'MercadoPago SDK error' : 'MercadoPago SDK error'
+        details: details
       }, 
       { status: 500 }
     );
