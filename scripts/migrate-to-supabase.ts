@@ -30,7 +30,7 @@ const client = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 const embeddings = new OpenAIEmbeddings({
   openAIApiKey: OPENAI_API_KEY || VLLM_API_KEY,
-  modelName: 'text-embedding-3-small',
+  modelName: OPENAI_API_KEY ? 'text-embedding-3-small' : 'openai/text-embedding-3-small',
   batchSize: 512,
   configuration: OPENAI_API_KEY ? undefined : {
     baseURL: 'https://openrouter.ai/api/v1',
@@ -41,12 +41,25 @@ const DATA_DIR = path.join(process.cwd(), 'public/data');
 
 // Files to migrate - Prioritize the large ones that were causing issues
 const FILES_TO_MIGRATE = [
-  'catechism.json',
-  // 'bible_study_plan.json', // Very large, uncomment when ready
-  // 'dogmatic_theology.json', // Large, uncomment when ready
-  'papal_magisterium.json',
-  'gospel_parables.json',
-  'custom_library.json'
+  // Already migrated:
+  // 'catechism.json',
+  // 'papal_magisterium.json',
+  // 'custom_teachings.json',
+  // 'gospel_parables.json',
+  // 'biblical_theology.json',
+  // 'celam_latinoamerica.json',
+  // 'espiritualidad_hispanoamericana.json',
+  // 'dei_verbum_passages.json',
+  // 'daily_gospel_reflections.json',
+  // 'difficult_passages.json',
+  // 'gospel_passages_greek.json',
+  // 'church_history.json',
+
+  // Pending (Small/Medium):
+
+  // Large files (Uncomment with caution - expensive/slow):
+  // 'dogmatic_theology.json', // ~73MB
+  // 'bible_study_plan.json', // ~245MB
 ];
 
 async function loadAndMigrate() {
@@ -100,6 +113,18 @@ async function loadAndMigrate() {
             }));
         }
       });
+
+      // Deletion logic moved here - assuming majority source
+      const mainSource = filename.replace('.json', '');
+      console.log(`🧹 Clearing existing documents for source: ${mainSource}...`);
+      const { error: deleteError } = await client
+        .from('documents')
+        .delete()
+        .filter('metadata->>source', 'eq', mainSource);
+
+      if (deleteError) {
+        console.warn(`⚠️ Error clearing documents (might be empty):`, deleteError);
+      }
 
       console.log(`✅ Loaded ${documents.length} documents from ${filename}. Generating embeddings and uploading...`);
 

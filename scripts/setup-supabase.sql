@@ -10,10 +10,17 @@ create table if not exists documents (
 );
 
 -- Create a function to search for documents
+-- Updated to support metadata filtering (required by LangChain)
+
+-- DROP existing functions to avoid "function overloading" ambiguity
+DROP FUNCTION IF EXISTS match_documents(vector, float, int, jsonb);
+DROP FUNCTION IF EXISTS match_documents(vector, int, jsonb, float);
+
 create or replace function match_documents (
   query_embedding vector(1536),
-  match_threshold float,
-  match_count int
+  match_count int default null,
+  filter jsonb default '{}',
+  match_threshold float default 0.1
 )
 returns table (
   id uuid,
@@ -32,6 +39,7 @@ begin
     1 - (documents.embedding <=> query_embedding) as similarity
   from documents
   where 1 - (documents.embedding <=> query_embedding) > match_threshold
+  and documents.metadata @> filter
   order by documents.embedding <=> query_embedding
   limit match_count;
 end;

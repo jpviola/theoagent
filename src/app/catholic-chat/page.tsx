@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, User, BookOpen, FlaskConical, AlertTriangle, X, Zap, BarChart2, Clock, Upload, FileText, Mic, Square, Volume2, Menu } from 'lucide-react';
+import { Send, User, BookOpen, AlertTriangle, X, Zap, Clock, Upload, FileText, Mic, Square, Volume2, Menu } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import EmailSubscriptionModal from '@/components/EmailSubscriptionModal';
 import { subscribeToNewsletter, shouldShowSubscriptionModal, markSubscriptionSkipped, SUBSCRIPTION_TIERS } from '@/lib/subscription';
@@ -190,8 +190,6 @@ export default function CatholicChatPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // advancedMode removed - using RAG by default
-  const [implementation, setImplementation] = useState<'LangChain' | 'LlamaIndex'>('LangChain');
-  const [showMetrics, setShowMetrics] = useState(false);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [isBowing, setIsBowing] = useState(false);
   // const [selectedModel, setSelectedModel] = useState<'anthropic' | 'openai' | 'llama'>('llama');
@@ -1070,50 +1068,7 @@ export default function CatholicChatPage() {
         </motion.div>
       </div>
 
-      {/* Advanced Mode Settings Panel */}
-      <AnimatePresence>
-        {advancedMode && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden bg-purple-50/50 dark:bg-purple-900/20 border-b border-purple-200 dark:border-purple-700"
-          >
-            <div className="max-w-4xl mx-auto px-4 py-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <FlaskConical className="h-4 w-4 text-purple-600" />
-                    <span className="text-sm font-medium text-purple-900 dark:text-purple-100">{currentTexts.advancedMode}</span>
-                  </div>
-                  <div className="h-4 w-px bg-purple-300 dark:bg-purple-600"></div>
-                  <div className="flex items-center gap-2">
-                    <label className="text-xs text-purple-700 dark:text-purple-300">{currentTexts.implementation}:</label>
-                    <select
-                      value={implementation}
-                      onChange={(e) => setImplementation(e.target.value as 'LangChain' | 'LlamaIndex')}
-                      className="text-xs border border-purple-300 dark:border-purple-600 rounded px-2 py-1 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-                    >
-                      <option value="LangChain">LangChain</option>
-                      <option value="LlamaIndex">LlamaIndex</option>
-                    </select>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowMetrics(!showMetrics)}
-                  className={`flex items-center gap-1 text-xs px-2 py-1 rounded ${
-                    showMetrics ? 'bg-purple-200 dark:bg-purple-700 text-purple-900 dark:text-purple-100' : 'text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-800'
-                  }`}
-                >
-                  <BarChart2 className="h-3 w-3" />
-                  {currentTexts.showMetrics}
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
 
       {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
@@ -1540,22 +1495,7 @@ export default function CatholicChatPage() {
                           </div>
                         )}
                         
-                        {advancedMode && showMetrics && message.role === 'assistant' && message.responseTime && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            className="mt-2 ml-2 flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400"
-                          >
-                            <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
-                              <Clock className="h-3 w-3" />
-                              <span>{message.responseTime}ms</span>
-                            </div>
-                            <div className="flex items-center gap-1 bg-purple-100 dark:bg-purple-900/50 px-2 py-1 rounded-full text-purple-700 dark:text-purple-300">
-                              <Zap className="h-3 w-3" />
-                              <span>{message.implementation}</span>
-                            </div>
-                          </motion.div>
-                        )}
+
                       </div>
 
                       {message.role === 'user' && (

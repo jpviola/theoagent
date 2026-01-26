@@ -66,7 +66,7 @@ class EnhancedVectorStore {
         this.vectorStore = new SupabaseVectorStore(
           new OpenAIEmbeddings({ 
             openAIApiKey: openaiKey || vllmKey,
-            modelName: "text-embedding-3-small",
+            modelName: openaiKey ? "text-embedding-3-small" : "openai/text-embedding-3-small",
             configuration: openaiKey ? undefined : {
                 baseURL: 'https://openrouter.ai/api/v1',
             }
