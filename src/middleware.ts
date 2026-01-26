@@ -1,9 +1,8 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // Handle legacy/implicit favicon requests early (avoid Supabase work and 404s)
-  // Browsers (and some manifest generators) commonly request these default paths.
   const pathname = request.nextUrl.pathname;
 
   if (pathname === '/favicon.ico') {
@@ -15,7 +14,6 @@ export async function proxy(request: NextRequest) {
   }
 
   // Some tools reference PNG favicons that may not exist in this repo.
-  // Return a tiny valid transparent PNG to prevent console 404 noise.
   if (
     pathname === '/favicon-16x16.png' ||
     pathname === '/favicon-32x32.png' ||
@@ -80,7 +78,8 @@ export async function proxy(request: NextRequest) {
   const { data: { user }, error } = await supabase.auth.getUser()
 
   // Define protected routes
-  const protectedRoutes = ['/dashboard', '/settings', '/admin']
+  // REMOVED /admin from protectedRoutes because it uses custom cookie-based auth
+  const protectedRoutes = ['/dashboard', '/settings']
   const authRoutes = ['/auth/signin', '/auth/signup']
   
   const isProtectedRoute = protectedRoutes.some(route => 
@@ -114,12 +113,16 @@ export async function proxy(request: NextRequest) {
       '/api/elevenlabs/single-use-token',
       '/api/payments',
       '/api/webhooks',
+      '/api/admin', // Added /api/admin to public routes for middleware (handled by cookie check internally)
     ]
     const isPublicApiRoute = publicApiRoutes.some(route => 
       request.nextUrl.pathname.startsWith(route)
     )
 
-    if (!isPublicApiRoute && (!user || error)) {
+    // Also check if it starts with /api/admin explicitly to be safe
+    const isAdminApiRoute = request.nextUrl.pathname.startsWith('/api/admin');
+
+    if (!isPublicApiRoute && !isAdminApiRoute && (!user || error)) {
       return new NextResponse(
         JSON.stringify({ error: 'Authentication required' }),
         { 

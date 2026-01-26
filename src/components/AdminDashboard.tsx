@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import { authAnalytics } from '@/lib/auth-analytics';
 
 interface AdminStats {
   totalUsers: number;
@@ -25,6 +26,7 @@ const supabase = createClient(
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats | null>(null);
+  const [authStats, setAuthStats] = useState<any>(null);
   const [docStats] = useState<DocumentStats>({
     catechism: 2865, // Approximate CCC entries
     papal: 150,      // Papal documents
@@ -32,11 +34,52 @@ export default function AdminDashboard() {
     custom: 50       // Custom teachings
   });
   const [loading, setLoading] = useState(true);
+  const [ingestLoading, setIngestLoading] = useState(false);
+  const [datasetLoading, setDatasetLoading] = useState(false);
+  const [pipelineStatus, setPipelineStatus] = useState<{ type: 'success' | 'error' | 'info', message: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchAdminStats();
+    setAuthStats(authAnalytics.getAnalyticsSummary());
   }, []);
+
+  const runIngestion = async () => {
+    setIngestLoading(true);
+    setPipelineStatus({ type: 'info', message: 'Running Airbyte simulation (Vatican News RSS)...' });
+    try {
+      const res = await fetch('/api/admin/ingest', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        setPipelineStatus({ type: 'success', message: data.message });
+      } else {
+        setPipelineStatus({ type: 'error', message: 'Ingestion failed: ' + data.message });
+      }
+    } catch (e) {
+      setPipelineStatus({ type: 'error', message: 'Ingestion error' });
+    } finally {
+      setIngestLoading(false);
+    }
+  };
+
+  const runDatasetPrep = async () => {
+    setDatasetLoading(true);
+    setPipelineStatus({ type: 'info', message: 'Preparing Snowflake/Fine-Tuning dataset...' });
+    try {
+      const res = await fetch('/api/admin/prepare-dataset', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        setPipelineStatus({ type: 'success', message: data.message });
+      } else {
+        setPipelineStatus({ type: 'error', message: 'Dataset preparation failed: ' + data.message });
+      }
+    } catch (e) {
+      setPipelineStatus({ type: 'error', message: 'Dataset error' });
+    } finally {
+      setDatasetLoading(false);
+    }
+  };
+
 
   const fetchAdminStats = async () => {
     try {
@@ -190,6 +233,44 @@ export default function AdminDashboard() {
               {Object.values(docStats).reduce((a, b) => a + b, 0)}
             </p>
           </div>
+          {/* Auth Analytics */}
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Auth Analytics</h3>
+            {authStats && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded">
+                    <p className="text-sm text-gray-500">Total Events</p>
+                    <p className="text-xl font-bold">{authStats.totalEvents}</p>
+                  </div>
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded">
+                    <p className="text-sm text-gray-500">Signups</p>
+                    <p className="text-xl font-bold text-green-600">{authStats.signups}</p>
+                  </div>
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded">
+                    <p className="text-sm text-gray-500">Logins</p>
+                    <p className="text-xl font-bold text-blue-600">{authStats.signins}</p>
+                  </div>
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded">
+                    <p className="text-sm text-gray-500">Failures</p>
+                    <p className="text-xl font-bold text-red-600">{authStats.failedSignins}</p>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium mb-2">Recent Events</h4>
+                  <div className="space-y-2 max-h-40 overflow-y-auto">
+                    {authStats.recentEvents.map((event: any, i: number) => (
+                      <div key={i} className="text-xs p-2 bg-gray-50 dark:bg-gray-800 rounded flex justify-between">
+                        <span>{event.event_type}</span>
+                        <span className="text-gray-500">{new Date(event.timestamp).toLocaleTimeString()}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
@@ -273,6 +354,50 @@ export default function AdminDashboard() {
             >
               Manage Documents
             </button>
+          </div>
+        </div>
+
+        {/* Data Pipeline & Ingestion (Airbyte/Snowflake) */}
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700 mt-8">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Data Pipeline Automation</h3>
+          <div className="space-y-4">
+            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <h4 className="font-bold text-gray-900 dark:text-white mb-2">1. Ingestion (Airbyte Simulation)</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                Fetches latest Vatican News RSS feeds and stores them as raw JSON in the Data Lake (`public/data/ingested`).
+              </p>
+              <button
+                onClick={runIngestion}
+                disabled={ingestLoading}
+                className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 disabled:opacity-50 transition-colors flex items-center gap-2"
+              >
+                {ingestLoading ? 'Syncing...' : '🔄 Run Airbyte Sync (Vatican News)'}
+              </button>
+            </div>
+
+            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <h4 className="font-bold text-gray-900 dark:text-white mb-2">2. Fine-Tuning Prep (Snowflake Export)</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                Processes ingested data into Snowflake-ready CSVs and JSONL for LLM Fine-Tuning.
+              </p>
+              <button
+                onClick={runDatasetPrep}
+                disabled={datasetLoading}
+                className="bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700 disabled:opacity-50 transition-colors flex items-center gap-2"
+              >
+                {datasetLoading ? 'Processing...' : '❄️ Prepare Snowflake Dataset'}
+              </button>
+            </div>
+            
+            {pipelineStatus && (
+              <div className={`p-4 rounded border ${
+                pipelineStatus.type === 'success' ? 'bg-green-50 border-green-200 text-green-800' :
+                pipelineStatus.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' :
+                'bg-blue-50 border-blue-200 text-blue-800'
+              }`}>
+                <p className="font-mono text-sm whitespace-pre-wrap">{pipelineStatus.message}</p>
+              </div>
+            )}
           </div>
         </div>
 

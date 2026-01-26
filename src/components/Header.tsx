@@ -2,20 +2,20 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { DonationButton } from '@/components/DonationButton';
 import { useUserProgress, GamificationModal } from '@/components/GamificationSystem';
 import EmailSubscriptionModal from '@/components/EmailSubscriptionModal';
 import { isUserSubscribed, subscribeToNewsletter } from '@/lib/subscription';
 import { useState, useEffect } from 'react';
-import { Trophy, Mail, User, LogIn } from 'lucide-react';
+import { Trophy, Mail, User, LogIn, Shield } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import AuthModal from '@/components/AuthModal';
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const { language, toggleLanguage } = useLanguage();
   const { isDarkMode, toggleDarkMode } = useTheme();
   const [showGamificationModal, setShowGamificationModal] = useState(false);
@@ -69,6 +69,13 @@ export default function Header() {
               </Link>
   
               <div className="flex w-full flex-wrap items-center justify-center gap-3 sm:w-auto sm:justify-end md:gap-4">
+                <Link
+                  href="/admin"
+                  className="h-9 w-9 flex items-center justify-center rounded-full border border-purple-200 text-purple-600 hover:bg-purple-50 transition-colors dark:text-purple-400 dark:border-purple-900 dark:hover:bg-purple-900/30"
+                  aria-label="Administración"
+                >
+                  <Shield className="h-4 w-4" />
+                </Link>
                 <button
                   onClick={() => setShowGamificationModal(true)}
                   className="h-9 w-9 flex items-center justify-center rounded-full border border-amber-200 text-base text-gray-600 hover:bg-amber-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700 relative"
@@ -79,17 +86,6 @@ export default function Header() {
                     <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
                       {progress.level}
                     </span>
-                  )}
-                </button>
-                <button
-                  onClick={() => setShowAuthModal(true)}
-                  className="h-9 w-9 flex items-center justify-center rounded-full border border-amber-200 text-base text-gray-600 hover:bg-amber-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700"
-                  aria-label={user ? "Perfil" : "Iniciar sesión"}
-                >
-                  {user ? (
-                    <User className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                  ) : (
-                    <LogIn className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                   )}
                 </button>
                 <button
@@ -134,7 +130,6 @@ export default function Header() {
           isOpen={showAuthModal}
           onClose={() => setShowAuthModal(false)}
           initialMode={user ? 'signin' : 'signin'} 
-          redirectTo="/admin"
         />
       </>
     );
@@ -167,6 +162,13 @@ export default function Header() {
 
             {/* Navegación principal minimalista */}
             <nav className="hidden lg:flex items-center gap-2 text-sm font-semibold text-gray-800 dark:text-white">
+              <Link
+                href="/admin"
+                className="h-9 w-9 flex items-center justify-center rounded-full border border-purple-200 text-purple-600 hover:bg-purple-50 transition-colors dark:text-purple-400 dark:border-purple-900 dark:hover:bg-purple-900/30"
+                aria-label="Administración"
+              >
+                <Shield className="h-4 w-4" />
+              </Link>
               <Link href="/blog" style={{ color: 'var(--foreground)' }} className="px-3 py-2 rounded-lg hover:bg-amber-50 hover:text-gray-900 transition-colors dark:text-white dark:hover:bg-gray-700 dark:hover:text-white">
                 Blog
               </Link>
@@ -188,6 +190,13 @@ export default function Header() {
 
             {/* Navegación móvil */}
             <nav className="flex lg:hidden items-center gap-1.5">
+              <Link
+                href="/admin"
+                className="h-9 w-9 flex items-center justify-center rounded-full border border-purple-200 text-purple-600 hover:bg-purple-50 transition-colors dark:text-purple-400 dark:border-purple-900 dark:hover:bg-purple-900/30"
+                aria-label="Administración"
+              >
+                <Shield className="h-4 w-4" />
+              </Link>
               {!isSubscribed && (
                 <button
                   onClick={() => setShowSubscriptionModal(true)}
@@ -220,7 +229,7 @@ export default function Header() {
                 )}
               </button>
               <button
-                onClick={() => setShowAuthModal(true)}
+                onClick={() => user ? router.push('/admin') : setShowAuthModal(true)}
                 className="h-9 w-9 flex items-center justify-center rounded-full border border-amber-200 text-base text-gray-600 hover:bg-amber-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700"
                 aria-label={user ? "Perfil" : "Iniciar sesión"}
               >
