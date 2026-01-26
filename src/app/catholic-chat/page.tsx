@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, User, BookOpen, AlertTriangle, X, Zap, Clock, Upload, FileText, Mic, Square, Volume2, Menu } from 'lucide-react';
+import { Send, User, BookOpen, AlertTriangle, X, Zap, Clock, Upload, FileText, Mic, Square, Volume2, Menu, CheckCircle2, Circle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import EmailSubscriptionModal from '@/components/EmailSubscriptionModal';
 import { subscribeToNewsletter, shouldShowSubscriptionModal, markSubscriptionSkipped, SUBSCRIPTION_TIERS } from '@/lib/subscription';
@@ -201,6 +201,7 @@ export default function CatholicChatPage() {
   const [autoSendVoice, setAutoSendVoice] = useState(false);
   const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSpecialist, setIsSpecialist] = useState(false);
   const [dailyMessageCount, setDailyMessageCount] = useState(0);
   const { language } = useLanguage();
   const { progress, addXP } = useUserProgress();
@@ -689,7 +690,8 @@ export default function CatholicChatPage() {
         implementation: 'Catholic Chat', 
         language, 
         model: 'auto', 
-        studyTrack: selectedTrackId 
+        studyTrack: selectedTrackId,
+        specialistMode: isSpecialist
       };
 
       const controller = new AbortController();
@@ -1532,6 +1534,28 @@ export default function CatholicChatPage() {
             transition={{ duration: 0.5, ease: 'easeOut' }}
             className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 mt-4"
           >
+            <div className="flex justify-end mb-2 px-1">
+               <button
+                  type="button"
+                  onClick={() => setIsSpecialist(!isSpecialist)}
+                  className={`text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all border ${
+                    isSpecialist 
+                      ? 'bg-amber-100 border-amber-300 text-amber-800 dark:bg-amber-900/40 dark:border-amber-700 dark:text-amber-200 shadow-sm' 
+                      : 'bg-gray-50 border-gray-200 text-gray-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  {isSpecialist ? (
+                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                  ) : (
+                    <Circle className="w-3.5 h-3.5" />
+                  )}
+                  <span className="font-medium">
+                    {language === 'es' ? 'Soy sacerdote/teólogo/seminarista' : 
+                     language === 'pt' ? 'Sou padre/teólogo/seminarista' : 
+                     'I am a priest/theologian/seminarian'}
+                  </span>
+                </button>
+            </div>
             <form onSubmit={handleSubmit} className="flex flex-col md:flex-row items-stretch md:items-center gap-2">
               <input
                 ref={fileInputRef}

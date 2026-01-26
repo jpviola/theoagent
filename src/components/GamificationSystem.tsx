@@ -64,10 +64,10 @@ export function ProgressBar({ progress }: { progress: UserProgress }) {
   const progressPercent = (progress.xp / progress.xpToNext) * 100;
 
   return (
-    <div className="rounded-2xl p-6 border-2 border-yellow-200 shadow-lg bg-white dark:border-gray-700 dark:bg-gray-900">
+    <div className="rounded-2xl p-6 border-2 border-amber-200 shadow-lg bg-white dark:border-gray-700 dark:bg-gray-900">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-yellow-500 rounded-full text-white">
+          <div className="p-2 bg-amber-500 rounded-full text-white">
             <Award className="h-5 w-5" />
           </div>
           <div>
@@ -76,14 +76,14 @@ export function ProgressBar({ progress }: { progress: UserProgress }) {
           </div>
         </div>
         <div className="text-right">
-          <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{progress.xp} XP</p>
+          <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">{progress.xp} XP</p>
           <p className="text-xs text-gray-500 dark:text-gray-400">{progress.xpToNext - progress.xp} para siguiente nivel</p>
         </div>
       </div>
 
-      <div className="relative h-3 bg-yellow-200 rounded-full overflow-hidden mb-4">
+      <div className="relative h-3 bg-amber-200 rounded-full overflow-hidden mb-4">
         <motion.div
-          className="absolute inset-y-0 left-0 bg-gradient-to-r from-yellow-500 to-amber-500 rounded-full"
+          className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
           initial={{ width: 0 }}
           animate={{ width: `${progressPercent}%` }}
           transition={{ duration: 1, ease: "easeOut" }}
@@ -112,18 +112,18 @@ export function AchievementNotification({ achievement, onClose }: { achievement:
       exit={{ opacity: 0, y: -50, scale: 0.9 }}
       className="fixed top-4 right-4 z-50 max-w-sm"
     >
-      <div className="bg-gradient-to-r from-yellow-500 to-amber-600 text-white p-4 rounded-2xl shadow-2xl border-2 border-yellow-300 dark:from-yellow-700 dark:to-amber-700 dark:border-yellow-700">
+      <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white p-4 rounded-2xl shadow-2xl border-2 border-amber-300 dark:from-amber-700 dark:to-orange-700 dark:border-amber-700">
         <div className="flex items-center gap-3 mb-2">
           <div className="p-2 bg-white/20 rounded-full">
             {achievement.icon}
           </div>
           <div>
             <h4 className="font-bold">¡Logro Desbloqueado!</h4>
-            <p className="text-yellow-100 text-sm">+{achievement.xp} XP</p>
+            <p className="text-amber-100 text-sm">+{achievement.xp} XP</p>
           </div>
         </div>
         <h3 className="font-bold text-lg">{achievement.name}</h3>
-        <p className="text-yellow-100 text-sm dark:text-yellow-200">{achievement.description}</p>
+        <p className="text-amber-100 text-sm dark:text-amber-200">{achievement.description}</p>
       </div>
     </motion.div>
   );
@@ -140,21 +140,21 @@ export function AchievementsList({ userProgress }: { userProgress: UserProgress 
       {/* Logros desbloqueados */}
       {unlockedAchievements.length > 0 && (
         <div className="space-y-2">
-          <h4 className="font-semibold text-yellow-700 dark:text-yellow-400">Desbloqueados</h4>
+          <h4 className="font-semibold text-amber-700 dark:text-amber-400">Desbloqueados</h4>
           {unlockedAchievements.map((achievement) => (
             <motion.div
               key={achievement.id}
-              className="flex items-center gap-4 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl border-2 border-yellow-200 dark:from-neutral-800 dark:to-neutral-700 dark:border-gray-700"
+              className="flex items-center gap-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border-2 border-amber-200 dark:from-neutral-800 dark:to-neutral-700 dark:border-gray-700"
               whileHover={{ scale: 1.02 }}
             >
-              <div className="p-2 bg-yellow-500 text-white rounded-full">
+              <div className="p-2 bg-amber-500 text-white rounded-full">
                 {achievement.icon}
               </div>
               <div className="flex-1">
                 <h4 className="font-bold text-gray-900 dark:text-gray-100">{achievement.name}</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-300">{achievement.description}</p>
               </div>
-              <div className="text-yellow-600 font-bold">+{achievement.xp} XP</div>
+              <div className="text-amber-600 font-bold">+{achievement.xp} XP</div>
             </motion.div>
           ))}
         </div>
@@ -208,25 +208,27 @@ function getCookie(name: string): string | null {
 
 // Hook para manejar progreso del usuario
 export function useUserProgress() {
-  const [progress, setProgress] = useState<UserProgress>(() => {
-    const defaultProgress: UserProgress = {
-      level: 1,
-      xp: 0,
-      xpToNext: 100,
-      achievements: [],
-      streak: 0,
-      totalInteractions: 0
-    };
+  const defaultProgress: UserProgress = {
+    level: 1,
+    xp: 0,
+    xpToNext: 100,
+    achievements: [],
+    streak: 0,
+    totalInteractions: 0
+  };
 
-    if (typeof window === 'undefined') {
-      return defaultProgress;
-    }
+  const [progress, setProgress] = useState<UserProgress>(defaultProgress);
+
+  // Hydrate state from client storage
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
 
     // Intentar recuperar de localStorage primero
     const saved = localStorage.getItem('santapalabra_progress');
     if (saved) {
       try {
-        return JSON.parse(saved) as UserProgress;
+        setProgress(JSON.parse(saved));
+        return;
       } catch {
         // Si falla localStorage, intentar cookie
       }
@@ -236,14 +238,11 @@ export function useUserProgress() {
     const cookieSaved = getCookie('santapalabra_progress');
     if (cookieSaved) {
       try {
-        return JSON.parse(decodeURIComponent(cookieSaved)) as UserProgress;
-      } catch {
-        return defaultProgress;
-      }
+        setProgress(JSON.parse(decodeURIComponent(cookieSaved)));
+      } catch {}
     }
+  }, []);
 
-    return defaultProgress;
-  });
   const [newAchievement, setNewAchievement] = useState<Achievement | null>(null);
 
   const saveProgress = (newProgress: UserProgress) => {
@@ -297,7 +296,7 @@ export function useUserProgress() {
         totalInteractions: prev.totalInteractions + 1
       };
 
-      saveProgress(newProgress);
+      setTimeout(() => saveProgress(newProgress), 0);
       
       return newProgress;
     });
@@ -319,7 +318,7 @@ export function useUserProgress() {
       // Mostrar notificación
       setNewAchievement(achievement);
 
-      saveProgress(newProgress);
+      setTimeout(() => saveProgress(newProgress), 0);
       
       return newProgress;
     });

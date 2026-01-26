@@ -19,7 +19,7 @@ export default function SobreNosotrosPage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-2xl bg-white p-6 shadow-md border border-yellow-100 dark:bg-gray-800 dark:border-amber-700">
+          <div className="rounded-2xl bg-white p-6 shadow-md border border-amber-200 dark:bg-gray-800 dark:border-amber-700">
             <div className="flex items-center gap-3">
               <Heart className="h-5 w-5 text-amber-600" />
               <h2 className="text-lg font-bold">Nuestra misión</h2>
@@ -29,7 +29,7 @@ export default function SobreNosotrosPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl bg-white p-6 shadow-md border border-yellow-100 dark:bg-gray-800 dark:border-amber-700">
+          <div className="rounded-2xl bg-white p-6 shadow-md border border-amber-200 dark:bg-gray-800 dark:border-amber-700">
             <div className="flex items-center gap-3">
               <BookOpen className="h-5 w-5 text-amber-600" />
               <h2 className="text-lg font-bold">Cómo lo hacemos</h2>
@@ -39,7 +39,7 @@ export default function SobreNosotrosPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl bg-white p-6 shadow-md border border-yellow-100 dark:bg-gray-800 dark:border-amber-700">
+          <div className="rounded-2xl bg-white p-6 shadow-md border border-amber-200 dark:bg-gray-800 dark:border-amber-700">
             <div className="flex items-center gap-3">
               <Users className="h-5 w-5 text-amber-600" />
               <h2 className="text-lg font-bold">Para quién</h2>
@@ -51,7 +51,7 @@ export default function SobreNosotrosPage() {
         </div>
 
         <div className="mt-12 grid gap-8 md:grid-cols-2">
-          <div className="rounded-2xl bg-white p-8 shadow-md border border-yellow-100 dark:bg-gray-800 dark:border-amber-700">
+          <div className="rounded-2xl bg-white p-8 shadow-md border border-amber-200 dark:bg-gray-800 dark:border-amber-700">
             <h3 className="text-xl font-bold text-amber-700">Principios editoriales</h3>
             <ul className="mt-4 space-y-3 text-sm text-gray-700 dark:text-gray-300">
               <li>• Fidelidad al Catecismo y al Magisterio.</li>
@@ -61,7 +61,7 @@ export default function SobreNosotrosPage() {
             </ul>
           </div>
 
-          <div className="rounded-2xl bg-white p-8 shadow-md border border-yellow-100 dark:bg-gray-800 dark:border-amber-700">
+          <div className="rounded-2xl bg-white p-8 shadow-md border border-amber-200 dark:bg-gray-800 dark:border-amber-700">
             <h3 className="text-xl font-bold text-amber-700">Colabora con la misión</h3>
             <p className="mt-3 text-sm text-gray-700 leading-relaxed dark:text-gray-300">
               SantaPalabra crece gracias a la comunidad. Tu apoyo mantiene vivo el proyecto y nos permite sumar nuevas fuentes y funcionalidades.

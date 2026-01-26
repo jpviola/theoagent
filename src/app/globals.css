@@ -260,11 +260,11 @@ body {
    `.preserve-light-bg-*` classes are used. This keeps their visual
    identity consistent across themes. Add the appropriate class to any
    other buttons that should not change in dark mode. */
-.dark .preserve-light-bg-yellow {
-  background-image: linear-gradient(90deg, #f59e0b, #d97706) !important; /* yellow-500 -> amber-600 */
+.dark .preserve-light-bg-amber {
+  background-image: linear-gradient(90deg, #f59e0b, #d97706) !important; /* amber-500 -> amber-600 */
   color: #ffffff !important;
 }
-.dark .preserve-light-bg-yellow:hover {
+.dark .preserve-light-bg-amber:hover {
   background-image: linear-gradient(90deg, #f59e0b, #ffb020) !important;
 }
 
@@ -278,7 +278,7 @@ body {
 
 /* Ensure the internal hover overlay from `BlessedButton` does not darken
    preserved buttons — hide the absolute inset overlay for these buttons. */
-.preserve-light-bg-yellow .absolute.inset-0,
+.preserve-light-bg-amber .absolute.inset-0,
 .preserve-light-bg-green .absolute.inset-0 {
   display: none !important;
 }

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AppChrome from "@/components/AppChrome";
-import DonationModal from '@/components/DonationModal';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
@@ -60,10 +59,8 @@ export default function RootLayout({
         <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200">
           <AppChrome>{children}</AppChrome>
         </main>
-                
-                <DonationModal />
-
-                <SpeedInsights />
+        
+        <SpeedInsights />
       </body>
     </html>
   );

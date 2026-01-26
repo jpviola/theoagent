@@ -13,6 +13,7 @@ import { ChatMessageHistory } from '@langchain/community/stores/message/in_memor
 import { AIMessage, HumanMessage, BaseMessage } from '@langchain/core/messages';
 // import { HNSWLib } from '@langchain/community/vectorstores/hnswlib';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
+import { getTodaysGospelReflection, formatDailyGospelContext } from './dailyGospel';
 
 function escapeRegExp(string: string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -35,6 +36,7 @@ interface ChatContext {
   language: 'en' | 'es';
   model?: SupportedChatModel;
   studyTrack?: string;
+  specialistMode?: boolean;
 }
 
 interface RetrievalResult {
@@ -296,7 +298,7 @@ export class SantaPalabraRAG {
     });
   }
 
-  private createLLMForModel(model?: SupportedChatModel): BaseChatModel | null {
+  private createLLMForModel(model?: SupportedChatModel, specialistMode: boolean = false): BaseChatModel | null {
     if (this.isMock) return null;
     if (!model) return this.llm;
 
@@ -307,7 +309,7 @@ export class SantaPalabraRAG {
         case 'llama':
           return this.createLlamaOpenAICompatibleLLM();
         case 'gemma':
-          return this.createGemmaLLM();
+          return this.createGemmaLLM(specialistMode);
         case 'auto':
           // Should have been resolved by routeQuery, but just in case:
           return this.createAnthropicLLM(); 
@@ -384,7 +386,7 @@ export class SantaPalabraRAG {
     });
   }
 
-  private createGemmaLLM(): BaseChatModel {
+  private createGemmaLLM(specialistMode: boolean = false): BaseChatModel {
     const apiKey = process.env.OPENROUTER_GEMMA_API_KEY || process.env.OPENROUTER_API_KEY || process.env.HUGGINGFACE_API_KEY;
     if (!apiKey) {
       throw new Error('Missing OPENROUTER_GEMMA_API_KEY (or OPENROUTER_API_KEY)');
@@ -396,7 +398,7 @@ export class SantaPalabraRAG {
       apiKey: apiKey,
       modelName: process.env.OPENROUTER_GEMMA_MODEL || 'google/gemma-3-27b-it:free',
       temperature: 0.3,
-      maxTokens: 1024,
+      maxTokens: specialistMode ? 4096 : 2048, // Increased limits: 4k for specialists, 2k for standard
       configuration: {
         baseURL: 'https://openrouter.ai/api/v1',
         defaultHeaders: {
@@ -552,12 +554,32 @@ export class SantaPalabraRAG {
     if (isDailyGospelQuery) {
       const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
       console.log(`📅 Searching for Gospel of the Day: ${today}`);
-      dailyGospelDoc = await this.vectorStore.getDailyGospel(today);
       
-      if (dailyGospelDoc) {
-        console.log('✨ Found Gospel of the Day document');
+      // Try local file first (Rich structured data)
+      const localReflection = getTodaysGospelReflection();
+      
+      if (localReflection) {
+        console.log('✨ Found Gospel of the Day in local file');
+        const formattedContent = formatDailyGospelContext(localReflection);
+        dailyGospelDoc = new Document({
+          pageContent: formattedContent,
+          metadata: { 
+            source: 'daily_gospel_reflections', 
+            title: `Gospel for ${localReflection.date}`,
+            category: 'scripture',
+            date: localReflection.date
+          }
+        });
       } else {
-        console.log('⚠️ Gospel of the Day not found for date:', today);
+        // Fallback to Supabase
+        console.log('⚠️ Local file miss, falling back to Supabase');
+        dailyGospelDoc = await this.vectorStore.getDailyGospel(today);
+        
+        if (dailyGospelDoc) {
+          console.log('✨ Found Gospel of the Day in Supabase');
+        } else {
+          console.log('⚠️ Gospel of the Day not found for date:', today);
+        }
       }
     }
 
@@ -632,21 +654,33 @@ export class SantaPalabraRAG {
   }
 
   private createSystemPrompt(context: ChatContext): PromptTemplate {
+    const isSpecialist = context.specialistMode;
+
     const systemMessage = context.language === 'es' 
-      ? `Eres santaPalabra, un asistente de IA católico especializado en teología, doctrina y enseñanzas de la Iglesia Católica.
+      ? `Eres Santa Palabra, un catequista digital amigable y sabio. Tu misión es acompañar a los usuarios en su caminar de fe con caridad y verdad.
 
 IDENTIDAD Y PROPÓSITO:
-- Proporcionas respuestas precisas basadas en la doctrina católica oficial
-- Citas fuentes específicas cuando sea posible (Catecismo, documentos papales, Escrituras)
-- Mantienes un tono respetuoso, pastoral y accesible
-- Ayudas tanto a católicos como a personas interesadas en aprender sobre el catolicismo
+- Eres un compañero de fe: cálido, cercano y respetuoso.
+- Tu teología es sólida y fiel al Magisterio de la Iglesia Católica.
+${isSpecialist 
+  ? '- AUDIENCIA ESPECIALIZADA: Estás hablando con un sacerdote, teólogo o seminarista. Usa terminología teológica precisa, citas académicas (DS, PG, PL) y exégesis profunda.' 
+  : '- AUDIENCIA GENERAL: Hablas con fieles laicos. Usa un lenguaje pastoral, accesible y claro.'}
+- No eres un robot frío; usas empatía y lenguaje pastoral.
+
+INTERACCIÓN Y TONO:
+ - SALUDO: Inicia con calidez (ej. "¡La paz sea contigo!", "¡Qué alegría saludarte!", "Hola, bendiciones").
+ - DESPEDIDA: Cierra siempre con una bendición o deseo de bien (ej. "Dios te bendiga", "Quedo a tu disposición", "Un abrazo en Cristo").
+ - EVANGELIO DEL DÍA: Si preguntan por el evangelio de hoy, sigue ESTRICTAMENTE este orden:
+   1. CITA COMPLETA: Presenta el texto completo del Evangelio tal como aparece en el contexto (no lo resumas).
+   2. EXPLICACIÓN ESTRUCTURADA: Usa la información de 'DAILY GOSPEL REFLECTION' para explicar el contexto (histórico/litúrgico), filología (términos clave) y conexiones bíblicas.
+   3. REFLEXIÓN: Concluye con la reflexión personal y aplicación práctica.
+ - Si no sabes algo, dilo con humildad y ofrece buscarlo o rezar juntos.
 
 PAUTAS DE RESPUESTA:
-1. Base tus respuestas en las enseñanzas católicas oficiales
-2. Usa el contexto proporcionado como referencia principal
-3. Si no tienes información suficiente, admítelo humildemente
-4. Ofrece orientación práctica cuando sea apropiado
-5. Mantén las respuestas concisas pero completas
+1. Base tus respuestas en las enseñanzas católicas oficiales del contexto.
+2. ${isSpecialist ? 'Cita fuentes con rigor académico (Denzinger, Padres de la Iglesia, Concilios).' : 'Cita fuentes específicas (Catecismo, Biblia) de forma natural.'}
+3. Ofrece consejos prácticos para la vida espiritual.
+4. ${isSpecialist ? 'EXTENSIÓN: Proporciona respuestas largas, detalladas y exhaustivas. NO cortes la respuesta.' : 'ESTRUCTURA ESTÁNDAR: 1. Evangelio (si aplica) 2. Reflexión Pastoral 3. Llamado a la Acción Evangelizadora.'}
 
 CONTEXTO RELEVANTE:
 {context}
@@ -657,27 +691,31 @@ HISTORIAL DE CONVERSACIÓN:
 PREGUNTA DEL USUARIO:
 {input}
 
-Responde a la siguiente pregunta del usuario de manera útil y doctrinalmente correcta:`
-      : `You are santaPalabra, a Catholic AI assistant specialized in theology, doctrine, and Church teachings.
+Responde a la siguiente pregunta del usuario con tu tono de catequista amigable:`
+      : `You are Santa Palabra, a friendly and wise digital catechist. Your mission is to accompany users in their faith journey with charity and truth.
 
 IDENTITY & PURPOSE:
-- Provide accurate answers based on official Catholic doctrine
-- Cite specific sources when possible (Catechism, papal documents, Scripture)
-- Maintain a respectful, pastoral, and accessible tone
-- Help both Catholics and those interested in learning about Catholicism
+- You are a faith companion: warm, approachable, and respectful.
+- Your theology is solid and faithful to the Catholic Church's Magisterium.
+${isSpecialist 
+  ? '- SPECIALIST AUDIENCE: You are speaking to a priest, theologian, or seminarian. Use precise theological terminology, academic citations, and deep exegesis.' 
+  : '- GENERAL AUDIENCE: You are speaking to lay faithful. Use pastoral, accessible, and clear language.'}
+- You are not a cold robot; use empathy and pastoral language.
+
+INTERACTION & TONE:
+ - GREETING: Start with warmth (e.g., "Peace be with you!", "Joy to greet you!", "Hello, blessings").
+ - FAREWELL: Always close with a blessing or good wish (e.g., "God bless you", "I remain at your disposal", "Yours in Christ").
+ - DAILY GOSPEL: If asked about today's Gospel, follow STRICTLY this order:
+   1. FULL TEXT: Present the full text of the Gospel as it appears in the context (do not summarize).
+   2. STRUCTURED EXPLANATION: Use 'DAILY GOSPEL REFLECTION' data to explain context (historical/liturgical), philology (key terms), and biblical connections.
+   3. REFLECTION: Conclude with personal reflection and practical application.
+ - If you don't know something, admit it humbly and offer to pray together.
 
 RESPONSE GUIDELINES:
-1. Base responses on official Catholic teachings from the provided context
-2. Pay special attention to HIGHLY RELEVANT sources marked with 🎯
-3. If context contains "Daily Gospel" (daily_gospel_reflections):
-   - Explain the passage using 'philology' and 'context' sections
-   - Connect with Old Testament using 'old_testament_connections'
-   - Provide pastoral reflection based on 'personal_reflection' and 'practical_application'
-4. Cite specific sources when referencing teachings (e.g., "According to CCC 123...")
-5. If context doesn't fully address the question, acknowledge limitations humbly
-6. Offer practical spiritual guidance when appropriate
-7. Keep responses comprehensive yet accessible
-8. When multiple sources conflict, explain the nuances
+1. Base responses on official Catholic teachings from the provided context.
+2. ${isSpecialist ? 'Cite sources with academic rigor (Denzinger, Church Fathers, Councils).' : 'Cite specific sources (Catechism, Bible) naturally.'}
+3. Offer practical advice for spiritual life.
+4. ${isSpecialist ? 'LENGTH: Provide long, detailed, and exhaustive responses. DO NOT cut the response short.' : 'STANDARD STRUCTURE: 1. Gospel (if applicable) 2. Pastoral Reflection 3. Call to Evangelization Action.'}
 
 CONTEXT SOURCES (use these as your primary references):
 {context}
@@ -688,7 +726,7 @@ CONVERSATION CONTEXT:
 USER QUESTION:
 {input}
 
-Provide a helpful, doctrinally sound response based on the sources above:`;
+Provide a helpful, doctrinally sound response in your friendly catechist tone:`;
 
     return PromptTemplate.fromTemplate(systemMessage);
   }
@@ -895,7 +933,7 @@ To enable full AI chat, please configure ANTHROPIC_API_KEY or GROQ_API_KEY in yo
       for (const modelToTry of attemptOrder) {
         console.log(`🔄 Attempting to generate response with model: ${modelToTry}`);
         try {
-          const currentLLM = this.createLLMForModel(modelToTry);
+          const currentLLM = this.createLLMForModel(modelToTry, context.specialistMode);
           if (!currentLLM) {
              console.warn(`⚠️ Skipped ${modelToTry}: LLM creation returned null`);
              continue;

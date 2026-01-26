@@ -69,17 +69,17 @@ const tiers = [
   {
     name: 'Contribución Básica',
     amount: 2,
-    description: '(US$ 2 o $PESOS 2000)'
+    description: '(US$ 2 o $PESOS 3000)'
   },
   {
     name: 'Apoyo Pastoral',
     amount: 10,
-    description: '(US$ 10 o $PESOS 10000)'
+    description: '(US$ 10 o $PESOS 15000)'
   },
   {
     name: 'Apoyo Institucional',
     amount: 100,
-    description: '(US$ 100 o $PESOS 100000)'
+    description: '(US$ 100 o $PESOS 150000)'
   }
 ];
 
@@ -472,7 +472,16 @@ interface SupportHeaderProps {
 
 function SupportHeader({ selectedCountry, onCountryChange }: SupportHeaderProps) {
   return (
-    <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-16">
+    <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-16 relative">
+      <div className="absolute top-4 left-4 md:top-8 md:left-8">
+        <Link 
+          href="/catholic-chat" 
+          className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full transition-all text-sm font-medium border border-white/20 hover:scale-105 shadow-sm"
+        >
+          <span className="text-lg">←</span>
+          <span>Volver al chat</span>
+        </Link>
+      </div>
       <div className="max-w-4xl mx-auto px-6 text-center">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
           🕊️ Apoya SantaPalabra
@@ -491,7 +500,7 @@ function SupportHeader({ selectedCountry, onCountryChange }: SupportHeaderProps)
               target="_blank"
               rel="noreferrer"
               aria-label="Donar con PayPal — abre en una nueva pestaña"
-              className="inline-flex items-center gap-2 bg-white text-gray-900 font-semibold px-4 py-2 rounded-full shadow hover:scale-105 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+              className="inline-flex items-center gap-2 bg-white text-gray-900 font-semibold px-4 py-2 rounded-full shadow hover:scale-105 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
             >
               <span>🅿️</span>
               <span>Donar con PayPal</span>
@@ -501,20 +510,20 @@ function SupportHeader({ selectedCountry, onCountryChange }: SupportHeaderProps)
               target="_blank"
               rel="noreferrer"
               aria-label="Donar con Buy Me a Coffee — abre en una nueva pestaña"
-              className="inline-flex items-center gap-2 bg-yellow-400 text-black font-semibold px-4 py-2 rounded-full shadow hover:scale-105 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+              className="inline-flex items-center gap-2 bg-amber-400 text-black font-semibold px-4 py-2 rounded-full shadow hover:scale-105 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
             >
               <span>☕</span>
-              <span>Buy Me a Coffee</span>
+              <span>BuyMeaCoffee</span>
             </a>
           </div>
-          <div className="mt-4 flex items-center justify-center gap-3">
+          <div className="mt-6 flex flex-col items-center justify-center gap-1">
+            <span className="text-xs font-medium uppercase tracking-wide opacity-80">Pronto en</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://play.google.com/intl/en_us/badges/static/images/badges/es_badge_web_generic.png"
-              alt="Android (Google Play)"
-              className="h-10"
+              src="/google-play-badge-es.png"
+              alt="Disponible en Google Play"
+              className="h-10 opacity-90"
             />
-            <span className="text-sm text-white/90">Pronto en Android Store</span>
           </div>
         </div>
         <p className="text-lg opacity-90 max-w-2xl mx-auto">
@@ -555,12 +564,21 @@ function SupportContent({ loading, mpLoaded, selectedCountry, onMercadoPagoPayme
     <main className="max-w-4xl mx-auto px-4 py-8">
       {/* Hero Section */}
       <div className="text-center mb-12 animate-fade-in">
-        <h1 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-amber-600 to-yellow-500 bg-clip-text text-transparent drop-shadow-sm">
+        <h1 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-amber-600 to-amber-500 bg-clip-text text-transparent drop-shadow-sm">
           Apoya a SantaPalabra
         </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed mb-8">
           Tu generosidad nos permite seguir evangelizando y desarrollando herramientas tecnológicas para nuestra fe.
         </p>
+
+        <div className="mx-auto max-w-3xl rounded-xl bg-amber-50/50 p-6 border border-amber-100 shadow-sm mb-12">
+          <p className="text-lg font-serif italic text-amber-800">
+            &ldquo;Cada uno debe dar según lo que haya decidido en su corazón, no de mala gana ni por obligación, porque Dios ama al que da con alegría.&rdquo;
+          </p>
+          <p className="mt-2 font-bold text-amber-700 text-sm tracking-wide uppercase">
+            — 2 Corintios 9:7a
+          </p>
+        </div>
       </div>
 
       {/* Donation Tiers */}
@@ -622,7 +640,7 @@ function DonationTiersSection({
           >
             <div className="text-center mb-6">
               <h3 className="text-xl font-bold mb-2">{tier.name}</h3>
-              <div className="text-3xl font-bold mb-2" style={{ color: 'var(--vatican-gold)' }}>
+              <div className="text-3xl font-bold mb-2 text-amber-500">
                 ${tier.amount}
               </div>
               <p className="text-sm text-gray-600">{tier.description}</p>
@@ -684,7 +702,7 @@ function NotificationBanner({ notification, onClose }: NotificationBannerProps) 
   const bgColors = {
     success: 'bg-green-500',
     error: 'bg-red-500',
-    warning: 'bg-yellow-500',
+    warning: 'bg-amber-500',
     info: 'bg-blue-500'
   };
 

@@ -1,10 +1,70 @@
-# santaPalabra - Catholic Theological Assistant
+# SantaPalabra - Asistente Teológico Católico (Open Source)
 
-A sophisticated AI-powered Catholic theological assistant with freemium subscription tiers.
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+
+Un sofisticado asistente teológico católico impulsado por IA, diseñado para acompañar en la fe con fidelidad al Magisterio.
+
+Este proyecto es **Open Source**. ¡Contribuciones son bienvenidas!
+
+## Características Principales
+
+*   **RAG (Retrieval-Augmented Generation):** Respuestas fundamentadas en documentos oficiales (Catecismo, Magisterio, Biblia).
+*   **Modo Especialista:** Respuestas académicas y profundas para sacerdotes y teólogos.
+*   **Modo Pastoral:** Respuestas accesibles y catequéticas para fieles laicos.
+*   **Soporte Multilingüe:** Español, Inglés y Portugués.
+*   **Integración Vectorial:** Usa Supabase (pgvector) para búsqueda semántica.
+
+## Primeros Pasos
+
+### Prerrequisitos
+
+*   Node.js 18+
+*   Cuenta en Supabase (para base de datos vectorial)
+*   Claves de API de proveedores LLM (Anthropic, OpenRouter/Gemma, Groq, etc.)
+
+### Instalación
+
+1.  Clona el repositorio:
+    ```bash
+    git clone https://github.com/tu-usuario/santaPalabra.git
+    cd santaPalabra
+    ```
+
+2.  Instala dependencias:
+    ```bash
+    npm install
+    ```
+
+3.  Configura las variables de entorno:
+    *   Copia `.env.local.example` a `.env.local`.
+    *   Configura al menos un proveedor de LLM (`ANTHROPIC_API_KEY`, `OPENROUTER_API_KEY`, etc.).
+    *   Configura las credenciales de Supabase (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
+
+4.  Inicia el servidor de desarrollo:
+    ```bash
+    npm run dev
+    ```
+
+## Arquitectura de Datos y Futuro (Snowflake/Airbyte)
+
+Actualmente, SantaPalabra utiliza **Supabase** como almacén vectorial principal para el sistema RAG.
+
+Si deseas escalar el entrenamiento o ingestión de datos:
+*   **Airbyte:** Puede usarse para sincronizar grandes volúmenes de documentos externos (RSS, APIs vaticanas) hacia nuestra base de datos.
+*   **Snowflake:** Compatible como almacén de datos (Data Warehouse) si se desea realizar Fine-Tuning masivo en el futuro.
+
+## Contribuir
+
+Lee [CONTRIBUTING.md](CONTRIBUTING.md) para detalles sobre nuestro código de conducta y el proceso para enviarnos pull requests.
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+---
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
 
 ## Environment variables
 

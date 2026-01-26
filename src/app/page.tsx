@@ -29,7 +29,7 @@ export default function HomePage() {
   const translations = {
     es: {
       heroTitle: 'Conversa con tu catequista digital',
-      heroCta: 'Una catequista digital hispanoamericana: Escritura, Tradición, Magisterio y espiritualidad latinoamericana en una experiencia nueva.',
+      heroCta: 'Una catequista digital hispanoamericana: Sagrada Escritura, Tradición, Magisterio y espiritualidad en una experiencia nueva.',
       ctaChat: 'Entrar al chat',
       ctaAdmin: 'Panel',
       testimonialsTitle: 'Lo que dicen nuestros usuarios',
@@ -43,7 +43,7 @@ export default function HomePage() {
     },
     en: {
       heroTitle: 'Talk to your digital catechist',
-      heroCta: 'A Hispanic-American digital catechist: Scripture, Tradition, Magisterium, and Latin American spirituality in a new kind of experience.',
+      heroCta: 'A Hispanic-American digital catechist: Sacred Scripture, Tradition, Magisterium, and spirituality in a new kind of experience.',
       ctaChat: 'Open chat',
       ctaAdmin: 'Dashboard',
       testimonialsTitle: 'What our users say',
@@ -232,7 +232,7 @@ export default function HomePage() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-2 border-yellow-500 border-t-transparent"></div>
+            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-2 border-amber-500 border-t-transparent"></div>
             <p className="mt-4 text-gray-700">
               {language === 'es' ? 'SantaPalabra cargando…' : 'SantaPalabra loading…'}
             </p>
@@ -268,13 +268,28 @@ export default function HomePage() {
       
 
       {/* HERO SECTION */}
-      <section className="hero-section relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-gray-100 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 dark:bg-none px-4 py-16 text-center">
-        <div className="pointer-events-none absolute inset-0">
+      <section className="hero-section relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-16 text-center">
+        {/* Video Background */}
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="h-full w-full object-cover"
+          >
+            <source src="/landingPageBackground.mp4" type="video/mp4" />
+          </video>
+          {/* Overlay oscuro para mejorar legibilidad */}
+          <div className="absolute inset-0 bg-black/50 dark:bg-black/70"></div>
+        </div>
+
+        <div className="pointer-events-none absolute inset-0 z-0">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1.3 }}
             transition={{ duration: 2.5, ease: 'circOut' }}
-            className="absolute -top-1/3 left-1/2 h-full w-full -translate-x-1/2 rounded-full bg-gradient-to-b from-gray-200/40 via-gray-100/30 to-transparent blur-3xl dark:from-gray-800/20 dark:via-gray-900/10 dark:to-transparent"
+            className="absolute -top-1/3 left-1/2 h-full w-full -translate-x-1/2 rounded-full bg-gradient-to-b from-amber-200/20 via-amber-100/10 to-transparent blur-3xl dark:from-amber-800/20 dark:via-amber-900/10 dark:to-transparent"
           />
           {/* Imágenes decorativas católicas vectorializadas - distribución simétrica */}
           {/* Esquina superior izquierda - Guadalupana con efecto respiración */}
@@ -320,48 +335,41 @@ export default function HomePage() {
         </div>
 
         <motion.div
-          className="relative z-10 max-w-4xl"
+          className="relative z-20 max-w-4xl"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          <motion.h1
-            variants={itemVariants}
-            className="text-5xl font-black tracking-tighter text-gray-900 dark:text-white sm:text-6xl md:text-7xl"
-          >
-            {t.heroTitle}
-          </motion.h1>
-
-          <motion.div variants={itemVariants} className="mt-8 flex justify-center">
-            <SantaPalabraLogo className="h-64 w-64 text-yellow-600 dark:text-yellow-500 md:h-96 md:w-96" />
+          <motion.div variants={itemVariants} className="flex justify-center mb-6">
+            <SantaPalabraLogo className="h-48 w-48 md:h-72 md:w-72 drop-shadow-2xl" />
           </motion.div>
 
           <motion.p
             variants={itemVariants}
-            className="mt-6 text-lg text-gray-700 dark:text-gray-300 md:text-xl max-w-3xl mx-auto"
+            className="mt-2 text-lg text-gray-100 md:text-xl max-w-3xl mx-auto drop-shadow-md font-medium mb-12"
           >
             {t.heroCta}
           </motion.p>
 
           <motion.div
             variants={itemVariants}
-            className="mt-10 flex flex-col items-center gap-4 w-full max-w-3xl mx-auto"
+            className="flex flex-col items-center gap-6 w-full max-w-3xl mx-auto"
           >
-            <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="w-full flex flex-col items-center justify-center gap-6">
               <BlessedButton
                 href="/catholic-chat"
                 onClick={() => handleInteraction('question')}
-                className="group w-full sm:w-[20rem] flex flex-row items-center justify-center gap-3 rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 px-8 sm:px-12 py-3 text-base md:text-lg font-bold text-white shadow-2xl shadow-yellow-500/40 transition-all duration-300 hover:scale-105 hover:shadow-yellow-500/60 whitespace-nowrap preserve-light-bg-yellow"
+                className="group w-full sm:w-auto min-w-[300px] flex flex-row items-center justify-center gap-3 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-5 text-xl md:text-2xl font-bold text-white shadow-2xl shadow-amber-500/40 transition-all duration-300 hover:scale-105 hover:shadow-amber-500/60 whitespace-normal text-center preserve-light-bg-amber"
               >
-                <BookOpen className="inline-block h-6 w-6 md:h-7 md:w-7" />
-                <span className="inline-block">{t.ctaChat}</span>
-                <ArrowRight className="inline-block h-5 w-5 md:h-6 md:w-6 transition-transform group-hover:translate-x-1" />
+                <BookOpen className="inline-block h-8 w-8 flex-shrink-0" />
+                <span className="inline-block">{t.heroTitle}</span>
+                <ArrowRight className="inline-block h-6 w-6 flex-shrink-0 transition-transform group-hover:translate-x-1" />
               </BlessedButton>
 
               <BlessedButton
                 href="/support"
                 onClick={() => handleInteraction('donation')}
-                className="group w-full sm:w-[20rem] flex flex-row items-center justify-center gap-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-8 sm:px-12 py-3 text-base md:text-lg font-bold text-white shadow-2xl shadow-green-500/40 transition-all duration-300 hover:scale-105 hover:shadow-green-500/60 whitespace-nowrap preserve-light-bg-green"
+                className="group w-full sm:w-auto min-w-[200px] flex flex-row items-center justify-center gap-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-8 py-3 text-base md:text-lg font-bold text-white shadow-2xl shadow-green-500/40 transition-all duration-300 hover:scale-105 hover:shadow-green-500/60 whitespace-nowrap preserve-light-bg-green"
               >
                 <Heart className="inline-block h-6 w-6 md:h-7 md:w-7" />
                 <span className="inline-block">{language === 'es' ? '¡Quiero donar!' : '¡I want to donate!'}</span>
@@ -380,7 +388,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={toggleLanguage}
-              className="rounded-full px-4 py-2 text-sm font-semibold text-gray-600 transition-colors hover:bg-yellow-100/50"
+              className="rounded-full px-4 py-2 text-sm font-semibold text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
             >
               {language === 'es' ? 'Switch to English' : 'Cambiar a Español'}
             </button>
@@ -426,15 +434,15 @@ export default function HomePage() {
             {testimonials.map((testimonial, idx) => (
               <motion.div
                 key={idx}
-                className="rounded-2xl border border-yellow-200 bg-white p-8 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                className="rounded-2xl border border-amber-200 bg-white p-8 shadow-lg dark:border-gray-700 dark:bg-gray-800"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: idx * 0.15 }}
                 viewport={{ once: true }}
               >
-                <Quote className="mb-4 h-8 w-8 text-yellow-600 dark:text-yellow-500" />
+                <Quote className="mb-4 h-8 w-8 text-amber-600 dark:text-amber-500" />
                 <p className="mb-6 text-base text-gray-700 dark:text-gray-300 italic">“{testimonial.text}”</p>
-                <div className="border-t border-yellow-200 dark:border-gray-600 pt-4">
+                <div className="border-t border-amber-200 dark:border-gray-600 pt-4">
                   <p className="font-bold text-gray-900 dark:text-white">{testimonial.author}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">{testimonial.role}</p>
                 </div>
@@ -486,7 +494,7 @@ export default function HomePage() {
               {t.principlesTitle}
             </h2>
 
-            <div className="rounded-2xl border-2 border-yellow-400 bg-black p-10 shadow-xl md:p-12">
+            <div className="rounded-2xl border-2 border-amber-400 bg-black p-10 shadow-xl md:p-12">
               <div className="flex gap-4 md:gap-6">
                 <Check className="h-8 w-8 flex-shrink-0 text-green-400 md:h-10 md:w-10" />
                 <p className="font-mono text-lg leading-relaxed text-green-400 md:text-xl">
@@ -520,7 +528,7 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             <div className="flex items-center justify-center gap-3 mb-4">
-              <HelpCircle className="h-10 w-10 text-yellow-600" />
+              <HelpCircle className="h-10 w-10 text-amber-600" />
               <h2 className="text-4xl font-black text-gray-900 md:text-5xl">
                 {t.faqTitle}
               </h2>
@@ -538,7 +546,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="border-2 border-yellow-200 rounded-2xl overflow-hidden bg-white dark:border-gray-700 dark:bg-gray-800"
+                className="border-2 border-amber-200 rounded-2xl overflow-hidden bg-white dark:border-gray-700 dark:bg-gray-800"
               >
                 <button
                   onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
@@ -551,7 +559,7 @@ export default function HomePage() {
                     animate={{ rotate: openFaqIndex === index ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <ChevronDown className="h-6 w-6 text-yellow-600 dark:text-yellow-500 flex-shrink-0" />
+                    <ChevronDown className="h-6 w-6 text-amber-600 dark:text-amber-500 flex-shrink-0" />
                   </motion.div>
                 </button>
                 <AnimatePresence>
@@ -563,7 +571,7 @@ export default function HomePage() {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 pb-5 pt-2 text-gray-700 dark:text-gray-300 leading-relaxed border-t border-yellow-100 dark:border-gray-700">
+                      <div className="px-6 pb-5 pt-2 text-gray-700 dark:text-gray-300 leading-relaxed border-t border-amber-100 dark:border-gray-700">
                         {faq.answer}
                       </div>
                     </motion.div>
@@ -576,7 +584,7 @@ export default function HomePage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-gradient-to-r from-amber-900 to-yellow-800 dark:from-gray-900 dark:to-gray-800 px-4 py-8 text-center text-white">
+      <footer className="bg-gradient-to-r from-amber-500 to-amber-600 dark:from-gray-900 dark:to-gray-800 px-4 py-8 text-center text-white">
         <motion.div
           className="mx-auto max-w-6xl"
           initial={{ opacity: 0 }}
@@ -600,35 +608,35 @@ export default function HomePage() {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-all hover:scale-125 hover:text-yellow-300 dark:hover:text-yellow-300 text-white dark:text-gray-200"
+                className="transition-all hover:scale-125 hover:text-amber-100 dark:hover:text-amber-300 text-white dark:text-gray-200"
               >
-                <Facebook className="h-8 w-8" />
+                <Facebook className="h-8 w-8 drop-shadow-md" />
               </a>
               <a
                 href="https://instagram.com/santapalabra_ok"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-all hover:scale-125 hover:text-yellow-300 dark:hover:text-yellow-300 text-white dark:text-gray-200"
+                className="transition-all hover:scale-125 hover:text-amber-100 dark:hover:text-amber-300 text-white dark:text-gray-200"
               >
-                <Instagram className="h-8 w-8" />
+                <Instagram className="h-8 w-8 drop-shadow-md" />
               </a>
               <a
                 href="https://x.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-all hover:scale-125 hover:text-yellow-300 dark:hover:text-yellow-300 text-white dark:text-gray-200"
+                className="transition-all hover:scale-125 hover:text-amber-100 dark:hover:text-amber-300 text-white dark:text-gray-200"
               >
-                <Twitter className="h-8 w-8" />
+                <Twitter className="h-8 w-8 drop-shadow-md" />
               </a>
             </div>
 
             {/* Créditos minimalistas */}
-            <div className="border-t border-amber-700 dark:border-amber-600 pt-4 w-full max-w-xl text-xs text-white dark:text-gray-300">
+            <div className="border-t border-amber-400 dark:border-amber-600 pt-4 w-full max-w-xl text-xs text-white dark:text-gray-300 font-medium drop-shadow-sm">
               <p className="flex items-center justify-center gap-1">
                 <span>© {new Date().getFullYear()}</span>
                 <span>·</span>
                 <span>{language === 'es' ? 'Powered con' : 'Powered by'}</span>
-                <Heart className="h-3 w-3 text-red-300 fill-red-300" />
+                <Heart className="h-3 w-3 text-red-100 fill-red-100 drop-shadow-sm" />
                 <span>{language === 'es' ? 'por La prensa de Tales' : 'La prensa de Tales'}</span>
               </p>
             </div>

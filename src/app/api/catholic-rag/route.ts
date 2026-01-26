@@ -42,7 +42,7 @@ async function initializeRAG() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { query, language = 'es', model, studyTrack } = await request.json();
+    const { query, language = 'es', model, studyTrack, specialistMode } = await request.json();
     
     if (!query || typeof query !== 'string') {
       return NextResponse.json({
@@ -64,6 +64,7 @@ export async function POST(request: NextRequest) {
       language: language as 'en' | 'es',
       model: model as 'anthropic' | 'llama' | 'gemma' | 'auto' | undefined,
       studyTrack,
+      specialistMode: !!specialistMode,
     });
     
     const modelUsage = rag.getLastModelUsage

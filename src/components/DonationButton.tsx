@@ -19,7 +19,7 @@ interface DonationButtonProps {
 const providerStyles: Record<DonationProvider, string> = {
   paypal: 'bg-[#003087] hover:bg-[#00256b] text-white border border-transparent',
   mercadopago: 'bg-[#009EE3] hover:bg-[#0089c7] text-white border border-transparent',
-  buymeacoffee: 'bg-[#FFDD00] hover:bg-[#e6c700] text-black border border-yellow-400',
+  buymeacoffee: 'bg-[#FFDD00] hover:bg-[#e6c700] text-black border border-amber-400',
 };
 
 const providerIcons: Record<DonationProvider, React.ReactNode> = {

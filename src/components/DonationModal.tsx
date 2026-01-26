@@ -75,7 +75,7 @@ export default function DonationModal() {
             className="relative w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5"
           >
             {/* Header with decorative background */}
-            <div className="relative h-32 bg-gradient-to-br from-yellow-400 to-amber-600">
+            <div className="relative h-32 bg-gradient-to-br from-amber-400 to-amber-600">
               <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10"></div>
               <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 rounded-full bg-white p-2 shadow-lg">
                 <Image
@@ -110,10 +110,15 @@ export default function DonationModal() {
               <h3 className="text-2xl font-bold text-gray-900 mb-2">
                 Apoya nuestra misión
               </h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
+              <p className="text-gray-600 mb-4 leading-relaxed">
                 SantaPalabra es un proyecto independiente mantenido por un pequeño equipo. 
                 Tu donación nos ayuda a desarrollar la app móvil y crear más contenido para evangelizar.
               </p>
+
+              <blockquote className="mb-6 rounded-lg bg-amber-50 border-l-4 border-amber-400 p-4 text-sm text-amber-900 italic">
+                &ldquo;Cada uno debe dar según lo que haya decidido en su corazón, no de mala gana ni por obligación, porque Dios ama al que da con alegría.&rdquo;
+                <footer className="mt-1 text-xs font-bold text-amber-700 not-italic">(2 Corintios 9:7a)</footer>
+              </blockquote>
 
               <div className="space-y-4">
                 {/* Donation Options */}
