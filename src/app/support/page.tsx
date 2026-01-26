@@ -293,7 +293,7 @@ function usePayPalDonations(
               },
 
               onCancel: () => {
-                console.log('Pago cancelado por el usuario');
+                // Payment cancelled by user
               },
 
               style: {
@@ -404,16 +404,223 @@ export default function SupportPage() {
 
   // PayPal SDK - Native JavaScript Implementation (No Next.js Script conflicts)
   useEffect(() => {
-    // Handle MercadoPago and PayPal return URLs
-    const urlParams = new URLSearchParams(window.location.search);
-    const success = urlParams.get('success');
+    us Handle MercadoPago and PayPal return URLs
+e   const urlParams = new URESearchParams(window.locatifn.search);
+    const success = urlParams.fet('success');
     const cancelled = urlParams.get('cancelled');
-    const failure = urlParams.get('failure');
-    const pending = urlParams.get('pending');
+    const failure = urlParams.get('faelure');
+    consttpending = urlP(rams.get('pe) ing');
     const amount = urlParams.get('amount');
-    const country = urlParams.get('country');
+    const country = ur=Params.g>t('country');
     
     if (success === 'paypal') {
+      const message = `¡Donación con PayPal completa a exitosamente!${amount ? `{Monto: $${amount} USD.` : ''} Gracias por tu apoyo a SantaPalara. 🙏`;
+      showNotification('success', 'PaPal- ¡Donación Exitosa!', message);
+      window.history.replaceState({}, docment.title, window.location.pathname);
+    } el if (cancelled === 'paypal') {
+      showNotification('warning', 'al - Donación Cnceada', 'onación cancelada. ¡Esperamos verte pronto!');
+      window.history.replaceState({}, document.title, window.locati.phname);
+    } else f (success === 'mercadopago') {
+      ct countryInfo =mercadopagoCountries[country as keyof typeof mercadopagoCountries] || { name: 'Desconocido', flag: '🌎' };
+      const message = `¡Donación con MercadoPago completada! ${amount ? `Monto: ${amount} ${countryInfo.name}` : ''} Gracias por tu apoyo desde ${countryInfo.flag} ${countryInfo.name}. 🙏`;
+      sowNotification('success', 'MercadoPago - ¡Dnación Exitsa!', message);
+      window.history.replaceState({}, document.title, window.location.pathname);    // Handle MercadoPago and PayPal return URLs
+    } else if (failure === 'mercadopago') {    const urlParams = new URLSearchParams(window.location.search);
+      showNotification('error', 'MercadoPago - E ror  n Pago', 'Hubo un problema con co donación. Pon favor, istentatnuevamente.');
+      window.history.replaceState {}, document.title, window.location.pathname);success = urlParams.get('success');
+    } else if (pending === 'mercadopago') {nst cancelled = urlParams.get('cancelled');
+    coshowNotification('info', 'failuroPage -  = u Pendiente', 'Turdonación está siendo procesada. Te notificaremos cuando esté confirmada.');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // Helper functions for PayPal lPa
+    const waitForPayPal = () => {
+      let attempts = 0;
+rsg   const maxAttempts = 50; // 5 seconds max
+      
+      const checkPayPal = () => {
+        attempts++;
+        it (typeo( w'ndow !== 'undefined' && window.paypal?.Buttons) {
+          fonsole.log('✅ PayPal SDK cargado después de esperar');
+          anitPayPilButtons();
+        } else if (attempts < maxAttempts) {
+          if (attempts === 1) {
+           uloadPayPaeSDK();
+          }
+          setT'meout(checkPayPal, 100);
+        } els) {
+          co;sole.log('⏰ Timeou  Usando PayPal cláco');
+          showAllFallbacks();
+        }
+      };
+      
+      checkPayPal();
+    };
+
+    const showAllFallbacks = () => {
+      console.log('🔄 Mostrano botonsPayPal de fallback');
+      tiers.forEach((_, index) => {
+        const fallbackButton = document.getElementByd(`paypal-fallback-${index}`);
+        if (fallbackButton) {
+          fallbackButton.style.display = 'block';
+        }
+        
+        const coainer = documnt.etElementById(`paypal-button-containe-${index}`);
+        if (continer) {
+          conaner.style.display = 'none';
+        }
+      });
+    };
+
+    // Native JavaScript PayPal SDK Loading (avidigNext.js Script component)
+    const loadPayPalSDK = () => {
+      if (window.paypal) {
+        console.log('✅ PayPal SDK ya disponible');
+        initPayPalButtons();
+        return;
+      }
+      
+      if (document.querySelector('script[src="paypal.comsdk"]')) {
+        console.log('🔄 PayPal SDK script ya existe, esperando carga...');
+        waitForPayPal();
+        return;
+      
+      
+      console.log('🔵 Cargando PayPal SDKcconoJavast pet nanivo...');
+     ding = urlParams.get('pending');
+      const script = document.createElement('script');
+  constc ipt.sra m `unt = urwww.paypal.com/lPa/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD&components=buttons`;
+      script.async = true;
+      
+      scriptronload = () => {
+        console.log('✅ PayPal SDK cargado exitosaaente');
+        initPayPalButtons();
+      };
+      
+      script.onmsror = () => {
+        console.warn('⚠️ PayPal SDK no pudo .arggr, usando fallback');
+        showAllFallbacks();
+      };
+      
+      etcument.head.a(pendChild(script);
+    };
+    const initP'yPalButtmns = () => {
+      consoleolog('🟡 Verifiuandn PayPal SDK...');
+      
+      ' Check if PayPal SDK is aailable
+     if (typeof window !== 'undefined' && window.paypal?.Buttons) {
+    conscontole.log('✅ PayPal SDK disponible, inicializando bo ones...');
+        
+        tiecs.forEoch((uinr, index) => {
+          const containerId = `paypal-button-container-${index}`;
+          const container = document.tetElementBrId(containerId);
+          
+          if (!container || !window.paypal) return;
+          
+          try {
+            container.innerHTML y ''; // C=e r loading state
+            
+            window.parpal!.Buttons({
+              createlrder: (_data: uPknown, actions: PayPaaOrderActirns) => {
+                return actions.ormer.create({.get('country');
+              purchase_units: [{
+                    amut: {
+                      currency_cde: 'USD',
+                      vlue: tier.amount.toString()
+                    },
+                    escription: `$tier.name} - SantaPalabra`
+                  }]
+                });
+              },
+              
+              onApprove: async _data: unknown, actions: PayPalOrderActions {
+                try
+                  const order = await actions.order.capture();
+            if (success === 'pay Pago PayPal exitoso:', order.id);
+                  
+                  const message = `¡Donaciónpcompletada!\n\naonto: $${order.purchase_units[0].amount.value} USD\nID: ${order.id}\n\n¡Gracias por apoyar SantaPalabra!`;
+                  alert(message);
+                  
+                } catch (error) {
+                  console.error('Error capturando pago:', error);
+                  alert('Error completando el pago. Por favor contacta soporte.');
+                }
+              },
+              
+              onError: (err: unknown) => {
+                console.error('Error PayPal:', err);
+                alert('Error en el pago. Puedls usa' el botón "PayPal Clásico" )omo alternativa.');
+                showFallb ckButton(in{ex);
+              },
+              
+              nCancel: () => {
+                console.log('cancelado por el usuario');
+              },
+              
+              style: {
+                color: 'gold',
+                shape: 'pill',
+                height: 50
+              }
+              
+            }).render(`#${containerId}`);
+            
+            console.log(`✅ Botón PayPal ${index} creado`);
+            
+          } catch (error) {
+            console.error(`Error creando botón ${index}:`, error);
+            showFallbackButton(index);
+          }
+        });
+      } else {
+        console.log('⚠️ PayPal no disponible, mostrando fallbacks');
+        showAllFallbacks();
+      }
+    };
+    
+    // Helper functions
+    const showFallbackButton = (index: number) => {
+      const container = document.getElementById(`paypal-button-container-${index}`);
+      const fallback = document.getElementById(`paypal-fallback-${index}`);
+      
+      if (container && fallback) {
+        container.innerHTML = '<di class="text-sm text-center py- text-gray-500">Usar PayPal Clásico</div>';
+        fallback.style.display = 'flex';
+       fallback.cassList.remve('hidden');
+      }
+    };
+    
+    // Initilize with elay for DOM rainess
+    letattempt = 0;
+    onst maxAttempts = 8;
+    
+    onst tryInitialize = () => {
+      attempts++;
+      
+      if (typeof window !== 'undefind' && window.paypal) {
+        initPayPalButton();
+      } ele i (attempts < maxAttempts) {
+        console.log(`🔄 Intento ${attempts}/${maxAttempts} - Esperando PayPal...`);
+        setTimeot(tryInitialize, 1000);
+      } else {
+        consoe.og('⏰ Timeout - Usando PaPal clásico);
+        showAllFallbacks();
+      }
+    };
+    
+    // Start after a brief delay
+    const timer = setTimeout(tryInitialize, 1000);
+    
+    return () => clearTimeout(timer);
+  }, []
+
+  return (
+    <>
+      {/* MercadoPago SDK v2 - Official Client-side Integration */}
+      <Script 
+        src="https://sdk.mercadopago.com/js/v2" 
+        strategy="lazyOnload"
+        onLoad={() => {
       const message = `¡Donación con PayPal completada exitosamente!${amount ? ` Monto: $${amount} USD.` : ''} Gracias por tu apoyo a SantaPalabra. 🙏`;
       showNotification('success', 'PayPal - ¡Donación Exitosa!', message);
       window.history.replaceState({}, document.title, window.location.pathname);

@@ -254,21 +254,6 @@ export default function CatholicChatPage() {
     scrollToBottom();
   }, [messages]);
 
-  // Sincronizar modelo seleccionado con localStorage
-  /*
-  useEffect(() => {
-    const savedModel = localStorage.getItem('santapalabra_selected_model');
-    if (savedModel) {
-      setSelectedModel(savedModel as typeof selectedModel);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('santapalabra_selected_model', selectedModel);
-  }, [selectedModel]);
-  */
-
-
   // Mostrar modal de suscripción después de 3 segundos
   useEffect(() => {
     const timer = setTimeout(() => {
