@@ -1,5 +1,285 @@
 [
   {
+    "date": "2026-02-01",
+    "liturgical_day": "Cuarto Domingo del Tiempo Ordinario (Ciclo C)",
+    "gospel_citation": "Lucas 4:21-30",
+    "gospel_text": "En aquel tiempo, comenzó Jesús a decir en la sinagoga: «Hoy se ha cumplido esta Escritura que acabáis de oír». Y todos le expresaban su aprobación y se admiraban de las palabras de gracia que salían de su boca. Y decían: «¿No es este el hijo de José?». Pero Jesús les dijo: «Sin duda me recitaréis aquel refrán: \"Médico, cúrate a ti mismo\"; haz también aquí, en tu pueblo, lo que hemos oído que has hecho en Cafarnaún». Y añadió: «En verdad os digo que ningún profeta es bien recibido en su tierra. Os aseguro que en Israel había muchas viudas en tiempos de Elías, cuando estuvo cerrado el cielo tres años y seis meses y hubo una gran hambre en todo el país; sin embargo, a ninguna de ellas fue enviado Elías sino a una viuda de Sarepta, en el territorio de Sidón. Y muchos leprosos había en Israel en tiempos del profeta Eliseo, sin embargo, ninguno de ellos fue curado sino Naamán, el sirio». Al oír esto, todos en la sinagoga se pusieron furiosos y, levantándose, lo empujaron fuera del pueblo hasta un barranco del monte en donde se alzaba su pueblo, con intención de despeñarlo. Pero Jesús se abrió paso entre ellos y seguía su camino.",
+    "context": {
+      "historical": "Nazaret era un pueblo pequeño e insignificante. La referencia a Elías y Eliseo (profetas que obraron milagros para gentiles) desafía el nacionalismo religioso judío de la época.",
+      "literary": "Continuación inmediata de la lectura de la semana anterior. Lucas presenta el programa de Jesús y el primer rechazo, anticipando la Pasión.",
+      "liturgical": "Domingo del Tiempo Ordinario: Muestra la universalidad de la salvación y el conflicto que genera la verdad profética."
+    },
+    "philology": {
+      "greek_terms": [
+        {
+          "word": "dektos",
+          "transliteration": "dektos",
+          "meaning": "aceptable, bien recibido",
+          "insight": "Se usa tanto para el 'año de gracia' (aceptable) como para el profeta (no aceptado). Juego de palabras irónico."
+        }
+      ],
+      "hebrew_background": "Alusión a las historias de 1 Reyes 17 (Elías y la viuda) y 2 Reyes 5 (Eliseo y Naamán), mostrando que la gracia de Dios no está atada a fronteras étnicas."
+    },
+    "old_testament_connections": [
+      {
+        "passage": "Jeremías 1:4-5, 17-19",
+        "text": "Lucharán contra ti, pero no te vencerán...",
+        "connection": "Prefigura el rechazo y la protección divina del profeta, cumplido plenamente en Jesús.",
+        "type": "Typological"
+      }
+    ],
+    "traditional_interpretation": {
+      "church_fathers": [
+        {
+          "father": "San Ambrosio",
+          "quote": "El Señor no es rechazado por la debilidad de su poder, sino por la incredulidad de sus compatriotas.",
+          "source": "Expositio Evangelii secundum Lucam"
+        }
+      ],
+      "modern_exegesis": "El rechazo en Nazaret funciona como una obertura de todo el Evangelio de Lucas: Jesús será rechazado por los suyos pero la palabra llegará a los gentiles.",
+      "magisterial_teaching": "La misión profética de la Iglesia implica a menudo ser signo de contradicción."
+    },
+    "personal_reflection": {
+      "questions": [
+        "¿Tengo prejuicios que me impiden ver la acción de Dios en lo cotidiano?",
+        "¿Cómo reacciono cuando la verdad del Evangelio desafía mis comodidades?"
+      ],
+      "prayer_prompt": "Señor, dame humildad para reconocerte en lo ordinario y valentía para aceptar tu verdad, aunque me duela."
+    },
+    "scholars": {
+      "ratzinger": "Jesús no vino a buscar aplausos, sino a traer la verdad que salva.",
+      "hahn": "La liturgia de la sinagoga se convierte en el escenario del cumplimiento de la profecía.",
+      "wright": "El reino de Dios subvierte las expectativas nacionalistas."
+    },
+    "liturgical_connection": "Nos prepara para reconocer a Jesús en la Eucaristía, más allá de las apariencias.",
+    "practical_application": "Acoger a los profetas de hoy (sacerdotes, catequistas) sin juzgarlos por su origen o apariencia humana.",
+    "tags": ["profecía", "rechazo", "universalidad", "fe", "gracia"]
+  },
+  {
+    "date": "2026-01-31",
+    "liturgical_day": "Sábado de la Tercera Semana del Tiempo Ordinario / San Juan Bosco",
+    "gospel_citation": "Marcos 4:35-41",
+    "gospel_text": "Aquel día, al atardecer, dijo Jesús a sus discípulos: «Vamos a la otra orilla». Dejando a la gente, se lo llevaron en la barca, como estaba; otras barcas lo acompañaban. Se levantó una fuerte tempestad y las olas rompían contra la barca hasta casi llenarla de agua. Él estaba en la popa, dormido sobre un cabezal. Lo despertaron, diciéndole: «Maestro, ¿no te importa que perezcamos?». Se puso en pie, increpó al viento y dijo al mar: «¡Silencio, enmudece!». El viento cesó y vino una gran calma. Él les dijo: «¿Por qué tenéis miedo? ¿Aún no tenéis fe?». Se llenaron de miedo y se decían unos a otros: «¿Pero quién es este, que hasta el viento y el mar lo obedecen?».",
+    "context": {
+      "historical": "El Mar de Galilea es propenso a tormentas repentinas debido a su geografía. Cruzar a la 'otra orilla' (territorio pagano) implicaba un riesgo y una misión.",
+      "literary": "Primer milagro sobre la naturaleza en Marcos. Revela la autoridad divina de Jesús (Cristología alta).",
+      "liturgical": "San Juan Bosco: educador de la juventud, cuya fe inquebrantable superó muchas 'tormentas' sociales y políticas."
+    },
+    "philology": {
+      "greek_terms": [
+        {
+          "word": "siopa",
+          "transliteration": "siopa",
+          "meaning": "¡Silencio!",
+          "insight": "Orden imperativa, la misma que usa para expulsar demonios. Sugiere que la tormenta podría tener un origen maligno o caótico."
+        }
+      ],
+      "hebrew_background": "En el AT, solo Dios tiene poder sobre el mar y el caos (Salmo 107, Job 38)."
+    },
+    "old_testament_connections": [
+      {
+        "passage": "Salmo 107:29",
+        "text": "Cambió la tempestad en suave brisa, se acallaron las olas del mar.",
+        "connection": "Jesús realiza acciones que el AT atribuye exclusivamente a Yahvé.",
+        "type": "Theological"
+      }
+    ],
+    "traditional_interpretation": {
+      "church_fathers": [
+        {
+          "father": "San Agustín",
+          "quote": "Si Cristo duerme en tu barca, despiértalo con tu fe. La barca es la Iglesia o tu corazón.",
+          "source": "Sermones"
+        }
+      ],
+      "modern_exegesis": "El 'sueño' de Jesús denota su confianza absoluta en el Padre. El miedo de los discípulos es falta de fe.",
+      "magisterial_teaching": "La Iglesia navega en la historia entre persecuciones del mundo y consuelos de Dios."
+    },
+    "personal_reflection": {
+      "questions": [
+        "¿Qué tormentas estoy atravesando hoy?",
+        "¿Creo que Jesús tiene poder para calmar mi ansiedad?"
+      ],
+      "prayer_prompt": "Jesús, confío en Ti. Aumenta mi fe cuando sienta que la barca se hunde."
+    },
+    "scholars": {
+      "ratzinger": "El grito de los discípulos es la oración de la Iglesia en tiempos de prueba.",
+      "hahn": "Jesús muestra su divinidad al dominar el caos acuático.",
+      "wright": "El Creador está actuando para restaurar el orden en su creación."
+    },
+    "liturgical_connection": "En la liturgia, Cristo se hace presente para calmar nuestros miedos y alimentarnos.",
+    "practical_application": "Hacer un acto de fe explícito ante los problemas del día: 'Jesús, yo me ocupo de amarte, tú ocúpate de esto'.",
+    "tags": ["fe", "miedo", "confianza", "poder divino", "tormenta"]
+  },
+  {
+    "date": "2026-01-30",
+    "liturgical_day": "Viernes de la Tercera Semana del Tiempo Ordinario",
+    "gospel_citation": "Marcos 4:26-34",
+    "gospel_text": "En aquel tiempo, decía Jesús a la gente: «El reino de Dios se parece a un hombre que echa semilla en la tierra. Él duerme de noche y se levanta de mañana; la semilla germina y va creciendo, sin que él sepa cómo. La tierra va produciendo fruto sola: primero los tallos, luego la espiga, después el grano. Cuando el grano está a punto, se mete la hoz, porque ha llegado la siega». Dijo también: «¿Con qué compararemos el reino de Dios? ¿Con qué parábola lo asemejaremos? Con un grano de mostaza: al sembrarlo en la tierra es la semilla más pequeña, pero después de sembrada crece, se hace más alta que las demás hortalizas y echa ramas tan grandes que los pájaros del cielo pueden anidar a su sombra». Con muchas parábolas parecidas les exponía la palabra, acomodándose a su entender. Todo se lo exponía con parábolas, pero a sus discípulos se lo explicaba todo en privado.",
+    "context": {
+      "historical": "La agricultura era la base de la vida en Galilea. Las imágenes de siembra y cosecha eran universalmente comprendidas.",
+      "literary": "Parábolas de crecimiento (semilla que crece sola, grano de mostaza). Contrastan el inicio pequeño con el resultado grandioso.",
+      "liturgical": "Nos enseña la paciencia y la confianza en la fuerza intrínseca de la Gracia."
+    },
+    "philology": {
+      "greek_terms": [
+        {
+          "word": "automato",
+          "transliteration": "automato",
+          "meaning": "por sí misma, automáticamente",
+          "insight": "De aquí viene 'automático'. La tierra da fruto por poder divino propio, no por esfuerzo humano constante."
+        }
+      ],
+      "hebrew_background": "El 'árbol grande donde anidan los pájaros' alude a Ezequiel 17:23 y Daniel 4, símbolos de un reino universal."
+    },
+    "old_testament_connections": [
+      {
+        "passage": "Ezequiel 17:22-24",
+        "text": "Tomaré un renuevo... y lo plantaré... y echará fruto y se hará un magnífico cedro.",
+        "connection": "El Reino de Dios comienza humilde pero cobijará a todas las naciones.",
+        "type": "Prophetic"
+      }
+    ],
+    "traditional_interpretation": {
+      "church_fathers": [
+        {
+          "father": "San Juan Crisóstomo",
+          "quote": "No te impacientes si no ves frutos inmediatos. La obra de Dios es silenciosa pero segura.",
+          "source": "Homilías sobre San Mateo"
+        }
+      ],
+      "modern_exegesis": "Contra el activismo: el Reino es primariamente obra de Dios, no construcción humana.",
+      "magisterial_teaching": "La evangelización requiere paciencia divina (Evangelii Gaudium)."
+    },
+    "personal_reflection": {
+      "questions": [
+        "¿Confío en que Dios está obrando aunque no vea resultados inmediatos?",
+        "¿Tengo paciencia con mis propios procesos de crecimiento espiritual?"
+      ],
+      "prayer_prompt": "Señor, enséñame a sembrar con amor y a esperar con esperanza, sabiendo que Tú das el crecimiento."
+    },
+    "scholars": {
+      "ratzinger": "El Reino de Dios no es ruidoso ni espectacular, es la fuerza humilde de la verdad.",
+      "hahn": "La Iglesia visible comienza pequeña pero está destinada a ser católica (universal).",
+      "wright": "Dios está recreando el mundo desde adentro, orgánicamente."
+    },
+    "liturgical_connection": "La Eucaristía es esa semilla pequeña que transforma nuestra vida desde dentro.",
+    "practical_application": "No desanimarse ante la pequeñez de nuestros esfuerzos apostólicos.",
+    "tags": ["reino de Dios", "crecimiento", "paciencia", "esperanza", "semilla"]
+  },
+  {
+    "date": "2026-01-29",
+    "liturgical_day": "Jueves de la Tercera Semana del Tiempo Ordinario",
+    "gospel_citation": "Marcos 4:21-25",
+    "gospel_text": "En aquel tiempo, dijo Jesús a la gente: «¿Se trae la lámpara para meterla debajo del celemín o debajo de la cama?, ¿no es para ponerla en el candelero? No hay nada escondido, sino para que sea descubierto; no hay nada oculto, sino para que salga a la luz. El que tenga oídos para oír, que oiga». Les dijo también: «Atención a lo que estáis oyendo: la medida que uséis la usarán con vosotros, y con creces. Porque al que tiene, se le dará; y al que no tiene, aun lo que tiene se le quitará».",
+    "context": {
+      "historical": "Las casas palestinas eran oscuras, con pequeñas ventanas. Una lámpara de aceite era vital y debía estar en alto para iluminar.",
+      "literary": "Colección de dichos sapienciales. Conecta la recepción de la palabra (luz) con la responsabilidad de transmitirla.",
+      "liturgical": "La fe es un don público, no privado."
+    },
+    "philology": {
+      "greek_terms": [
+        {
+          "word": "lychnos",
+          "transliteration": "lychnos",
+          "meaning": "lámpara",
+          "insight": "Símbolo de la Palabra de Dios y del testimonio cristiano."
+        }
+      ],
+      "hebrew_background": "La luz es símbolo de la Ley (Torá) y de la presencia de Dios."
+    },
+    "old_testament_connections": [
+      {
+        "passage": "Salmo 119:105",
+        "text": "Lámpara es tu palabra para mis pasos, luz en mi sendero.",
+        "connection": "Jesús es la Palabra encarnada que ilumina a todo hombre.",
+        "type": "Typological"
+      }
+    ],
+    "traditional_interpretation": {
+      "church_fathers": [
+        {
+          "father": "San Beda",
+          "quote": "Quien recibe la luz de la fe debe iluminar al prójimo con sus obras.",
+          "source": "Comentario a Marcos"
+        }
+      ],
+      "modern_exegesis": "La 'medida' se refiere a la generosidad en la escucha y la transmisión del Evangelio.",
+      "magisterial_teaching": "La fe se fortalece dándola (Redemptoris Missio)."
+    },
+    "personal_reflection": {
+      "questions": [
+        "¿Escondo mi fe por vergüenza o comodidad?",
+        "¿Soy generoso al compartir lo que Dios me ha dado?"
+      ],
+      "prayer_prompt": "Señor, que mi vida sea un reflejo de tu luz. No permitas que la apague por miedo."
+    },
+    "scholars": {
+      "ratzinger": "La verdad tiene una fuerza irradiante propia.",
+      "hahn": "La luz del candelabro (Menorá) ahora es Cristo en la Iglesia.",
+      "wright": "El cristianismo es intrínsecamente misional."
+    },
+    "liturgical_connection": "En el Bautismo recibimos la luz de Cristo para mantenerla encendida.",
+    "practical_application": "Hacer un gesto visible de caridad o fe hoy.",
+    "tags": ["luz", "testimonio", "generosidad", "misión"]
+  },
+  {
+    "date": "2026-01-28",
+    "liturgical_day": "Miércoles de la Tercera Semana del Tiempo Ordinario / Santo Tomás de Aquino",
+    "gospel_citation": "Marcos 4:1-20",
+    "gospel_text": "En aquel tiempo, Jesús se puso a enseñar otra vez junto al mar. Acudió un gentío tan enorme, que tuvo que subirse a una barca en el mar y sentarse; y toda la gente se quedó en tierra junto al mar. Les enseñaba muchas cosas con parábolas y les decía instruyéndolos: «¡Escuchad! Salió el sembrador a sembrar...» [Texto abreviado: Parábola del sembrador y su explicación]. El sembrador siembra la palabra. Hay unos que están al borde del camino... otros en terreno pedregoso... otros entre abrojos... y otros son los que reciben la semilla en tierra buena: escuchan la palabra, la acogen y dan fruto: unos el treinta, otros el sesenta, otros el ciento».",
+    "context": {
+      "historical": "Jesús enseña desde la barca (cátedra) a la multitud. La parábola refleja la agricultura galilea.",
+      "literary": "Parábola fundamental sobre la recepción del Reino. Contiene la clave hermenéutica: 'Si no entendéis esta parábola, ¿cómo entenderéis todas las demás?'.",
+      "liturgical": "Santo Tomás de Aquino: modelo de tierra buena que dio fruto intelectual y espiritual abundante (el ciento por uno)."
+    },
+    "philology": {
+      "greek_terms": [
+        {
+          "word": "akouete",
+          "transliteration": "akouete",
+          "meaning": "¡Escuchad!",
+          "insight": "Imperativo solemne, eco del Shemá Israel. La escucha es el primer mandamiento."
+        }
+      ],
+      "hebrew_background": "El fruto abundante (30, 60, 100) evoca la bendición de Isaac en Génesis 26:12."
+    },
+    "old_testament_connections": [
+      {
+        "passage": "Isaías 55:10-11",
+        "text": "Como bajan la lluvia y la nieve... así será mi palabra... no volverá a mí vacía.",
+        "connection": "La eficacia de la Palabra depende también de la acogida humana.",
+        "type": "Prophetic"
+      }
+    ],
+    "traditional_interpretation": {
+      "church_fathers": [
+        {
+          "father": "San Jerónimo",
+          "quote": "Nosotros somos la tierra; de nuestra voluntad depende ser camino, piedra, espinas o tierra fértil.",
+          "source": "Comentario a Mateo"
+        }
+      ],
+      "modern_exegesis": "Énfasis en la responsabilidad del oyente. El sembrador (Dios/Jesús) es generoso y siembra en todas partes.",
+      "magisterial_teaching": "La formación de la conciencia es preparar la tierra para la semilla (Catecismo)."
+    },
+    "personal_reflection": {
+      "questions": [
+        "¿Qué tipo de tierra soy hoy para la Palabra de Dios?",
+        "¿Qué 'espinas' (preocupaciones) están ahogando mi vida espiritual?"
+      ],
+      "prayer_prompt": "Divino Sembrador, rompe la dureza de mi corazón y hazme tierra fértil."
+    },
+    "scholars": {
+      "ratzinger": "Tomás de Aquino mostró cómo la razón humana puede ser tierra fértil para la fe.",
+      "hahn": "La Palabra crea la Iglesia donde es acogida.",
+      "wright": "El Reino de Dios avanza a través de la respuesta humana a la Palabra."
+    },
+    "liturgical_connection": "La Liturgia de la Palabra es el momento actual de la siembra.",
+    "practical_application": "Dedicar 10 minutos a leer la Biblia con atención plena, sin distracciones.",
+    "tags": ["sembrador", "palabra de Dios", "escucha", "fecundidad", "Tomás de Aquino"]
+  },
+  {
     "date": "2026-01-27",
     "liturgical_day": "Martes de la Tercera Semana del Tiempo Ordinario",
     "gospel_citation": "Marcos 3:31-35",
