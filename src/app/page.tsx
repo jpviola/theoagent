@@ -10,7 +10,7 @@ import SantaPalabraLogo from '@/components/SantaPalabraLogo';
 import { ArrowRight, BookOpen, FlaskConical, Heart, Quote, Check, Facebook, Instagram, Twitter, ChevronDown, HelpCircle } from 'lucide-react';
 import { BlessedButton, BreathingImage } from '@/components/SensorialEffects';
 import { ProgressBar, AchievementNotification, useUserProgress } from '@/components/GamificationSystem';
-import { SmartNotifications, type UserProfile as PersonalizationUserProfile } from '@/components/PersonalizationEngine';
+import { SmartNotifications, PersonalizedRecommendations, type UserProfile as PersonalizationUserProfile } from '@/components/PersonalizationEngine';
 import ShareSantaPalabra from '@/components/ShareSantaPalabra';
 
 export default function HomePage() {
@@ -136,42 +136,15 @@ export default function HomePage() {
 
   useEffect(() => {
     let isMounted = true;
-    const failSafe = setTimeout(() => {
+    
+    // Simulate loading delay for smooth transition
+    const initTimer = setTimeout(() => {
       if (isMounted) setLoading(false);
-    }, 3000);
-
-    const getUser = async () => {
-      // Si Supabase no está configurado, no bloqueamos la carga
-      if (!supabase) {
-        if (isMounted) {
-          setUser(null);
-          setLoading(false);
-        }
-        return;
-      }
-
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (isMounted) {
-          setUser(session?.user || null);
-        }
-      } catch (error) {
-        console.error('Error fetching session:', error);
-        if (isMounted) {
-          setUser(null);
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    getUser();
+    }, 1000);
 
     return () => {
       isMounted = false;
-      clearTimeout(failSafe);
+      clearTimeout(initTimer);
     };
   }, []);
 
@@ -197,16 +170,26 @@ export default function HomePage() {
     if (profileInitializedRef.current) return;
     profileInitializedRef.current = true;
 
-    try {
-      const savedProfile = localStorage.getItem('santapalabra_profile');
-      if (savedProfile) {
-        const profile = JSON.parse(savedProfile);
-        setUserProfile(profile);
+    const loadProfile = async () => {
+      try {
+        // Pure Guest Mode: Load from localStorage only
+        // No Supabase Auth check required
+        const savedProfile = localStorage.getItem('santapalabra_profile');
+        if (savedProfile) {
+          const profile = JSON.parse(savedProfile);
+          setUserProfile(profile);
+          console.log('HomePage: Loaded guest profile from localStorage');
+        } else {
+          console.log('HomePage: No guest profile found');
+        }
+        
+        updateStreak();
+      } catch (err) {
+        console.error('Error initializing profile/gamification:', err);
       }
-      updateStreak();
-    } catch (err) {
-      console.error('Error initializing profile/gamification:', err);
-    }
+    };
+
+    loadProfile();
   }, [updateStreak]);
 
 
@@ -259,6 +242,7 @@ export default function HomePage() {
     <div className="flex min-h-screen flex-col bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200">
       {/* Notificaciones y elementos personalizados */}
       <SmartNotifications profile={userProfile} />
+      <PersonalizedRecommendations profile={userProfile} />
       {newAchievement && (
         <AchievementNotification 
           achievement={newAchievement} 

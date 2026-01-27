@@ -1,14 +1,17 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, User, BookOpen, AlertTriangle, X, Zap, Clock, Upload, FileText, Mic, Square, Volume2, Menu, CheckCircle2, Circle } from 'lucide-react';
+import { Send, User, BookOpen, AlertTriangle, X, Zap, Clock, Upload, FileText, Mic, Square, Volume2, Menu, CheckCircle2, Circle, Copy, RefreshCw, Check } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import EmailSubscriptionModal from '@/components/EmailSubscriptionModal';
 import { subscribeToNewsletter, shouldShowSubscriptionModal, markSubscriptionSkipped, SUBSCRIPTION_TIERS } from '@/lib/subscription';
 import { useUserProgress } from '@/components/GamificationSystem';
-import { StudyTracksSidebar } from '@/components/StudyTracksSidebar';
+import { StudyTracksSidebar, StudyTrack } from '@/components/StudyTracksSidebar';
+import ScriptureLinkedMarkdown from '@/components/ScriptureLinkedMarkdown';
+import { TrackPurchaseModal } from '@/components/TrackPurchaseModal';
 
 interface Message {
   id: string;
@@ -203,7 +206,13 @@ export default function CatholicChatPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSpecialist, setIsSpecialist] = useState(false);
   const [dailyMessageCount, setDailyMessageCount] = useState(0);
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [purchasedTracks, setPurchasedTracks] = useState<string[]>([]);
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
+  const [trackToPurchase, setTrackToPurchase] = useState<StudyTrack | null>(null);
+
   const { language } = useLanguage();
+  const searchParams = useSearchParams();
   const { progress, addXP } = useUserProgress();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -216,6 +225,87 @@ export default function CatholicChatPage() {
   const sttProcessorRef = useRef<ScriptProcessorNode | null>(null);
   const sttSourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const transcriptRef = useRef<string>('');
+
+  useEffect(() => {
+    // Load purchased tracks from localStorage
+    const savedTracks = localStorage.getItem('santapalabra_purchased_tracks');
+    if (savedTracks) {
+      try {
+        setPurchasedTracks(JSON.parse(savedTracks));
+      } catch (e) {
+        console.error('Failed to parse purchased tracks', e);
+      }
+    } else {
+      // Check profile metadata fallback
+      const profileStr = localStorage.getItem('santapalabra_profile');
+      if (profileStr) {
+        try {
+          const profile = JSON.parse(profileStr);
+          if (profile.metadata?.purchased_tracks) {
+            setPurchasedTracks(profile.metadata.purchased_tracks);
+            localStorage.setItem('santapalabra_purchased_tracks', JSON.stringify(profile.metadata.purchased_tracks));
+          }
+        } catch (e) {}
+      }
+    }
+  }, []);
+
+  const handlePurchaseRequest = (track: StudyTrack) => {
+    setTrackToPurchase(track);
+    setIsPurchaseModalOpen(true);
+  };
+
+  const handlePurchaseConfirm = async (trackId: string) => {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    const newTracks = [...purchasedTracks, trackId];
+    setPurchasedTracks(newTracks);
+    localStorage.setItem('santapalabra_purchased_tracks', JSON.stringify(newTracks));
+    
+    // Update profile metadata if exists
+    const profileStr = localStorage.getItem('santapalabra_profile');
+    if (profileStr) {
+      try {
+        const profile = JSON.parse(profileStr);
+        profile.metadata = { ...profile.metadata, purchased_tracks: newTracks };
+        localStorage.setItem('santapalabra_profile', JSON.stringify(profile));
+        
+        // Try to sync with backend if possible (fire and forget)
+        // fetch('/api/guest/update', ... ) 
+      } catch (e) {}
+    }
+    
+    // Select the newly purchased track
+    setSelectedTrackId(trackId);
+    setIsPurchaseModalOpen(false);
+  };
+
+  const handleCopy = async (text: string, messageId: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedMessageId(messageId);
+      setTimeout(() => setCopiedMessageId(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
+  const handleRegenerate = (assistantMessageId: string) => {
+    const msgIndex = messages.findIndex(m => m.id === assistantMessageId);
+    if (msgIndex === -1) return;
+
+    // Find the user message that triggered this response (usually the one before)
+    const userMsgIndex = msgIndex - 1;
+    if (userMsgIndex >= 0 && messages[userMsgIndex].role === 'user') {
+      const userContent = messages[userMsgIndex].content;
+      // Remove the user message and the assistant message (and anything after)
+      // This effectively "undoes" the last turn so we can try again
+      setMessages(prev => prev.slice(0, userMsgIndex));
+      // Re-send the message
+      void sendMessageText(userContent);
+    }
+  };
 
   const cleanupSttResources = async () => {
     try {
@@ -254,6 +344,14 @@ export default function CatholicChatPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Handle URL query parameters for initial input
+  useEffect(() => {
+    const q = searchParams?.get('q');
+    if (q) {
+      setInput(q);
+    }
+  }, [searchParams]);
 
   // Mostrar modal de suscripción después de 3 segundos
   useEffect(() => {
@@ -1090,6 +1188,8 @@ export default function CatholicChatPage() {
                     setSelectedTrackId(id);
                     setIsSidebarOpen(false);
                   }}
+                  purchasedTracks={purchasedTracks}
+                  onPurchaseTrack={handlePurchaseRequest}
                 />
               </div>
             </motion.div>
@@ -1098,11 +1198,16 @@ export default function CatholicChatPage() {
       </AnimatePresence>
 
       <div className="flex-1 flex overflow-hidden relative z-10">
-        <div className="hidden md:block h-full border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 z-20">
-           <StudyTracksSidebar 
-              selectedTrackId={selectedTrackId}
-              onSelectTrack={setSelectedTrackId}
-           />
+        <div className="hidden md:block h-full z-20 pl-4 py-4">
+           <div className="h-full rounded-2xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-800">
+             <StudyTracksSidebar 
+                selectedTrackId={selectedTrackId}
+                onSelectTrack={setSelectedTrackId}
+                purchasedTracks={purchasedTracks}
+                onPurchaseTrack={handlePurchaseRequest}
+                variant="floating"
+             />
+           </div>
         </div>
         <main className="flex-1 flex flex-col items-center px-4 pb-6 pt-4 relative z-10 overflow-hidden">
         <div className="w-full max-w-3xl flex flex-col h-full">
@@ -1429,13 +1534,11 @@ export default function CatholicChatPage() {
                               : 'bg-white dark:bg-gray-800 border-2 border-amber-100 dark:border-amber-700 text-gray-900 dark:text-gray-100'
                           }`}
                         >
-                          <div className="prose prose-sm max-w-none">
+                          <div className="prose prose-sm max-w-none text-gray-900 dark:text-gray-100">
                             {message.role === 'assistant' ? (
-                              <div 
-                                className="whitespace-pre-wrap leading-relaxed"
-                                dangerouslySetInnerHTML={{ 
-                                  __html: message.content.replace(/\n/g, '<br>') 
-                                }}
+                              <ScriptureLinkedMarkdown 
+                                content={message.content}
+                                language={language === 'es' ? 'spanish' : language === 'pt' ? 'portuguese' : 'english'}
                               />
                             ) : (
                               <p className="whitespace-pre-wrap font-medium">{message.content}</p>
@@ -1444,7 +1547,7 @@ export default function CatholicChatPage() {
                         </div>
 
                         {message.role === 'assistant' && (
-                          <div className="mt-2 flex items-center gap-2">
+                          <div className="mt-2 flex items-center gap-2 flex-wrap">
                             <button
                               type="button"
                               onClick={() => void speakText(message.id, message.content)}
@@ -1470,6 +1573,37 @@ export default function CatholicChatPage() {
                                   : (language === 'es' ? 'Escuchar' : language === 'pt' ? 'Ouvir' : 'Listen')}
                               </span>
                             </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleCopy(message.content, message.id)}
+                              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-700 text-amber-800 dark:text-amber-200 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
+                              title={language === 'es' ? 'Copiar respuesta' : language === 'pt' ? 'Copiar resposta' : 'Copy response'}
+                            >
+                              {copiedMessageId === message.id ? (
+                                <Check className="h-3.5 w-3.5" />
+                              ) : (
+                                <Copy className="h-3.5 w-3.5" />
+                              )}
+                              <span>
+                                {copiedMessageId === message.id 
+                                  ? (language === 'es' ? 'Copiado' : language === 'pt' ? 'Copiado' : 'Copied')
+                                  : (language === 'es' ? 'Copiar' : language === 'pt' ? 'Copiar' : 'Copy')}
+                              </span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleRegenerate(message.id)}
+                              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-700 text-amber-800 dark:text-amber-200 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
+                              title={language === 'es' ? 'Regenerar respuesta' : language === 'pt' ? 'Regenerar resposta' : 'Regenerate response'}
+                            >
+                              <RefreshCw className="h-3.5 w-3.5" />
+                              <span>
+                                {language === 'es' ? 'Re-preguntar' : language === 'pt' ? 'Regenerar' : 'Regenerate'}
+                              </span>
+                            </button>
+
                             {message.fallbackUsed && (
                               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-200 border border-blue-200 dark:border-blue-700">
                                 {language === 'es'
@@ -1746,6 +1880,12 @@ export default function CatholicChatPage() {
         </div>
       </main>
       </div>
+      <TrackPurchaseModal
+        isOpen={isPurchaseModalOpen}
+        onClose={() => setIsPurchaseModalOpen(false)}
+        track={trackToPurchase}
+        onPurchase={handlePurchaseConfirm}
+      />
     </div>
   );
 }

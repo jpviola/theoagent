@@ -230,7 +230,7 @@ export default function Header() {
               </button>
               <button
                 onClick={() => user ? router.push('/admin') : setShowAuthModal(true)}
-                className="h-9 w-9 flex items-center justify-center rounded-full border border-amber-200 text-base text-gray-600 hover:bg-amber-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700"
+                className="h-9 w-9 flex items-center justify-center rounded-full border border-amber-200 text-base text-gray-600 hover:bg-amber-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700 relative"
                 aria-label={user ? "Perfil" : "Iniciar sesión"}
               >
                 {user ? (
@@ -238,6 +238,9 @@ export default function Header() {
                 ) : (
                   <LogIn className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                 )}
+                <span className="absolute -bottom-1 -right-2 px-1 py-0.5 rounded-md bg-blue-600 text-[8px] font-bold text-white shadow-sm leading-none">
+                  BETA
+                </span>
               </button>
               <button
                 onClick={toggleDarkMode}

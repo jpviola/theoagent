@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BellRing, X, Heart, Book, Star, Sparkles, Calendar } from 'lucide-react';
 
@@ -14,11 +15,12 @@ interface PersonalizedContent {
 }
 
 export interface UserProfile {
-  devotion: string;
-  interest: string;
-  country: string;
-  level: number;
-  completedAt: Date;
+  id: string;
+  role: string | null;
+  experience_level: string | null;
+  interests: string[] | null;
+  preferred_language: string | null;
+  subscription_tier: 'free' | 'plus' | 'expert';
 }
 
 type SmartNotification = {
@@ -27,6 +29,61 @@ type SmartNotification = {
   message: string;
   type: 'devotion' | 'reminder' | 'achievement';
   timestamp: Date;
+};
+
+// Helper to map DB interests to content keys
+const mapInterestsToKeys = (interests: string[] | null) => {
+  const keys = {
+    devotion: [] as string[],
+    interest: [] as string[],
+    country: [] as string[]
+  };
+
+  if (!interests) return keys;
+
+  // Map "Mariology" to guadalupana content
+  if (interests.includes('Mariology') || interests.includes('Mariología')) keys.devotion.push('guadalupana');
+  
+  // Map "Saints & Spirituality" to mystic content
+  if (interests.includes('Saints & Spirituality') || interests.includes('Santos y Espiritualidad')) {
+    keys.devotion.push('teresiana');
+    keys.devotion.push('juanista');
+  }
+
+  // Map "Sacred Scripture", "Biblical Exegesis" to bible content
+  if (interests.includes('Sacred Scripture') || interests.includes('Biblical Exegesis') || 
+      interests.includes('Sagradas Escrituras') || interests.includes('Exégesis Bíblica')) {
+    keys.interest.push('biblia');
+  }
+
+  // Map "Church Fathers", "Church History" to history content
+  if (interests.includes('Church Fathers') || interests.includes('Church History') ||
+      interests.includes('Padres de la Iglesia') || interests.includes('Historia de la Iglesia')) {
+    keys.interest.push('patristica');
+  }
+
+  // Map "Moral Theology", "Social Teaching" to moral content
+  if (interests.includes('Moral Theology') || interests.includes('Social Teaching') ||
+      interests.includes('Teología Moral') || interests.includes('Doctrina Social')) {
+    keys.interest.push('moral');
+  }
+
+  // Map "Prayer & Spirituality" (topic) or implicit interest to oracion
+  if (interests.includes('Saints & Spirituality') || interests.includes('Liturgy & Sacraments') ||
+      interests.includes('Santos y Espiritualidad') || interests.includes('Liturgia y Sacramentos')) {
+    keys.interest.push('oracion');
+  }
+
+  // Map doctrine related interests
+  if (interests.includes('Catechism') || interests.includes('Dogmatic Theology') || interests.includes('Apologetics') ||
+      interests.includes('Catecismo') || interests.includes('Teología Dogmática') || interests.includes('Apologética')) {
+    keys.interest.push('doctrina');
+  }
+  
+  // Default country content (can be improved with geolocation or user setting later)
+  keys.country.push('mexico'); // Defaulting to Mexico content for now
+
+  return keys;
 };
 
 const contentDatabase = {
@@ -102,6 +159,48 @@ const contentDatabase = {
         tags: ['eucaristia', 'sacramento', 'cristo'],
         relevanceScore: 0.8
       }
+    ],
+    biblia: [
+      {
+        title: "Lectio Divina",
+        content: "Un método antiguo para leer la Biblia: Lectura, Meditación, Oración y Contemplación...",
+        tags: ['biblia', 'lectio', 'metodo'],
+        relevanceScore: 0.9
+      },
+      {
+        title: "Los Sentidos de la Escritura",
+        content: "El sentido literal y el sentido espiritual (alegórico, moral y anagógico)...",
+        tags: ['exegesis', 'escritura', 'interpretacion'],
+        relevanceScore: 0.8
+      }
+    ],
+    patristica: [
+      {
+        title: "San Agustín y el Tiempo",
+        content: "¿Qué es el tiempo? Si nadie me lo pregunta, lo sé; pero si quiero explicárselo al que me lo pregunta, no lo sé...",
+        tags: ['agustin', 'filosofia', 'padres'],
+        relevanceScore: 0.9
+      },
+      {
+        title: "Didaché: La Enseñanza de los Doce Apóstoles",
+        content: "Uno de los documentos más antiguos de la Iglesia primitiva sobre moral y liturgia...",
+        tags: ['historia', 'primitiva', 'documentos'],
+        relevanceScore: 0.8
+      }
+    ],
+    moral: [
+      {
+        title: "La Doctrina Social de la Iglesia",
+        content: "Principios de reflexión, criterios de juicio y directrices de acción para la sociedad...",
+        tags: ['social', 'justicia', 'moral'],
+        relevanceScore: 0.9
+      },
+      {
+        title: "Las Bienaventuranzas",
+        content: "El corazón de la enseñanza moral de Jesús: Bienaventurados los pobres de espíritu...",
+        tags: ['evangelio', 'moral', 'felicidad'],
+        relevanceScore: 0.8
+      }
     ]
   },
   country: {
@@ -126,42 +225,56 @@ const contentDatabase = {
 
 const generatePersonalizedContent = (profile: UserProfile): PersonalizedContent[] => {
   const content: PersonalizedContent[] = [];
+  const keys = mapInterestsToKeys(profile.interests);
 
-  if (contentDatabase.devotion[profile.devotion as keyof typeof contentDatabase.devotion]) {
-    const devotionContent = contentDatabase.devotion[profile.devotion as keyof typeof contentDatabase.devotion];
-    content.push({
-      type: 'devotion',
-      title: devotionContent[0].title,
-      content: devotionContent[0].content,
-      icon: <Heart className="h-5 w-5" />,
-      tags: devotionContent[0].tags,
-      relevanceScore: devotionContent[0].relevanceScore
-    });
-  }
+  // Add devotion content
+  keys.devotion.forEach(key => {
+    if (contentDatabase.devotion[key as keyof typeof contentDatabase.devotion]) {
+      const items = contentDatabase.devotion[key as keyof typeof contentDatabase.devotion];
+      // Pick random or first
+      const item = items[0];
+      content.push({
+        type: 'devotion',
+        title: item.title,
+        content: item.content,
+        icon: <Heart className="h-5 w-5" />,
+        tags: item.tags,
+        relevanceScore: item.relevanceScore
+      });
+    }
+  });
 
-  if (contentDatabase.interest[profile.interest as keyof typeof contentDatabase.interest]) {
-    const interestContent = contentDatabase.interest[profile.interest as keyof typeof contentDatabase.interest];
-    content.push({
-      type: 'teaching',
-      title: interestContent[0].title,
-      content: interestContent[0].content,
-      icon: <Book className="h-5 w-5" />,
-      tags: interestContent[0].tags,
-      relevanceScore: interestContent[0].relevanceScore
-    });
-  }
+  // Add interest content
+  keys.interest.forEach(key => {
+    if (contentDatabase.interest[key as keyof typeof contentDatabase.interest]) {
+      const items = contentDatabase.interest[key as keyof typeof contentDatabase.interest];
+      const item = items[0];
+      content.push({
+        type: 'teaching',
+        title: item.title,
+        content: item.content,
+        icon: <Book className="h-5 w-5" />,
+        tags: item.tags,
+        relevanceScore: item.relevanceScore
+      });
+    }
+  });
 
-  if (contentDatabase.country[profile.country as keyof typeof contentDatabase.country]) {
-    const countryContent = contentDatabase.country[profile.country as keyof typeof contentDatabase.country];
-    content.push({
-      type: 'reflection',
-      title: countryContent[0].title,
-      content: countryContent[0].content,
-      icon: <Star className="h-5 w-5" />,
-      tags: countryContent[0].tags,
-      relevanceScore: countryContent[0].relevanceScore
-    });
-  }
+  // Add country content
+  keys.country.forEach(key => {
+     if (contentDatabase.country[key as keyof typeof contentDatabase.country]) {
+      const items = contentDatabase.country[key as keyof typeof contentDatabase.country];
+      const item = items[0];
+      content.push({
+        type: 'reflection',
+        title: item.title,
+        content: item.content,
+        icon: <Star className="h-5 w-5" />,
+        tags: item.tags,
+        relevanceScore: item.relevanceScore
+      });
+    }
+  });
 
   content.push({
     type: 'gospel',
@@ -172,10 +285,15 @@ const generatePersonalizedContent = (profile: UserProfile): PersonalizedContent[
     relevanceScore: 1.0
   });
 
-  return content.sort((a, b) => b.relevanceScore - a.relevanceScore);
+  // Remove duplicates by title
+  const uniqueContent = Array.from(new Map(content.map(item => [item.title, item])).values());
+
+  return uniqueContent.sort((a, b) => b.relevanceScore - a.relevanceScore);
 };
 
 const getPersonalizedMorningMessage = (profile: UserProfile) => {
+  const keys = mapInterestsToKeys(profile.interests);
+  
   const messages = {
     guadalupana: 'Que la Virgen de Guadalupe te acompañe en este nuevo día',
     teresiana: 'Como dice Santa Teresa: "Que nada te turbe, que nada te espante"',
@@ -183,7 +301,14 @@ const getPersonalizedMorningMessage = (profile: UserProfile) => {
     general: 'Que Dios bendiga tu jornada de hoy'
   };
   
-  return messages[profile.devotion as keyof typeof messages] || messages.general;
+  // Try to find a specific message based on devotion keys
+  for (const key of keys.devotion) {
+    if (messages[key as keyof typeof messages]) {
+      return messages[key as keyof typeof messages];
+    }
+  }
+  
+  return messages.general;
 };
 
 const generateSmartNotifications = (profile: UserProfile): SmartNotification[] => {
@@ -215,6 +340,7 @@ const generateSmartNotifications = (profile: UserProfile): SmartNotification[] =
 
 export function PersonalizedRecommendations({ profile }: { profile: UserProfile | null }) {
   const [isVisible, setIsVisible] = useState(false);
+  const router = useRouter();
   const recommendations = profile ? generatePersonalizedContent(profile) : [];
 
   useEffect(() => {
@@ -222,6 +348,22 @@ export function PersonalizedRecommendations({ profile }: { profile: UserProfile 
 
     setTimeout(() => setIsVisible(true), 2000);
   }, [profile]);
+
+  const handleRecommendationClick = (item: PersonalizedContent) => {
+    if (item.type === 'gospel') {
+      // Navegar a la página del evangelio si existiera, o al chat preguntando por él
+      router.push('/catholic-chat?q=' + encodeURIComponent('¿Cuál es el evangelio de hoy y su reflexión?'));
+    } else {
+      // Para otros contenidos, iniciar una conversación sobre el tema
+      router.push('/catholic-chat?q=' + encodeURIComponent(item.title));
+    }
+    setIsVisible(false);
+  };
+
+  const handleViewMore = () => {
+    router.push('/catholic-chat');
+    setIsVisible(false);
+  };
 
   if (!isVisible || recommendations.length === 0) return null;
 
@@ -253,6 +395,7 @@ export function PersonalizedRecommendations({ profile }: { profile: UserProfile 
                 key={index}
                 className="p-4 bg-white rounded-xl border border-yellow-200 hover:border-yellow-400 transition-colors cursor-pointer group"
                 whileHover={{ scale: 1.02 }}
+                onClick={() => handleRecommendationClick(item)}
               >
                 <div className="flex items-start gap-3">
                     <div className="p-2 bg-yellow-100 rounded-lg text-yellow-700 group-hover:bg-yellow-200 transition-colors dark:bg-amber-900/10 dark:text-yellow-300">
@@ -281,7 +424,10 @@ export function PersonalizedRecommendations({ profile }: { profile: UserProfile 
             ))}
           </div>
 
-          <button className="w-full mt-4 py-2 px-4 bg-gradient-to-r from-yellow-500 to-amber-600 text-white font-semibold rounded-xl hover:from-yellow-600 hover:to-amber-700 transition-colors">
+          <button 
+            onClick={handleViewMore}
+            className="w-full mt-4 py-2 px-4 bg-gradient-to-r from-yellow-500 to-amber-600 text-white font-semibold rounded-xl hover:from-yellow-600 hover:to-amber-700 transition-colors"
+          >
             Ver más recomendaciones
           </button>
         </div>

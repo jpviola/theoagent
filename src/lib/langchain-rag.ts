@@ -324,19 +324,19 @@ export class SantaPalabraRAG {
       // Fallback Strategy:
       // 1. Try Groq/Llama (Fastest/Cheapest fallback)
       if (process.env.GROQ_API_KEY) {
-        console.log(`🔄 Fallback: Switching to Groq/Llama from ${model}`);
+        // console.log(`🔄 Fallback: Switching to Groq/Llama from ${model}`);
         try { return this.createLlamaOpenAICompatibleLLM(); } catch (e) { console.warn('Groq fallback failed', e); }
       }
 
       // 2. Try Anthropic (Reliable standard)
       if (process.env.ANTHROPIC_API_KEY && model !== 'anthropic') {
-        console.log(`🔄 Fallback: Switching to Anthropic from ${model}`);
+        // console.log(`🔄 Fallback: Switching to Anthropic from ${model}`);
         try { return this.createAnthropicLLM(); } catch (e) { console.warn('Anthropic fallback failed', e); }
       }
       
       // 3. Try Qwen (Free/OpenRouter)
        if ((process.env.OPENROUTER_QWEN_API_KEY || process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_GEMMA_API_KEY) && model !== 'qwen') {
-          console.log(`🔄 Fallback: Switching to Qwen from ${model}`);
+          // console.log(`🔄 Fallback: Switching to Qwen from ${model}`);
           try { return this.createQwenLLM(); } catch (e) { console.warn('Qwen fallback failed', e); }
        }
       
@@ -418,7 +418,7 @@ export class SantaPalabraRAG {
       throw new Error('Missing OPENROUTER_QWEN_API_KEY (or OPENROUTER_API_KEY)');
     }
 
-    console.log('🤖 Using Qwen3 via OpenRouter');
+    // console.log('🤖 Using Qwen3 via OpenRouter');
     return new ChatOpenAI({
       apiKey: apiKey,
       modelName: process.env.OPENROUTER_QWEN_MODEL || 'qwen/qwen3-4b:free',
@@ -442,7 +442,7 @@ export class SantaPalabraRAG {
     // 1. Try Anthropic (Primary High Quality Model)
     // Always prefer direct API key if available
     if (process.env.ANTHROPIC_API_KEY) {
-        console.log('🤖 Using Anthropic Claude directly');
+        // console.log('🤖 Using Anthropic Claude directly');
         return new ChatAnthropic({
             model: "claude-3-haiku-20240307",
             temperature: 0.3,
@@ -455,7 +455,7 @@ export class SantaPalabraRAG {
     // Fallback to Gateway if no direct key
     if (gatewayApiKey) {
          try {
-            console.log('🔥 Using Anthropic via Vercel AI Gateway');
+            // console.log('🔥 Using Anthropic via Vercel AI Gateway');
             return new ChatAnthropic({
                 apiKey: gatewayApiKey,
                 modelName: 'anthropic/claude-3-5-haiku-20241022',
@@ -480,7 +480,7 @@ export class SantaPalabraRAG {
     
     // 3. Try OpenRouter (Gemma)
     if (process.env.OPENROUTER_GEMMA_API_KEY || process.env.OPENROUTER_API_KEY || process.env.HUGGINGFACE_API_KEY) {
-        console.log('🤗 Using Gemma via OpenRouter');
+        // console.log('🤗 Using Gemma via OpenRouter');
         return new ChatOpenAI({
             apiKey: process.env.OPENROUTER_GEMMA_API_KEY || process.env.OPENROUTER_API_KEY || process.env.HUGGINGFACE_API_KEY,
             modelName: process.env.OPENROUTER_GEMMA_MODEL || 'google/gemma-3-27b-it:free',
@@ -555,7 +555,7 @@ export class SantaPalabraRAG {
     let filter: any = undefined;
     
     if (studyTrack) {
-      console.log(`🔍 Filtering documents for study track: ${studyTrack}`);
+      // console.log(`🔍 Filtering documents for study track: ${studyTrack}`);
       switch (studyTrack) {
         case 'dogmatic-theology':
           filter = { category: 'catechism' }; // Simplified for now, as complex OR filters are hard in simple metadata maps
@@ -578,50 +578,51 @@ export class SantaPalabraRAG {
       queryLower.includes('evangelio del día') || 
       queryLower.includes('daily gospel') || 
       queryLower.includes('evangelio de hoy') ||
-      queryLower.includes('lectura de hoy');
+      queryLower.includes('lectura de hoy') ||
+      queryLower.includes('reflexión de hoy') || // Added trigger
+      queryLower.includes('reflection for today');
 
     let dailyGospelDoc: Document | null = null;
+    
+    // Always attempt to load today's gospel to have it available for "detection"
+    // This answers the user's request to "detect the date and daily gospel" automatically
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const localReflection = getTodaysGospelReflection();
 
-    if (isDailyGospelQuery) {
-      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-      console.log(`📅 Searching for Gospel of the Day: ${today}`);
-      
-      // Try local file first (Rich structured data)
-      const localReflection = getTodaysGospelReflection();
-      
-      if (localReflection) {
-        console.log('✨ Found Gospel of the Day in local file');
-        const formattedContent = formatDailyGospelContext(localReflection);
-        dailyGospelDoc = new Document({
-          pageContent: formattedContent,
-          metadata: { 
-            source: 'daily_gospel_reflections', 
-            title: `Gospel for ${localReflection.date}`,
-            category: 'scripture',
-            date: localReflection.date
-          }
-        });
-      } else {
-        // Fallback to Supabase
-        console.log('⚠️ Local file miss, falling back to Supabase');
-        dailyGospelDoc = await this.vectorStore.getDailyGospel(today);
-        
-        if (dailyGospelDoc) {
-          console.log('✨ Found Gospel of the Day in Supabase');
-        } else {
-          console.log('⚠️ Gospel of the Day not found for date:', today);
+    if (localReflection) {
+      const formattedContent = formatDailyGospelContext(localReflection);
+      dailyGospelDoc = new Document({
+        pageContent: formattedContent,
+        metadata: { 
+          source: 'daily_gospel_reflections', 
+          title: `Gospel for ${localReflection.date}`,
+          category: 'scripture',
+          date: localReflection.date
         }
+      });
+      
+      if (isDailyGospelQuery) {
+        console.log(`📅 Explicit request for Gospel of the Day: ${today}`);
+      } else {
+        console.log(`📅 Auto-loading Gospel of the Day for context: ${today}`);
       }
+    } else if (isDailyGospelQuery) {
+       // Only fallback to Supabase if explicitly requested and missing locally
+       console.log('⚠️ Local file miss, falling back to Supabase');
+       dailyGospelDoc = await this.vectorStore.getDailyGospel(today);
     }
 
     // Perform Search
     const results = await this.vectorStore.enhancedSearch(query, topK, filter);
 
-    // If we found a daily gospel doc, inject it at the top with max score
+    // Inject daily gospel doc
     if (dailyGospelDoc) {
-      // Remove it from results if it's already there to avoid duplicate (check by content or id)
+      // If explicitly requested, put it first (high priority)
+      // If not, we still include it but maybe the LLM decides relevance. 
+      // For now, we simply add it to ensure "detection".
+      
       const newDocs: Document[] = [dailyGospelDoc];
-      const newScores: number[] = [1.0];
+      const newScores: number[] = [isDailyGospelQuery ? 1.0 : 0.8]; // Slightly lower score if not explicit
       const newSources: string[] = [dailyGospelDoc.metadata.source || 'Daily Gospel'];
       
       results.documents.forEach((doc, i) => {
@@ -686,9 +687,12 @@ export class SantaPalabraRAG {
 
   private createSystemPrompt(context: ChatContext): PromptTemplate {
     const isSpecialist = context.specialistMode;
+    const today = new Date().toISOString().split('T')[0];
 
     const systemMessage = context.language === 'es' 
       ? `Eres Santa Palabra, un catequista digital amigable y sabio. Tu misión es acompañar a los usuarios en su caminar de fe con caridad y verdad.
+
+FECHA DE HOY: ${today}
 
 IDENTIDAD Y PROPÓSITO:
 - Eres un compañero de fe: cálido, cercano y respetuoso.
@@ -724,6 +728,8 @@ PREGUNTA DEL USUARIO:
 
 Responde a la siguiente pregunta del usuario con tu tono de catequista amigable:`
       : `You are Santa Palabra, a friendly and wise digital catechist. Your mission is to accompany users in their faith journey with charity and truth.
+
+TODAY'S DATE: ${today}
 
 IDENTITY & PURPOSE:
 - You are a faith companion: warm, approachable, and respectful.

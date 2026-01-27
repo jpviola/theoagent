@@ -263,19 +263,45 @@ export default function AuthModal({
     authAnalytics.signupStarted(email, 'email')
 
     try {
-      const { error, data } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
+      // Check if we are currently an anonymous user
+      const { data: { user: currentUser } } = await supabase.auth.getUser()
+      const isAnonymous = currentUser?.is_anonymous
+
+      let data, error
+
+      if (isAnonymous) {
+        console.log('AuthModal: Converting anonymous user to permanent account')
+        // Convert anonymous user to permanent by updating email/password
+        const result = await supabase.auth.updateUser({
+          email,
+          password,
           data: {
             full_name: fullName.trim(),
             institution_name: institutionName.trim(),
-            created_via: 'modal',
+            created_via: 'modal_conversion',
             signup_source: window.location.pathname
+          }
+        })
+        data = result.data
+        error = result.error
+      } else {
+        // Standard signup
+        const result = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: fullName.trim(),
+              institution_name: institutionName.trim(),
+              created_via: 'modal',
+              signup_source: window.location.pathname
+            },
+            emailRedirectTo: redirectTo || `${window.location.origin}/auth/callback`
           },
-          emailRedirectTo: redirectTo || `${window.location.origin}/auth/callback`
-        },
-      })
+        })
+        data = result.data
+        error = result.error
+      }
 
       if (error) throw error
 

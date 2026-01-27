@@ -1,8 +1,8 @@
 import React from 'react';
-import { Book, Scroll, History, Calendar, Lock } from 'lucide-react';
+import { Book, Scroll, History, Calendar, Lock, Unlock, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-interface StudyTrack {
+export interface StudyTrack {
   id: string;
   title: { es: string; pt: string; en: string };
   price: string;
@@ -51,9 +51,20 @@ export const STUDY_TRACKS: StudyTrack[] = [
 interface StudyTracksSidebarProps {
   onSelectTrack: (trackId: string) => void;
   selectedTrackId: string | null;
+  purchasedTracks?: string[];
+  onPurchaseTrack?: (track: StudyTrack) => void;
+  className?: string;
+  variant?: 'default' | 'floating';
 }
 
-export function StudyTracksSidebar({ onSelectTrack, selectedTrackId }: StudyTracksSidebarProps) {
+export function StudyTracksSidebar({ 
+  onSelectTrack, 
+  selectedTrackId, 
+  purchasedTracks = [], 
+  onPurchaseTrack,
+  className = '',
+  variant = 'default'
+}: StudyTracksSidebarProps) {
   const { language } = useLanguage();
   
   // Helper to safely get title
@@ -61,8 +72,23 @@ export function StudyTracksSidebar({ onSelectTrack, selectedTrackId }: StudyTrac
     return track.title[language as keyof typeof track.title] || track.title.es;
   };
 
+  const handleTrackClick = (track: StudyTrack) => {
+    const isUnlocked = purchasedTracks.includes(track.id);
+    
+    if (isUnlocked) {
+      onSelectTrack(track.id);
+    } else {
+      if (onPurchaseTrack) {
+        onPurchaseTrack(track);
+      }
+    }
+  };
+
+  const baseClasses = "w-72 bg-white dark:bg-gray-900 flex flex-col h-full";
+  const borderClass = variant === 'default' ? "border-r border-gray-200 dark:border-gray-800" : "";
+  
   return (
-    <div className="w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col h-full">
+    <div className={`${baseClasses} ${borderClass} ${className}`}>
       <div className="p-4 border-b border-gray-200 dark:border-gray-800">
         <h2 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
           {language === 'es' ? 'Trayectos de Estudio' : 
@@ -75,11 +101,12 @@ export function StudyTracksSidebar({ onSelectTrack, selectedTrackId }: StudyTrac
           {STUDY_TRACKS.map((track) => {
             const Icon = track.icon;
             const isSelected = selectedTrackId === track.id;
+            const isUnlocked = purchasedTracks.includes(track.id);
             
             return (
               <button
                 key={track.id}
-                onClick={() => onSelectTrack(track.id)}
+                onClick={() => handleTrackClick(track)}
                 className={`w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium rounded-md transition-colors group ${
                   isSelected 
                     ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-300' 
@@ -90,13 +117,21 @@ export function StudyTracksSidebar({ onSelectTrack, selectedTrackId }: StudyTrac
                   <Icon className={`mr-2.5 h-4 w-4 flex-shrink-0 ${
                     isSelected ? 'text-indigo-500' : 'text-gray-400 group-hover:text-gray-500'
                   }`} />
-                  <span className="truncate text-left">{getTitle(track)}</span>
+                  <span className={`truncate text-left ${!isUnlocked && !isSelected ? 'text-gray-500' : ''}`}>
+                    {getTitle(track)}
+                  </span>
                 </div>
                 <div className="flex items-center flex-shrink-0">
-                   <Lock className="h-2.5 w-2.5 text-gray-400 mr-1" />
-                   <span className="text-[10px] font-semibold text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">
-                     {track.price}
-                   </span>
+                   {isUnlocked ? (
+                     <CheckCircle className="h-3.5 w-3.5 text-green-500" />
+                   ) : (
+                     <>
+                       <Lock className="h-2.5 w-2.5 text-gray-400 mr-1" />
+                       <span className="text-[10px] font-semibold text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">
+                         {track.price}
+                       </span>
+                     </>
+                   )}
                 </div>
               </button>
             );

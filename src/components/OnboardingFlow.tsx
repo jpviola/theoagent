@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient, type User } from '@supabase/supabase-js'
+import { type User } from '@supabase/supabase-js'
 
 interface OnboardingFlowProps {
   user: User
@@ -10,23 +10,14 @@ interface OnboardingFlowProps {
 }
 
 interface OnboardingData {
-  role: 'student' | 'educator' | 'priest' | 'scholar' | 'layperson' | ''
+  role: 'priest' | 'religious' | 'layperson' | ''
+  profession: 'student' | 'educator' | 'theologian' | 'catechist' | 'seeker' | ''
   interests: string[]
-  experience: 'beginner' | 'intermediate' | 'advanced' | ''
-  primaryUse: 'personal_study' | 'teaching' | 'pastoral_care' | 'academic_research' | 'general' | ''
-  topics: string[]
-  preferredLanguage: 'en' | 'es' | 'it' | 'fr' | 'pt' | ''
-  notifications: {
-    dailyReflections: boolean
-    weeklyNewsletter: boolean
-    productUpdates: boolean
-  }
+  preferredLanguage: 'en' | 'es' | 'pt'
 }
 
 type RoleId = OnboardingData['role']
-type ExperienceLevel = OnboardingData['experience']
-type PrimaryUse = OnboardingData['primaryUse']
-type PreferredLanguage = OnboardingData['preferredLanguage']
+type ProfessionId = OnboardingData['profession']
 
 const ROLE_OPTIONS: Array<{
   id: RoleId
@@ -34,82 +25,42 @@ const ROLE_OPTIONS: Array<{
   description: string
   icon: string
 }> = [
-  { id: 'student', name: 'Student', description: 'Seminary student or theology student', icon: '🎓' },
-  { id: 'educator', name: 'Educator', description: 'Teacher, professor, or catechist', icon: '👨‍🏫' },
-  { id: 'priest', name: 'Priest/Religious', description: 'Ordained minister or religious', icon: '👨‍💼' },
-  { id: 'scholar', name: 'Scholar', description: 'Academic researcher or theologian', icon: '📚' },
-  { id: 'layperson', name: 'Lay Faithful', description: 'Faithful seeking to deepen faith', icon: '🙏' }
+  { id: 'layperson', name: 'Laico', description: 'Fiel católico en el mundo', icon: '🙏' },
+  { id: 'priest', name: 'Sacerdote', description: 'Ministro ordenado', icon: '✝️' },
+  { id: 'religious', name: 'Religioso/a', description: 'Vida consagrada', icon: '📿' }
+]
+
+const PROFESSION_OPTIONS: Array<{
+  id: ProfessionId
+  name: string
+  description: string
+  icon: string
+}> = [
+  { id: 'student', name: 'Estudiante', description: 'Estudiante de teología o seminario', icon: '🎓' },
+  { id: 'catechist', name: 'Catequista', description: 'Formador en la fe', icon: '📖' },
+  { id: 'educator', name: 'Educador', description: 'Profesor o maestro católico', icon: '👨‍🏫' },
+  { id: 'theologian', name: 'Teólogo', description: 'Investigador o académico', icon: '📚' },
+  { id: 'seeker', name: 'Buscador', description: 'Interesado en aprender más', icon: '🔍' }
 ]
 
 const INTEREST_OPTIONS = [
-  'Sacred Scripture', 'Church Fathers', 'Catechism', 'Moral Theology', 
-  'Liturgy & Sacraments', 'Mariology', 'Saints & Spirituality', 'Church History',
-  'Social Teaching', 'Apologetics', 'Biblical Exegesis', 'Dogmatic Theology'
-]
-
-const TOPIC_OPTIONS = [
-  'Daily Gospel Readings', 'Saint of the Day', 'Papal Teaching', 'Conciliar Documents',
-  'Prayer & Spirituality', 'Bioethics', 'Marriage & Family', 'Social Justice',
-  'Ecumenism', 'Interfaith Dialogue', 'Church Law (Canon Law)', 'Theology of the Body'
-]
-
-const EXPERIENCE_LEVELS: Array<{
-  id: ExperienceLevel
-  name: string
-  desc: string
-}> = [
-  { id: 'beginner', name: 'Beginner', desc: 'New to formal theological study' },
-  { id: 'intermediate', name: 'Intermediate', desc: 'Some theological education or experience' },
-  { id: 'advanced', name: 'Advanced', desc: 'Extensive theological training or study' }
-]
-
-const USE_CASE_OPTIONS: Array<{
-  id: PrimaryUse
-  name: string
-  desc: string
-}> = [
-  { id: 'personal_study', name: 'Personal Study', desc: 'Growing in faith and knowledge' },
-  { id: 'teaching', name: 'Teaching & Education', desc: 'Preparing lessons or courses' },
-  { id: 'pastoral_care', name: 'Pastoral Care', desc: 'Ministry and spiritual guidance' },
-  { id: 'academic_research', name: 'Academic Research', desc: 'Scholarly work and writing' },
-  { id: 'general', name: 'General Questions', desc: 'Various theological inquiries' }
-]
-
-const LANGUAGE_OPTIONS: Array<{
-  id: PreferredLanguage
-  name: string
-  flag: string
-}> = [
-  { id: 'en', name: 'English', flag: '🇺🇸' },
-  { id: 'es', name: 'Español', flag: '🇪🇸' },
-  { id: 'it', name: 'Italiano', flag: '🇮🇹' },
-  { id: 'fr', name: 'Français', flag: '🇫🇷' },
-  { id: 'pt', name: 'Português', flag: '🇵🇹' }
+  'Sagradas Escrituras', 'Padres de la Iglesia', 'Catecismo', 'Teología Moral', 
+  'Liturgia y Sacramentos', 'Mariología', 'Santos y Espiritualidad', 'Historia de la Iglesia',
+  'Doctrina Social', 'Apologética', 'Exégesis Bíblica', 'Teología Dogmática'
 ]
 
 export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingFlowProps) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
   const [currentStep, setCurrentStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [data, setData] = useState<OnboardingData>({
     role: '',
+    profession: '',
     interests: [],
-    experience: '',
-    primaryUse: '',
-    topics: [],
-    preferredLanguage: 'en',
-    notifications: {
-      dailyReflections: true,
-      weeklyNewsletter: true,
-      productUpdates: false
-    }
+    preferredLanguage: 'es'
   })
 
-  const totalSteps = 5
+  const totalSteps = 3
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -130,43 +81,74 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
     setError('')
 
     try {
-      // Save onboarding data to user profile
-      const { error: updateError } = await supabase.auth.updateUser({
-        data: {
-          onboarding_completed: true,
-          onboarding_data: data,
-          role: data.role,
-          experience_level: data.experience,
-          interests: data.interests,
-          preferred_language: data.preferredLanguage
-        }
-      })
-
-      if (updateError) throw updateError
-
-      // Update profile in database
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({
-          role: data.role,
-          experience_level: data.experience,
-          interests: data.interests,
-          preferred_language: data.preferredLanguage,
-          onboarding_completed: true
-        })
-        .eq('id', user.id)
-
-      if (profileError) {
-        console.error('Profile update error:', profileError)
-        // Don't throw - onboarding data is saved in auth metadata
+      // Generate or retrieve guest ID
+      let guestId = localStorage.getItem('santapalabra_guest_id');
+      if (!guestId) {
+        guestId = crypto.randomUUID();
+        localStorage.setItem('santapalabra_guest_id', guestId);
       }
 
+      const profileData = {
+        id: guestId,
+        role: data.role,
+        experience_level: data.profession, // Mapping profession to experience_level for compatibility
+        interests: data.interests,
+        preferred_language: data.preferredLanguage,
+        // subscription_tier: 'free', // Removed as it's not in the schema
+        onboarding_completed: true,
+        metadata: {
+          profession: data.profession,
+          subscription_tier: 'free'
+          // topics: data.topics, // Removed
+          // notifications: data.notifications // Removed
+        }
+      };
+
+      // Save to Guest API
+      const response = await fetch('/api/guest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profileData),
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        console.error('API Error Details:', errData);
+        throw new Error(errData.error || 'Failed to save guest profile');
+      }
+
+      // Save to localStorage for client-side access (HomePage compatibility)
+      localStorage.setItem('santapalabra_profile', JSON.stringify(profileData));
+      
       onComplete()
 
     } catch (error: unknown) {
       console.error('Onboarding save error:', error)
-      setError('Failed to save onboarding data. You can complete this later in settings.')
-      setTimeout(() => onComplete(), 2000)
+      setError('Failed to save preferences. Please try again.')
+      // Even if API fails, we can save locally and proceed
+      try {
+         let guestId = localStorage.getItem('santapalabra_guest_id') || crypto.randomUUID();
+         localStorage.setItem('santapalabra_guest_id', guestId);
+         
+         const localProfile = {
+             id: guestId,
+             role: data.role,
+             experience_level: data.profession,
+             interests: data.interests,
+             preferred_language: data.preferredLanguage,
+             subscription_tier: 'free',
+             onboarding_completed: true,
+             metadata: {
+               profession: data.profession
+             }
+          };
+         localStorage.setItem('santapalabra_profile', JSON.stringify(localProfile));
+         setTimeout(() => onComplete(), 1000);
+      } catch (e) {
+         console.error('Local save error:', e);
+      }
     } finally {
       setLoading(false)
     }
@@ -184,34 +166,32 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
   const isStepValid = () => {
     switch (currentStep) {
       case 1: return data.role !== ''
-      case 2: return data.interests.length > 0
-      case 3: return data.experience !== '' && data.primaryUse !== ''
-      case 4: return data.topics.length > 0
-      case 5: return data.preferredLanguage !== ''
+      case 2: return data.profession !== ''
+      case 3: return data.interests.length > 0
       default: return true
     }
   }
 
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-yellow-50 to-amber-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[95vh] overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="relative p-6 border-b border-gray-200 bg-gradient-to-r from-[#F4B400] to-[#FFCC00]">
+        <div className="relative p-6 border-b border-gray-200 bg-gradient-to-r from-[#F4B400] to-[#FFCC00] flex-none">
           <div className="text-center text-white">
             <div className="flex items-center justify-center mb-4">
               <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
                 <span className="text-3xl">⛪</span>
               </div>
             </div>
-            <h1 className="text-2xl font-bold mb-2">Welcome to santaPalabra!</h1>
-            <p className="text-white/90">Let&apos;s personalize your theological assistant</p>
+            <h1 className="text-2xl font-bold mb-2">¡Bienvenido a Santa Palabra!</h1>
+            <p className="text-white/90">Personalicemos tu asistente teológico</p>
           </div>
 
           {/* Progress Bar */}
           <div className="mt-6">
             <div className="flex items-center justify-between text-sm text-white/80 mb-2">
-              <span>Step {currentStep} of {totalSteps}</span>
-              <span>{Math.round((currentStep / totalSteps) * 100)}% complete</span>
+              <span>Paso {currentStep} de {totalSteps}</span>
+              <span>{Math.round((currentStep / totalSteps) * 100)}% completado</span>
             </div>
             <div className="w-full bg-white/20 rounded-full h-2">
               <div 
@@ -227,12 +207,12 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
               onClick={onSkip}
               className="absolute top-4 right-4 text-white/80 hover:text-white text-sm underline"
             >
-              Skip setup
+              Saltar configuración
             </button>
           )}
         </div>
 
-        <div className="p-6 overflow-y-auto max-h-[60vh]">
+        <div className="p-6 overflow-y-auto flex-1 min-h-0">
           {error && (
             <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-center">
               <p className="text-sm text-red-700">{error}</p>
@@ -242,8 +222,8 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
           {/* Step 1: Role Selection */}
           {currentStep === 1 && (
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">What&apos;s your role?</h2>
-              <p className="text-gray-600 mb-8">This helps us tailor santaPalabra to your needs</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">¿Cuál es tu estado de vida?</h2>
+              <p className="text-gray-600 mb-8">Ayúdanos a personalizar tu experiencia</p>
               
               <div className="space-y-3">
                 {ROLE_OPTIONS.map((role) => (
@@ -276,11 +256,48 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
             </div>
           )}
 
-          {/* Step 2: Interests */}
+          {/* Step 2: Profession/Occupation */}
           {currentStep === 2 && (
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">What interests you most?</h2>
-              <p className="text-gray-600 mb-8">Select up to 6 areas (you can change these later)</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">¿Cuál es tu perfil?</h2>
+              <p className="text-gray-600 mb-8">Para ofrecerte contenido relevante</p>
+              
+              <div className="space-y-3">
+                {PROFESSION_OPTIONS.map((prof) => (
+                  <button
+                    key={prof.id}
+                    onClick={() => setData(prev => ({ ...prev, profession: prof.id }))}
+                    className={`w-full p-4 rounded-xl border-2 transition-all text-left hover:shadow-md ${
+                      data.profession === prof.id
+                        ? 'border-blue-500 bg-blue-50 shadow-md'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-4">
+                      <span className="text-2xl">{prof.icon}</span>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">{prof.name}</h3>
+                        <p className="text-sm text-gray-600">{prof.description}</p>
+                      </div>
+                      {data.profession === prof.id && (
+                        <div className="ml-auto">
+                          <svg className="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Step 3: Interests */}
+          {currentStep === 3 && (
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">¿Qué te interesa más?</h2>
+              <p className="text-gray-600 mb-8">Selecciona hasta 6 áreas</p>
               
               <div className="grid grid-cols-2 gap-3">
                 {INTEREST_OPTIONS.map((interest) => (
@@ -302,195 +319,14 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
               </div>
               
               <p className="text-xs text-gray-500 mt-4">
-                Selected: {data.interests.length}/6
+                Seleccionado: {data.interests.length}/6
               </p>
-            </div>
-          )}
-
-          {/* Step 3: Experience & Usage */}
-          {currentStep === 3 && (
-            <div className="space-y-8">
-              <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Tell us about yourself</h2>
-                <p className="text-gray-600 mb-8">This helps us match our responses to your level</p>
-                
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Your theology background:</h3>
-                    <div className="grid grid-cols-1 gap-3">
-                      {EXPERIENCE_LEVELS.map((level) => (
-                        <button
-                          key={level.id}
-                          onClick={() => setData(prev => ({ ...prev, experience: level.id }))}
-                          className={`p-4 rounded-xl border-2 transition-all text-left ${
-                            data.experience === level.id
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h4 className="font-semibold text-gray-900">{level.name}</h4>
-                              <p className="text-sm text-gray-600">{level.desc}</p>
-                            </div>
-                            {data.experience === level.id && (
-                              <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            )}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Primary use case:</h3>
-                    <div className="grid grid-cols-1 gap-3">
-                      {USE_CASE_OPTIONS.map((use) => (
-                        <button
-                          key={use.id}
-                          onClick={() => setData(prev => ({ ...prev, primaryUse: use.id }))}
-                          className={`p-4 rounded-xl border-2 transition-all text-left ${
-                            data.primaryUse === use.id
-                              ? 'border-green-500 bg-green-50'
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h4 className="font-semibold text-gray-900">{use.name}</h4>
-                              <p className="text-sm text-gray-600">{use.desc}</p>
-                            </div>
-                            {data.primaryUse === use.id && (
-                              <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            )}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Step 4: Specific Topics */}
-          {currentStep === 4 && (
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">What topics interest you?</h2>
-              <p className="text-gray-600 mb-8">Select areas you&apos;d like to explore (optional but helpful)</p>
-              
-              <div className="grid grid-cols-2 gap-3">
-                {TOPIC_OPTIONS.map((topic) => (
-                  <button
-                    key={topic}
-                    onClick={() => setData(prev => ({ 
-                      ...prev, 
-                      topics: toggleArrayItem(prev.topics, topic, 8) 
-                    }))}
-                    className={`p-3 rounded-xl border-2 transition-all text-sm hover:shadow-sm ${
-                      data.topics.includes(topic)
-                        ? 'border-purple-500 bg-purple-50 text-purple-900'
-                        : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                    }`}
-                  >
-                    {topic}
-                  </button>
-                ))}
-              </div>
-              
-              <p className="text-xs text-gray-500 mt-4">
-                Selected: {data.topics.length}/8
-              </p>
-            </div>
-          )}
-
-          {/* Step 5: Language & Notifications */}
-          {currentStep === 5 && (
-            <div className="space-y-8">
-              <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Final preferences</h2>
-                <p className="text-gray-600 mb-8">Choose your language and notification preferences</p>
-                
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4 text-left">Preferred Language:</h3>
-                    <div className="grid grid-cols-2 gap-3">
-                      {LANGUAGE_OPTIONS.map((lang) => (
-                        <button
-                          key={lang.id}
-                          onClick={() => setData(prev => ({ ...prev, preferredLanguage: lang.id }))}
-                          className={`p-3 rounded-xl border-2 transition-all ${
-                            data.preferredLanguage === lang.id
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <span className="text-2xl">{lang.flag}</span>
-                          <div className="font-medium text-gray-900">{lang.name}</div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4 text-left">Email Notifications:</h3>
-                    <div className="space-y-3">
-                      {[
-                        { 
-                          key: 'dailyReflections' as keyof typeof data.notifications, 
-                          name: 'Daily Gospel Reflections', 
-                          desc: 'Brief theological insights on daily Mass readings' 
-                        },
-                        { 
-                          key: 'weeklyNewsletter' as keyof typeof data.notifications, 
-                          name: 'Weekly Newsletter', 
-                          desc: 'New features, theological insights, and community highlights' 
-                        },
-                        { 
-                          key: 'productUpdates' as keyof typeof data.notifications, 
-                          name: 'Product Updates', 
-                          desc: 'Important updates and new feature announcements' 
-                        }
-                      ].map((notification) => (
-                        <div key={notification.key} className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-                          <div className="text-left">
-                            <h4 className="font-medium text-gray-900">{notification.name}</h4>
-                            <p className="text-sm text-gray-600">{notification.desc}</p>
-                          </div>
-                          <button
-                            onClick={() => setData(prev => ({
-                              ...prev,
-                              notifications: {
-                                ...prev.notifications,
-                                [notification.key]: !prev.notifications[notification.key]
-                              }
-                            }))}
-                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                              data.notifications[notification.key] ? 'bg-blue-600' : 'bg-gray-200'
-                            }`}
-                          >
-                            <span
-                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                data.notifications[notification.key] ? 'translate-x-5' : 'translate-x-0'
-                              }`}
-                            />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           )}
         </div>
 
         {/* Footer Navigation */}
-        <div className="p-6 border-t border-gray-200 bg-gray-50">
+        <div className="p-6 border-t border-gray-200 bg-gray-50 flex-none">
           <div className="flex items-center justify-between">
             <button
               onClick={handleBack}
@@ -500,7 +336,7 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              <span>Back</span>
+              <span>Atrás</span>
             </button>
 
             <div className="flex items-center space-x-3">
@@ -527,13 +363,13 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  <span>Setting up...</span>
+                  <span>Configurando...</span>
                 </>
               ) : currentStep === totalSteps ? (
-                <span>Complete Setup</span>
+                <span>Completar</span>
               ) : (
                 <>
-                  <span>Next</span>
+                  <span>Siguiente</span>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>

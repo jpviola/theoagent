@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { amount, currency = 'ARS', donor_email, donor_name, country = 'mla', metadata } = body;
 
-    console.log('🌎 MercadoPago payment request:', { amount, currency, donor_email, donor_name, country });
+    // console.log('🌎 MercadoPago payment request:', { amount, currency, donor_email, donor_name, country });
 
     // Enhanced validation
     if (!amount || amount <= 0) {
@@ -83,6 +83,8 @@ export async function POST(request: NextRequest) {
         country_code: country,
         platform: 'SantaPalabra',
         purpose: 'donation',
+        track_id: metadata?.track_id,
+        track_title: metadata?.track_title,
         // Enhanced fraud prevention metadata
         user_agent: metadata?.user_agent || 'unknown',
         timestamp: metadata?.timestamp || new Date().toISOString(),
@@ -97,11 +99,11 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    console.log('🔧 Creating MercadoPago preference for', selectedCountry.name, preferenceData);
+    // console.log('🔧 Creating MercadoPago preference for', selectedCountry.name, preferenceData);
 
     const result = await preference.create({ body: preferenceData });
 
-    console.log('✅ MercadoPago preference created:', result);
+    // console.log('✅ MercadoPago preference created:', result);
 
     // Create pending donation record
     const donationData = {
@@ -123,7 +125,7 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    console.log('💾 Creating MercadoPago donation record:', donationData);
+    // console.log('💾 Creating MercadoPago donation record:', donationData);
 
     const { data: donation, error: dbError } = await supabase
       .from('donations')
@@ -136,7 +138,7 @@ export async function POST(request: NextRequest) {
       throw new Error(`Database error: ${dbError.message}`);
     }
 
-    console.log('✅ MercadoPago donation created:', donation);
+    // console.log('✅ MercadoPago donation created:', donation);
 
     return NextResponse.json({ 
       success: true,
