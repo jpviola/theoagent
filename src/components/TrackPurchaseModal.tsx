@@ -32,12 +32,6 @@ const mercadopagoCountries = {
 
 const PAYPAL_BUTTON_URL = 'https://www.paypal.com/ncp/links/YTAYJCFUN8MCY';
 
-declare global {
-  interface Window {
-    MercadoPago?: any;
-  }
-}
-
 export function TrackPurchaseModal({ isOpen, onClose, track, onPurchase }: TrackPurchaseModalProps) {
   const { language } = useLanguage();
   const [isProcessing, setIsProcessing] = useState(false);

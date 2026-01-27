@@ -6,59 +6,6 @@ import Script from 'next/script';
 import { DonationButton } from '@/components/DonationButton';
 import { DiffusionSupportModal } from '@/components/DiffusionSupportModal';
 
-interface MercadoPagoCheckoutOptions {
-  preference: {
-    id: string;
-  };
-  render: {
-    container: string;
-    label: string;
-  };
-}
-
-interface MercadoPagoInstance {
-  checkout: (options: MercadoPagoCheckoutOptions) => Promise<void>;
-  bricks: () => {
-    create: (type: string, containerId: string, options: unknown) => Promise<unknown>;
-  };
-}
-
-interface PayPalOrder {
-  purchase_units: {
-    amount: {
-      value: string;
-    };
-  }[];
-  id: string;
-}
-
-interface PayPalOrderActions {
-  order: {
-    create: (input: {
-      purchase_units: {
-        amount: {
-          currency_code: string;
-          value: string;
-        };
-        description: string;
-      }[];
-    }) => Promise<string | void>;
-    capture: () => Promise<PayPalOrder>;
-  };
-}
-
-interface PayPalButtonsConfig {
-  createOrder: (data: unknown, actions: PayPalOrderActions) => Promise<string | void>;
-  onApprove: (data: unknown, actions: PayPalOrderActions) => Promise<void>;
-  onError?: (err: unknown) => void;
-  onCancel?: () => void;
-  style?: {
-    color?: string;
-    shape?: string;
-    height?: number;
-  };
-}
-
 const PAYPAL_BUTTON_URL = 'https://www.paypal.com/ncp/links/YTAYJCFUN8MCY';
 
 const PAYPAL_CLIENT_ID =
@@ -84,18 +31,7 @@ const tiers = [
 ];
 
 // MercadoPago Client-side SDK v2 - Promise-based with fraud prevention
-declare global {
-  interface Window {
-    MercadoPago?: {
-      new (publicKey: string, options?: { locale?: string }): MercadoPagoInstance;
-    };
-    paypal?: {
-      Buttons: (config: PayPalButtonsConfig) => {
-        render: (selector: string) => Promise<void>;
-      };
-    };
-  }
-}
+// Types defined in src/types/global.d.ts
 
 type NotificationType = 'success' | 'error' | 'warning' | 'info';
 
