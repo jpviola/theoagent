@@ -97,33 +97,24 @@ async function loadCatholicDocuments() {
 
 export async function POST(req: NextRequest) {
   try {
-    console.log('🚀 Enhanced Chat route with LangChain called');
     const { messages, mode = 'standard', userId, language = 'en', model } = await req.json();
-    console.log('📝 Chat request:', { messagesCount: messages?.length, mode, userId, language, model });
     
     // Authenticate and validate user
     if (!userId) {
-      console.log('❌ No userId provided');
       return new Response('Unauthorized', { status: 401 });
     }
     
     // Check/create user profile
-    console.log('👤 Checking user profile for:', userId);
     const { data: profile, error } = await supabaseAdmin
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .single();
       
-    console.log('📊 Profile query result:', { profile: !!profile, error: !!error });
-    
     let userProfile = profile;
     if (error || !profile) {
-      console.log('📋 Profile error details:', error);
-      
       // Create profile if it doesn't exist
       if (error?.code === 'PGRST116') {
-        console.log('➕ Creating new profile for user:', userId);
         const { data: newProfile, error: createError } = await supabaseAdmin
           .from('profiles')
           .insert({
@@ -135,12 +126,11 @@ export async function POST(req: NextRequest) {
           .single();
           
         if (createError) {
-          console.log('❌ Failed to create profile:', createError);
+          console.error('❌ Failed to create profile:', createError);
           return new Response('Failed to create user profile', { status: 500 });
         }
         
         userProfile = newProfile;
-        console.log('✅ Successfully created new profile');
       } else {
         return new Response('User not found', { status: 404 });
       }
@@ -160,13 +150,11 @@ export async function POST(req: NextRequest) {
     }
     
     // Initialize TheoAgent RAG system
-    console.log('🧠 Initializing TheoAgent RAG system...');
     const rag = await loadCatholicDocuments();
     
     // Set advanced mode based on subscription
     const useAdvanced = userProfile.subscription_tier === 'plus' || userProfile.subscription_tier === 'expert';
     await rag.setAdvancedMode(useAdvanced);
-    console.log(`🤖 Using ${useAdvanced ? 'advanced' : 'standard'} model for ${userProfile.subscription_tier} tier`);
     
     // Get user's last message
     const lastMessage = messages[messages.length - 1];
@@ -177,18 +165,12 @@ export async function POST(req: NextRequest) {
     }
     
     // Generate enhanced response using LangChain RAG
-    console.log('💭 Generating response with enhanced RAG system...');
-    const startTime = Date.now();
-    
     const response = await rag.generateResponse(userQuery, {
       userId,
       mode,
       language,
       model
     });
-    
-    const endTime = Date.now();
-    console.log(`⚡ Response generated in ${endTime - startTime}ms`);
     
     // Update usage count
     const { error: updateError } = await supabaseAdmin

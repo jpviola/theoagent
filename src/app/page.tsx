@@ -142,6 +142,12 @@ export default function HomePage() {
         : 'Our specialization in Hispanic-American spirituality. We integrate CELAM documents, Spanish mysticism (Teresa of Ávila, John of the Cross), Guadalupan devotion, and Latin American theological richness—something unique that you won\'t find in other Catholic chatbots.'
     },
     {
+      question: language === 'es' ? '¿Qué es el modo gamificación?' : 'What is gamification mode?',
+      answer: language === 'es'
+        ? 'El modo gamificación recompensa tu participación con puntos XP, logros y seguimiento de progreso en tus estudios teológicos. Puedes desbloquear contenido exclusivo y seguir tu camino de aprendizaje.'
+        : 'Gamification mode rewards your participation with XP points, achievements, and progress tracking in your theological studies. You can unlock exclusive content and follow your learning journey.'
+    },
+    {
       question: language === 'es' ? '¿Puedo usar SantaPalabra para catequesis parroquial?' : 'Can I use SantaPalabra for parish catechesis?',
 
       answer: language === 'es'
@@ -211,9 +217,6 @@ export default function HomePage() {
         if (savedProfile) {
           const profile = JSON.parse(savedProfile);
           setUserProfile(profile);
-          console.log('HomePage: Loaded guest profile from localStorage');
-        } else {
-          console.log('HomePage: No guest profile found');
         }
         
         updateStreak();
@@ -692,7 +695,7 @@ export default function HomePage() {
             {/* Redes sociales - PROMINENTES */}
             <div className="flex gap-6 text-white">
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/profile.php?id=61586393920926"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-all hover:scale-125 hover:text-amber-100 dark:hover:text-amber-300 text-white dark:text-gray-200"
@@ -724,7 +727,14 @@ export default function HomePage() {
                 <span>·</span>
                 <span>{language === 'es' ? 'Powered con' : 'Powered by'}</span>
                 <Heart className="h-3 w-3 text-red-100 fill-red-100 drop-shadow-sm" />
-                <span>{language === 'es' ? 'por La prensa de Tales' : 'La prensa de Tales'}</span>
+                <a 
+                  href="https://www.laprensadetales.dev/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-amber-200 transition-colors"
+                >
+                  {language === 'es' ? 'por La prensa de Tales' : 'La prensa de Tales'}
+                </a>
               </p>
             </div>
           </div>

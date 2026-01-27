@@ -8,14 +8,6 @@ import OnboardingFlow from './OnboardingFlow'
 import MFASetup from './MFASetup'
 import EmailVerificationBanner from './EmailVerificationBanner'
 
-// Debug environment variables
-console.log('AuthFlowManager: Environment check:', {
-  hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-  urlStart: process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30),
-  hasAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  anonKeyStart: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.substring(0, 30)
-});
-
 interface AuthFlowManagerProps {
   children: React.ReactNode
   requireMFA?: boolean // Whether MFA is required for this app
@@ -37,13 +29,11 @@ export default function AuthFlowManager({
     // Pure Guest Mode: Check localStorage for onboarding completion
     // No Supabase Auth required for the main flow
     try {
-      const isGuestOnboarded = localStorage.getItem('sp_guest_onboarding_completed') === 'true';
+      const isGuestOnboarded = localStorage.getItem('santapalabra_beta_onboarding_completed') === 'true';
       
       if (isGuestOnboarded) {
-        console.log('AuthFlowManager: Guest onboarding completed (localStorage) -> Authenticated');
         setCurrentStep('authenticated');
       } else {
-        console.log('AuthFlowManager: Guest onboarding NOT completed -> Onboarding');
         setCurrentStep('onboarding');
       }
     } catch (err) {
@@ -54,12 +44,12 @@ export default function AuthFlowManager({
 
   const handleOnboardingComplete = () => {
     // Mark as completed in localStorage
-    localStorage.setItem('sp_guest_onboarding_completed', 'true');
+    localStorage.setItem('santapalabra_beta_onboarding_completed', 'true');
     setCurrentStep('authenticated');
   }
 
   const handleSkipOnboarding = () => {
-    localStorage.setItem('sp_guest_onboarding_completed', 'true');
+    localStorage.setItem('santapalabra_beta_onboarding_completed', 'true');
     setCurrentStep('authenticated');
   }
 

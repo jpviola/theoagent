@@ -1,5 +1,4 @@
-import React from 'react';
-import { Book, Scroll, History, Calendar, Lock, Unlock, CheckCircle } from 'lucide-react';
+import { Book, Scroll, History, Calendar, Lock, Unlock, CheckCircle, Clock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export interface StudyTrack {
@@ -13,37 +12,37 @@ export const STUDY_TRACKS: StudyTrack[] = [
   {
     id: 'dogmatic-theology',
     title: { es: 'Teología Dogmática', pt: 'Teologia Dogmática', en: 'Dogmatic Theology' },
-    price: '$29.00',
+    price: 'Soon',
     icon: Book
   },
   {
     id: 'biblical-theology',
     title: { es: 'Teología Bíblica', pt: 'Teologia Bíblica', en: 'Biblical Theology' },
-    price: '$29.00',
+    price: 'Soon',
     icon: Scroll
   },
   {
     id: 'church-history',
     title: { es: 'Historia de la Iglesia', pt: 'História da Igreja', en: 'Church History' },
-    price: '$24.00',
+    price: 'Soon',
     icon: History
   },
   {
     id: 'bible-study-plan',
     title: { es: 'Plan de Estudio Bíblico', pt: 'Plano de Estudo Bíblico', en: 'Bible Study Plan' },
-    price: '$49.00/yr',
+    price: 'Soon',
     icon: Calendar
   },
   {
     id: 'biblical-greek',
     title: { es: 'Griego Bíblico', pt: 'Grego Bíblico', en: 'Biblical Greek' },
-    price: '$35.00',
+    price: 'Soon',
     icon: Scroll
   },
   {
     id: 'ecclesiastical-latin',
     title: { es: 'Latín Eclesiástico', pt: 'Latim Eclesiástico', en: 'Ecclesiastical Latin' },
-    price: '$35.00',
+    price: 'Soon',
     icon: Book
   }
 ];
@@ -70,6 +69,13 @@ export function StudyTracksSidebar({
   // Helper to safely get title
   const getTitle = (track: StudyTrack) => {
     return track.title[language as keyof typeof track.title] || track.title.es;
+  };
+
+  const getPriceLabel = (price: string) => {
+    if (price === 'Soon') {
+        return language === 'es' ? 'Pronto' : language === 'pt' ? 'Breve' : 'Soon';
+    }
+    return price;
   };
 
   const handleTrackClick = (track: StudyTrack) => {
@@ -102,6 +108,7 @@ export function StudyTracksSidebar({
             const Icon = track.icon;
             const isSelected = selectedTrackId === track.id;
             const isUnlocked = purchasedTracks.includes(track.id);
+            const isSoon = track.price === 'Soon';
             
             return (
               <button
@@ -126,9 +133,13 @@ export function StudyTracksSidebar({
                      <CheckCircle className="h-3.5 w-3.5 text-green-500" />
                    ) : (
                      <>
-                       <Lock className="h-2.5 w-2.5 text-gray-400 mr-1" />
-                       <span className="text-[10px] font-semibold text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">
-                         {track.price}
+                       {isSoon ? <Clock className="h-2.5 w-2.5 text-amber-500 mr-1" /> : <Lock className="h-2.5 w-2.5 text-gray-400 mr-1" />}
+                       <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
+                         isSoon 
+                           ? 'text-amber-700 bg-amber-100 dark:text-amber-300 dark:bg-amber-900/30' 
+                           : 'text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-700'
+                       }`}>
+                         {getPriceLabel(track.price)}
                        </span>
                      </>
                    )}

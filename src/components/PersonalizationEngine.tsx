@@ -438,18 +438,27 @@ export function PersonalizedRecommendations({ profile }: { profile: UserProfile 
 
 export function SmartNotifications({ profile }: { profile: UserProfile | null }) {
   const notifications = profile ? generateSmartNotifications(profile) : [];
+  const [dismissedIds, setDismissedIds] = useState<string[]>([]);
+
+  const visibleNotifications = notifications.filter(n => !dismissedIds.includes(n.id));
 
   return (
     <div className="fixed top-4 left-4 z-50 space-y-2">
       <AnimatePresence>
-        {notifications.map((notification) => (
+        {visibleNotifications.map((notification) => (
           <motion.div
             key={notification.id}
             initial={{ opacity: 0, x: -100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-2xl shadow-2xl max-w-sm"
+            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-2xl shadow-2xl max-w-sm relative pr-10"
           >
+            <button
+              onClick={() => setDismissedIds(prev => [...prev, notification.id])}
+              className="absolute top-2 right-2 p-1 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+            >
+              <X className="h-4 w-4 text-white" />
+            </button>
             <div className="flex items-center gap-2 mb-1">
               <BellRing className="h-4 w-4" />
               <h4 className="font-semibold text-sm">{notification.title}</h4>

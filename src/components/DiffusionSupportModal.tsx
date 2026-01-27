@@ -8,7 +8,7 @@ interface DiffusionSupportModalProps {
 }
 
 export const DiffusionSupportModal: React.FC<DiffusionSupportModalProps> = ({ isOpen, onClose }) => {
-  const shareUrl = 'https://santapalabra.app';
+  const shareUrl = 'https://santapalabra.lat';
   const shareText = '¡Hola! Te recomiendo SantaPalabra, tu catequista digital. Es una herramienta increíble para nuestra fe.';
 
   const handleShare = (platform: 'whatsapp' | 'facebook' | 'twitter' | 'native') => {

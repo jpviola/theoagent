@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, User, BookOpen, AlertTriangle, X, Zap, Clock, Upload, FileText, Mic, Square, Volume2, Menu, CheckCircle2, Circle, Copy, RefreshCw, Check } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import AuthFlowManager from '@/components/AuthFlowManager';
 import EmailSubscriptionModal from '@/components/EmailSubscriptionModal';
 import { subscribeToNewsletter, shouldShowSubscriptionModal, markSubscriptionSkipped, SUBSCRIPTION_TIERS } from '@/lib/subscription';
 import { useUserProgress } from '@/components/GamificationSystem';
@@ -248,7 +249,19 @@ export default function CatholicChatPage() {
         } catch (e) {}
       }
     }
+
+    // Load active journey
+    const savedActiveJourney = localStorage.getItem('santapalabra_active_journey');
+    if (savedActiveJourney) {
+      setSelectedTrackId(savedActiveJourney);
+    }
   }, []);
+
+  useEffect(() => {
+    if (selectedTrackId) {
+      localStorage.setItem('santapalabra_active_journey', selectedTrackId);
+    }
+  }, [selectedTrackId]);
 
   const handlePurchaseRequest = (track: StudyTrack) => {
     setTrackToPurchase(track);
@@ -1114,7 +1127,8 @@ export default function CatholicChatPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col relative overflow-hidden">
+    <AuthFlowManager>
+      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col relative overflow-hidden">
       {/* Modal de suscripción */}
       <EmailSubscriptionModal
         isOpen={showSubscriptionModal}
@@ -1768,6 +1782,19 @@ export default function CatholicChatPage() {
                   disabled={!input.trim() && !isLoading}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  animate={isLoading ? {
+                    scale: [1, 1.1, 1],
+                    boxShadow: [
+                      "0 0 0 0 rgba(245, 158, 11, 0)",
+                      "0 0 0 10px rgba(245, 158, 11, 0.3)",
+                      "0 0 0 0 rgba(245, 158, 11, 0)"
+                    ]
+                  } : {}}
+                  transition={isLoading ? {
+                    duration: 1.5,
+                    repeat: Infinity,
+                    repeatType: "loop"
+                  } : {}}
                   onClick={(e) => {
                     if (isLoading) {
                       e.preventDefault();
@@ -1887,5 +1914,6 @@ export default function CatholicChatPage() {
         onPurchase={handlePurchaseConfirm}
       />
     </div>
+    </AuthFlowManager>
   );
 }

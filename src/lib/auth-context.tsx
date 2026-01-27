@@ -12,8 +12,8 @@ interface AuthContextType {
   profile: Profile | null
   session: Session | null
   loading: boolean
-  signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>
-  signUp: (email: string, password: string, userData?: { full_name?: string, institution_name?: string }) => Promise<{ error: AuthError | null }>
+  signIn: (email: string, password: string) => Promise<{ data: { user: User | null; session: Session | null }; error: AuthError | null }>
+  signUp: (email: string, password: string, userData?: { full_name?: string, institution_name?: string }) => Promise<{ data: { user: User | null; session: Session | null }; error: AuthError | null }>
   signOut: () => Promise<{ error: AuthError | null }>
   signInWithGoogle: () => Promise<{ error: AuthError | null }>
   resetPassword: (email: string) => Promise<{ error: AuthError | null }>

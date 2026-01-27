@@ -195,12 +195,12 @@ export function getEmailSubscriptionData(): EmailSubscriptionData | null {
 }
 
 export function markSubscriptionSkipped(): void {
-  localStorage.setItem('santapalabra_subscription_status', 'skipped');
+  localStorage.setItem('santapalabra_beta_subscription_status', 'skipped');
 }
 
 export function shouldShowSubscriptionModal(): boolean {
   if (typeof window === 'undefined') return false;
   
-  const status = localStorage.getItem('santapalabra_subscription_status');
+  const status = localStorage.getItem('santapalabra_beta_subscription_status');
   return status !== 'subscribed' && status !== 'skipped';
 }
