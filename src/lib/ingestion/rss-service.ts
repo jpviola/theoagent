@@ -126,7 +126,7 @@ function extractTag(xml: string, tag: string): string {
   // Handle CDATA
   if (match && match[1]) {
     const content = match[1];
-    const cdataMatch = /<!\[CDATA\[(.*?)\]\]>/s.exec(content);
+    const cdataMatch = /<!\[CDATA\[([\s\S]*?)\]\]>/.exec(content);
     return cdataMatch ? cdataMatch[1] : content;
   }
   return '';
