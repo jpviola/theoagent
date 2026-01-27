@@ -98,8 +98,8 @@ async function loadCatholicDocuments() {
 export async function POST(req: NextRequest) {
   try {
     console.log('🚀 Enhanced Chat route with LangChain called');
-    const { messages, mode = 'standard', userId, language = 'en' } = await req.json();
-    console.log('📝 Chat request:', { messagesCount: messages?.length, mode, userId, language });
+    const { messages, mode = 'standard', userId, language = 'en', model } = await req.json();
+    console.log('📝 Chat request:', { messagesCount: messages?.length, mode, userId, language, model });
     
     // Authenticate and validate user
     if (!userId) {
@@ -183,7 +183,8 @@ export async function POST(req: NextRequest) {
     const response = await rag.generateResponse(userQuery, {
       userId,
       mode,
-      language
+      language,
+      model
     });
     
     const endTime = Date.now();

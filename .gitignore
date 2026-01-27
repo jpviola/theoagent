@@ -45,3 +45,6 @@ next-env.d.ts
 
 # Documents
 documents/raw/
+
+# Logs
+snowflake.log

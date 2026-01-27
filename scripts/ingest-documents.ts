@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
+import mammoth from 'mammoth';
 
 let pdfLib = require('pdf-parse');
 // Handle potential default export in CommonJS/ESM interop
@@ -48,6 +49,11 @@ async function processPdf(filePath: string): Promise<string> {
   const pdf = new PDFParse({ data: dataBuffer });
   const result = await pdf.getText();
   return result.text || '';
+}
+
+async function processDocx(filePath: string): Promise<string> {
+  const result = await mammoth.extractRawText({ path: filePath });
+  return result.value || '';
 }
 
 function processEpub(filePath: string): Promise<string> {
@@ -172,6 +178,9 @@ async function main() {
         } else if (ext === '.epub') {
           console.log(`  📖 Leyendo EPUB: ${file}`);
           text = await processEpub(filePath);
+        } else if (ext === '.docx') {
+          console.log(`  📝 Leyendo DOCX: ${file}`);
+          text = await processDocx(filePath);
         } else if (ext === '.txt' || ext === '.md') {
           console.log(`  📝 Leyendo Texto: ${file}`);
           text = fs.readFileSync(filePath, 'utf-8');
@@ -191,12 +200,6 @@ async function main() {
 
     if (allDocs.length > 0) {
       const outputPath = path.join(OUTPUT_DIR, outputFilename);
-      
-      // Merge with existing if exists? Or overwrite? 
-      // For simplicity, let's read existing only if we want to preserve manual entries.
-      // But these are generated files. Let's overwrite but maybe backup?
-      // Actually, let's just write.
-      
       fs.writeFileSync(outputPath, JSON.stringify(allDocs, null, 2));
       console.log(`💾 Guardados ${allDocs.length} documentos en ${outputFilename}`);
     } else {

@@ -1,6 +1,6 @@
 import { ChatAnthropic } from '@langchain/anthropic';
 import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseVectorStore } from '@langchain/community/vectorstores/supabase';
 // import { HuggingFaceEndpoint } from '@langchain/community/llms/hf';
 // import { ChatHuggingFace } from '@langchain/community/chat_models/huggingface';
@@ -8,18 +8,13 @@ import { PromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { Document } from '@langchain/core/documents';
-import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import { ChatMessageHistory } from '@langchain/community/stores/message/in_memory';
 import { AIMessage, HumanMessage, BaseMessage } from '@langchain/core/messages';
 // import { HNSWLib } from '@langchain/community/vectorstores/hnswlib';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { getTodaysGospelReflection, formatDailyGospelContext } from './dailyGospel';
 
-function escapeRegExp(string: string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-type SupportedChatModel = 'anthropic' | 'openai' | 'llama' | 'gemma' | 'auto';
+type SupportedChatModel = 'anthropic' | 'openai' | 'llama' | 'gemma' | 'qwen' | 'auto';
 
 // Types
 interface CatholicDocument {
@@ -54,7 +49,7 @@ interface ConversationSummary {
 // Enhanced vector store using Supabase
 class EnhancedVectorStore {
   private vectorStore: SupabaseVectorStore | null = null;
-  private client: any;
+  private client: SupabaseClient | null = null;
   
   constructor() {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -88,13 +83,13 @@ class EnhancedVectorStore {
     }
   }
   
-  async initialize(documents: any[]): Promise<void> {
+  async initialize(documents: CatholicDocument[]): Promise<void> {
     // No-op: Data is already in Supabase
     // We log a message to indicate we are using the external DB
     console.log(`✅ Using Supabase Vector DB (ignoring ${documents.length} local docs)`);
   }
   
-  async enhancedSearch(query: string, topK: number = 5, filter?: any): Promise<RetrievalResult> {
+  async enhancedSearch(query: string, topK: number = 5, filter?: Record<string, unknown>): Promise<RetrievalResult> {
     if (!this.vectorStore) {
         console.warn('⚠️ Vector store not available, returning empty results');
         return { documents: [], sources: [], relevanceScores: [] };
@@ -122,7 +117,7 @@ class EnhancedVectorStore {
           // We use a text search on the content since we didn't strictly structured the date in metadata
           // The format in content is usually "date": "YYYY-MM-DD"
           
-          const { data, error } = await this.client
+          const { data } = await this.client
             .from('documents')
             .select('*')
             .eq('metadata->>source', 'daily_gospel_reflections')
@@ -310,6 +305,8 @@ export class SantaPalabraRAG {
           return this.createLlamaOpenAICompatibleLLM();
         case 'gemma':
           return this.createGemmaLLM(specialistMode);
+        case 'qwen':
+          return this.createQwenLLM(specialistMode);
         case 'auto':
           // Should have been resolved by routeQuery, but just in case:
           return this.createAnthropicLLM(); 
@@ -336,6 +333,12 @@ export class SantaPalabraRAG {
         console.log(`🔄 Fallback: Switching to Anthropic from ${model}`);
         try { return this.createAnthropicLLM(); } catch (e) { console.warn('Anthropic fallback failed', e); }
       }
+      
+      // 3. Try Qwen (Free/OpenRouter)
+       if ((process.env.OPENROUTER_QWEN_API_KEY || process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_GEMMA_API_KEY) && model !== 'qwen') {
+          console.log(`🔄 Fallback: Switching to Qwen from ${model}`);
+          try { return this.createQwenLLM(); } catch (e) { console.warn('Qwen fallback failed', e); }
+       }
       
       // Removed OpenAI fallback as requested
 
@@ -409,6 +412,28 @@ export class SantaPalabraRAG {
     });
   }
 
+  private createQwenLLM(specialistMode: boolean = false): BaseChatModel {
+    const apiKey = process.env.OPENROUTER_QWEN_API_KEY || process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_GEMMA_API_KEY;
+    if (!apiKey) {
+      throw new Error('Missing OPENROUTER_QWEN_API_KEY (or OPENROUTER_API_KEY)');
+    }
+
+    console.log('🤖 Using Qwen3 via OpenRouter');
+    return new ChatOpenAI({
+      apiKey: apiKey,
+      modelName: process.env.OPENROUTER_QWEN_MODEL || 'qwen/qwen3-4b:free',
+      temperature: 0.3,
+      maxTokens: specialistMode ? 4096 : 2048,
+      configuration: {
+        baseURL: 'https://openrouter.ai/api/v1',
+        defaultHeaders: {
+          'HTTP-Referer': 'https://santapalabra.org',
+          'X-Title': 'Santa Palabra',
+        }
+      },
+    });
+  }
+
   /**
    * Initialize LLM with Vercel AI Gateway support
    * Falls back to direct API calls if gateway is not available
@@ -471,7 +496,13 @@ export class SantaPalabraRAG {
         });
     }
 
-    // 4. Try VLLM / OpenRouter / Custom
+    // 4. Try Qwen (OpenRouter)
+    if (process.env.OPENROUTER_QWEN_API_KEY || process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_GEMMA_API_KEY) {
+        console.log('🤖 Using Qwen3 via OpenRouter');
+        return this.createQwenLLM();
+    }
+
+    // 5. Try VLLM / OpenRouter / Custom
     if (process.env.VLLM_API_KEY) {
         console.log('🔌 Using Custom VLLM/OpenRouter');
          return new ChatOpenAI({
@@ -494,7 +525,7 @@ export class SantaPalabraRAG {
     try {
       // Initialize vector store (connects to Supabase)
       this.vectorStore = new EnhancedVectorStore();
-      await this.vectorStore.initialize([]);
+      await this.vectorStore.initialize(documents);
       
       // We no longer keep documents in memory
       this.documents = [];
@@ -914,14 +945,16 @@ To enable full AI chat, please configure ANTHROPIC_API_KEY or GROQ_API_KEY in yo
       const initialModel = actualModel as SupportedChatModel;
       
       if (initialModel === 'anthropic') {
-        attemptOrder = ['anthropic', 'llama', 'gemma'];
+        attemptOrder = ['anthropic', 'llama', 'gemma', 'qwen'];
       } else if (initialModel === 'llama') {
-        attemptOrder = ['llama', 'anthropic', 'gemma'];
+        attemptOrder = ['llama', 'anthropic', 'gemma', 'qwen'];
       } else if (initialModel === 'gemma') {
-        attemptOrder = ['gemma', 'llama', 'anthropic'];
+        attemptOrder = ['gemma', 'qwen', 'llama', 'anthropic'];
+      } else if (initialModel === 'qwen') {
+        attemptOrder = ['qwen', 'gemma', 'llama', 'anthropic'];
       } else {
         // Fallback default
-        attemptOrder = ['anthropic', 'llama', 'gemma'];
+        attemptOrder = ['anthropic', 'llama', 'gemma', 'qwen'];
       }
 
       // Remove duplicates

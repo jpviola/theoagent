@@ -39,6 +39,12 @@ export default function AdminDashboard() {
   const [pipelineStatus, setPipelineStatus] = useState<{ type: 'success' | 'error' | 'info', message: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Playground State
+  const [testQuery, setTestQuery] = useState('');
+  const [testModel, setTestModel] = useState('qwen');
+  const [testResponse, setTestResponse] = useState('');
+  const [testLoading, setTestLoading] = useState(false);
+
   useEffect(() => {
     fetchAdminStats();
     setAuthStats(authAnalytics.getAnalyticsSummary());
@@ -77,6 +83,49 @@ export default function AdminDashboard() {
       setPipelineStatus({ type: 'error', message: 'Dataset error' });
     } finally {
       setDatasetLoading(false);
+    }
+  };
+
+  const runModelTest = async () => {
+    if (!testQuery.trim()) return;
+    
+    setTestLoading(true);
+    setTestResponse('');
+    
+    try {
+      const response = await fetch('/api/admin/test-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: testQuery }],
+          mode: 'standard',
+          userId: 'admin-test-user', // Special ID for admin testing
+          language: 'es', // Default to Spanish for testing
+          model: testModel
+        }),
+      });
+
+      if (!response.ok) throw new Error(response.statusText);
+
+      // Handle streaming response
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error('No reader available');
+
+      const decoder = new TextDecoder();
+      let accumulatedResponse = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        const chunk = decoder.decode(value, { stream: true });
+        accumulatedResponse += chunk;
+        setTestResponse(prev => prev + chunk);
+      }
+    } catch (e) {
+      setTestResponse('Error generating response: ' + (e instanceof Error ? e.message : String(e)));
+    } finally {
+      setTestLoading(false);
     }
   };
 
@@ -361,34 +410,57 @@ export default function AdminDashboard() {
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700 mt-8">
           <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Data Pipeline Automation</h3>
           <div className="space-y-4">
-            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
-              <h4 className="font-bold text-gray-900 dark:text-white mb-2">1. Ingestion (Airbyte Simulation)</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                Fetches latest Vatican News RSS feeds and stores them as raw JSON in the Data Lake (`public/data/ingested`).
-              </p>
-              <button
-                onClick={runIngestion}
-                disabled={ingestLoading}
-                className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 disabled:opacity-50 transition-colors flex items-center gap-2"
-              >
-                {ingestLoading ? 'Syncing...' : '🔄 Run Airbyte Sync (Vatican News)'}
-              </button>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
+                <h4 className="font-bold text-gray-900 dark:text-white mb-2">Step 1: Ingest Data</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">Fetch latest Vatican News RSS</p>
+                <button
+                  onClick={runIngestion}
+                  disabled={ingestLoading}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors disabled:opacity-50"
+                >
+                  {ingestLoading ? 'Running Airbyte Sync...' : 'Run Airbyte Sync (RSS)'}
+                </button>
+              </div>
+
+              <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
+                <h4 className="font-bold text-gray-900 dark:text-white mb-2">Step 2: Process Data</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">Convert to Snowflake/JSONL format</p>
+                <button
+                  onClick={runDatasetPrep}
+                  disabled={datasetLoading}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition-colors disabled:opacity-50"
+                >
+                  {datasetLoading ? 'Processing...' : 'Prepare Snowflake Dataset'}
+                </button>
+              </div>
+
+              <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
+                <h4 className="font-bold text-gray-900 dark:text-white mb-2">Step 3: Upload</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">Push CSV to Snowflake DB</p>
+                <button
+                  onClick={async () => {
+                    if(!confirm('Ensure you have configured Snowflake credentials in .env.local. Proceed?')) return;
+                    setPipelineStatus({ type: 'info', message: 'Uploading to Snowflake...' });
+                    try {
+                      const res = await fetch('/api/admin/upload-snowflake', { method: 'POST' });
+                      const data = await res.json();
+                      if (data.success) {
+                        setPipelineStatus({ type: 'success', message: data.message });
+                      } else {
+                        setPipelineStatus({ type: 'error', message: 'Upload failed: ' + data.message });
+                      }
+                    } catch (e) {
+                      setPipelineStatus({ type: 'error', message: 'Upload error' });
+                    }
+                  }}
+                  className="w-full bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded transition-colors"
+                >
+                  Upload to Snowflake ❄️
+                </button>
+              </div>
             </div>
 
-            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
-              <h4 className="font-bold text-gray-900 dark:text-white mb-2">2. Fine-Tuning Prep (Snowflake Export)</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                Processes ingested data into Snowflake-ready CSVs and JSONL for LLM Fine-Tuning.
-              </p>
-              <button
-                onClick={runDatasetPrep}
-                disabled={datasetLoading}
-                className="bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700 disabled:opacity-50 transition-colors flex items-center gap-2"
-              >
-                {datasetLoading ? 'Processing...' : '❄️ Prepare Snowflake Dataset'}
-              </button>
-            </div>
-            
             {pipelineStatus && (
               <div className={`p-4 rounded border ${
                 pipelineStatus.type === 'success' ? 'bg-green-50 border-green-200 text-green-800' :
@@ -396,6 +468,53 @@ export default function AdminDashboard() {
                 'bg-blue-50 border-blue-200 text-blue-800'
               }`}>
                 <p className="font-mono text-sm whitespace-pre-wrap">{pipelineStatus.message}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Model Playground */}
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700 mt-8">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">LLM Model Playground</h3>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="md:col-span-3">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Test Query (Spanish)</label>
+                <textarea
+                  value={testQuery}
+                  onChange={(e) => setTestQuery(e.target.value)}
+                  placeholder="E.g., ¿Qué enseña la Iglesia sobre la gracia?"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 h-24"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Model</label>
+                <select
+                  value={testModel}
+                  onChange={(e) => setTestModel(e.target.value)}
+                  className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                >
+                  <option value="qwen">Qwen 2.5 (Free)</option>
+                  <option value="gemma">Gemma 2 (Free)</option>
+                  <option value="anthropic">Claude 3 (Paid)</option>
+                  <option value="llama">Llama 3 (Groq)</option>
+                </select>
+                <button
+                  onClick={runModelTest}
+                  disabled={testLoading || !testQuery}
+                  className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition-colors disabled:opacity-50"
+                >
+                  {testLoading ? 'Generating...' : 'Test Generation'}
+                </button>
+              </div>
+            </div>
+            
+            {testResponse && (
+              <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Response ({testModel}):</h4>
+                <div className="prose dark:prose-invert max-w-none text-sm whitespace-pre-wrap">
+                  {testResponse}
+                </div>
               </div>
             )}
           </div>
