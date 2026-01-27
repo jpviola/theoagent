@@ -386,7 +386,7 @@ export default function HomePage() {
               <BlessedButton
                 href="/support"
                 onClick={() => handleInteraction('donation')}
-                className="group w-full sm:w-auto min-w-[200px] flex flex-row items-center justify-center gap-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-8 py-3 text-base md:text-lg font-bold text-white shadow-2xl shadow-green-500/40 transition-all duration-300 hover:scale-105 hover:shadow-green-500/60 whitespace-nowrap preserve-light-bg-green"
+                className="group w-full sm:w-auto min-w-[200px] flex flex-row items-center justify-center gap-3 rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-8 py-3 text-base md:text-lg font-bold text-white shadow-2xl shadow-amber-400/40 transition-all duration-300 hover:scale-105 hover:shadow-amber-400/60 whitespace-nowrap preserve-light-bg-green"
               >
                 <Heart className="inline-block h-6 w-6 md:h-7 md:w-7" />
                 <span className="inline-block">{language === 'es' ? '¡Quiero donar!' : '¡I want to donate!'}</span>
@@ -415,7 +415,7 @@ export default function HomePage() {
 
       {/* PROGRESS SECTION - Solo visible si el usuario ha completado el perfil */}
       {userProfile && progress.level > 1 && (
-        <section className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-12 px-4">
+        <section className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 py-12 px-4 border-b border-amber-100/50">
           <motion.div
             className="mx-auto max-w-4xl"
             initial={{ opacity: 0, y: 20 }}
@@ -429,7 +429,7 @@ export default function HomePage() {
       )}
 
       {/* TESTIMONIALS SECTION */}
-      <section className="bg-white dark:bg-gray-900 py-20 px-4 md:py-28">
+      <section className="bg-amber-50/30 dark:bg-gray-900 py-20 px-4 md:py-28">
         <motion.div
           className="mx-auto max-w-6xl"
           initial={{ opacity: 0 }}
@@ -438,7 +438,7 @@ export default function HomePage() {
           viewport={{ once: true }}
         >
           <motion.h2
-            className="mb-16 text-center text-4xl font-black text-gray-900 md:text-5xl"
+            className="mb-16 text-center text-4xl font-black text-amber-900 dark:text-amber-500 md:text-5xl"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -451,17 +451,17 @@ export default function HomePage() {
             {testimonials.map((testimonial, idx) => (
               <motion.div
                 key={idx}
-                className="rounded-2xl border border-amber-200 bg-white p-8 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                className="rounded-2xl border border-amber-100 bg-white/80 backdrop-blur-sm p-8 shadow-xl shadow-amber-100/20 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: idx * 0.15 }}
                 viewport={{ once: true }}
               >
-                <Quote className="mb-4 h-8 w-8 text-amber-600 dark:text-amber-500" />
-                <p className="mb-6 text-base text-gray-700 dark:text-gray-300 italic">“{testimonial.text}”</p>
-                <div className="border-t border-amber-200 dark:border-gray-600 pt-4">
-                  <p className="font-bold text-gray-900 dark:text-white">{testimonial.author}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{testimonial.role}</p>
+                <Quote className="mb-4 h-8 w-8 text-amber-500 dark:text-amber-500" />
+                <p className="mb-6 text-base text-gray-700 dark:text-gray-300 italic leading-relaxed">“{testimonial.text}”</p>
+                <div className="border-t border-amber-100 dark:border-gray-600 pt-4">
+                  <p className="font-bold text-amber-900 dark:text-white">{testimonial.author}</p>
+                  <p className="text-sm text-amber-600/80 dark:text-gray-400">{testimonial.role}</p>
                 </div>
               </motion.div>
             ))}
@@ -474,14 +474,14 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.5 }}
             viewport={{ once: true }}
           >
-            <p className="mb-6 text-lg text-gray-700 font-medium">
+            <p className="mb-6 text-lg text-amber-800 dark:text-gray-300 font-medium">
               {language === 'es' 
                 ? '¿Te ha sido útil SantaPalabra? Ayúdanos a seguir creciendo' 
                 : 'Has SantaPalabra been helpful? Help us keep growing'}
             </p>
             <Link
               href="/support"
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-8 py-4 text-lg font-bold text-white shadow-2xl shadow-green-500/40 transition-all duration-300 hover:scale-110 hover:shadow-green-500/60"
+              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-amber-400/30 transition-all duration-300 hover:scale-105 hover:shadow-amber-400/50"
             >
               <Heart className="mr-3 h-6 w-6" />
               {language === 'es' ? '¡Sí, quiero apoyar este proyecto!' : '¡Yes, I want to support this project!'}
@@ -491,7 +491,7 @@ export default function HomePage() {
       </section>
 
       {/* PRINCIPLES SECTION */}
-      <section className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 dark:bg-none dark:bg-gray-900 py-20 px-4 md:py-28">
+      <section className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 py-20 px-4 md:py-28">
         <motion.div
           className="mx-auto max-w-4xl"
           initial={{ opacity: 0 }}
@@ -507,19 +507,19 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h2 className="mb-8 text-4xl font-black text-gray-900 md:text-5xl">
+            <h2 className="mb-8 text-4xl font-black text-amber-900 dark:text-amber-500 md:text-5xl">
               {t.principlesTitle}
             </h2>
 
-            <div className="rounded-2xl border-2 border-amber-400 bg-black p-10 shadow-xl md:p-12">
+            <div className="rounded-2xl border-2 border-amber-200 bg-white/60 backdrop-blur-md p-10 shadow-xl shadow-amber-100/50 md:p-12 dark:bg-black dark:border-amber-900">
               <div className="flex gap-4 md:gap-6">
-                <Check className="h-8 w-8 flex-shrink-0 text-green-400 md:h-10 md:w-10" />
-                <p className="font-mono text-lg leading-relaxed text-green-400 md:text-xl">
+                <Check className="h-8 w-8 flex-shrink-0 text-amber-600 md:h-10 md:w-10" />
+                <p className="font-mono text-lg leading-relaxed text-amber-800 md:text-xl dark:text-amber-200">
                   {displayedText}
                   <motion.span
                     animate={{ opacity: [1, 0, 1] }}
                     transition={{ duration: 0.8, repeat: Infinity, repeatType: 'loop' as const }}
-                    className="ml-1 inline-block h-6 w-2 bg-green-400 align-middle"
+                    className="ml-1 inline-block h-6 w-2 bg-amber-600 align-middle"
                   />
                 </p>
               </div>
@@ -529,7 +529,7 @@ export default function HomePage() {
       </section>
 
       {/* FAQ SECTION */}
-      <section className="bg-white dark:bg-gray-900 py-20 px-4 md:py-28">
+      <section className="bg-amber-50/30 dark:bg-gray-900 py-20 px-4 md:py-28">
         <motion.div
           className="mx-auto max-w-4xl"
           initial={{ opacity: 0 }}
@@ -546,11 +546,11 @@ export default function HomePage() {
           >
             <div className="flex items-center justify-center gap-3 mb-4">
               <HelpCircle className="h-10 w-10 text-amber-600" />
-              <h2 className="text-4xl font-black text-gray-900 md:text-5xl">
+              <h2 className="text-4xl font-black text-amber-900 dark:text-amber-500 md:text-5xl">
                 {t.faqTitle}
               </h2>
             </div>
-            <p className="text-lg text-gray-600 mt-4">
+            <p className="text-lg text-amber-700/80 dark:text-gray-400 mt-4">
               {t.faqSubtitle}
             </p>
           </motion.div>
@@ -563,20 +563,20 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="border-2 border-amber-200 rounded-2xl overflow-hidden bg-white dark:border-gray-700 dark:bg-gray-800"
+                className="border border-amber-200 rounded-2xl overflow-hidden bg-white/80 backdrop-blur-sm shadow-md hover:shadow-lg transition-shadow dark:border-gray-700 dark:bg-gray-800"
               >
                 <button
                   onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
-                  className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-amber-50/50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  <span className="font-bold text-gray-900 dark:text-white text-lg pr-4">
+                  <span className="font-bold text-amber-900 dark:text-white text-lg pr-4">
                     {faq.question}
                   </span>
                   <motion.div
                     animate={{ rotate: openFaqIndex === index ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <ChevronDown className="h-6 w-6 text-amber-600 dark:text-amber-500 flex-shrink-0" />
+                    <ChevronDown className="h-6 w-6 text-amber-500 dark:text-amber-500 flex-shrink-0" />
                   </motion.div>
                 </button>
                 <AnimatePresence>
@@ -601,11 +601,11 @@ export default function HomePage() {
       </section>
 
       {/* NEWSLETTER SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-amber-500 to-amber-700 dark:from-amber-900 dark:to-gray-900 py-20 px-4 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-gray-900 py-20 px-4 text-amber-900 dark:text-white">
         {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-10">
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-40">
           <div className="absolute top-[-10%] left-[-10%] w-96 h-96 rounded-full bg-white blur-3xl"></div>
-          <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 rounded-full bg-amber-200 blur-3xl"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 rounded-full bg-orange-200 blur-3xl"></div>
         </div>
 
         <motion.div
@@ -615,11 +615,11 @@ export default function HomePage() {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <Mail className="mx-auto h-12 w-12 mb-6 text-amber-200" />
-          <h2 className="mb-4 text-3xl md:text-4xl font-black tracking-tight">
+          <Mail className="mx-auto h-12 w-12 mb-6 text-amber-500" />
+          <h2 className="mb-4 text-3xl md:text-4xl font-black tracking-tight text-amber-900 dark:text-amber-100">
             {t.newsletterTitle}
           </h2>
-          <p className="mb-8 text-lg text-amber-100 max-w-2xl mx-auto">
+          <p className="mb-8 text-lg text-amber-700 dark:text-amber-200 max-w-2xl mx-auto">
             {t.newsletterSubtitle}
           </p>
 
@@ -631,15 +631,15 @@ export default function HomePage() {
               placeholder={t.newsletterPlaceholder}
               required
               disabled={newsletterStatus === 'loading' || newsletterStatus === 'success'}
-              className="flex-grow px-6 py-3 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-300 disabled:opacity-70"
+              className="flex-grow px-6 py-3 rounded-full border border-amber-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:opacity-70 shadow-sm"
             />
             <button
               type="submit"
               disabled={newsletterStatus === 'loading' || newsletterStatus === 'success'}
-              className="px-8 py-3 bg-white text-amber-700 font-bold rounded-full hover:bg-amber-50 transition-colors disabled:opacity-70 shadow-lg"
+              className="px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-full hover:from-amber-600 hover:to-orange-600 transition-all hover:scale-105 disabled:opacity-70 shadow-lg shadow-amber-500/20"
             >
               {newsletterStatus === 'loading' ? (
-                <div className="h-5 w-5 animate-spin rounded-full border-2 border-amber-600 border-t-transparent mx-auto"></div>
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent mx-auto"></div>
               ) : newsletterStatus === 'success' ? (
                 <Check className="h-5 w-5 mx-auto" />
               ) : (
@@ -652,7 +652,7 @@ export default function HomePage() {
             <motion.p 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 text-green-200 font-medium"
+              className="mt-4 text-green-600 font-medium"
             >
               {t.newsletterSuccess}
             </motion.p>
@@ -662,7 +662,7 @@ export default function HomePage() {
             <motion.p 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 text-red-200 font-medium"
+              className="mt-4 text-red-500 font-medium"
             >
               {t.newsletterError}
             </motion.p>
@@ -671,7 +671,7 @@ export default function HomePage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-gradient-to-r from-amber-500 to-amber-600 dark:from-gray-900 dark:to-gray-800 px-4 py-8 text-center text-white">
+      <footer className="bg-gradient-to-r from-amber-500 to-orange-600 dark:from-gray-900 dark:to-gray-800 px-4 py-12 text-center text-white">
         <motion.div
           className="mx-auto max-w-6xl"
           initial={{ opacity: 0 }}
@@ -679,13 +679,13 @@ export default function HomePage() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <div className="flex flex-col items-center justify-center gap-6">
+          <div className="flex flex-col items-center justify-center gap-8">
             {/* Botón de donación prominente */}
             <BlessedButton
               onClick={() => window.location.href = '/support'}
-              className="inline-flex items-center justify-center rounded-full preserve-light-bg-green bg-gradient-to-r from-green-500 to-emerald-500 px-6 py-2 text-base font-bold text-white shadow-lg shadow-green-500/40 transition-all duration-300 hover:shadow-green-500/60"
+              className="inline-flex items-center justify-center rounded-full preserve-light-bg-green bg-white/10 backdrop-blur-md border border-white/30 px-6 py-3 text-base font-bold text-white shadow-lg transition-all duration-300 hover:bg-white/20 hover:scale-105"
             >
-              <Heart className="mr-2 h-5 w-5" />
+              <Heart className="mr-2 h-5 w-5 text-amber-200 fill-amber-200" />
               {language === 'es' ? 'Apoyar proyecto' : 'Support project'}
             </BlessedButton>
 
