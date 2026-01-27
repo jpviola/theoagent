@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ['sharp'],
+  serverExternalPackages: ['sharp', 'snowflake-sdk'],
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
