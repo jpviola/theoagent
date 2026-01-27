@@ -1,5 +1,66 @@
 [
   {
+    "date": "2026-01-27",
+    "liturgical_day": "Martes de la Tercera Semana del Tiempo Ordinario",
+    "gospel_citation": "Marcos 3:31-35",
+    "gospel_text": "En aquel tiempo, llegaron la madre y los hermanos de Jesús y, quedándose fuera, lo mandaron llamar. La gente estaba sentada alrededor de él, y le dijeron: «Tu madre y tus hermanos están fuera y te buscan». Él les respondió: «¿Quiénes son mi madre y mis hermanos?». Y mirando a los que estaban sentados a su alrededor, dijo: «Estos son mi madre y mis hermanos. El que haga la voluntad de Dios, ese es mi hermano, mi hermana y mi madre».",
+    "context": {
+      "historical": "Jesús se encuentra en su ministerio público en Galilea. La estructura familiar judía del siglo I era muy fuerte y definía la identidad social. Reclamar una nueva familia basada en la fe era un concepto radical.",
+      "literary": "Este pasaje sigue a las acusaciones de los escribas de que Jesús estaba poseído. Marcos utiliza la técnica del 'sándwich' (intercalación) para contrastar la incredulidad de los de afuera con la fe de los de adentro.",
+      "liturgical": "Tiempo Ordinario: énfasis en el discipulado y el seguimiento de Cristo en la vida cotidiana."
+    },
+    "philology": {
+      "greek_terms": [
+        {
+          "word": "adelphoi",
+          "transliteration": "adelphoi",
+          "meaning": "hermanos",
+          "insight": "En el contexto bíblico puede referirse a hermanos de sangre, parientes cercanos (primos) o miembros de la comunidad de fe."
+        }
+      ],
+      "hebrew_background": "La obediencia a la voluntad de Dios (hacer Su voluntad) es central en la espiritualidad judía y define la verdadera pertenencia al pueblo de la alianza."
+    },
+    "old_testament_connections": [
+      {
+        "passage": "Éxodo 19:5",
+        "text": "Ahora pues, si diereis oído a mi voz, y guardareis mi pacto, vosotros seréis mi especial tesoro.",
+        "connection": "La obediencia al pacto crea una relación familiar especial con Dios.",
+        "type": "Theological"
+      }
+    ],
+    "traditional_interpretation": {
+      "church_fathers": [
+        {
+          "father": "San Agustín",
+          "quote": "María fue más bienaventurada al recibir la fe de Cristo que al concebir la carne de Cristo.",
+          "source": "De sancta virginitate"
+        }
+      ],
+      "modern_exegesis": "Jesús no rechaza a su familia biológica, sino que expande el concepto de familia para incluir a todos los creyentes obedientes.",
+      "magisterial_teaching": "La Iglesia es la familia de Dios (Lumen Gentium 6)."
+    },
+    "personal_reflection": {
+      "questions": [
+        "¿Siento que pertenezco verdaderamente a la familia de Jesús?",
+        "¿Estoy haciendo la voluntad de Dios en mi vida diaria?"
+      ],
+      "prayer_prompt": "Señor Jesús, ayúdame a escuchar tu palabra y ponerla en práctica para ser verdaderamente tu hermano/a."
+    },
+    "scholars": {
+      "ratzinger": "La verdadera familia de Jesús se constituye por la escucha y la obediencia a la Palabra.",
+      "hahn": "La filiación divina se vive en la comunidad eclesial.",
+      "wright": "El Reino de Dios redefine las lealtades y relaciones humanas."
+    },
+    "liturgical_connection": "Nos invita a renovar nuestro compromiso bautismal de vivir como hijos de Dios.",
+    "practical_application": "Tratar a los miembros de mi comunidad parroquial como verdaderos hermanos y buscar hacer la voluntad de Dios en las pequeñas cosas.",
+    "tags": [
+      "familia",
+      "voluntad de Dios",
+      "discipulado",
+      "obediencia"
+    ]
+  },
+  {
     "date": "2025-12-18",
     "liturgical_day": "Thursday of the Third Week of Advent",
     "gospel_citation": "Luke 7:18b-23",
