@@ -9,9 +9,7 @@ import { useUserProgress, GamificationModal } from '@/components/GamificationSys
 import EmailSubscriptionModal from '@/components/EmailSubscriptionModal';
 import { isUserSubscribed, subscribeToNewsletter } from '@/lib/subscription';
 import { useState, useEffect } from 'react';
-import { Trophy, Mail, User, LogIn, Shield } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import AuthModal from '@/components/AuthModal';
+import { Trophy, Mail, Shield } from 'lucide-react';
 
 export default function Header() {
   const pathname = usePathname();
@@ -20,10 +18,8 @@ export default function Header() {
   const { isDarkMode, toggleDarkMode } = useTheme();
   const [showGamificationModal, setShowGamificationModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { progress } = useUserProgress();
-  const { user, profile } = useAuth();
 
   useEffect(() => {
     setIsSubscribed(isUserSubscribed());
@@ -59,8 +55,11 @@ export default function Header() {
                   />
                 </div>
                 <div className="leading-tight">
-                  <div className="text-xl md:text-2xl font-black text-gray-900 tracking-tight dark:text-white/90">
+                  <div className="text-xl md:text-2xl font-black text-gray-900 tracking-tight dark:text-white/90 flex items-center gap-2">
                     SantaPalabra,
+                    <span className="px-1.5 py-0.5 rounded-md bg-blue-600 text-[10px] font-bold text-white shadow-sm leading-none align-middle">
+                      BETA
+                    </span>
                   </div>
                   <div className="text-sm md:text-base text-gray-700 font-semibold dark:text-white/70">
                     ¡Ruega por nosotros!
@@ -126,11 +125,6 @@ export default function Header() {
           onClose={() => setShowGamificationModal(false)}
           progress={progress}
         />
-        <AuthModal
-          isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-          initialMode={user ? 'signin' : 'signin'} 
-        />
       </>
     );
   }
@@ -155,7 +149,12 @@ export default function Header() {
                 />
               </div>
               <div className="leading-tight">
-                <div className="text-xl font-black text-gray-900 tracking-tight dark:text-white/90">SantaPalabra</div>
+                <div className="text-xl font-black text-gray-900 tracking-tight dark:text-white/90 flex items-center gap-2">
+                  SantaPalabra
+                  <span className="px-1.5 py-0.5 rounded-md bg-blue-600 text-[10px] font-bold text-white shadow-sm leading-none align-middle">
+                    BETA
+                  </span>
+                </div>
                 <div className="text-xs text-gray-600 font-medium dark:text-white/70">Catequista digital hispanoamericano</div>
               </div>
             </Link>
@@ -229,20 +228,6 @@ export default function Header() {
                 )}
               </button>
               <button
-                onClick={() => user ? router.push('/admin') : setShowAuthModal(true)}
-                className="h-9 w-9 flex items-center justify-center rounded-full border border-amber-200 text-base text-gray-600 hover:bg-amber-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700 relative"
-                aria-label={user ? "Perfil" : "Iniciar sesión"}
-              >
-                {user ? (
-                  <User className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                ) : (
-                  <LogIn className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                )}
-                <span className="absolute -bottom-1 -right-2 px-1 py-0.5 rounded-md bg-blue-600 text-[8px] font-bold text-white shadow-sm leading-none">
-                  BETA
-                </span>
-              </button>
-              <button
                 onClick={toggleDarkMode}
                 className="h-9 w-9 rounded-full border border-amber-200 text-base text-gray-600 hover:bg-amber-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700"
                 aria-label="Alternar tema"
@@ -270,12 +255,6 @@ export default function Header() {
         isOpen={showGamificationModal}
         onClose={() => setShowGamificationModal(false)}
         progress={progress}
-      />
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        initialMode={user ? 'signin' : 'signin'}
-        redirectTo="/admin"
       />
     </>
   );

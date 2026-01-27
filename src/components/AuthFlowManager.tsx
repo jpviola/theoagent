@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase-client'
 import type { Database } from '@/lib/supabase'
 import type { User } from '@supabase/supabase-js'
-import AuthModal from './AuthModal'
 import OnboardingFlow from './OnboardingFlow'
 import MFASetup from './MFASetup'
 import EmailVerificationBanner from './EmailVerificationBanner'
@@ -33,8 +32,6 @@ export default function AuthFlowManager({
   requireVerification = true 
 }: AuthFlowManagerProps) {
   const [currentStep, setCurrentStep] = useState<AuthStep>('loading')
-  const [showAuthModal, setShowAuthModal] = useState(false)
-  const [authMode, setAuthMode] = useState<'signin' | 'signup' | 'reset'>('signin')
 
   useEffect(() => {
     // Pure Guest Mode: Check localStorage for onboarding completion
@@ -92,13 +89,6 @@ export default function AuthFlowManager({
   return (
     <>
       {children}
-      {/* AuthModal is kept in case we want to offer optional login later, but hidden by default */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        initialMode={authMode}
-        onSuccess={() => setShowAuthModal(false)}
-      />
     </>
   )
 }

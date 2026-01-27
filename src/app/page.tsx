@@ -7,11 +7,12 @@ import type { User } from '@supabase/supabase-js';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import SantaPalabraLogo from '@/components/SantaPalabraLogo';
-import { ArrowRight, BookOpen, FlaskConical, Heart, Quote, Check, Facebook, Instagram, Twitter, ChevronDown, HelpCircle } from 'lucide-react';
+import { ArrowRight, BookOpen, FlaskConical, Heart, Quote, Check, Facebook, Instagram, Twitter, ChevronDown, HelpCircle, Mail } from 'lucide-react';
 import { BlessedButton, BreathingImage } from '@/components/SensorialEffects';
 import { ProgressBar, AchievementNotification, useUserProgress } from '@/components/GamificationSystem';
 import { SmartNotifications, PersonalizedRecommendations, type UserProfile as PersonalizationUserProfile } from '@/components/PersonalizationEngine';
 import ShareSantaPalabra from '@/components/ShareSantaPalabra';
+import { subscribeToNewsletter } from '@/lib/subscription';
 
 export default function HomePage() {
   const { language, toggleLanguage } = useLanguage();
@@ -24,6 +25,26 @@ export default function HomePage() {
   const [userProfile, setUserProfile] = useState<PersonalizationUserProfile | null>(null);
   const { progress, newAchievement, setNewAchievement, addXP, unlockAchievement, updateStreak, trackReferral } = useUserProgress();
   const profileInitializedRef = useRef(false);
+
+  // Newsletter state
+  const [email, setEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setNewsletterStatus('loading');
+    try {
+      await subscribeToNewsletter(email, language);
+      setNewsletterStatus('success');
+      setEmail('');
+      addXP(20); // Bonus XP for subscription
+    } catch (error) {
+      console.error('Newsletter error:', error);
+      setNewsletterStatus('error');
+    }
+  };
 
   // Definir traducciones y palabras antes de los efectos
   const translations = {
@@ -40,6 +61,12 @@ export default function HomePage() {
       footerText: 'Hecho con amor',
       footerCredits: 'Bits de filosofía',
       footerYear: 'Creando desde 2026',
+      newsletterTitle: 'Recibe inspiración diaria',
+      newsletterSubtitle: 'Suscríbete para recibir reflexiones, novedades y contenido exclusivo.',
+      newsletterPlaceholder: 'Tu correo electrónico',
+      newsletterButton: 'Suscribirse',
+      newsletterSuccess: '¡Gracias por suscribirte! Revisa tu correo.',
+      newsletterError: 'Hubo un error. Intenta nuevamente.',
     },
     en: {
       heroTitle: 'Talk to your digital catechist',
@@ -54,6 +81,12 @@ export default function HomePage() {
       footerText: 'Made with love',
       footerCredits: 'Bits of Philosophy',
       footerYear: 'Creating since 2026',
+      newsletterTitle: 'Get daily inspiration',
+      newsletterSubtitle: 'Subscribe to receive reflections, news, and exclusive content.',
+      newsletterPlaceholder: 'Your email address',
+      newsletterButton: 'Subscribe',
+      newsletterSuccess: 'Thanks for subscribing! Check your email.',
+      newsletterError: 'An error occurred. Please try again.',
     },
   };
 
@@ -564,6 +597,76 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
+        </motion.div>
+      </section>
+
+      {/* NEWSLETTER SECTION */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-amber-500 to-amber-700 dark:from-amber-900 dark:to-gray-900 py-20 px-4 text-white">
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-10">
+          <div className="absolute top-[-10%] left-[-10%] w-96 h-96 rounded-full bg-white blur-3xl"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 rounded-full bg-amber-200 blur-3xl"></div>
+        </div>
+
+        <motion.div
+          className="relative z-10 mx-auto max-w-3xl text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <Mail className="mx-auto h-12 w-12 mb-6 text-amber-200" />
+          <h2 className="mb-4 text-3xl md:text-4xl font-black tracking-tight">
+            {t.newsletterTitle}
+          </h2>
+          <p className="mb-8 text-lg text-amber-100 max-w-2xl mx-auto">
+            {t.newsletterSubtitle}
+          </p>
+
+          <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={t.newsletterPlaceholder}
+              required
+              disabled={newsletterStatus === 'loading' || newsletterStatus === 'success'}
+              className="flex-grow px-6 py-3 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-300 disabled:opacity-70"
+            />
+            <button
+              type="submit"
+              disabled={newsletterStatus === 'loading' || newsletterStatus === 'success'}
+              className="px-8 py-3 bg-white text-amber-700 font-bold rounded-full hover:bg-amber-50 transition-colors disabled:opacity-70 shadow-lg"
+            >
+              {newsletterStatus === 'loading' ? (
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-amber-600 border-t-transparent mx-auto"></div>
+              ) : newsletterStatus === 'success' ? (
+                <Check className="h-5 w-5 mx-auto" />
+              ) : (
+                t.newsletterButton
+              )}
+            </button>
+          </form>
+
+          {newsletterStatus === 'success' && (
+            <motion.p 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-4 text-green-200 font-medium"
+            >
+              {t.newsletterSuccess}
+            </motion.p>
+          )}
+
+          {newsletterStatus === 'error' && (
+            <motion.p 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-4 text-red-200 font-medium"
+            >
+              {t.newsletterError}
+            </motion.p>
+          )}
         </motion.div>
       </section>
 
