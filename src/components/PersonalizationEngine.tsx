@@ -370,12 +370,11 @@ export function PersonalizedRecommendations({ profile }: { profile: UserProfile 
   return (
     <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        className="fixed bottom-4 right-4 max-w-sm z-40"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        className="fixed z-40 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-4 border border-amber-100 dark:border-gray-700 bottom-4 left-4 right-4 md:w-96 md:right-4 md:left-auto"
       >
-          <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl shadow-2xl border-2 border-yellow-200 p-6 dark:from-gray-800 dark:to-gray-700 dark:border-amber-600">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-yellow-600" />
@@ -430,7 +429,6 @@ export function PersonalizedRecommendations({ profile }: { profile: UserProfile 
           >
             Ver más recomendaciones
           </button>
-        </div>
       </motion.div>
     </AnimatePresence>
   );

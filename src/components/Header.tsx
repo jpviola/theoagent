@@ -138,7 +138,7 @@ export default function Header() {
           <div className="flex items-center justify-between">
             {/* Logo y título principal */}
             <Link href="/" className="flex items-center gap-3 group transition-transform hover:scale-[1.01]">
-              <div className="relative h-12 w-12 rounded-xl bg-gradient-to-br from-amber-50 to-amber-100 p-2 shadow-sm group-hover:shadow-md transition-shadow dark:from-gray-700 dark:to-gray-600">
+              <div className="relative h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-amber-50 to-amber-100 p-2 shadow-sm group-hover:shadow-md transition-shadow dark:from-gray-700 dark:to-gray-600">
                 <Image
                   src="/santapalabra-logo.svg"
                   alt="SantaPalabra"
@@ -149,13 +149,13 @@ export default function Header() {
                 />
               </div>
               <div className="leading-tight">
-                <div className="text-xl font-black text-gray-900 tracking-tight dark:text-white/90 flex items-center gap-2">
+                <div className="text-lg sm:text-xl font-black text-gray-900 tracking-tight dark:text-white/90 flex items-center gap-2">
                   SantaPalabra
-                  <span className="px-1.5 py-0.5 rounded-md bg-blue-600 text-[10px] font-bold text-white shadow-sm leading-none align-middle">
+                  <span className="px-1.5 py-0.5 rounded-md bg-blue-600 text-[10px] font-bold text-white shadow-sm leading-none align-middle hidden sm:inline-block">
                     BETA
                   </span>
                 </div>
-                <div className="text-xs text-gray-600 font-medium dark:text-white/70">Catequista digital hispanoamericano</div>
+                <div className="text-xs text-gray-600 font-medium dark:text-white/70 hidden sm:block">Catequista digital hispanoamericano</div>
               </div>
             </Link>
 
@@ -205,10 +205,10 @@ export default function Header() {
                   <Mail className="h-5 w-5 dark:text-white" />
                 </button>
               )}
-              <Link href="/blog" style={{ color: 'var(--foreground)' }} className="p-2 rounded-lg hover:bg-amber-50 transition-colors dark:bg-transparent dark:hover:bg-gray-700">
+              <Link href="/blog" style={{ color: 'var(--foreground)' }} className="p-2 rounded-lg hover:bg-amber-50 transition-colors dark:bg-transparent dark:hover:bg-gray-700 hidden sm:block">
                 <span className="text-lg dark:text-white">📖</span>
               </Link>
-              <Link href="/sobre-nosotros" style={{ color: 'var(--foreground)' }} className="p-2 rounded-lg hover:bg-amber-50 transition-colors dark:bg-transparent dark:hover:bg-gray-700">
+              <Link href="/sobre-nosotros" style={{ color: 'var(--foreground)' }} className="p-2 rounded-lg hover:bg-amber-50 transition-colors dark:bg-transparent dark:hover:bg-gray-700 hidden sm:block">
                 <span className="text-lg dark:text-white">ℹ️</span>
               </Link>
             </nav>

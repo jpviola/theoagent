@@ -190,7 +190,7 @@ export async function POST(req: NextRequest) {
         mode_used: mode,
         message_count: 1,
         model_used: useAdvanced ? 'claude-3-5-sonnet' : 'claude-3-haiku',
-        processing_time_ms: endTime - startTime
+        processing_time_ms: 0
       });
       
     if (conversationError) {
