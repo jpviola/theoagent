@@ -98,18 +98,18 @@ export function searchDailyGospelByKeyword(keyword: string): DailyGospelReflecti
 }
 
 export function formatDailyGospelContext(reflection: DailyGospelReflection): string {
-  let context = `\n\n📖 **DAILY GOSPEL REFLECTION**\n`;
+  let context = `\n\n📖 **REFLEXIÓN DEL EVANGELIO DEL DÍA**\n`;
   context += `**${reflection.liturgical_day}** - ${reflection.gospel_citation}\n\n`;
   
-  context += `**Gospel Text:**\n"${reflection.gospel_text}"\n\n`;
+  context += `**Texto del Evangelio:**\n"${reflection.gospel_text}"\n\n`;
   
-  context += `**Context:**\n`;
-  context += `- Historical: ${reflection.context.historical}\n`;
-  context += `- Literary: ${reflection.context.literary}\n`;
-  context += `- Liturgical: ${reflection.context.liturgical}\n\n`;
+  context += `**Contexto:**\n`;
+  context += `- Histórico: ${reflection.context.historical}\n`;
+  context += `- Literario: ${reflection.context.literary}\n`;
+  context += `- Litúrgico: ${reflection.context.liturgical}\n\n`;
   
   if (reflection.philology.greek_terms.length > 0) {
-    context += `**Key Greek Terms:**\n`;
+    context += `**Términos Griegos Clave:**\n`;
     reflection.philology.greek_terms.forEach(term => {
       context += `- **${term.word}** (${term.transliteration}): ${term.meaning} - ${term.insight}\n`;
     });
@@ -117,7 +117,7 @@ export function formatDailyGospelContext(reflection: DailyGospelReflection): str
   }
   
   if (reflection.old_testament_connections.length > 0) {
-    context += `**Old Testament Connections:**\n`;
+    context += `**Conexiones con el Antiguo Testamento:**\n`;
     reflection.old_testament_connections.forEach(conn => {
       context += `- ${conn.passage}: ${conn.connection}\n`;
     });
@@ -125,14 +125,14 @@ export function formatDailyGospelContext(reflection: DailyGospelReflection): str
   }
   
   if (reflection.traditional_interpretation.church_fathers.length > 0) {
-    context += `**Church Fathers:**\n`;
+    context += `**Padres de la Iglesia:**\n`;
     reflection.traditional_interpretation.church_fathers.slice(0, 2).forEach(father => {
       context += `- ${father.father}: "${father.quote}"\n`;
     });
     context += `\n`;
   }
   
-  context += `**For Personal Reflection:**\n`;
+  context += `**Para Reflexión Personal:**\n`;
   reflection.personal_reflection.questions.slice(0, 3).forEach((q, i) => {
     context += `${i + 1}. ${q}\n`;
   });

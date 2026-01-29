@@ -741,7 +741,7 @@ INTERACCIÓN Y TONO:
  - DESPEDIDA: Cierra siempre con una bendición o deseo de bien (ej. "Dios te bendiga", "Quedo a tu disposición", "Un abrazo en Cristo").
  - EVANGELIO DEL DÍA: Si preguntan por el evangelio de hoy, sigue ESTRICTAMENTE este orden:
    1. CITA COMPLETA: Presenta el texto completo del Evangelio tal como aparece en el contexto (no lo resumas).
-   2. EXPLICACIÓN ESTRUCTURADA: Usa la información de 'DAILY GOSPEL REFLECTION' para explicar el contexto (histórico/litúrgico), filología (términos clave) y conexiones bíblicas.
+   2. EXPLICACIÓN ESTRUCTURADA: Usa la información de 'REFLEXIÓN DEL EVANGELIO DEL DÍA' para explicar el contexto (histórico/litúrgico), filología (términos clave) y conexiones bíblicas.
    3. REFLEXIÓN: Concluye con la reflexión personal y aplicación práctica.
  - Si no sabes algo, dilo con humildad y ofrece buscarlo o rezar juntos.
 
@@ -992,11 +992,11 @@ To enable full AI chat, please configure ANTHROPIC_API_KEY or GROQ_API_KEY in yo
       const initialModel = actualModel as SupportedChatModel;
       
       if (initialModel === 'local') {
-        attemptOrder = ['local', 'llama', 'gemma', 'anthropic', 'qwen'];
+        attemptOrder = ['local', 'llama', 'gemma', 'qwen', 'anthropic'];
       } else if (initialModel === 'anthropic') {
         attemptOrder = ['anthropic', 'llama', 'gemma', 'qwen'];
       } else if (initialModel === 'llama') {
-        attemptOrder = ['llama', 'gemma', 'qwen', 'anthropic'];
+        attemptOrder = ['llama', 'local', 'gemma', 'qwen', 'anthropic'];
       } else if (initialModel === 'gemma') {
         attemptOrder = ['gemma', 'qwen', 'llama', 'anthropic'];
       } else if (initialModel === 'qwen') {

@@ -197,7 +197,7 @@ export default function CatholicChatPage() {
   // advancedMode removed - using RAG by default
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [isBowing, setIsBowing] = useState(false);
-  const [selectedModel, setSelectedModel] = useState<'anthropic' | 'openai' | 'llama' | 'local'>('local');
+  const [selectedModel, setSelectedModel] = useState<'anthropic' | 'openai' | 'llama' | 'local'>('llama'); // Default to Groq (Llama)
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [userXP, setUserXP] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
