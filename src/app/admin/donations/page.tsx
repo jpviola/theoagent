@@ -142,10 +142,7 @@ export default function DonationsAdminPage() {
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Completadas</h3>
               <p className="text-2xl font-bold text-green-500 dark:text-green-300">{stats.completed_donations}</p>
             </div>
-            <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Stripe</h3>
-              <p className="text-2xl font-bold text-blue-500 dark:text-blue-300">{stats.stripe_donations}</p>
-            </div>
+            {/* Stripe removed */}
             <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">PayPal</h3>
               <p className="text-2xl font-bold text-yellow-500 dark:text-yellow-300">{stats.paypal_donations}</p>

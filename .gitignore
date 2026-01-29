@@ -48,3 +48,15 @@ documents/raw/
 
 # Logs
 snowflake.log
+
+# Models
+models/*.gguf
+models/*.bin
+
+# Training
+training/venv/
+training/__pycache__/
+*.ipynb_checkpoints
+
+# Reports
+lint_report.txt

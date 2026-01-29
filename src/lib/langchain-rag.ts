@@ -14,7 +14,7 @@ import { AIMessage, HumanMessage, BaseMessage } from '@langchain/core/messages';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { getTodaysGospelReflection, formatDailyGospelContext } from './dailyGospel';
 
-type SupportedChatModel = 'anthropic' | 'openai' | 'llama' | 'gemma' | 'qwen' | 'auto';
+type SupportedChatModel = 'anthropic' | 'openai' | 'llama' | 'gemma' | 'qwen' | 'local' | 'auto';
 
 // Types
 interface CatholicDocument {
@@ -307,6 +307,8 @@ export class SantaPalabraRAG {
           return this.createGemmaLLM(specialistMode);
         case 'qwen':
           return this.createQwenLLM(specialistMode);
+        case 'local':
+          return this.createLocalLLM();
         case 'auto':
           // Should have been resolved by routeQuery, but just in case:
           return this.createAnthropicLLM(); 
@@ -427,6 +429,22 @@ export class SantaPalabraRAG {
           'HTTP-Referer': 'https://santapalabra.org',
           'X-Title': 'Santa Palabra',
         }
+      },
+    });
+  }
+
+  private createLocalLLM(): BaseChatModel {
+    const baseURL = process.env.LOCAL_LLM_BASE_URL || 'http://localhost:11434/v1';
+    const model = process.env.LOCAL_LLM_MODEL || 'santapalabra';
+    
+    console.log(`🏠 Using Local LLM (${model}) at ${baseURL}`);
+    
+    return new ChatOpenAI({
+      apiKey: 'ollama', // Ollama doesn't require a real key
+      modelName: model,
+      temperature: 0.3,
+      configuration: {
+        baseURL: baseURL,
       },
     });
   }
@@ -961,7 +979,9 @@ To enable full AI chat, please configure ANTHROPIC_API_KEY or GROQ_API_KEY in yo
       let attemptOrder: SupportedChatModel[] = [];
       const initialModel = actualModel as SupportedChatModel;
       
-      if (initialModel === 'anthropic') {
+      if (initialModel === 'local') {
+        attemptOrder = ['local', 'anthropic', 'llama', 'gemma', 'qwen'];
+      } else if (initialModel === 'anthropic') {
         attemptOrder = ['anthropic', 'llama', 'gemma', 'qwen'];
       } else if (initialModel === 'llama') {
         attemptOrder = ['llama', 'anthropic', 'gemma', 'qwen'];

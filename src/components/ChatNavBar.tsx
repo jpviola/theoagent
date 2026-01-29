@@ -19,7 +19,7 @@ interface NavUser {
   email?: string | null;
 }
 
-type ChatModelId = 'anthropic' | 'openai' | 'llama';
+type ChatModelId = 'anthropic' | 'openai' | 'llama' | 'gemma' | 'qwen' | 'local';
 
 interface NavBarProps {
   user?: NavUser | null;
@@ -99,6 +99,12 @@ export default function NavBar({
       name: 'Kimi / Llama (Open Source)',
       cost: '3 XP',
       description: language === 'es' ? 'Modelo económico (Kimi via OpenRouter)' : language === 'pt' ? 'Modelo econômico (Kimi via OpenRouter)' : 'Economic model (Kimi via OpenRouter)'
+    },
+    { 
+      id: 'local' as const, 
+      name: 'Santa Palabra (Local)',
+      cost: '0 XP',
+      description: language === 'es' ? 'Modelo local Llama-3 (Ollama)' : language === 'pt' ? 'Modelo local Llama-3 (Ollama)' : 'Local Llama-3 Model (Ollama)'
     }
   ];
 

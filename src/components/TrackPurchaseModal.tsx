@@ -114,50 +114,6 @@ export function TrackPurchaseModal({ isOpen, onClose, track, onPurchase }: Track
     window.open(PAYPAL_BUTTON_URL, '_blank');
   };
 
-  const handleStripePurchase = async () => {
-    setIsProcessing(true);
-    
-    if (!user) {
-      const success = await handleAuth();
-      if (!success) {
-        setIsProcessing(false);
-        return;
-      }
-    }
-
-    try {
-      const amount = getPriceAmount(track.price);
-      
-      const response = await fetch('/api/payments/stripe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          amount: amount,
-          currency: 'usd',
-          track_title: getTitle(track),
-          metadata: {
-            track_id: track.id,
-            track_title: getTitle(track),
-            source: 'track_purchase_modal'
-          }
-        })
-      });
-
-      const data = await response.json();
-      
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert(`Error: ${data.error || 'Stripe initialization failed'}`);
-      }
-    } catch (error) {
-      console.error('Stripe purchase failed', error);
-      alert('Error initiating Stripe payment');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
   const handleMercadoPagoPurchase = async () => {
     if (!mpLoaded || !window.MercadoPago) {
       alert('MercadoPago SDK loading...');

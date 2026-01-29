@@ -196,7 +196,7 @@ export default function CatholicChatPage() {
   // advancedMode removed - using RAG by default
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [isBowing, setIsBowing] = useState(false);
-  // const [selectedModel, setSelectedModel] = useState<'anthropic' | 'openai' | 'llama'>('llama');
+  const [selectedModel, setSelectedModel] = useState<'anthropic' | 'openai' | 'llama' | 'local'>('local');
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [userXP, setUserXP] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
@@ -795,12 +795,12 @@ export default function CatholicChatPage() {
     try {
       // Using RAG endpoint by default
       const apiEndpoint = '/api/catholic-rag';
-      // Always use Catholic Chat implementation with auto model
+      // Always use Catholic Chat implementation with selected model
       const requestBody = { 
         query: userMessage.content, 
         implementation: 'Catholic Chat', 
         language, 
-        model: 'auto', 
+        model: selectedModel, 
         studyTrack: selectedTrackId,
         specialistMode: isSpecialist
       };
