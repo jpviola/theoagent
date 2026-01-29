@@ -447,7 +447,7 @@ export class SantaPalabraRAG {
       apiKey: 'ollama', // Ollama doesn't require a real key
       modelName: model,
       temperature: 0.3,
-      timeout: 120000, // 2 minutes timeout for local/tunnel connections
+      timeout: 300000, // 5 minutes timeout for slow local models
       configuration: {
         baseURL: baseURL,
         defaultHeaders: {
