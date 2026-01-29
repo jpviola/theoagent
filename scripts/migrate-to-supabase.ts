@@ -55,11 +55,14 @@ const FILES_TO_MIGRATE: string[] = [
   // 'gospel_passages_greek.json',
   // 'church_history.json',
 
+  // New regional data:
+  // 'regional_church_data.json',
+
   // Pending (Small/Medium):
 
   // Large files (Uncomment with caution - expensive/slow):
-  'dogmatic_theology.json', // ~73MB
-  'bible_study_plan.json', // ~245MB
+  // 'dogmatic_theology.json', // ~73MB
+  // 'bible_study_plan.json', // ~245MB
 ];
 
 async function loadAndMigrate() {

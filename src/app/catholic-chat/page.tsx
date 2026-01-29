@@ -803,7 +803,8 @@ export default function CatholicChatPage() {
         language, 
         model: selectedModel, 
         studyTrack: selectedTrackId,
-        specialistMode: isSpecialist
+        specialistMode: isSpecialist,
+        country: userCountry 
       };
 
       const controller = new AbortController();
@@ -958,22 +959,67 @@ export default function CatholicChatPage() {
 
   // Estado para preferencias del usuario
   const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
+  const [userCountry, setUserCountry] = useState<string | null>(null);
 
-  // Cargar preferencias del usuario
+  // Cargar preferencias del usuario y detectar país
   useEffect(() => {
     const savedProfile = localStorage.getItem('santapalabra_user_profile');
     if (!savedProfile) return;
     try {
-      const profile = JSON.parse(savedProfile) as { preferences?: UserPreferences };
+      const profile = JSON.parse(savedProfile) as { preferences?: UserPreferences, country?: string };
       if (profile.preferences) {
         setUserPreferences(profile.preferences);
       }
+      if (profile.country) {
+        setUserCountry(profile.country);
+      }
     } catch {
+    }
+
+    // Simular detección por IP (en producción usar headers o API de geoip)
+    // Para prueba: si no hay país, default a 'LATAM' o permitir selección
+    if (!localStorage.getItem('santapalabra_user_country')) {
+       // Mock: Asumir AR para pruebas si no hay nada
+       // setUserCountry('AR');
     }
   }, []);
 
   // Seleccionar preguntas personalizadas
   const [sampleQuestions, setSampleQuestions] = useState<string[]>([]);
+  
+  // Definir preguntas por país
+  const countryQuestions: Record<string, string[]> = {
+    'AR': [
+      '¿Qué dice la Conferencia Episcopal Argentina sobre la pobreza?',
+      '¿Quién es el Santo Cura Brochero?',
+      '¿Cuál es la historia de la Virgen de Luján?',
+      '¿Qué documentos recientes ha publicado el Episcopado Argentino?'
+    ],
+    'PE': [
+      '¿Qué dice la Conferencia Episcopal Peruana sobre la situación actual?',
+      '¿Quién es Santa Rosa de Lima?',
+      '¿Cuál es la devoción al Señor de los Milagros?',
+      '¿Qué es la Carta Pastoral sobre la ecología en Perú?'
+    ],
+    'ES': [
+      '¿Qué dice la Conferencia Episcopal Española sobre la educación?',
+      '¿Quién es San Juan de la Cruz?',
+      '¿Cuál es la historia de Santiago Apóstol en España?',
+      '¿Qué documentos ha publicado la CEE recientemente?'
+    ],
+    'MX': [
+      '¿Cuál es el mensaje de la Virgen de Guadalupe?',
+      '¿Qué dice el Episcopado Mexicano sobre los migrantes?',
+      '¿Quién fue San Juan Diego?',
+      '¿Qué es el Proyecto Global de Pastoral 2031-2033?'
+    ],
+    'CO': [
+      '¿Qué dice la Conferencia Episcopal de Colombia sobre la paz?',
+      '¿Quién es Santa Laura Montoya?',
+      '¿Cuál es la historia del Señor de Monserrate?',
+      '¿Qué documentos ha publicado la CEC recientemente?'
+    ]
+  };
 
   useEffect(() => {
     const gospelQuestion = language === 'es' 
@@ -983,6 +1029,12 @@ export default function CatholicChatPage() {
       : 'Can you explain today\'s Gospel to me?';
     
     let questions: string[] = [];
+
+    // Priorizar preguntas por país si existe
+    if (userCountry && countryQuestions[userCountry]) {
+      const specificQuestions = countryQuestions[userCountry];
+      questions.push(...specificQuestions);
+    }
 
     if (userPreferences && userPreferences.interests && userPreferences.interests.length > 0) {
       // Si hay preferencias, seleccionar preguntas basadas en intereses
@@ -1007,15 +1059,25 @@ export default function CatholicChatPage() {
       // Si no hay preferencias, usar preguntas generales aleatorias
       const langQuestions = categorizedQuestions[language];
       const allQuestions = Object.values(langQuestions).flat();
-      questions = allQuestions.sort(() => Math.random() - 0.5);
+      questions.push(...allQuestions.sort(() => Math.random() - 0.5));
     }
 
-    // Seleccionar 2 preguntas aleatorias + evangelio del día
-    const shuffled = questions.sort(() => Math.random() - 0.5);
-    const selected = shuffled.slice(0, 2);
+    // Mezclar y seleccionar: 1 Evangelio, 1 País (si hay), 1 General/Interés
+    const shuffled = questions.filter(q => q !== gospelQuestion).sort(() => Math.random() - 0.5);
     
-    setSampleQuestions([...selected, gospelQuestion]);
-  }, [language, userPreferences]);
+    let finalSelection: string[] = [];
+    
+    if (userCountry && countryQuestions[userCountry]) {
+        // Asegurar al menos una de país
+        const countryQ = countryQuestions[userCountry].sort(() => Math.random() - 0.5)[0];
+        const otherQ = shuffled.filter(q => q !== countryQ).slice(0, 1);
+        finalSelection = [countryQ, ...otherQ];
+    } else {
+        finalSelection = shuffled.slice(0, 2);
+    }
+    
+    setSampleQuestions([gospelQuestion, ...finalSelection]);
+  }, [language, userPreferences, userCountry]);
 
   const texts = {
     es: {
