@@ -1,0 +1,95 @@
+{"level":"INFO","message":"[9:08:18.630 PM]: Creating new connection object"}
+{"level":"INFO","message":"[9:08:18.641 PM]: Creating Connection[id: a8cda48f-afee-4a79-a6d0-2812d8dcf3a3] with host: GLEHEXK.NP20617.snowflakecomputing.com, account: GLEHEXK, accessUrl: https://GLEHEXK.NP20617.snowflakecomputing.com, user: jpviola, role: ACCOUNTADMIN, database: SANTAPALABRA_DB, schema: PUBLIC, warehouse: COMPUTE_WH, proxy was not configured, password is provided, region: NP20617, authenticator: SNOWFLAKE, ocsp mode: FAIL_OPEN, os: win32, os version: 10.0.26200"}
+{"level":"INFO","message":"[9:08:18.642 PM]: Connection[id: a8cda48f-afee-4a79-a6d0-2812d8dcf3a3] additional details: passcode in password is provided, passcode is not provided, private key is not provided, application: SantaPalabra_Ingestion, client name: snowflake-sdk, client version: 2.3.3, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[9:08:18.642 PM]: Connection[id: a8cda48f-afee-4a79-a6d0-2812d8dcf3a3] - connection object created successfully."}
+{"level":"INFO","message":"[9:08:18.643 PM]: Connection[id: a8cda48f-afee-4a79-a6d0-2812d8dcf3a3] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[9:08:18.643 PM]: Connection[id: a8cda48f-afee-4a79-a6d0-2812d8dcf3a3] - authentication successful using: SNOWFLAKE"}
+{"level":"INFO","message":"[9:08:18.644 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[9:08:18.647 PM]: No client config detected."}
+{"level":"INFO","message":"[9:08:18.647 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[9:08:18.648 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"ERROR","message":"[9:12:12.053 PM]: Connection[id: a8cda48f-afee-4a79-a6d0-2812d8dcf3a3] - connection failed after 233409.84 milliseconds. Error: Hostname/IP does not match certificate's altnames: Host: glehexk.np20617.snowflakecomputing.com. is not in the cert's altnames: DNS:*.prod3.us-west-2.aws.snowflakecomputing.com, DNS:*.global.privatelink.snowflakecomputing.com, DNS:*.global.snowflakecomputing.com, DNS:*.ingest.pdxaaj.privatelink.snowflakecomputing.com, DNS:*.ingest.pdxaaj.snowflakecomputing.com, DNS:*.opencatalog.pdxaaj.p"}
+{"level":"INFO","message":"[9:14:42.676 PM]: Creating new connection object"}
+{"level":"INFO","message":"[9:14:42.690 PM]: Creating Connection[id: 588f169e-479f-452f-9dc9-49c9ec4954b7] with host: GLEHEXK-NP20617.snowflakecomputing.com, account: GLEHEXK-NP20617, accessUrl: https://GLEHEXK-NP20617.snowflakecomputing.com, user: JPVIOLA, role: ACCOUNTADMIN, database: SANTAPALABRA_DB, schema: PUBLIC, warehouse: COMPUTE_WH, proxy was not configured, password is provided, region: undefined, authenticator: SNOWFLAKE, ocsp mode: FAIL_OPEN, os: win32, os version: 10.0.26200"}
+{"level":"INFO","message":"[9:14:42.691 PM]: Connection[id: 588f169e-479f-452f-9dc9-49c9ec4954b7] additional details: passcode in password is provided, passcode is not provided, private key is not provided, application: SantaPalabra_Ingestion, client name: snowflake-sdk, client version: 2.3.3, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[9:14:42.692 PM]: Connection[id: 588f169e-479f-452f-9dc9-49c9ec4954b7] - connection object created successfully."}
+{"level":"INFO","message":"[9:14:42.692 PM]: Connection[id: 588f169e-479f-452f-9dc9-49c9ec4954b7] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[9:14:42.693 PM]: Connection[id: 588f169e-479f-452f-9dc9-49c9ec4954b7] - authentication successful using: SNOWFLAKE"}
+{"level":"INFO","message":"[9:14:42.694 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[9:14:42.697 PM]: No client config detected."}
+{"level":"INFO","message":"[9:14:42.697 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[9:14:42.698 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"ERROR","message":"[9:14:45.904 PM]: Connection[id: 588f169e-479f-452f-9dc9-49c9ec4954b7] - connection failed after 3211.33 milliseconds. Error: Incorrect username or password was specified."}
+{"level":"INFO","message":"[9:15:56.289 PM]: Creating new connection object"}
+{"level":"INFO","message":"[9:15:56.299 PM]: Creating Connection[id: 42c2e051-559a-401d-8a88-17218a0647c3] with host: GLEHEXK-NP20617.snowflakecomputing.com, account: GLEHEXK-NP20617, accessUrl: https://GLEHEXK-NP20617.snowflakecomputing.com, user: JPVIOLA, role: ACCOUNTADMIN, database: SANTAPALABRA_DB, schema: PUBLIC, warehouse: COMPUTE_WH, proxy was not configured, password is provided, region: undefined, authenticator: SNOWFLAKE, ocsp mode: FAIL_OPEN, os: win32, os version: 10.0.26200"}
+{"level":"INFO","message":"[9:15:56.300 PM]: Connection[id: 42c2e051-559a-401d-8a88-17218a0647c3] additional details: passcode in password is provided, passcode is not provided, private key is not provided, application: SantaPalabra_Ingestion, client name: snowflake-sdk, client version: 2.3.3, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[9:15:56.300 PM]: Connection[id: 42c2e051-559a-401d-8a88-17218a0647c3] - connection object created successfully."}
+{"level":"INFO","message":"[9:15:56.301 PM]: Connection[id: 42c2e051-559a-401d-8a88-17218a0647c3] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[9:15:56.301 PM]: Connection[id: 42c2e051-559a-401d-8a88-17218a0647c3] - authentication successful using: SNOWFLAKE"}
+{"level":"INFO","message":"[9:15:56.302 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[9:15:56.305 PM]: No client config detected."}
+{"level":"INFO","message":"[9:15:56.305 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[9:15:56.306 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"ERROR","message":"[9:15:57.876 PM]: Connection[id: 42c2e051-559a-401d-8a88-17218a0647c3] - connection failed after 1574.95 milliseconds. Error: Incorrect username or password was specified."}
+{"level":"INFO","message":"[9:17:29.117 PM]: Creating new connection object"}
+{"level":"INFO","message":"[9:17:29.128 PM]: Creating Connection[id: 82614a8b-6ac1-4988-91e4-e24102fcc952] with host: GLEHEXK-NP20617.snowflakecomputing.com.snowflakecomputing.com, account: GLEHEXK-NP20617, accessUrl: https://GLEHEXK-NP20617.snowflakecomputing.com.snowflakecomputing.com, user: JPVIOLA, role: ACCOUNTADMIN, database: SANTAPALABRA_DB, schema: PUBLIC, warehouse: COMPUTE_WH, proxy was not configured, password is provided, region: snowflakecomputing.com, authenticator: SNOWFLAKE, ocsp mode: FAIL_OPEN, os: win32, os version: 10.0"}
+{"level":"INFO","message":"[9:17:29.128 PM]: Connection[id: 82614a8b-6ac1-4988-91e4-e24102fcc952] additional details: passcode in password is provided, passcode is not provided, private key is not provided, application: SantaPalabra_Ingestion, client name: snowflake-sdk, client version: 2.3.3, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[9:17:29.129 PM]: Connection[id: 82614a8b-6ac1-4988-91e4-e24102fcc952] - connection object created successfully."}
+{"level":"INFO","message":"[9:17:29.130 PM]: Connection[id: 82614a8b-6ac1-4988-91e4-e24102fcc952] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[9:17:29.130 PM]: Connection[id: 82614a8b-6ac1-4988-91e4-e24102fcc952] - authentication successful using: SNOWFLAKE"}
+{"level":"INFO","message":"[9:17:29.131 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[9:17:29.147 PM]: No client config detected."}
+{"level":"INFO","message":"[9:17:29.147 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[9:17:29.147 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"ERROR","message":"[9:20:45.007 PM]: Connection[id: 82614a8b-6ac1-4988-91e4-e24102fcc952] - connection failed after 195877.14 milliseconds. Error: Hostname/IP does not match certificate's altnames: Host: glehexk-np20617.snowflakecomputing.com.snowflakecomputing.com. is not in the cert's altnames: DNS:*.prod3.us-west-2.aws.snowflakecomputing.com, DNS:*.global.privatelink.snowflakecomputing.com, DNS:*.global.snowflakecomputing.com, DNS:*.ingest.pdxaaj.privatelink.snowflakecomputing.com, DNS:*.ingest.pdxaaj.snowflakecomputing.com, DNS"}
+{"level":"INFO","message":"[9:24:18.681 PM]: Creating new connection object"}
+{"level":"INFO","message":"[9:24:18.691 PM]: Creating Connection[id: c02b1882-4661-4ab2-926a-9b8f5af4fca7] with host: NP20617.snowflakecomputing.com, account: NP20617, accessUrl: https://NP20617.snowflakecomputing.com, user: JPVIOLA, role: ACCOUNTADMIN, database: SANTAPALABRA_DB, schema: PUBLIC, warehouse: COMPUTE_WH, proxy was not configured, password is provided, region: undefined, authenticator: SNOWFLAKE, ocsp mode: FAIL_OPEN, os: win32, os version: 10.0.26200"}
+{"level":"INFO","message":"[9:24:18.691 PM]: Connection[id: c02b1882-4661-4ab2-926a-9b8f5af4fca7] additional details: passcode in password is provided, passcode is not provided, private key is not provided, application: SantaPalabra_Ingestion, client name: snowflake-sdk, client version: 2.3.3, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[9:24:18.692 PM]: Connection[id: c02b1882-4661-4ab2-926a-9b8f5af4fca7] - connection object created successfully."}
+{"level":"INFO","message":"[9:24:18.692 PM]: Connection[id: c02b1882-4661-4ab2-926a-9b8f5af4fca7] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[9:24:18.693 PM]: Connection[id: c02b1882-4661-4ab2-926a-9b8f5af4fca7] - authentication successful using: SNOWFLAKE"}
+{"level":"INFO","message":"[9:24:18.693 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[9:24:18.697 PM]: No client config detected."}
+{"level":"INFO","message":"[9:24:18.697 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[9:24:18.698 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"ERROR","message":"[9:27:11.224 PM]: Connection[id: c02b1882-4661-4ab2-926a-9b8f5af4fca7] - connection failed after 172531.36 milliseconds. Error: Request to Snowflake failed."}
+{"level":"INFO","message":"[9:28:33.291 PM]: Creating new connection object"}
+{"level":"INFO","message":"[9:28:33.300 PM]: Creating Connection[id: d5aa3fc1-007e-47dc-8e2a-9c5b0d000b8e] with host: GLEHEXK-NP20617.snowflakecomputing.com, account: GLEHEXK-NP20617, accessUrl: https://GLEHEXK-NP20617.snowflakecomputing.com, user: JPVIOLA, role: ACCOUNTADMIN, database: SANTAPALABRA_DB, schema: PUBLIC, warehouse: COMPUTE_WH, proxy was not configured, password is provided, region: undefined, authenticator: SNOWFLAKE, ocsp mode: FAIL_OPEN, os: win32, os version: 10.0.26200"}
+{"level":"INFO","message":"[9:28:33.301 PM]: Connection[id: d5aa3fc1-007e-47dc-8e2a-9c5b0d000b8e] additional details: passcode in password is provided, passcode is not provided, private key is not provided, application: SantaPalabra_Ingestion, client name: snowflake-sdk, client version: 2.3.3, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[9:28:33.301 PM]: Connection[id: d5aa3fc1-007e-47dc-8e2a-9c5b0d000b8e] - connection object created successfully."}
+{"level":"INFO","message":"[9:28:33.302 PM]: Connection[id: d5aa3fc1-007e-47dc-8e2a-9c5b0d000b8e] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[9:28:33.302 PM]: Connection[id: d5aa3fc1-007e-47dc-8e2a-9c5b0d000b8e] - authentication successful using: SNOWFLAKE"}
+{"level":"INFO","message":"[9:28:33.303 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[9:28:33.306 PM]: No client config detected."}
+{"level":"INFO","message":"[9:28:33.307 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[9:28:33.307 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"ERROR","message":"[9:28:35.608 PM]: Connection[id: d5aa3fc1-007e-47dc-8e2a-9c5b0d000b8e] - connection failed after 2305.67 milliseconds. Error: Incorrect username or password was specified."}
+{"level":"INFO","message":"[9:30:01.842 PM]: Creating new connection object"}
+{"level":"INFO","message":"[9:30:01.843 PM]: Creating Connection[id: 4041fb7a-67a6-4020-a956-75cfb1eb1a22] with host: GLEHEXK-NP20617.snowflakecomputing.com, account: GLEHEXK-NP20617, accessUrl: https://GLEHEXK-NP20617.snowflakecomputing.com, user: JPVIOLA, role: ACCOUNTADMIN, database: SANTAPALABRA_DB, schema: PUBLIC, warehouse: COMPUTE_WH, proxy was not configured, password is provided, region: undefined, authenticator: SNOWFLAKE, ocsp mode: FAIL_OPEN, os: win32, os version: 10.0.26200"}
+{"level":"INFO","message":"[9:30:01.843 PM]: Connection[id: 4041fb7a-67a6-4020-a956-75cfb1eb1a22] additional details: passcode in password is provided, passcode is not provided, private key is not provided, application: SantaPalabra_Ingestion, client name: snowflake-sdk, client version: 2.3.3, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[9:30:01.844 PM]: Connection[id: 4041fb7a-67a6-4020-a956-75cfb1eb1a22] - connection object created successfully."}
+{"level":"INFO","message":"[9:30:01.844 PM]: Connection[id: 4041fb7a-67a6-4020-a956-75cfb1eb1a22] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[9:30:01.844 PM]: Connection[id: 4041fb7a-67a6-4020-a956-75cfb1eb1a22] - authentication successful using: SNOWFLAKE"}
+{"level":"ERROR","message":"[9:30:03.042 PM]: Connection[id: 4041fb7a-67a6-4020-a956-75cfb1eb1a22] - connection failed after 1198.38 milliseconds. Error: Incorrect username or password was specified."}
+{"level":"INFO","message":"[9:32:57.811 PM]: Creating new connection object"}
+{"level":"INFO","message":"[9:32:57.824 PM]: Creating Connection[id: 57e1f9b3-8a2f-49b7-84d3-431ee80e10c8] with host: GLEHEXK-NP20617.snowflakecomputing.com, account: GLEHEXK-NP20617, accessUrl: https://GLEHEXK-NP20617.snowflakecomputing.com, user: JPVIOLA, role: ACCOUNTADMIN, database: SANTAPALABRA_DB, schema: PUBLIC, warehouse: COMPUTE_WH, proxy was not configured, password is provided, region: undefined, authenticator: SNOWFLAKE, ocsp mode: FAIL_OPEN, os: win32, os version: 10.0.26200"}
+{"level":"INFO","message":"[9:32:57.825 PM]: Connection[id: 57e1f9b3-8a2f-49b7-84d3-431ee80e10c8] additional details: passcode in password is provided, passcode is not provided, private key is not provided, application: SantaPalabra_Test, client name: snowflake-sdk, client version: 2.3.3, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[9:32:57.825 PM]: Connection[id: 57e1f9b3-8a2f-49b7-84d3-431ee80e10c8] - connection object created successfully."}
+{"level":"INFO","message":"[9:32:57.826 PM]: Connection[id: 57e1f9b3-8a2f-49b7-84d3-431ee80e10c8] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[9:32:57.827 PM]: Connection[id: 57e1f9b3-8a2f-49b7-84d3-431ee80e10c8] - authentication successful using: SNOWFLAKE"}
+{"level":"INFO","message":"[9:32:57.827 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[9:32:57.829 PM]: No client config detected."}
+{"level":"INFO","message":"[9:32:57.829 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[9:32:57.830 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"ERROR","message":"[9:32:59.742 PM]: Connection[id: 57e1f9b3-8a2f-49b7-84d3-431ee80e10c8] - connection failed after 1915.98 milliseconds. Error: Your user account has been temporarily locked. Try again later or contact your account administrator for assistance. For more information about this error, go to https://community.snowflake.com/s/error-your-user-login-has-been-locked."}
+{"level":"INFO","message":"[9:34:05.922 PM]: Creating new connection object"}
+{"level":"INFO","message":"[9:34:05.933 PM]: Creating Connection[id: 77c79594-f0d3-4947-a65f-ebd203a0bc48] with host: GLEHEXK-NP20617.snowflakecomputing.com, account: GLEHEXK-NP20617, accessUrl: https://GLEHEXK-NP20617.snowflakecomputing.com, user: JPVIOLA, role: ACCOUNTADMIN, database: SANTAPALABRA_DB, schema: PUBLIC, warehouse: COMPUTE_WH, proxy was not configured, password is provided, region: undefined, authenticator: SNOWFLAKE, ocsp mode: FAIL_OPEN, os: win32, os version: 10.0.26200"}
+{"level":"INFO","message":"[9:34:05.933 PM]: Connection[id: 77c79594-f0d3-4947-a65f-ebd203a0bc48] additional details: passcode in password is provided, passcode is not provided, private key is not provided, application: SantaPalabra_Ingestion, client name: snowflake-sdk, client version: 2.3.3, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[9:34:05.934 PM]: Connection[id: 77c79594-f0d3-4947-a65f-ebd203a0bc48] - connection object created successfully."}
+{"level":"INFO","message":"[9:34:05.934 PM]: Connection[id: 77c79594-f0d3-4947-a65f-ebd203a0bc48] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[9:34:05.935 PM]: Connection[id: 77c79594-f0d3-4947-a65f-ebd203a0bc48] - authentication successful using: SNOWFLAKE"}
+{"level":"INFO","message":"[9:34:05.935 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[9:34:05.938 PM]: No client config detected."}
+{"level":"INFO","message":"[9:34:05.938 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[9:34:05.939 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"ERROR","message":"[9:34:07.195 PM]: Connection[id: 77c79594-f0d3-4947-a65f-ebd203a0bc48] - connection failed after 1260.63 milliseconds. Error: Your user account has been temporarily locked. Try again later or contact your account administrator for assistance. For more information about this error, go to https://community.snowflake.com/s/error-your-user-login-has-been-locked."}

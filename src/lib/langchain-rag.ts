@@ -322,7 +322,9 @@ export class SantaPalabraRAG {
       }
     } catch (error) {
       console.warn(`⚠️ Failed to initialize requested model ${model}:`, error);
+      throw error; // Let generateResponse handle the fallback
       
+      /* INTERNAL FALLBACK DISABLED TO FIX actualModel REPORTING
       // Fallback Strategy:
       // 1. Try Groq/Llama (Fastest/Cheapest fallback)
       if (process.env.GROQ_API_KEY) {
@@ -343,6 +345,7 @@ export class SantaPalabraRAG {
 
       // If all fail, rethrow (which will trigger Mock Mode in generateResponse)
       throw error;
+      */
     }
   }
 
@@ -447,6 +450,12 @@ export class SantaPalabraRAG {
       timeout: 120000, // 2 minutes timeout for local/tunnel connections
       configuration: {
         baseURL: baseURL,
+        defaultHeaders: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Bypass-Tunnel-Reminder': 'true'
+        }
       },
     });
   }
@@ -983,11 +992,11 @@ To enable full AI chat, please configure ANTHROPIC_API_KEY or GROQ_API_KEY in yo
       const initialModel = actualModel as SupportedChatModel;
       
       if (initialModel === 'local') {
-        attemptOrder = ['local', 'anthropic', 'llama', 'gemma', 'qwen'];
+        attemptOrder = ['local', 'llama', 'gemma', 'anthropic', 'qwen'];
       } else if (initialModel === 'anthropic') {
         attemptOrder = ['anthropic', 'llama', 'gemma', 'qwen'];
       } else if (initialModel === 'llama') {
-        attemptOrder = ['llama', 'anthropic', 'gemma', 'qwen'];
+        attemptOrder = ['llama', 'gemma', 'qwen', 'anthropic'];
       } else if (initialModel === 'gemma') {
         attemptOrder = ['gemma', 'qwen', 'llama', 'anthropic'];
       } else if (initialModel === 'qwen') {

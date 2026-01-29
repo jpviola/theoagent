@@ -22,6 +22,7 @@ interface Message {
   responseTime?: number;
   implementation?: string;
   fallbackUsed?: boolean;
+  actualModel?: string;
 }
 
 interface ApiErrorPayload {
@@ -854,7 +855,8 @@ export default function CatholicChatPage() {
         content: data.response || 'No response received',
         timestamp: new Date(),
         // responseTime and implementation removed from UI
-        fallbackUsed: Boolean(data.fallbackUsed)
+        fallbackUsed: Boolean(data.fallbackUsed),
+        actualModel: data.actualModel
       };
 
       setMessages(prev => [...prev, assistantMessage]);
@@ -1621,10 +1623,10 @@ export default function CatholicChatPage() {
                             {message.fallbackUsed && (
                               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-200 border border-blue-200 dark:border-blue-700">
                                 {language === 'es'
-                                  ? 'Respuesta generada con modelo de respaldo (Anthropic)'
+                                  ? `Respuesta generada con modelo de respaldo (${message.actualModel || 'Alternativo'})`
                                   : language === 'pt'
-                                    ? 'Resposta gerada com modelo de backup (Anthropic)'
-                                    : 'Answer generated with fallback model (Anthropic)'}
+                                    ? `Resposta gerada com modelo de backup (${message.actualModel || 'Alternativo'})`
+                                    : `Answer generated with fallback model (${message.actualModel || 'Fallback'})`}
                               </span>
                             )}
                           </div>
