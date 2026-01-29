@@ -59,14 +59,14 @@ async function processDocx(filePath: string): Promise<string> {
 function processEpub(filePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const epub = new EPub(filePath);
-    let fullText = '';
+    const fullText = '';
 
     epub.on('end', async () => {
       try {
         // Iterate over chapters and get text
         // EPub2 doesn't give simple text extraction out of the box easily without flow
         // We will try to iterate flow
-        let textAccumulator: string[] = [];
+        const textAccumulator: string[] = [];
         for (const chapter of epub.flow) {
            // This is a simplified approach. Getting text from epub correctly is complex.
            // For now we might just get the raw ID/href. 

@@ -76,7 +76,6 @@ export default function DonationModal() {
           >
             {/* Header with decorative background */}
             <div className="relative h-32 bg-gradient-to-br from-amber-400 to-amber-600">
-              <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10"></div>
               <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 rounded-full bg-white p-2 shadow-lg">
                 <Image
                   src="/santapalabra-logoSinLeyenda.ico"

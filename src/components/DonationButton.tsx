@@ -1,7 +1,7 @@
 import React from 'react';
 import { Coffee, CreditCard } from 'lucide-react';
 
-export type DonationProvider = 'paypal' | 'mercadopago' | 'buymeacoffee' | 'stripe';
+export type DonationProvider = 'paypal' | 'mercadopago' | 'buymeacoffee';
 
 interface DonationButtonProps {
   provider: DonationProvider;
@@ -20,21 +20,18 @@ const providerStyles: Record<DonationProvider, string> = {
   paypal: 'bg-[#003087] hover:bg-[#00256b] text-white border border-transparent',
   mercadopago: 'bg-[#009EE3] hover:bg-[#0089c7] text-white border border-transparent',
   buymeacoffee: 'bg-[#FFDD00] hover:bg-[#e6c700] text-black border border-amber-400',
-  stripe: 'bg-[#635BFF] hover:bg-[#534be8] text-white border border-transparent',
 };
 
 const providerIcons: Record<DonationProvider, React.ReactNode> = {
   paypal: <span className="text-lg">🅿️</span>,
   mercadopago: <CreditCard className="w-5 h-5" />,
   buymeacoffee: <Coffee className="w-5 h-5" />,
-  stripe: <CreditCard className="w-5 h-5" />,
 };
 
 const defaultLabels: Record<DonationProvider, string> = {
   paypal: 'Donar con PayPal',
   mercadopago: 'Donar con MercadoPago',
   buymeacoffee: 'Invítame un Café',
-  stripe: 'Pagar con Stripe',
 };
 
 export const DonationButton: React.FC<DonationButtonProps> = ({

@@ -103,7 +103,7 @@ export async function uploadToSnowflake(): Promise<{ success: boolean; message: 
         const ingestedDir = path.join(process.cwd(), 'public', 'data', 'ingested');
         const files = fs.readdirSync(ingestedDir).filter(f => f.endsWith('.json'));
         
-        let totalRows = 0;
+        const totalRows = 0;
         let currentBatch: any[] = [];
 
         for (const file of files) {

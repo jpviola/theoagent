@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
         // Crear una donación de prueba
         const testDonation = {
           user_id: body.user_id || null,
-          payment_provider: body.payment_provider || 'stripe',
+          payment_provider: body.payment_provider || 'paypal',
           payment_id: `test_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           session_id: `sess_test_${Date.now()}`,
           amount_cents: body.amount_cents || 500,

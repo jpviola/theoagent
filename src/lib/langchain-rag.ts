@@ -435,7 +435,8 @@ export class SantaPalabraRAG {
 
   private createLocalLLM(): BaseChatModel {
     const baseURL = process.env.LOCAL_LLM_BASE_URL || 'http://localhost:11434/v1';
-    const model = process.env.LOCAL_LLM_MODEL || 'santapalabra';
+    // Default to 'santa-palabra' (standard Ollama naming) instead of 'santapalabra'
+    const model = process.env.LOCAL_LLM_MODEL || 'santa-palabra';
     
     console.log(`🏠 Using Local LLM (${model}) at ${baseURL}`);
     
@@ -443,6 +444,7 @@ export class SantaPalabraRAG {
       apiKey: 'ollama', // Ollama doesn't require a real key
       modelName: model,
       temperature: 0.3,
+      timeout: 120000, // 2 minutes timeout for local/tunnel connections
       configuration: {
         baseURL: baseURL,
       },
@@ -567,6 +569,7 @@ export class SantaPalabraRAG {
 
     // Construct filter based on study track
     // Note: This requires the match_documents RPC to accept a filter parameter
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let filter: any = undefined;
     
     if (studyTrack) {

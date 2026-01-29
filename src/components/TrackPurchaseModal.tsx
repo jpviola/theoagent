@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Check, CreditCard, Lock, Globe, Mail, User as UserIcon, ArrowRight, Loader2, Clock } from 'lucide-react';
+import { X, Check, Clock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { DonationButton } from './DonationButton';
 import { useAuth } from '@/lib/auth-context';
@@ -96,9 +96,9 @@ export function TrackPurchaseModal({ isOpen, onClose, track, onPurchase }: Track
       }
       setIsProcessing(false);
       return true;
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error('Auth error:', e);
-      setAuthError(e.message || 'Authentication failed');
+      setAuthError((e as Error).message || 'Authentication failed');
       setIsProcessing(false);
       return false;
     }
@@ -241,7 +241,7 @@ export function TrackPurchaseModal({ isOpen, onClose, track, onPurchase }: Track
       ],
       pay: 'Pay',
       processing: 'Processing...',
-      secure: 'Secure payment via Stripe/MercadoPago',
+      secure: 'Secure payment via MercadoPago',
       selectCountry: 'Country for MercadoPago:',
       comingSoon: 'Coming Soon',
       comingSoonDesc: 'We are preparing this track with exclusive content and specialized models. It will be available very soon!',

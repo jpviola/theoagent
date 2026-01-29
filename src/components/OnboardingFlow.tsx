@@ -129,7 +129,7 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
       setError('Failed to save preferences. Please try again.')
       // Even if API fails, we can save locally and proceed
       try {
-         let guestId = localStorage.getItem('santapalabra_guest_id') || crypto.randomUUID();
+         const guestId = localStorage.getItem('santapalabra_guest_id') || crypto.randomUUID();
          localStorage.setItem('santapalabra_guest_id', guestId);
          
          const localProfile = {

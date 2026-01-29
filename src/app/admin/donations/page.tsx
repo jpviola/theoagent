@@ -65,7 +65,7 @@ export default function DonationsAdminPage() {
     try {
       const testData = {
         action: 'test_donation',
-        payment_provider: Math.random() > 0.5 ? 'stripe' : 'paypal',
+        payment_provider: 'paypal',
         amount_cents: Math.floor(Math.random() * 10000) + 500, // $5-$105
         donor_name: `Test Donor ${Math.floor(Math.random() * 1000)}`,
         donor_email: `test${Math.floor(Math.random() * 1000)}@example.com`,
