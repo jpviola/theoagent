@@ -7,12 +7,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, User, BookOpen, AlertTriangle, X, Zap, Clock, Upload, FileText, Mic, Square, Volume2, Menu, CheckCircle2, Circle, Copy, RefreshCw, Check } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AuthFlowManager from '@/components/AuthFlowManager';
-import EmailSubscriptionModal from '@/components/EmailSubscriptionModal';
-import { subscribeToNewsletter, shouldShowSubscriptionModal, markSubscriptionSkipped, SUBSCRIPTION_TIERS } from '@/lib/subscription';
+import { subscribeToNewsletter, markSubscriptionSkipped, SUBSCRIPTION_TIERS } from '@/lib/subscription';
 import { useUserProgress } from '@/components/GamificationSystem';
-import { StudyTracksSidebar, StudyTrack } from '@/components/StudyTracksSidebar';
+import ChatRightSidebar from '@/components/ChatRightSidebar';
 import ScriptureLinkedMarkdown from '@/components/ScriptureLinkedMarkdown';
-import { TrackPurchaseModal } from '@/components/TrackPurchaseModal';
 
 interface Message {
   id: string;
@@ -37,156 +35,42 @@ interface UserPreferences {
 }
 
 const categorizedQuestions = {
-  es: {
-    scripture: [
-      "¿Qué enseña la Sagrada Escritura sobre la creación?",
-      "¿Cómo interpretar la parábola del hijo pródigo?",
-      "¿Qué significa 'Hágase tu voluntad' en el Padrenuestro?",
-      "¿Cómo se formó el canon de la Biblia?"
-    ],
-    tradition: [
-      "¿Qué enseña la Iglesia Católica sobre la Trinidad?",
-      "¿Cuál es el significado de la Eucaristía?",
-      "¿Qué enseña el Catecismo sobre la confesión?",
-      "¿Qué dice el Magisterio sobre el matrimonio?"
-    ],
-    spirituality: [
-      "¿Cómo deben los católicos abordar la oración?",
-      "Cuéntame sobre la devoción al Sagrado Corazón",
-      "¿Qué enseña Santa Teresa de Ávila sobre la oración?",
-      "¿Cuál es la noche oscura según San Juan de la Cruz?"
-    ],
-    morality: [
-      "¿Qué enseña la Iglesia sobre la dignidad humana?",
-      "¿Cuándo es lícito defenderse en la guerra justa?",
-      "¿Qué dice la Iglesia sobre la eutanasia?",
-      "¿Cómo entender el mandamiento 'no matarás'?"
-    ],
-    saints: [
-      "¿Qué enseña la Iglesia sobre la Virgen María?",
-      "¿Cuál fue la contribución de San Agustín a la teología?",
-      "¿Qué podemos aprender de Santa Teresa de Calcuta?",
-      "¿Cómo vivió el testimonio San Francisco de Asís?"
-    ],
-    latinamerica: [
-      "¿Qué dice el CELAM sobre la evangelización en América Latina?",
-      "¿Cómo influyó la Virgen de Guadalupe en la evangelización?",
-      "¿Qué enseña la teología de la liberación?",
-      "¿Cuál es el rol de los laicos en la Iglesia latinoamericana?"
-    ],
-    mysticism: [
-      "¿Qué enseña San Juan de la Cruz sobre la contemplación?",
-      "¿Cómo describe Santa Teresa los grados de oración?",
-      "¿Qué significa 'castillo interior' en la mística teresiana?",
-      "¿Cómo entender el 'camino de perfección'?"
-    ],
-    catechesis: [
-      "¿Qué son los sacramentos de iniciación cristiana?",
-      "¿Cuál es la importancia de la catequesis familiar?",
-      "¿Cómo preparar a un niño para la primera comunión?",
-      "¿Qué enseña la Iglesia sobre la confirmación?"
-    ]
-  },
-  pt: {
-    scripture: [
-      "O que a Sagrada Escritura ensina sobre a criação?",
-      "Como interpretar a parábola do filho pródigo?",
-      "O que significa 'Seja feita a tua vontade' no Pai Nosso?",
-      "Como se formou o cânon da Bíblia?"
-    ],
-    tradition: [
-      "O que a Igreja Católica ensina sobre a Trindade?",
-      "Qual é o significado da Eucaristia?",
-      "O que ensina o Catecismo sobre a confissão?",
-      "O que diz o Magistério sobre o casamento?"
-    ],
-    spirituality: [
-      "Como os católicos devem abordar a oração?",
-      "Conte-me sobre a devoção ao Sagrado Coração",
-      "O que Santa Teresa de Ávila ensina sobre a oração?",
-      "O que é a noite escura segundo São João da Cruz?"
-    ],
-    morality: [
-      "O que a Igreja ensina sobre a dignidade humana?",
-      "Quando é lícito defender-se na guerra justa?",
-      "O que a Igreja diz sobre a eutanásia?",
-      "Como entender o mandamento 'não matarás'?"
-    ],
-    saints: [
-      "O que a Igreja ensina sobre a Virgem Maria?",
-      "Qual foi a contribuição de Santo Agostinho para a teologia?",
-      "O que podemos aprender com Santa Teresa de Calcutá?",
-      "Como viveu o testemunho São Francisco de Assis?"
-    ],
-    latinamerica: [
-      "O que o CELAM diz sobre a evangelização na América Latina?",
-      "Como influenciou a Virgem de Guadalupe na evangelização?",
-      "O que ensina a teologia da libertação?",
-      "Qual é o papel dos leigos na Igreja latino-americana?"
-    ],
-    mysticism: [
-      "O que ensina São João da Cruz sobre a contemplação?",
-      "Como descreve Santa Teresa os graus de oração?",
-      "O que significa 'castelo interior' na mística teresiana?",
-      "Como entender o 'caminho de perfeição'?"
-    ],
-    catechesis: [
-      "Quais são os sacramentos de iniciação cristã?",
-      "Qual é a importância da catequese familiar?",
-      "Como preparar uma criança para a primeira comunhão?",
-      "O que a Igreja ensina sobre a confirmação?"
-    ]
-  },
-  en: {
-    scripture: [
-      "What does Sacred Scripture teach about creation?",
-      "How to interpret the parable of the prodigal son?",
-      "What does 'Thy will be done' mean in the Lord's Prayer?",
-      "How was the Bible canon formed?"
-    ],
-    tradition: [
-      "What is the Catholic teaching on the Trinity?",
-      "What is the significance of the Eucharist?",
-      "What does the Catechism teach about confession?",
-      "What does the Magisterium say about marriage?"
-    ],
-    spirituality: [
-      "How should Catholics approach prayer?",
-      "Tell me about devotion to the Sacred Heart",
-      "What does Saint Teresa of Ávila teach about prayer?",
-      "What is the dark night according to Saint John of the Cross?"
-    ],
-    morality: [
-      "What does the Church teach about human dignity?",
-      "When is it lawful to defend oneself in just war?",
-      "What does the Church say about euthanasia?",
-      "How to understand the commandment 'thou shalt not kill'?"
-    ],
-    saints: [
-      "What does the Church teach about the Virgin Mary?",
-      "What was Saint Augustine's contribution to theology?",
-      "What can we learn from Saint Teresa of Calcutta?",
-      "How did Saint Francis of Assisi live his testimony?"
-    ],
-    latinamerica: [
-      "What does CELAM say about evangelization in Latin America?",
-      "How did Our Lady of Guadalupe influence evangelization?",
-      "What does liberation theology teach?",
-      "What is the role of laypeople in the Latin American Church?"
-    ],
-    mysticism: [
-      "What does Saint John of the Cross teach about contemplation?",
-      "How does Saint Teresa describe the degrees of prayer?",
-      "What does 'interior castle' mean in Teresian mysticism?",
-      "How to understand the 'way of perfection'?"
-    ],
-    catechesis: [
-      "What are the sacraments of Christian initiation?",
-      "What is the importance of family catechesis?",
-      "How to prepare a child for first communion?",
-      "What does the Church teach about confirmation?"
-    ]
-  }
+  es: [
+    "Obras de misericordia",
+    "Evangelio de hoy",
+    "¿Qué es la Iglesia católica?",
+    "El Papa",
+    "El Vaticano",
+    "La Biblia",
+    "Los Evangelios",
+    "Latín",
+    "Bienaventuranzas",
+    "Rosario"
+  ],
+  pt: [
+    "Obras de misericórdia",
+    "Evangelho de hoje",
+    "O que é a Igreja Católica?",
+    "O Papa",
+    "O Vaticano",
+    "A Bíblia",
+    "Os Evangelhos",
+    "Latim",
+    "Bem-aventuranças",
+    "Rosário"
+  ],
+  en: [
+    "Works of Mercy",
+    "Today's Gospel",
+    "What is the Catholic Church?",
+    "The Pope",
+    "The Vatican",
+    "The Bible",
+    "The Gospels",
+    "Latin",
+    "Beatitudes",
+    "Rosary"
+  ]
 };
 
 export default function CatholicChatPage() {
@@ -198,20 +82,15 @@ export default function CatholicChatPage() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [isBowing, setIsBowing] = useState(false);
   const [selectedModel, setSelectedModel] = useState<'anthropic' | 'openai' | 'llama' | 'local'>('llama'); // Default to Groq (Llama)
-  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [userXP, setUserXP] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null);
   const [autoSendVoice, setAutoSendVoice] = useState(false);
   const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSpecialist, setIsSpecialist] = useState(false);
   const [dailyMessageCount, setDailyMessageCount] = useState(0);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
-  const [purchasedTracks, setPurchasedTracks] = useState<string[]>([]);
-  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
-  const [trackToPurchase, setTrackToPurchase] = useState<StudyTrack | null>(null);
 
   const { language } = useLanguage();
   const searchParams = useSearchParams();
@@ -229,28 +108,6 @@ export default function CatholicChatPage() {
   const transcriptRef = useRef<string>('');
 
   useEffect(() => {
-    // Load purchased tracks from localStorage
-    const savedTracks = localStorage.getItem('santapalabra_purchased_tracks');
-    if (savedTracks) {
-      try {
-        setPurchasedTracks(JSON.parse(savedTracks));
-      } catch (e) {
-        console.error('Failed to parse purchased tracks', e);
-      }
-    } else {
-      // Check profile metadata fallback
-      const profileStr = localStorage.getItem('santapalabra_profile');
-      if (profileStr) {
-        try {
-          const profile = JSON.parse(profileStr);
-          if (profile.metadata?.purchased_tracks) {
-            setPurchasedTracks(profile.metadata.purchased_tracks);
-            localStorage.setItem('santapalabra_purchased_tracks', JSON.stringify(profile.metadata.purchased_tracks));
-          }
-        } catch (e) {}
-      }
-    }
-
     // Load active journey
     const savedActiveJourney = localStorage.getItem('santapalabra_active_journey');
     if (savedActiveJourney) {
@@ -263,37 +120,6 @@ export default function CatholicChatPage() {
       localStorage.setItem('santapalabra_active_journey', selectedTrackId);
     }
   }, [selectedTrackId]);
-
-  const handlePurchaseRequest = (track: StudyTrack) => {
-    setTrackToPurchase(track);
-    setIsPurchaseModalOpen(true);
-  };
-
-  const handlePurchaseConfirm = async (trackId: string) => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const newTracks = [...purchasedTracks, trackId];
-    setPurchasedTracks(newTracks);
-    localStorage.setItem('santapalabra_purchased_tracks', JSON.stringify(newTracks));
-    
-    // Update profile metadata if exists
-    const profileStr = localStorage.getItem('santapalabra_profile');
-    if (profileStr) {
-      try {
-        const profile = JSON.parse(profileStr);
-        profile.metadata = { ...profile.metadata, purchased_tracks: newTracks };
-        localStorage.setItem('santapalabra_profile', JSON.stringify(profile));
-        
-        // Try to sync with backend if possible (fire and forget)
-        // fetch('/api/guest/update', ... ) 
-      } catch (e) {}
-    }
-    
-    // Select the newly purchased track
-    setSelectedTrackId(trackId);
-    setIsPurchaseModalOpen(false);
-  };
 
   const handleCopy = async (text: string, messageId: string) => {
     try {
@@ -367,17 +193,8 @@ export default function CatholicChatPage() {
     }
   }, [searchParams]);
 
-  // Mostrar modal de suscripción después de 3 segundos
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (shouldShowSubscriptionModal()) {
-        setShowSubscriptionModal(true);
-      }
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
+  // Subscription modal moved to GlobalModalManager
+  
   // Cargar XP del usuario desde el progreso de gamificación
   useEffect(() => {
     const currentXP = progress.xp || 0;
@@ -917,18 +734,6 @@ export default function CatholicChatPage() {
     await sendMessageText(input);
   };
 
-  // Funciones para el modal de suscripción
-  const handleSubscribe = async (email: string) => {
-    await subscribeToNewsletter(email, language);
-    setShowSubscriptionModal(false);
-    addXP(25);
-  };
-
-  const handleSkipSubscription = () => {
-    markSubscriptionSkipped();
-    setShowSubscriptionModal(false);
-  };
-
   const handlePdfUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -987,97 +792,11 @@ export default function CatholicChatPage() {
   // Seleccionar preguntas personalizadas
   const [sampleQuestions, setSampleQuestions] = useState<string[]>([]);
   
-  // Definir preguntas por país
-  const countryQuestions: Record<string, string[]> = {
-    'AR': [
-      '¿Qué dice la Conferencia Episcopal Argentina sobre la pobreza?',
-      '¿Quién es el Santo Cura Brochero?',
-      '¿Cuál es la historia de la Virgen de Luján?',
-      '¿Qué documentos recientes ha publicado el Episcopado Argentino?'
-    ],
-    'PE': [
-      '¿Qué dice la Conferencia Episcopal Peruana sobre la situación actual?',
-      '¿Quién es Santa Rosa de Lima?',
-      '¿Cuál es la devoción al Señor de los Milagros?',
-      '¿Qué es la Carta Pastoral sobre la ecología en Perú?'
-    ],
-    'ES': [
-      '¿Qué dice la Conferencia Episcopal Española sobre la educación?',
-      '¿Quién es San Juan de la Cruz?',
-      '¿Cuál es la historia de Santiago Apóstol en España?',
-      '¿Qué documentos ha publicado la CEE recientemente?'
-    ],
-    'MX': [
-      '¿Cuál es el mensaje de la Virgen de Guadalupe?',
-      '¿Qué dice el Episcopado Mexicano sobre los migrantes?',
-      '¿Quién fue San Juan Diego?',
-      '¿Qué es el Proyecto Global de Pastoral 2031-2033?'
-    ],
-    'CO': [
-      '¿Qué dice la Conferencia Episcopal de Colombia sobre la paz?',
-      '¿Quién es Santa Laura Montoya?',
-      '¿Cuál es la historia del Señor de Monserrate?',
-      '¿Qué documentos ha publicado la CEC recientemente?'
-    ]
-  };
-
   useEffect(() => {
-    const gospelQuestion = language === 'es' 
-      ? '¿Me explicas el evangelio del día?' 
-      : language === 'pt'
-      ? 'Você pode me explicar o evangelho do dia?'
-      : 'Can you explain today\'s Gospel to me?';
-    
-    let questions: string[] = [];
-
-    // Priorizar preguntas por país si existe
-    if (userCountry && countryQuestions[userCountry]) {
-      const specificQuestions = countryQuestions[userCountry];
-      questions.push(...specificQuestions);
-    }
-
-    if (userPreferences && userPreferences.interests && userPreferences.interests.length > 0) {
-      // Si hay preferencias, seleccionar preguntas basadas en intereses
-      const langQuestions = categorizedQuestions[language];
-      userPreferences.interests.forEach((interest: string) => {
-        const interestKey = interest as keyof typeof langQuestions;
-        if (langQuestions[interestKey]) {
-          questions.push(...langQuestions[interestKey]);
-        }
-      });
-      
-      // Si no hay suficientes preguntas de intereses, agregar algunas generales
-      if (questions.length < 4) {
-        const generalQuestions = Object.values(langQuestions).flat();
-        const additionalQuestions = generalQuestions
-          .filter(q => !questions.includes(q))
-          .sort(() => Math.random() - 0.5)
-          .slice(0, 4 - questions.length);
-        questions.push(...additionalQuestions);
-      }
-    } else {
-      // Si no hay preferencias, usar preguntas generales aleatorias
-      const langQuestions = categorizedQuestions[language];
-      const allQuestions = Object.values(langQuestions).flat();
-      questions.push(...allQuestions.sort(() => Math.random() - 0.5));
-    }
-
-    // Mezclar y seleccionar: 1 Evangelio, 1 País (si hay), 1 General/Interés
-    const shuffled = questions.filter(q => q !== gospelQuestion).sort(() => Math.random() - 0.5);
-    
-    let finalSelection: string[] = [];
-    
-    if (userCountry && countryQuestions[userCountry]) {
-        // Asegurar al menos una de país
-        const countryQ = countryQuestions[userCountry].sort(() => Math.random() - 0.5)[0];
-        const otherQ = shuffled.filter(q => q !== countryQ).slice(0, 1);
-        finalSelection = [countryQ, ...otherQ];
-    } else {
-        finalSelection = shuffled.slice(0, 2);
-    }
-    
-    setSampleQuestions([gospelQuestion, ...finalSelection]);
-  }, [language, userPreferences, userCountry]);
+    // Load simple concepts based on language
+    const concepts = categorizedQuestions[language as keyof typeof categorizedQuestions] || categorizedQuestions.es;
+    setSampleQuestions(concepts);
+  }, [language]);
 
   const texts = {
     es: {
@@ -1193,114 +912,34 @@ export default function CatholicChatPage() {
   return (
     <AuthFlowManager>
       <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col relative overflow-hidden">
-      {/* Modal de suscripción */}
-      <EmailSubscriptionModal
-        isOpen={showSubscriptionModal}
-        onClose={handleSkipSubscription}
-        onSubscribe={handleSubscribe}
-      />
+      {/* Modal de suscripción eliminado de aquí - gestionado por GlobalModalManager */}
 
       {/* Imágenes decorativas católicas de fondo */}
-      <div className="fixed inset-0 pointer-events-none z-0">
+      <div className="fixed inset-0 pointer-events-none z-0 flex justify-between items-center px-4 md:px-12">
         <motion.div
-          initial={{ opacity: 0, rotate: 0 }}
-          animate={{ opacity: 0.25, rotate: 12 }}
+          initial={{ opacity: 0, x: -50, rotate: -5 }}
+          animate={{ opacity: 0.15, x: 0, rotate: 0 }}
           transition={{ duration: 2, delay: 0.5 }}
-          className="absolute top-[8%] left-[2%] h-40 w-40 md:h-56 md:w-56"
-          style={{ filter: 'sepia(80%) brightness(0.5) contrast(120%) saturate(1.2)' }}
-        >
-          <Image src="/SantaTeresa.svg" alt="" fill className="object-contain" />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, rotate: 0 }}
-          animate={{ opacity: 0.25, rotate: -12 }}
-          transition={{ duration: 2, delay: 0.7 }}
-          className="absolute top-[28%] right-[2%] h-40 w-40 md:h-56 md:w-56"
-          style={{ filter: 'sepia(80%) brightness(0.5) contrast(120%) saturate(1.2)' }}
-        >
-          <Image src="/san juan.svg" alt="" fill className="object-contain" />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, rotate: 0 }}
-          animate={{ opacity: 0.3, rotate: 0 }}
-          transition={{ duration: 2, delay: 0.9 }}
-          className="absolute bottom-[12%] left-[1%] h-36 w-36 md:h-52 md:w-52"
+          className="w-48 h-48 md:w-80 md:h-80 relative opacity-20"
           style={{ filter: 'sepia(80%) brightness(0.5) contrast(120%) saturate(1.2)' }}
         >
           <Image src="/guadalupana.svg" alt="" fill className="object-contain" />
         </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0, x: 50, rotate: 5 }}
+          animate={{ opacity: 0.15, x: 0, rotate: 0 }}
+          transition={{ duration: 2, delay: 0.7 }}
+          className="w-48 h-48 md:w-80 md:h-80 relative opacity-20"
+          style={{ filter: 'sepia(80%) brightness(0.5) contrast(120%) saturate(1.2)' }}
+        >
+          <Image src="/SantaTeresa.svg" alt="" fill className="object-contain" />
+        </motion.div>
       </div>
 
-
-
-      {/* Mobile Sidebar Overlay */}
-      <AnimatePresence>
-        {isSidebarOpen && (
-          <>
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsSidebarOpen(false)}
-              className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 left-0 bottom-0 w-72 bg-white dark:bg-gray-900 z-50 md:hidden shadow-2xl border-r border-gray-200 dark:border-gray-800"
-            >
-              <div className="absolute top-2 right-2 z-10">
-                 <button 
-                   onClick={() => setIsSidebarOpen(false)} 
-                   className="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
-                 >
-                   <X className="h-5 w-5" />
-                 </button>
-              </div>
-              <div className="h-full pt-8">
-                <StudyTracksSidebar 
-                  selectedTrackId={selectedTrackId}
-                  onSelectTrack={(id) => {
-                    setSelectedTrackId(id);
-                    setIsSidebarOpen(false);
-                  }}
-                  purchasedTracks={purchasedTracks}
-                  onPurchaseTrack={handlePurchaseRequest}
-                />
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
       <div className="flex-1 flex overflow-hidden relative z-10">
-        <div className="hidden md:block h-full z-20 pl-4 py-4">
-           <div className="h-full rounded-2xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-800">
-             <StudyTracksSidebar 
-                selectedTrackId={selectedTrackId}
-                onSelectTrack={setSelectedTrackId}
-                purchasedTracks={purchasedTracks}
-                onPurchaseTrack={handlePurchaseRequest}
-                variant="floating"
-             />
-           </div>
-        </div>
         <main className="flex-1 flex flex-col items-center px-4 pb-6 pt-4 relative z-10 overflow-hidden">
         <div className="w-full max-w-3xl flex flex-col h-full">
-          {/* Mobile Sidebar Toggle */}
-          <div className="md:hidden w-full flex items-center justify-start mb-4">
-             <button 
-               onClick={() => setIsSidebarOpen(true)}
-               className="flex items-center gap-2 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 px-4 py-2 rounded-full border border-amber-200 dark:border-amber-700 shadow-sm hover:shadow-md transition-all active:scale-95"
-             >
-               <Menu className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-               <span className="text-sm font-medium">
-                 {language === 'es' ? 'Trayectos' : language === 'pt' ? 'Trilhas' : 'Tracks'}
-               </span>
-             </button>
-          </div>
 
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -1540,40 +1179,37 @@ export default function CatholicChatPage() {
               </motion.div>
             )}
 
-            {/* Preguntas Sugeridas - Debajo de la barra */}
-            <AnimatePresence>
-              {messages.length === 0 && sampleQuestions.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="space-y-2"
-                >
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 text-center uppercase tracking-wide mb-3">
-                    {language === 'es' ? 'Preguntas sugeridas' : 'Suggested questions'}
-                  </h3>
-                  <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="flex flex-col gap-2"
+            {/* Country Selector for Beta Testing/Verification */}
+            {messages.length === 0 && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex justify-center mb-6"
+              >
+                <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-sm border border-amber-100 dark:border-amber-800">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {language === 'es' ? 'Región:' : 'Region:'}
+                  </span>
+                  <select 
+                    value={userCountry || ''} 
+                    onChange={(e) => {
+                      const c = e.target.value;
+                      setUserCountry(c);
+                      localStorage.setItem('santapalabra_user_country', c);
+                    }}
+                    className="bg-transparent border-none text-sm font-medium text-amber-700 dark:text-amber-400 focus:ring-0 cursor-pointer"
                   >
-                    {sampleQuestions.map((question, index) => (
-                      <motion.button
-                        key={index}
-                        variants={itemVariants}
-                        whileHover={{ scale: 1.01 }}
-                        whileTap={{ scale: 0.99 }}
-                        onClick={() => handleSampleQuestion(question)}
-                        className="text-left px-4 py-2.5 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-700 transition-all text-sm text-gray-700 dark:text-gray-300 shadow-sm"
-                      >
-                        {question}
-                      </motion.button>
-                    ))}
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                    <option value="">{language === 'es' ? 'General' : 'General'}</option>
+                    <option value="LATAM">Latinoamérica</option>
+                    <option value="AR">Argentina</option>
+                    <option value="PE">Perú</option>
+                    <option value="ES">España</option>
+                    <option value="MX">México</option>
+                    <option value="CO">Colombia</option>
+                  </select>
+                </div>
+              </motion.div>
+            )}
 
             {/* Messages - Renderizar cuando existan */}
             {messages.length > 0 && (
@@ -1739,36 +1375,53 @@ export default function CatholicChatPage() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Form - Centrado */}
+          {/* Input Form - Minimalist Capsule Style */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 mt-4"
+            className={`w-full max-w-3xl mx-auto px-2 transition-all duration-500 ${messages.length === 0 ? 'mb-[15vh]' : 'mt-4'}`}
           >
-            <div className="flex justify-end mb-2 px-1">
-               <button
-                  type="button"
-                  onClick={() => setIsSpecialist(!isSpecialist)}
-                  className={`text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all border ${
-                    isSpecialist 
-                      ? 'bg-amber-100 border-amber-300 text-amber-800 dark:bg-amber-900/40 dark:border-amber-700 dark:text-amber-200 shadow-sm' 
-                      : 'bg-gray-50 border-gray-200 text-gray-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`}
+            {/* Preguntas Sugeridas - Pegadas a la barra */}
+            <AnimatePresence>
+              {messages.length === 0 && sampleQuestions.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mb-3 px-4"
                 >
-                  {isSpecialist ? (
-                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                  ) : (
-                    <Circle className="w-3.5 h-3.5" />
-                  )}
-                  <span className="font-medium">
-                    {language === 'es' ? 'Soy sacerdote/teólogo/seminarista' : 
-                     language === 'pt' ? 'Sou padre/teólogo/seminarista' : 
-                     'I am a priest/theologian/seminarian'}
-                  </span>
-                </button>
-            </div>
-            <form onSubmit={handleSubmit} className="flex flex-col md:flex-row items-stretch md:items-center gap-2">
+                  <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="flex flex-wrap justify-center gap-2"
+                  >
+                    {sampleQuestions.map((question, index) => (
+                      <motion.button
+                        key={index}
+                        variants={itemVariants}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleSampleQuestion(question)}
+                        className="px-3 py-1 bg-white/60 dark:bg-gray-800/60 hover:bg-white dark:hover:bg-gray-800 rounded-full border border-gray-200/50 dark:border-gray-700/50 transition-all text-xs font-medium text-gray-600 dark:text-gray-300 backdrop-blur-sm"
+                      >
+                        {question}
+                      </motion.button>
+                    ))}
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <form 
+              onSubmit={handleSubmit} 
+              className={`relative flex items-center gap-2 bg-white dark:bg-gray-800 rounded-[2rem] shadow-2xl border transition-all p-2 pl-4 ${
+                isLoading 
+                  ? 'border-amber-400 shadow-amber-100 dark:shadow-none' 
+                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+              }`}
+            >
               <input
                 ref={fileInputRef}
                 type="file"
@@ -1777,167 +1430,170 @@ export default function CatholicChatPage() {
                 className="hidden"
               />
               
-              <div className="flex gap-2 w-full md:w-auto">
-            <motion.button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`p-3 rounded-full transition-colors shadow-md flex-shrink-0 ${
-                pdfFile 
-                  ? 'bg-green-500 text-white' 
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-              }`}
-              title={pdfFile ? currentTexts.pdfAttached : currentTexts.uploadPdf}
-            >
-              {pdfFile ? <FileText className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
-            </motion.button>
-          </div>
+              {/* File Upload Trigger */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className={`p-2 rounded-full transition-colors flex-shrink-0 ${
+                  pdfFile 
+                    ? 'bg-green-100 texle - Expticit Lab-lgreen-600 dark:bg-green-900/30 dark:text-green-400' 
+                    : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+                title={pdfFile ? currentTexts.pdfAttached : currentTexts.uploadPdf}
+              >
+                {pdfFile ? <FileText className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
+              </button>
 
-              <div className="flex-1 flex gap-2 w-full">
-                <input
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="¿Qué quieres aprender hoy?"
-                  className="flex-1 px-5 py-3 border border-amber-200 dark:border-amber-700 rounded-full focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500 w-full"
-                  disabled={isLoading}
-                />
+              {/* Theological Mode Toggle */}
+              <button
+                type="button"
+                onClick={() => setIsSpecialist(!isSpecialist)}
+                className={`pl-2 pr-3 py-1.5 rounded-full transition-all flex-shrink-0 flex items-center gap-2 border ${
+                  isSpecialist
+                    ? 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-700'
+                    : 'bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700 dark:hover:bg-gray-700'
+                }`}
+                title={language === 'es' ? 'Activar modo teológico avanzado' : 'Toggle theological mode'}
+              >
+                <BookOpen className="h-4 w-4" />
+                <span className="text-xs font-bold whitespace-nowrap hidden sm:inline-block">
+                  {language === 'es' ? 'Modo Teológico' : language === 'pt' ? 'Modo Teológico' : 'Theology Mode'}
+                </span>
+                <span className="text-xs font-bold whitespace-nowrap sm:hidden">
+                  {isSpecialist ? 'ON' : 'OFF'}
+                </span>
+              </button>
 
-                {/* Mic (STT) */}
-                <motion.button
-                  type="button"
-                  onClick={() => {
-                    if (isRecording) {
-                      void stopTranscription();
-                    } else {
-                      void startTranscription();
-                    }
-                  }}
-                  disabled={isLoading || isTranscribing}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`p-3 rounded-full transition-colors shadow-md flex-shrink-0 ${
-                    isRecording
-                      ? 'bg-red-500 text-white hover:bg-red-600'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                  } disabled:bg-gray-300 disabled:cursor-not-allowed`}
-                  title={
-                    isRecording
-                      ? (language === 'es' ? 'Detener' : language === 'pt' ? 'Parar' : 'Stop')
-                      : (language === 'es' ? 'Hablar' : language === 'pt' ? 'Falar' : 'Speak')
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={language === 'es' ? 'Pregunta algo sobre la fe...' : language === 'pt' ? 'Pergunte algo sobre a fé...' : 'Ask something about faith...'}
+                className="flex-1 bg-transparent border-none focus:ring-0 text-sm sm:text-base text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500 py-2 min-w-0"
+                disabled={isLoading}
+              />
+
+              {/* Mic (STT) */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (isRecording) {
+                    void stopTranscription();
+                  } else {
+                    void startTranscription();
                   }
-                >
-                  {isTranscribing ? (
-                    <motion.div
-                      className="w-5 h-5 border-2 border-current border-t-transparent rounded-full"
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                    />
-                  ) : isRecording ? (
-                    <Square className="h-5 w-5" />
-                  ) : (
-                    <Mic className="h-5 w-5" />
-                  )}
-                </motion.button>
+                }}
+                disabled={isLoading || isTranscribing}
+                className={`p-2 rounded-full transition-all flex-shrink-0 ${
+                  isRecording
+                    ? 'bg-red-500 text-white hover:bg-red-600 animate-pulse'
+                    : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+                title={
+                  isRecording
+                    ? (language === 'es' ? 'Detener' : language === 'pt' ? 'Parar' : 'Stop')
+                    : (language === 'es' ? 'Hablar' : language === 'pt' ? 'Falar' : 'Speak')
+                }
+              >
+                {isTranscribing ? (
+                  <RefreshCw className="h-5 w-5 animate-spin" />
+                ) : isRecording ? (
+                  <Square className="h-4 w-4 fill-current" />
+                ) : (
+                  <Mic className="h-5 w-5" />
+                )}
+              </button>
 
-                <motion.button
-                  type="submit"
-                  disabled={!input.trim() && !isLoading}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  animate={isLoading ? {
-                    scale: [1, 1.1, 1],
-                    boxShadow: [
-                      "0 0 0 0 rgba(245, 158, 11, 0)",
-                      "0 0 0 10px rgba(245, 158, 11, 0.3)",
-                      "0 0 0 0 rgba(245, 158, 11, 0)"
-                    ]
-                  } : {}}
-                  transition={isLoading ? {
-                    duration: 1.5,
-                    repeat: Infinity,
-                    repeatType: "loop"
-                  } : {}}
-                  onClick={(e) => {
-                    if (isLoading) {
-                      e.preventDefault();
-                      handleStopGeneration();
-                    }
-                  }}
-                  className="p-3 bg-amber-500 text-white rounded-full hover:bg-amber-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-md dark:bg-amber-500 dark:hover:bg-amber-600 dark:disabled:bg-gray-600 flex-shrink-0"
-                  title={
-                    isLoading
-                      ? language === 'es'
-                        ? 'Detener respuesta'
-                        : language === 'pt'
-                          ? 'Parar resposta'
-                          : 'Stop response'
-                      : currentTexts.send
+              {/* Send Button */}
+              <button
+                type="submit"
+                disabled={!input.trim() && !isLoading}
+                onClick={(e) => {
+                  if (isLoading) {
+                    e.preventDefault();
+                    handleStopGeneration();
                   }
-                >
-                  {isLoading ? (
-                    <Square className="h-5 w-5" />
-                  ) : (
-                    <Send className="h-5 w-5" />
-                  )}
-                </motion.button>
-              </div>
+                }}
+                className={`p-2.5 rounded-full transition-all flex-shrink-0 shadow-sm ${
+                  isLoading
+                    ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'
+                    : !input.trim()
+                      ? 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-600'
+                      : 'bg-amber-500 text-white hover:bg-amber-600 hover:shadow-md hover:scale-105 active:scale-95'
+                }`}
+                title={
+                  isLoading
+                    ? language === 'es'
+                      ? 'Detener respuesta'
+                      : language === 'pt'
+                        ? 'Parar resposta'
+                        : 'Stop response'
+                    : currentTexts.send
+                }
+              >
+                {isLoading ? (
+                  <Square className="h-4 w-4 fill-current" />
+                ) : (
+                  <Send className="h-4 w-4 ml-0.5" />
+                )}
+              </button>
             </form>
 
             <AnimatePresence>
               {(isRecording || isTranscribing) && (
                 <motion.div
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 4 }}
-                  className="mt-2 inline-flex items-center gap-2 text-xs font-semibold text-red-700 dark:text-red-300"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-2 flex justify-center"
                 >
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75 animate-ping" />
-                    <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-600" />
-                  </span>
-                  <span>
-                    {isTranscribing
-                      ? language === 'es'
-                        ? 'Transcribiendo audio...'
-                        : language === 'pt'
-                          ? 'Transcrevendo áudio...'
-                          : 'Transcribing audio...'
-                      : language === 'es'
-                        ? 'Grabando desde el micrófono...'
-                        : language === 'pt'
-                          ? 'Gravando do microfone...'
-                          : 'Recording from microphone...'}
-                  </span>
+                  <div className="inline-flex items-center gap-2 text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/10 px-3 py-1 rounded-full border border-red-100 dark:border-red-900/20">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75 animate-ping" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-red-600" />
+                    </span>
+                    <span>
+                      {isTranscribing
+                        ? language === 'es'
+                          ? 'Transcribiendo...'
+                          : language === 'pt'
+                            ? 'Transcrevendo...'
+                            : 'Transcribing...'
+                        : language === 'es'
+                          ? 'Escuchando...'
+                          : language === 'pt'
+                            ? 'Ouvindo...'
+                            : 'Listening...'}
+                    </span>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            <div className="mt-3 flex items-center justify-between gap-3 text-xs text-gray-600 dark:text-gray-300">
-              <label className="inline-flex items-center gap-2 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"
-                  checked={autoSendVoice}
-                  onChange={(e) => setAutoSendVoice(e.target.checked)}
-                />
-                <span>
-                  {language === 'es'
-                    ? 'Auto-enviar al parar el micrófono'
-                    : language === 'pt'
-                      ? 'Enviar automaticamente ao parar o microfone'
-                      : 'Auto-send when stopping mic'}
-                </span>
-              </label>
-              <span className="text-gray-400 dark:text-gray-500">
-                {language === 'es'
-                  ? 'Voz → texto'
-                  : language === 'pt'
-                    ? 'Voz → texto'
-                    : 'Voice → text'}
-              </span>
-            </div>
+            {/* Auto-send Checkbox - Hidden by default or very subtle */}
+            {isRecording && (
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }}
+                className="mt-2 flex justify-center"
+              >
+                <label className="inline-flex items-center gap-2 cursor-pointer select-none text-[10px] text-gray-500">
+                  <input
+                    type="checkbox"
+                    className="h-3 w-3 rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+                    checked={autoSendVoice}
+                    onChange={(e) => setAutoSendVoice(e.target.checked)}
+                  />
+                  <span>
+                    {language === 'es'
+                      ? 'Enviar al terminar'
+                      : language === 'pt'
+                        ? 'Enviar ao terminar'
+                        : 'Auto-send'}
+                  </span>
+                </label>
+              </motion.div>
+            )}
 
             {/* PDF Info */}
             <AnimatePresence>
@@ -1946,37 +1602,21 @@ export default function CatholicChatPage() {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  className="mt-3 flex items-center justify-between bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg px-3 py-2"
+                  className="mt-2 flex justify-center"
                 >
-                  <div className="flex items-center gap-2 text-sm text-green-700 dark:text-green-300">
-                    <FileText className="h-4 w-4" />
-                    <span className="font-medium">{pdfFile.name}</span>
-                    <span className="text-xs text-green-600">({(pdfFile.size / 1024 / 1024).toFixed(2)} MB)</span>
+                  <div className="inline-flex items-center gap-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-full px-3 py-1 text-xs text-green-700 dark:text-green-300">
+                    <FileText className="h-3 w-3" />
+                    <span className="font-medium max-w-[150px] truncate">{pdfFile.name}</span>
+                    <button onClick={removePdf} className="ml-1 hover:text-green-900 dark:hover:text-green-100"><X className="h-3 w-3" /></button>
                   </div>
-                  <button
-                    onClick={removePdf}
-                    className="text-green-700 dark:text-green-300 hover:text-green-900 dark:hover:text-green-100 p-1 rounded-full hover:bg-green-100 dark:hover:bg-green-800"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
                 </motion.div>
               )}
             </AnimatePresence>
-
-            {/* PDF Limits Info */}
-            <div className="mt-2 text-center text-xs text-gray-400 dark:text-gray-500">
-              {currentTexts.pdfLimits}
-            </div>
           </motion.div>
         </div>
       </main>
+      <ChatRightSidebar />
       </div>
-      <TrackPurchaseModal
-        isOpen={isPurchaseModalOpen}
-        onClose={() => setIsPurchaseModalOpen(false)}
-        track={trackToPurchase}
-        onPurchase={handlePurchaseConfirm}
-      />
     </div>
     </AuthFlowManager>
   );

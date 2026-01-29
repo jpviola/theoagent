@@ -7,8 +7,8 @@ interface DonationStats {
   total_donations: number
   total_amount_cents: number
   completed_donations: number
-  stripe_donations: number
   paypal_donations: number
+  mercadopago_donations: number
   average_amount_cents: number
 }
 
@@ -214,7 +214,7 @@ export default function DonationsAdminPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        donation.payment_provider === 'stripe' 
+                        donation.payment_provider === 'mercadopago' 
                           ? 'bg-blue-100 text-blue-800' 
                           : 'bg-yellow-100 text-yellow-800'
                       }`}>

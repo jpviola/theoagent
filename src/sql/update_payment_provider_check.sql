@@ -7,4 +7,4 @@ DROP CONSTRAINT IF EXISTS donations_payment_provider_check;
 -- Add the new constraint including 'mercadopago'
 ALTER TABLE public.donations 
 ADD CONSTRAINT donations_payment_provider_check 
-CHECK (payment_provider IN ('stripe', 'paypal', 'mercadopago'));
+CHECK (payment_provider IN ('paypal', 'mercadopago'));

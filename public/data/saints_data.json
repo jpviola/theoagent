@@ -1,0 +1,2930 @@
+[
+  {
+    "date": "01-01",
+    "name": "Santa María Madre de Dios",
+    "type": "",
+    "bio": "Santa MARÍA Madre de nuestro Señor Jesucristo Justo era que Ella fuese situada a la cabeza de todos los santos, Ella que es la mayor de todos, que es la Madre del Salvador y la nuestra, y cuyas plegarias...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "01-02",
+    "name": "San Basilio el Grande y san Gregorio Nacianceno",
+    "type": "Obispos y Doctores de la Iglesia",
+    "bio": "Dos grandes amigos, dos luchadores, dos oradores de gran calibre, dos doctores de la Iglesia, dos obispos. Basilio había nacido en Cesarea de Capadocia. Gregorio, en Arianzo, cerca de Nacianzo, donde...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-03",
+    "name": "El santísimo nombre de Jesús",
+    "type": "",
+    "bio": "El Padre hizo saber a María (Lc 1, 31) y a José (Mt 1, 21) cómo debía Llamarse su Hijo encarnado: «Le pondrás por nombre Jesús». San Pablo asegura que «este Nombre está por encima de todo nombre»...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-04",
+    "name": "Santa Ángela de Foligno",
+    "type": "Terciaria Franciscana",
+    "bio": "Nació (1248) y murió (4 de enero de 1309) en esta ciudad de Umbría, (Italia). El relato autobiográfico de sus experiencias espirituales es una cumbre de la literatura mística. Educada en medio de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-05",
+    "name": "San Juan Nepomuceno Neumann",
+    "type": "Obispo",
+    "bio": "Fue un redentorista que llevó su celo pastoral al servicio de sus compa-triotas alemanes emigrados en los Estados Unidos. Originario de Prochatritz (Bohemia), murió siendo obispo de Filadelfia (Pensilvania)....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-06",
+    "name": "Epifanía del Señor",
+    "type": "",
+    "bio": "Los orientales celebran la Epifanía desde el siglo III (epiphaneia, manifestación). Conmemoran en este día los dos episodios en los que se manifestó por primera vez la, divinidad del Salvador: su bautismo,...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "01-07",
+    "name": "San Raimundo de Peñafort",
+    "type": "Sacerdote",
+    "bio": "Nació en Peñafort (Villafranca del Penedés, provincia de Barcelona) hacia el 1175 y murió en Barcelona el 6 de enero de 1275. Antiguamente se daba el nombre de «decretales santas» a los escritos...",
+    "region": "ES",
+    "is_primary": true
+  },
+  {
+    "date": "01-08",
+    "name": "San Máximo de Pavía",
+    "type": "Obispo",
+    "bio": "Massimo es Obispo de Pavía (muerto a Pavía en el 514) y Patrón de Valencia. A Pavía se acuerdan dos obispos con nombre Massimo, pero en realidad se trata de una única persona que vino después del...",
+    "region": "ES",
+    "is_primary": true
+  },
+  {
+    "date": "01-09",
+    "name": "San Marcelino de Ancona",
+    "type": "Obispo",
+    "bio": "Marcellino vivió en el siglo siete, nació de familia Boccamajore, fue el sexto obispo de Ancona, entre el 550 y el 568, año de su muerte. él estaba considerado \"hombre santo y lleno de celo por la...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-10",
+    "name": "San Aldo",
+    "type": "Ermitaño",
+    "bio": "La figura de Sant Aldo todavía está en espera de una clara reconstrucción: de hecho además de la memoria del nombre, allí sólo han llegado escasas noticias que lo conciernen. Probablemente vivió...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-11",
+    "name": "Bautismo de Jesús",
+    "type": "",
+    "bio": "Jesús Cristo llegado a la edad de treinta años, antes de ir al desierto a dar cuarenta días y cuarenta noches continuas en perfecto ayuno, fue a la ribera del río Jordano, donde S. estaba Giovanni...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-12",
+    "name": "San Bernardo de Corleone",
+    "type": "Religioso",
+    "bio": "Su nombre real era Filippo. Nació en Palermo, tercero de tres hijos. Su juventud fue turbulenta, vivida en un entorno de soldados mercenarios a los órdenes de España. Un día durante una pelea, hirió...",
+    "region": "ES",
+    "is_primary": true
+  },
+  {
+    "date": "01-13",
+    "name": "San Hilario de Poitiers",
+    "type": "Obispo y Doctor de la Iglesia",
+    "bio": "San HILARIO Nació en Poitiers (Francia) hacia el 315 y murió en esa ciudad hacia el 367. Eran los tiempos en que los emperadores, para apaciguar los espíritus, pretendían imponer en todo el Imperio...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-14",
+    "name": "San Félix de Nola",
+    "type": "Confesor y mártir",
+    "bio": "San Feliz, sacerdote nolano, nació en Nola en la segunda mitad de tercero siglo de una familia noble. Fue encarcelado por los enemigos de nuestra Santa Sede, fue liberado por un angel, que lo llevó a...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-15",
+    "name": "San Mauro",
+    "type": "Abad",
+    "bio": "La espléndida figura de San Benedetto forma, en la historia del monachesimo occidental, una místico sistema planetario, de que el Patriarca es el sol; su hermana Escolar es la luna y las dos primeras...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-16",
+    "name": "San Marcelo I",
+    "type": "Papa",
+    "bio": "Cuando terminó la persecución de Diocleciano, muchos cristianos apóstatas pidieron ingresar de nuevo en el seno de la Iglesia. ¿Cuáles serían las penitencias que pretendió imponerles Marcelo? Los...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-17",
+    "name": "San Antonio",
+    "type": "Abad",
+    "bio": "Nacido en Quemán (al sur de El Cairo) y muerto en la Tebaida el 17 de enero del 356. La Biografía de san Atanasio (360) le hizo célebre; en cuanto a su cerdo, debe su fama a los cuadros de Brueghel,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-18",
+    "name": "Santa Margarita de Hungría",
+    "type": "princesa y religiosa",
+    "bio": "Era hija de Bela IV, rey de Hungría, derrotado por el ejército de los mongoles; estando embarazada su. madre, María Laskaris, princesa bizantina, prometieron entregar a Dios a su hijo que había de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-19",
+    "name": "Santos Mario, Marta, Audifax y Abaco",
+    "type": "Mártires de Roma",
+    "bio": "San Mario es figura legendaria de un santo mártir. Es acogido en el Martirologio Romano junto a su mujer Marta y los dos hijos Audiface y Ábaco. La tradición dice que la pareja de Persia fue a Roma...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-20",
+    "name": "Santos Fabián Papa y Sebastián",
+    "type": "Mártires",
+    "bio": "San SEBASTIÁN Martirizado en Roma a principios del siglo IV. Además de los músicos (Debussy) y los poetas (D'Annunzio), los pintores lo han tomado con frecuencia como fuente de inspiración; entre otros,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-21",
+    "name": "Santa Inés",
+    "type": "Virgen y mártir",
+    "bio": "Pocas leyendas de santos han sido tan estimadas como la de la virgen y mártir Inés. Se la tuvo en alto aprecio en la Iglesia Cristiana primitiva y su nombre ha quedado como símbolo de la pura doncellez,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-22",
+    "name": "San Vicente de Zaragoza",
+    "type": "Diácono y Mártir",
+    "bio": "Nace en Huesca (España) y muere en Valencia (España) en el 304.Vicente era reconocido corno un gran orador. San Valerio, el anciano obispo de Zaragoza que empezaba a tartamudear, le ordenó diácono...",
+    "region": "ES",
+    "is_primary": true
+  },
+  {
+    "date": "01-23",
+    "name": "Santa Emerenciana",
+    "type": "Virgen y Mártir",
+    "bio": "Según un cuento de autor desconocido de la pasión de Sant'Agnese, Emerenziana estuvo entre los fieles que participaron en los funerales de la joven mártir Agnese \"Emerentiana, quae fuerat collactanea...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-24",
+    "name": "San Francisco de Sales",
+    "type": "Obispo y doctor de la Iglesia",
+    "bio": "Francisco de Sales nació en el castillo de Sales, en la Saboya suiza, el 21 de agosto de 1567, y en su bautismo, en la iglesia parroquial de Thorens, fue nombrada Francisco Bonaventura, es decir, con...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-25",
+    "name": "La conversión de San Pablo",
+    "type": "",
+    "bio": "Llegamos a uno de los hechos históricos más importantes de los primeros tiempos del cristianismo. Lucas, compañero del Apóstol, lo ha contado por extenso (Hch 9, 122). Por su parte, Pablo relató personalmente...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-26",
+    "name": "Santos Timoteo y Tito",
+    "type": "Obispos y Discípulos de San Pablo",
+    "bio": "Lo que sabemos de ellos nos viene de las tres cartas que estando san Pablo prisionero en Roma les escribió mientras esperaba ser condenado a muerte. Timoteo, su «verdadero hijo en la fe» había...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-27",
+    "name": "Santa Ángela de Mérici",
+    "type": "Virgen y fundadora",
+    "bio": "Nació en Desenzano (cerca del lago de Garda, Italia) en 1474; murió en Brescia (Lombardía, Italia) el 24 de enero de 1540. Es sabido que durante el Renacimiento se produjo en Italia una notable degradación...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-28",
+    "name": "San Tomás de Aquino",
+    "type": "Sacerdote y doctor de la Iglesia",
+    "bio": "La familia italiana de Aquino descendía de los reyes lombardos y estaba emparentada con varias casas reales de Europa. Landolfo, padre de Tomás de Aquino, tenía los títulos de conde Aquino y señor...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-29",
+    "name": "San Constancio de Perugia",
+    "type": "Obispo y Mártir",
+    "bio": "Costanzo vivió en el siglo II, era un joven cristiano que se distinguió inmediatamente en la Iglesia perugina por su celo y por su generosidad hacia los pobres unidos a una gran severidad hacia sí mismo. Por...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-30",
+    "name": "Santa Martina",
+    "type": "Virgen y Mártir",
+    "bio": "Santa Marina era gallega, de Orense, en las afueras de la ciudad. Allí la llaman Santa Marina de Santas Aguas. A unos 4 kilómetros de la ciudad, hay un poblado maravilloso, con una iglesia románica...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "01-31",
+    "name": "San Juan Bosco",
+    "type": "Sacerdote",
+    "bio": "En su vida, lo sobrenatural fue lo natural y lo extraordinario lo ordinario.» Así habló el Papa Pío XI del amado Don Bosco, famoso por sus obras educativas y por su afectuoso cuidado de los orfanatos....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-01",
+    "name": "Santa Brígida de Kildare",
+    "type": "Abadesa",
+    "bio": "Brígida de Irlanda fue una Abadesa, que vivió entre el 400 y el 500, patrona de Irlanda, de los herreros, de los hijos reconocidos, de los gallineros. Fue hija de un jefe pagano y una esclava cristiana....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-02",
+    "name": "Presentación de Jesús en el Templo (Candelaria)",
+    "type": "",
+    "bio": "Se conmemora en este día la «purificación» de María o la «presentación» de Jesús en el Templo (Lc 2, 2235), cuando el anciano Simeón anunció que ese Niño sería «la luz de todas las naciones»....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-03",
+    "name": "San Blas",
+    "type": "Obispo y mártir",
+    "bio": "No se sabe con certeza cuándo ni dónde vivió San Blas, pero, según la tradición, fue obispo de Sebasto, Armenia, en los primeros años del siglo iv, y sufrió el martirio bajo el emperador romano...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-04",
+    "name": "San José de Leonisa",
+    "type": "Capuchino",
+    "bio": "Prisionero de los turcos en Constantinopla, el fraile Giuseppe quedó colgado por tres días de una cruz por un pie y por una mano. Y no murió. Dios solo sabe cómo lograra sobrevivir a aquel suplicio,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-05",
+    "name": "Santa Águeda de Catania",
+    "type": "Virgen y mártir",
+    "bio": "Suele ubicarse su martirio en Catania (Sicilia) en el siglo III. Vivía entonces en Sicilia un juez cruel y libidinoso llamado Quinciano, que había jurado seducir a una virgen joven y bella de nombre...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-06",
+    "name": "San Pablo Miki y Compañeros",
+    "type": "Mártires",
+    "bio": "Muertos en Nagasaki (Japón) el 6 de febrero de 1597. Una de las más duras persecuciones que hubieron de sufrir los cristianos de Japón fue la de Taikosama. En 1587, este emperador promulgó un decreto...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-07",
+    "name": "San Ricardo",
+    "type": "Rey de los ingleses",
+    "bio": "El San de hoy no fue realmente rey y también es desconocido su verdadero nombre. Nombre y título derivan de una leyenda desarrollada en Eichstatt en Baviera en el siglo X y en Lucca en el siglo XII debido...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-08",
+    "name": "San Jerónimo Emiliani",
+    "type": "Fundador",
+    "bio": "Nacido en Venecia en 1481; muerto en Somasca (Lombardía) el año 1537. Provenía de una familia muy rica y tuvo una juventud desordenada. Hecho prisionero por las tropas imperiales de Carlos V cerca de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-09",
+    "name": "Santa Apolonia",
+    "type": "Virgen y mártir",
+    "bio": "Muere en Alejandría (Egipto) en el 249. Durante el mandato del emperador Decio (248-251), llegó un momento, en Alejandría, en que los paganos podían, impunemente, capturar y matar a los cristianos...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-10",
+    "name": "Santa Escolástica",
+    "type": "Virgen",
+    "bio": "Nació en Nursia (Italia) en el año 480, y murió cerca de Montecassino (íd.) el año 547. Tan pronto como san Benito hubo fundado Montecassino, su hermana Escolástica vino a establecerse en los...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-11",
+    "name": "Nuestra Señora de Lourdes",
+    "type": "",
+    "bio": "El 11 de febrero de 1858 tres jovencitas merodeaban el L. río, junto a la roca de Masabielle, en Lourdes. Bernardita, de 14 años, se quedó extasiada ante una visión. \"Alcé los ojos, miré hacia...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-12",
+    "name": "Santos Mártires de Abitina",
+    "type": "",
+    "bio": "Fueron sorprendidos en Abitina de Cartago, norte de África, durante la persecución de Diocleciano, durante la celebración de la Eucaristía en la mañana del domingo; los condujeron prisioneros ante...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-13",
+    "name": "Santas Fusca y Maura",
+    "type": "Mártires",
+    "bio": "En los alrededores de Venecia, una de las localidades más melancólicamente sugestivas es Torcello, la más antigua, y por muchos siglos la más espléndida ciudad de la laguna véneta. Venecia nació...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-14",
+    "name": "San Valentín",
+    "type": "Mártir",
+    "bio": "Se dice que era obispo de Terni y que, tras cincuenta años en el puesto, gozaba de una merecida reputación de taumaturgo. Cierto día le visitó el filósofo romano Critón y le pidió que salvara a...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-15",
+    "name": "Santos Faustino y Jovita",
+    "type": "Mártires",
+    "bio": "Los Santos Faustino y Giovita nacieron en Brescia de una familia aristócrata, y desde la más tierna edad fueron educados cristianamente. Durante la persecución de Adriano, se consagraron a la visita...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-16",
+    "name": "Santa Juliana de Nicomedia",
+    "type": "Virgen y mártir",
+    "bio": "Santa Juliana, fue una mujer destinada en novia a Eulogio, prefecto pagano de su ciudad, Nicomedia en Bitinia. Después de la bodas, en cambio, se negó firmemente al abrazo del novio idólatra. Para comprender...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-17",
+    "name": "Los siete fundadores de los Siervos de María",
+    "type": "",
+    "bio": "Vivieron y murieron en el siglo XIII. Se llamaban Bonfiglio Monaldo (m. 1262), Juan Manetti (m. 1257), Benicio del Antella (m. 1268), Bartolomé Amidei (m. 1266), Gerardino Sostegni (m. 1282), Ricoverio...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-18",
+    "name": "Miércoles de ceniza",
+    "type": "",
+    "bio": "El miércoles de las Cenizas es el día en el que tiene principio el Cuaresma, el período de cuarenta días que preceden la Pascua de Resurrección y en los que invita a los fieles a un camino de penitencia...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-19",
+    "name": "San Conrado Confalonieri",
+    "type": "Ermitaño franciscano",
+    "bio": "Nació en Plasencia (Italia) en el 1290, murió no lejos de Noto (Sicilia) el año 1351. Una partida de caza cambió la vida del noble Conrado y su mujer Eufrosina. Se encontraban persiguiendo a un...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-20",
+    "name": "Santa Jacinta Marto",
+    "type": "Vidente de Fátima",
+    "bio": "Nacida el 11 de marzo de 1910 en Aljustrel, una aldea de Fátima en Portugal, Jacinta Marto fue la undécima y última hija de Emanuele Pietro Marto y Olimpia de Jesus. Junto con su hermano Francesco y...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-21",
+    "name": "San Pedro Damián",
+    "type": "Obispo y doctor de la Iglesia",
+    "bio": "Nació en Rávena (Italia) en 1007; murió en Faenza (íd.) el 22 de febrero de 1072. Entró con veintiocho años en la Orden camaldulense, y ocho años después llegó a ser abad de la casa madre...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-22",
+    "name": "Cátedra de San Pedro",
+    "type": "",
+    "bio": "Con los demás apóstoles, Pedro fundó la Iglesia de Jerusalén. Allí era el jefe indiscutible. La Iglesia de Antioquía estuvo presidida por él. En tiempo de Claudio (4145) fundó la Iglesia de Roma...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-23",
+    "name": "San Policarpo",
+    "type": "Obispo y mártir",
+    "bio": "Nace aproximadamente el año 85 y muere en Esmirna (Izmir, Turquía) el 23 de febrero del 155. Después de san Esteban la historia no conoce otro mártir más antiguo que Policarpo. Su fiesta fue la...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-24",
+    "name": "San Etelberto",
+    "type": "Rey de Kent",
+    "bio": "El pagano Etelberto se casó a Berta, princesa de los Francos, permitiéndolas profesar su religión y, primero de los soberanos anglosajones, fue convertido por Agostino de Centerbury mandado por el Papa...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-25",
+    "name": "San Gerlando de Agrigento",
+    "type": "Obispo",
+    "bio": "Al obispo Gerlando se debe la reorganización de la diócesis de Agrigento después de la larga ocupación musulmana que duró desde el año 829 hasta el año 1086. Nombrado primicerio de la Schola cantorunt...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-26",
+    "name": "Santa Paula Montalt de San José de Calasanz",
+    "type": "Religiosa y fundadora",
+    "bio": "Montalt nació en el seno de una familia sencilla de artesanos, numerosa, compleja y muy cristiana. Pasó su infancia y juventud en su villa natal, trabajando desde los 10 años, a la muerte de su padre,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-27",
+    "name": "San Gabriel de la Dolorosa",
+    "type": "Religioso",
+    "bio": "Nació en Asís. Fueron 13 hermanos; él era el número 11. Se bautizó en la misma pila bautismal que Francisco de Asís y Clara. A los 4 años se quedó sin madre. Estudió con los hermanos de La...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-28",
+    "name": "Santos Roman y Lupicino",
+    "type": "Abades",
+    "bio": "Murieron en el Jura (Francia); el primero en Condat en el 463 y el segundo en Leucone hacia el 480. Román tenía treinta y cinco años cuando salió de su Bugey natal llevando consigo sólo una Vida...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "02-29",
+    "name": "San Augusto Chapdelaine",
+    "type": "Mártir de China",
+    "bio": "Nació en La Rochelle (Manche, Francia) en 1814 y fue ordenado en 1843. En 1851 ingresó en las Misiones extranjeras de París y, un año después, parte hacia China, donde muere en los últimos días...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-01",
+    "name": "San Albino de Angers",
+    "type": "Obispo",
+    "bio": "Nacido en la región de Vannes (Morbibhan, Francia) en el 429. Llegó a ser obispo de Angers en el 529 y murió en esta ciudad, el 1 de marzo del 550. Durante la época merovingia eran numerosos los caballeros...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-02",
+    "name": "Santa Inés de Bohemia",
+    "type": "Princesa, abadesa y fundadora",
+    "bio": "Decimotercera hija de Otakar, rey de Boemia, nació en el castillo real de Praga en el 1211. Su adolescencia fue señalada por varias propuestas de bodas reales. De algunos frailes menores llegados a Praga...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-03",
+    "name": "Santa Cunegunda",
+    "type": "Emperatriz",
+    "bio": "Santa Cunegunda era hija de Sigfredo, primer conde de Luxemburgo; piadosa esposa y de brillantes dotes intelec; tuales. Es casada con Enrique II, duque de Baviera, y reveló a su marido la noche de bodas...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-04",
+    "name": "San Casimiro de Polonia",
+    "type": "Príncipe polaco",
+    "bio": "Nació en Cracovia (Polonia) en 1458; murió en Grozny (Bielorrusia) el 4 de marzo de 1484. Segundo hijo de Casimiro IV, rey de Polonia (m. 1492), había recibido de su padre excelentes preceptores,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-05",
+    "name": "San Adrián de Cesárea",
+    "type": "Mártir",
+    "bio": "Padeció el martirio con Eubulo el año 309, \"sexto año de la persecución\", según el testimonio de Eusebio. Habiendo venido ambos a Cesárea en Palestina para ayudar a los mártires de aquella ciudad,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-06",
+    "name": "Beata Rosa de Viterbo",
+    "type": "Vírgen",
+    "bio": "En el siglo XIII la Iglesia estaba atormentada por herejías funestísimas y por frecuentes guerras y turbulencias. Viterbo estaba entonces en muy tristes condiciones. Herejes, ateos, se difundían por...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-07",
+    "name": "Santas Perpetua y Felicidad",
+    "type": "Mártires",
+    "bio": "El relato de la pasión de Santa Perpetua, Santa Felicitas y sus compañeros es uno de los valiosos tesoros de la literatura de los mártires y un documento auténtico preservado para nosotros, con las...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-08",
+    "name": "San Juan de Dios",
+    "type": "Religioso",
+    "bio": "Nació en Montemor-o-Novo (Évora, Portugal) en 1495; murió en Gra nada el 8 de marzo de 1550. Se desconoce todo acerca de su infancia excepto que a los ocho años s fuga de la casa paterna para nunca...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-09",
+    "name": "Santa Francisca Romana",
+    "type": "Religiosa",
+    "bio": "Nació y murió en Roma (1384-1440). Se casó a los trece años con Lorenzo de Ponziani, un muchacho perteneciente a la nobleza romana al igual que ella. Formaron una pareja perfecta. No disputaron...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-10",
+    "name": "San Macario de Jerusalén",
+    "type": "Obispo",
+    "bio": "La fuerza de su oposición al arianesimo es demostrada por el modo en cuyo Arión habla de él en su carta a Eusebio de Nicomedia. Macario participó al Concilio de Nicea, en el curso del que pudiera...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-11",
+    "name": "San Constantino",
+    "type": "Rey y mártir",
+    "bio": "La Iglesia griega, pero no aquella latina, reserva un lugar importante, entre sus San, al más célebre Costantino de la historia, es decir al emperador romano que les reconoció a los cristianos la libertad...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-12",
+    "name": "San Luis Orione",
+    "type": "Sacerdote y fundador",
+    "bio": "\"Lo que de él, en el recuerdo, yo ha quedado más imprimido, fue la sosegada ternura de su mirada. La luz de sus ojos tuvo la bondad y la clarividencia que se encuentra a veces en ciertas viejas campesinas,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-13",
+    "name": "San Rodrigo de Córdoba",
+    "type": "Sacerdote y mártir",
+    "bio": "Muertos en Córdoba por la fe en el 837. El Memorial de san Eulogio nos da noticias de estos dos santos cordobeses. Su autor la escribió en el 852, en la misma ciudad en donde Rodrigo y Salomón fueron...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "03-14",
+    "name": "Santa Matilde",
+    "type": "Reina",
+    "bio": "El mayor de los hijos que tuvo con Enrique I el Pajarero, rey de Germanía (9199.36), se llamaba Otón y llegó a ser emperador de Alemania; el segundo, Enrique, fue duque de Baviera; y su hija Eduvigis...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-15",
+    "name": "Santa Luisa de Marillac",
+    "type": "Viuda y religiosa",
+    "bio": "Nació en París en 1591 y murió el 15 de marzo de 1660. Durante la misa solemne de Pentecostés de 1623, Luisa de Marillac, Mme. Le Gras, sintió una voz interior que le aseguraba que habría de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-16",
+    "name": "San Heriberto de Colonia",
+    "type": "Obispo",
+    "bio": "Heriberto era hijo del duque Hugo de Worms. Tras estudiar en la escuela de la catedral de Worms, su ciudad natal, pasó algún tiempo en el monasterio benedictino de Gorza, situado en el ducado de Lorena....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-17",
+    "name": "San Patricio",
+    "type": "Obispo",
+    "bio": "El lugar en donde se desarrolló la labor de San Patricio fue la parte más remota del mundo que entonces se conocía. La semilla que él plantó en la lejana Irlanda, la cual antes de que él llegará...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-18",
+    "name": "San Cirilo de Jerusalén",
+    "type": "Obispo y doctor de la Iglesia",
+    "bio": "Nacido en el 315, murió en el .386. Fue obispo de la Ciudad Santa en el 349. Los arrianos, que pululaban en aquel entonces por toda Palestina, le obligaron a exiliarse tres veces. Cirilo llegó a conocer...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-19",
+    "name": "San José",
+    "type": "Esposo de la Virgen María",
+    "bio": "San José, según todas las apariencias, nació en Belén y se cree que murió en Nazaret antes de que Jesús comenzara su misterio. La Biblia habla muy poco de San José, pero por los primeros capítulos...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-20",
+    "name": "San Juan Nepomuceno",
+    "type": "Sacerdote y mártir",
+    "bio": "Es el mártir del sello sacramental. Nació en el 1330 a Nepomuk, en Boemia. Empezó los estudios eclesiásticos en la ciudad de Praga, y fue consagrado sacerdote por el arzobispo de aquella ciudad. Apenas...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-21",
+    "name": "San Serapión de Thmuis",
+    "type": "Obispo",
+    "bio": "Obispo, santo, (siglo IV). A pesar de que siempre haya sido muy celebrado en la historia de la Iglesia como hombre de gran cultura y profunda espiritualidad, las noticias que poseemos de S. están delgadas...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-22",
+    "name": "Santa Lea",
+    "type": "Viuda",
+    "bio": "Murió en Roma hacia el año 383. Como Marcela (31 de enero) o Melania (26 de enero), era una dama patricia que asistía a las clases sobre las Sagradas Escrituras dadas por san Jerónimo cuando éste...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-23",
+    "name": "San Toribio de Mogrovejo",
+    "type": "Obispo",
+    "bio": "Nació en Mayorga (León) en 1538 y murió en Saña Grande (Perú) en 1606. Gran benefactor de los indios. Cuando Felipe II lo nombra arzobispo de Lima (1581), son abundantes los abusos contra los...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "03-24",
+    "name": "Santa Catalina de Suecia",
+    "type": "Religiosa",
+    "bio": "Nació hacia el año 1331; murió en Vadstena (Suecia) el 24 de marzo de 1381. Sus padres fueron santa Brígida y Ulf Gudmarsson, ambos parientes de los reyes de Suecia. En cuanto fue criada, la llevaron...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-25",
+    "name": "Anunciación del Señor",
+    "type": "",
+    "bio": "El misterio que la Iglesia celebra hoy es el anuncio del arcángel Gabriele a Maria, que Ella fue sida elegida entre todas las mujeres a ser la Madre de Dios y la encarnación del Verbo en su seno refino. Antiguamente...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-26",
+    "name": "Santo Manuel",
+    "type": "Mártir",
+    "bio": "La fama y también la belleza del nombre de Emanuele no es atada a un San, pero al mismo Salvador. Leemos en efecto el Evangelio de Matteo, que dice, hablando del nacimiento del Niño de Belén: \" Todo...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-27",
+    "name": "San Ruperto",
+    "type": "Obispo",
+    "bio": "Ruperto nació en una noble familia de orígenes irlandeses emparentada con los Merovingios, al final del siglo VII. Después de haber recibido una educación monástica, obró por la evangelización de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-28",
+    "name": "San Esteban Harding",
+    "type": "Abad",
+    "bio": "La historia de Stefano Harding se refiere a los orígenes de la orden monástica cisterciense, entre finales del siglo XI y principios del siglo XII. Este monje inglés originario de Shelburne está, de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-29",
+    "name": "El Domingo de Ramos",
+    "type": "",
+    "bio": "En el domingo de Ramos la liturgia recuerda la entrada triunfal de Jesús en Jerusalén a espalda de un burro mientras la multitud de personas tendia capas a tierra y agitaba palmas.Se trata del día en...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-30",
+    "name": "Beato Amadeo de Saboya",
+    "type": "Duque",
+    "bio": "Nació en Thonon (Saboya, Italia) en 1435; murió en Vercelli (Piamone) el .30 de marzo de 1472. Apenas había nacido cuando fue prometido a Yolanda de Francia, hija le Luis XI. Se casó a los diecisiete...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "03-31",
+    "name": "San Benjamín",
+    "type": "Diácono y Mártir",
+    "bio": "Los cristianos persas vivían tranquilos desde hacia cincuenta años hasta que a Abdas, obispo de Tesifón, se le ocurrió quemar un templo pagano. El incendio enfureció al rey Yezdigerd, quien por desgracia...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-01",
+    "name": "San Hugo de Grenoble",
+    "type": "Obispo",
+    "bio": "Natural de Chateauneuf, Francia, su padre ocupaba un puesto importante en el cjército y a su vez introducía prkticas religiosas entro los militares. Por consejo de su hijo Hugo, se hizo monje y vivici...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-02",
+    "name": "El Jueves Santo",
+    "type": "Ultima cena del Señor",
+    "bio": "El jueves Santo se celebra el ritual de la bendición de los aceites santos durante la Misa de la Crisma recordando la última Cena del Dios y empezando así el Triduo San. En la Iglesia, pero también...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-03",
+    "name": "El Viernes Santo",
+    "type": "La Pasión del Señor",
+    "bio": "La Iglesia con la meditación de la pasión del Cristo y con la adoración de la Cruz conmemora su origen de la cadera del Dios, que intercede por la salvación de todo el mundo sobre la cruz. En este...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-04",
+    "name": "Sábado Santo",
+    "type": "Descendiendo a los Infiernos",
+    "bio": "El tercer día del Triduo Pascual es el sábado santo que conmemora la bajada a los avernos de Nuestro Señor Jesús. Jesús queda en los avernos por un breve tiempo cumpliendo su victoria sobre la muerte...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-05",
+    "name": "Pascua de Resurrección del Señor",
+    "type": "",
+    "bio": "A la tarde del viernes, en cuanto Jesús devolvió el espíritu, un soldado para cerciorarse que estuvo realmente muerto le pasó el corazón con una lanza.Giuseppe de Arimatea, noble decurión, y Nicodemo...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-06",
+    "name": "San Pedro de Verona",
+    "type": "Sacerdoto y mártir",
+    "bio": "Llamado Pedro Mártir, vino al mundo en Verona, ciudad de Lombardía; sus padres eran herejes maniqueos; cursó estudios superiores en la universidad de Bolonia, ingresó en la orden dominica recién fundada...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-07",
+    "name": "San Juan Bautista de la Salle",
+    "type": "Sacerdote",
+    "bio": "Juan Bautista de la Salle, educador pionero, fundador del extendido Instituto de los Hermanos de las Escuelas Cristianas, comúnmente llamados Hermanos Cristianos, nació en la ciudad catedralicia de Reims,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-08",
+    "name": "San Dionisio de Corinto",
+    "type": "Obispo",
+    "bio": "Fue nombrado obispo de Corinto, su ciudad.Las pocas noticias sobre su vida son transmitidas por Girolamo y sobre todo por Eusebio de Cesárea, el que ha conservado fragmentos interesantes de ocho sus cartas,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-09",
+    "name": "San Demetrio de Tesalónica",
+    "type": "Mártir",
+    "bio": "Las orígenes de su culto son oscuras, la primera prueba de su existencia se tiene solamente 175 años después de su martirio y muchos estudiosos dudan que un Demetrio mártir haya existido en Tessalonica. Sin...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-10",
+    "name": "Santa Magdalena de Canossa",
+    "type": "Vírgen",
+    "bio": "Maddalena nació en Verona el l° marzo de 1774 de noble y rica familia, tercera hija de seis hermanos. Su vida fue señalada enseguida por tristes episodios como la muerte del padre, la segunda bodas...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-11",
+    "name": "Santa Gema Galgani",
+    "type": "Virgen",
+    "bio": "E sta chica armó tal revuelo en su tiempo, que hoy nos alegramos de que la Iglesia le haya admitido entre los santos. Era italiana, de Camigliano. Quiso ser religiosa, pero no pudo lograrlo por motivos...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-12",
+    "name": "San José Moscati",
+    "type": "Laico",
+    "bio": "Nació en Benevento (Italia). Fue un buen estudiante de medicina. Logró la plaza de médico en Nápoles, y se entregó a su oficio con todo ahínco. A la vez que curaba los cuerpos, se preocupaba...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-13",
+    "name": "San Martín I",
+    "type": "Papa y mártir",
+    "bio": "Había nacido en una familia distinguida de una pequeña ciudad a cien kilómetros al norte de Roma: Todi. Fue un gran filósofo y un sabio de su tiempo. Al fallecer el papa Teodoro I (649) le escogieron...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-14",
+    "name": "Santa Liduina",
+    "type": "Vírgen",
+    "bio": "Virgen y santa nació en Schiedam en 1380. A la edad de quince años Liduina tuvo una mala caída mientras patinaba sobre el hielo, Liduina quedó paralizada en la cama, el accidente fue el origen de todos...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-15",
+    "name": "San Damián de Veuster",
+    "type": "Sacerdote",
+    "bio": "En el archipiélago del Hawai hay una isla maldita, la L. isla de Molokai, la patria de los leprosos. Hace más de 100 años, de vez en cuando llegaba por allí un cargamento de enfermos, los arrojaba...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-16",
+    "name": "Santa Bernadette Soubirous",
+    "type": "Virgen",
+    "bio": "En la Francia del siglo xvii, la fe del pueblo estaba quebrantada; había rebelión contra la Iglesia y descuido de sus enseñanzas; el auge del protestantismo y la herejía jansenista' tenían parte de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-17",
+    "name": "San Roberto de Chaise-Dieu",
+    "type": "Abad",
+    "bio": "Hijo de una aristócrata de la familia de Turlandia, golpeada por los dolores del parto en el alquiler de un bosque, mientras iba a un cercano castillo. Se dijo pronto que el recién nacido fue destinado...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-18",
+    "name": "San Galdino",
+    "type": "Obispo",
+    "bio": "En 1162, Federico Barbarroja, emperador de Alemania, saqueó Milán. Es el período en el que se establecieron las Comunas Libres en las ciudades italianas y precisamente Barbarroja luchó contra estas...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-19",
+    "name": "Santa Emma de Sajonia",
+    "type": "Viuda",
+    "bio": "Hay dos santas con el nombre de Emma: de la segunda no tendremos ocasión de hablar, porque su memoria cae el 29 de junio, fiesta de los apóstoles Pedro y Pablo. En cambio, podemos hablar del primero...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-20",
+    "name": "Santa Sara de Antioquía",
+    "type": "Mártir",
+    "bio": "El Sinassario alejandrino es el único documento que contiene un testimonio escrito de Santa Sara que vivió entre los siglos III y IV, situando el día conmemorativo de su \"renacimiento en el cielo\" (dies...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-21",
+    "name": "San Anselmo de Cantorbery",
+    "type": "Obispo y Doctor de la Iglesia",
+    "bio": "Si bien Guillermo el Conquistador, en el año 1066,1 privó a Inglaterra de su libertad y de muchas de sus posesiones, también fue responsable de llevar a Inglaterra, desde diversas partes de Europa,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-22",
+    "name": "San Leónidas de Alejandría",
+    "type": "Mártir y padre de Orígenes",
+    "bio": "Nació en Droitwich (Worcester, Inglaterra) en 1197 y murió en Chichester (Sussex, Inglaterra) el 3 de abril de 1253. Después de recuperar la fortuna que sus padres habían perdido, Ricardo de Wich se...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-23",
+    "name": "San Jorge",
+    "type": "Mártir de Lyda",
+    "bio": "S. Giorgio vivió en siglo II, bajo el imperio de Diocleciano. De este San, muy venerado en todo sitio, y especialmente en Inglaterra, se tienen pocas noticias, sin embargo sabemos que él fue honrado...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-24",
+    "name": "San Fidel de Sigmaringa",
+    "type": "Sacerdote y mártir",
+    "bio": "Se llamaba Marcos Rey. Había nacido en una pequeña ciudad alemana, Sigmaringa. Sus padres le llevaron a estudiar a Friburgo. Hizo letras y derecho. Y tuvo ocasión de recorrer toda Europa acompañando...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-25",
+    "name": "San Marcos",
+    "type": "Evangelista",
+    "bio": "Era judío y su conversión fue posterior a la resurrección de Cristo, aunque algunos lo emparentaban con san Pedro, el caso es que escribió el evangelio basándose en los relatos de san Pedro, más...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-26",
+    "name": "San Cleto",
+    "type": "Papa",
+    "bio": "S. Anacleto nació en Atenas después de la mitad del siglo primero, destinado por Dios a sujetar sabiamente la Iglesia en tiempos perniciosos. Empezando muy pronto a estudiar, se distinguió duro entre...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-27",
+    "name": "Santa Zita",
+    "type": "Vírgen",
+    "bio": "Era una humilde sirvienta en casa de un rico señor de Lucca, Italia, este patrón la ocupaba en servicios bajos y despreciables, ella corría ociosa a cualquier labor que fuese ordenada por su señor;...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-28",
+    "name": "Santa Valeria de Milán",
+    "type": "",
+    "bio": "Santa Valeria, más conocida para haber sido la mujer de San Vitale, un oficial del ejército matado y martirizado en la ciudad de Rávena y madre de los San mártires gemelos Gervasio y Protasio, vivió...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-29",
+    "name": "Santa Catalina de Siena",
+    "type": "Virgen y doctora de la Iglesia, patrona de Italia",
+    "bio": "La Edad Media llegaba a su fin y el nuevo mundo del Renacimiento surgía a la vida cuando Catalina Benincasa nació en la ciudad de Siena, el día de la Anunciación de 1347. Catalina y una hermana gemela...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "04-30",
+    "name": "San Pío V",
+    "type": "Papa",
+    "bio": "Miguel Ghisleri, conocido conio Pio V, nació eri Bosco, una pequefíita ciudad de la diócesis de Tortona, en 1504. Con tan solo catorce arios ingresa en la orden de santo Domingo y es ordenado muy pronto...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "05-01",
+    "name": "San José",
+    "type": "Obrero",
+    "bio": "La Iglesia siempre vio con buenos ojos el movimiento obrero. Hay personas que no lo quieren creer, pero es verdad. Los papas escribieron muchas veces denunciando la horrible situación de la clase...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-02",
+    "name": "San Atanasio",
+    "type": "Obispo y doctor de la Iglesia",
+    "bio": "San Atanasio, conocido como el «campeón de la ortodoxia», nació hacia el año 297 en Alejandría. Existe una tradición, relatada por Rufmo,3 según la cual llamó la atención del patriarca Alejandro...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-03",
+    "name": "Santos Felipe y Santiago",
+    "type": "Apóstoles",
+    "bio": "Felipe era de Betsaida, galileo, junto al lago de Gene1 saret. Seguidor fiel de Jesús. Este le dijo: \"Sígueme\". Y no hizo falta más. A pesar de su ingenuidad, supo estar en su puesto de apóstol desde...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "05-04",
+    "name": "San Florián de Lorch",
+    "type": "Mártir",
+    "bio": "Hay pruebas sólidas del martirio de Florian, que tuvo lugar en Lorch (Lauriacum) durante la persecución de Diocleciano, el último y más violento del Imperio Romano. Era un oficial del ejército...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-05",
+    "name": "San Ángel de Jerusalén",
+    "type": "Mártir, carmelito",
+    "bio": "Nacido en Jerusalén, de un parto gemelar, Ángel fue no solamente hebreo de raza, pero también de religión, hasta que la madre, convirtiéndose al Cristianismo, no llevó a la fe también a los dos...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-06",
+    "name": "San Pedro Nolasco",
+    "type": "Fundador de la Orden de la Merced",
+    "bio": "Santo francés, que mediante revelaci6n divina, fundó la orden de los Mercedarios, con el mecenazgo del rey de Aragòn y los adoctrinamientos de su confesor Raimundo de Peflafort, que también tuvieron...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-07",
+    "name": "Santa Flavia Domitila",
+    "type": "Mártir",
+    "bio": "Flavia Domitilla Mártir, santa (siglo I). Cayó víctima de la persecución de Domiciano. Eusebio de Cesárea dice que fue la nieta del cónsul Flavio Clemente y que fue relegada en la isla de Ponza....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-08",
+    "name": "Nuestra Señora del Rosario de Pompeya",
+    "type": "",
+    "bio": "El culto del Beato Virgo del Rosario de Pompeya, o, más sencillamente, de la Virgen de Pompeya, nace al final del 1800 a obra de Bartolo Longo, hoy Beato Bartolo Longo, el que, se cuenta que, mientras...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-09",
+    "name": "San Pacomio",
+    "type": "Abad",
+    "bio": "Abad, San Pacomio fue el primero padre del cenobismo monástico. Soldado Esneh tuvo ocasión de conocer a cristianos y fue empujado a imitarlos. Dejada pues el militizia, se apartó cerca de un pequeño...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-10",
+    "name": "San Cataldo de Rachau",
+    "type": "Obispo",
+    "bio": "No común, pero difuso un poquito por todas partes en Italia, el nombre de Cataldo es frecuente particularmente en Apulia, y sobre todo en la ciudad de Tarento, de que es Patrón, de tiempos remotos, el...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "05-11",
+    "name": "San Ignacio de Láconi",
+    "type": "Hermano capuchino",
+    "bio": "Ignacio nació a Láconi, en el corazón de Cerdeña, en el 1701. En el pequeño país cerca de las montañas del Gennargentu, creció recto de Dios y de adolescente ya practicó ayunos y mortificaciones;...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-12",
+    "name": "Santos Nereo, Aquileo y Pancracio",
+    "type": "Mártires",
+    "bio": "Son dos mártires gloriosos, muy venerados por el pueblo cristiano. De un fragmento del epígrafe compuesto por el Papa S. Damaso y puesto sobre la tumba de los mártires se sabe que los primeros dos...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-13",
+    "name": "Virgen de Fátima",
+    "type": "",
+    "bio": "El caso es que tres pastorcillos, Lucía, Francisco y Jacinta, después de tres visiones angelicales de preaviso, el día 13 de mayo de 1917, de repente, vieron una luz como de un relámpago. \"Cerca...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-14",
+    "name": "San Matías",
+    "type": "Apóstol",
+    "bio": "Curioso Santo, llamado apóstol de repuesto, por ser elegido al azar de entre los aproximadamente 72 apóstoles de Cristo para sustituir a Judas Iscariote (el traidor), convirtiéndose en uno de los doce....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-15",
+    "name": "San Isidro Labrador",
+    "type": "Laico",
+    "bio": "El popular patrono de Madrid nació en 1082 en la capital de España y se casó con María Toribia, quien más tarde sería santa María de la Cabeza o de Torrejón. Labrador también de nacimiento,...",
+    "region": "ES",
+    "is_primary": true
+  },
+  {
+    "date": "05-16",
+    "name": "San Ubaldo de Gubbio",
+    "type": "Obispo",
+    "bio": "Ubaldo nació a Gubbio alrededor del 1085. Huérfano de ambos los padres, fue educado por un tío muy religioso, el que sin embargo obstaculizó su proyecto, manifestado cuando tuvo quince años, de apartarse...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-17",
+    "name": "Ascensión de Jesús",
+    "type": "",
+    "bio": "Jesús después de la resurrección, en los 40 días que todavía quedó en tierra, confortó a los Apóstoles y con muchas pruebas los convenció de ser realmente resucitado. Los instruyó alrededor del...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-18",
+    "name": "San Juan I",
+    "type": "Papa y mártir",
+    "bio": "Había nacido en Florencia, a finales del siglo V. De joven fue a estudiar a Roma, y allí se hizo sacerdote. Su vida fue tan ejemplar, que, al morir el papa Hormisdas (523), fue elegido para la Sede de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-19",
+    "name": "San Celestino V",
+    "type": "Ermitaño y papa",
+    "bio": "Pedro Angelario, llamado nuis tarde Pedro Murón, hoy conocido por el nombre de Celestino V, papa, y miis generalmente por el de Pedro Celestipo, nació probablemente en Isernia, ciudad de Campania, en...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-20",
+    "name": "San Bernardino de Siena",
+    "type": "Sacerdote",
+    "bio": "Perteneciente a la nobleza de su país, nació en la ciudad toscana de. Massa, hijo de Tulo y Ncra; al morir sus padres siendo él niño, se ocupó de su custodia una tía de nombre Diana. Después de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-21",
+    "name": "Santos Cristóbal Magallanes y 24 compañeros",
+    "type": "Mártires de México",
+    "bio": "Nació en Totalice el 30 de julio de 1869. Se crió en el seno de una familia muy humilde y hasta los 19 años trabajó en el campo. En 1888 ingresó al seminario de Guadalajara donde se distinguió por...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-22",
+    "name": "Santa Rita de Casia",
+    "type": "Viuda y religiosa",
+    "bio": "En 1381, en un humilde hogar campesino de Rocca Porena, en el centro de Italia, nació una niña que debía alcanzar renombre de santidad a causa de sus transportes místicos, sus austeridades y su indecible...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-23",
+    "name": "San Desiderio de Langres",
+    "type": "Obispo y Mártir",
+    "bio": "Nacido en Autun; muerto en Saint-Didier-sur-Chalaronne el 23 de mayo del 607. Obispo de Vienne a partir del 595 como muy tarde. Gobernaba entonces Austrasia una mujer horrible, Brunehaut, a expensas...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-24",
+    "name": "Pentecostés",
+    "type": "",
+    "bio": "\" Os digo la verdad, es mejor para vosotros que vaya, porque si yo no voy, no a os vendrá al Consolador; Cuando haya ido, os lo mandaré y viniendo, convencerá el mundo cuánto al pecado, a la justicia...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-25",
+    "name": "María Madre de la Iglesia",
+    "type": "",
+    "bio": "El día 11 de febrero de 2018 sobre voluntad de Papa Francesco la Congregación por el Culto Divino y la Disciplina de los Sacramentos ha inscrito en el Calendario romano general, al lunes después Pentecostés,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-26",
+    "name": "San Felipe Neri",
+    "type": "Sacerdote",
+    "bio": "Felipe Neri nació en Florencia en el año 1515, uno de los cuatro hijos del notario Francesco Neri. La madre murió cuando los niños eran aún pequeños y su lugar fue ocupado por una madrastra muy capaz....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-27",
+    "name": "San Agustin de Cantorbery",
+    "type": "Obispo",
+    "bio": "Cuando el Papa Gregorio comenzó a planear la evangelización de Inglaterra, aquel país era aun pagano, en su mayor parte, si bien en el sudoeste quedaban restos de esfuerzos misioneros. Para encabezar...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-28",
+    "name": "San Germán de París",
+    "type": "Obispo",
+    "bio": "Nacido cerca de Autun hacia el año 496 y muerto en París el 28 de mayo del 576. Según su amigo san Fortunato, estuvo a punto de no venir al mundo pues su madre había intentado desembarazarse de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-29",
+    "name": "San Máximo de Verona",
+    "type": "Obispo",
+    "bio": "El historicidad de Massimo obispo de Verona es bastante difícil que establecer, probablemente ha existido en el siglo IV. Ello es recordado en un Martirologio de la Iglesia veronesa del siglo XVI y en...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-30",
+    "name": "Santa Juana de Arco",
+    "type": "Virgen",
+    "bio": "Salvadora de Francia y heroína nacional de ese país, Juana de Arco vive en la imaginación de las gentes como el símbolo de esa integridad de propósito que hace morir por lo que se cree. Juana «la...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "05-31",
+    "name": "Santísima Trinidad",
+    "type": "",
+    "bio": "La Iglesia, después de haber establecido muchas fiestas que honran a las individuales Personas del SS. Trinidad, fijó incluso una fiesta en honor de las Tres Personas. Esta fiesta fue instituida especialmente...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-01",
+    "name": "San Justino",
+    "type": "Mártir",
+    "bio": "Fue el primero en lanzar un puente entre la ciencia y el cristianismo. Era un hombre fuera de serie. Amaba la verdad, como pudiera amarla san Agustín. Su camino hacia la fe fue el siguiente: 1. Estoicismo....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-02",
+    "name": "Santos Marcelino y Pedro",
+    "type": "Mártires",
+    "bio": "Marcelino y Pedro pertenecían al clero romano. El primero era sacerdote, el otro exorcista. Insignes, por virtud y por prodigios, eran admirados y venerados por todos los fieles y al mismo tiempo objeto...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-03",
+    "name": "San Carlos Lwanga y 12 compañeros",
+    "type": "Mártires",
+    "bio": "Carlos tenía 20 años cuando murió. Lo mataron como a una rata, lo torturaron, lo machacaron, lo llevaron a la colina de Namugongo y lo quemaron vivo. A él y a otros 19 compañeros más. Otro de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-04",
+    "name": "San Francisco Caracciolo",
+    "type": "Sacerdote",
+    "bio": "Como ya en el antiguo Testamento, así como en lo Nuevo, Dios nunca omite de suscitar, según las necesidades de la Iglesia, hombres eminentes por santidad, celo y doctrina. Uno de éstos fue S. Francesco...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-05",
+    "name": "San Bonifacio",
+    "type": "Mártire y obispo",
+    "bio": "Desde tiempos antiguos habían penetrado en Alemania grupos aislados de misioneros, pero hasta el siglo vm no hubo un esfuerzo sistemático para cristianizar las vastas áreas selváticas. Al monje inglés...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-06",
+    "name": "San Norberto",
+    "type": "Obispo",
+    "bio": "De alto linaje en cuanto a nacirniento, procedía de Colonia, vivía rn.21s corno un noble sciior que corno clérigo. Cabalgando por aqucllas tierras, se desató una tempestad, su criado le aconsejó apearse,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-07",
+    "name": "Corpus Christi",
+    "type": "Solemnidad del Cuerpo y la Sangre de Cristo",
+    "bio": "« Así Dios quiso el mundo, de darnos a su Hijo Unigénito ». Estas admirables palabras las vemos brillar sobre la choza del infante de Belén donde Cristo nació sobre de un jergón de hojas. Las...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-08",
+    "name": "San Medardo",
+    "type": "Obispo",
+    "bio": "Nacido en Salency y muerto en Noyon hacia el año 560. Fue obispo de Noyon durante mucho tiempo. Llegó a ser tan popular en vida como después de su muerte. Los testimonios a este respecto se hacen...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-09",
+    "name": "San Efrén",
+    "type": "Diácono y doctor de la Iglesia",
+    "bio": "Efrén nació en Nisibi, Mesopotamia, alrededor del año 306 bajo el emperador Constantino. Era hijo de paganos, pero estudió con ardor la doctrina cristiana. Contrariado y perseguido por su padre,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-10",
+    "name": "Beata Diana de Andaló",
+    "type": "Virgen",
+    "bio": "Nació en Bolonia en el 1200, Diana favoreció el asentamiento de los Dominicos a Bolonia. Tuvo con San Domenico de Guzman, que persuadiò también en fundar un monasterio femenino en su ciudad; Sin embargo,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-11",
+    "name": "San Bernabé",
+    "type": "Apóstol",
+    "bio": "Nació en Chipre y, al parecer, murió allí en el siglo I. Fue uno de los primeros judíos en creer en la divinidad de Cristo. Los Apóstoles acogieron a su antiguo perseguidor, san Pablo, por la...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-12",
+    "name": "Sagrado Corazón de Jesús",
+    "type": "",
+    "bio": "En la ciudad de Paray-le-Monial, en un monasterio de la Visitación, hacia el año 1670, encontrándose en un día de la octava del Corpus Dominós, Santa Margherita Maria Alacoque, postrada delante del...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-13",
+    "name": "San Antonio de Padua",
+    "type": "Sacerdote y doctor de la Iglesia",
+    "bio": "Aunque fue nativo de Lisboa, Antonio deriva su sobrenombre de la ciudad italiana de Padua, en donde pasó sus años maduros y en donde aún se veneran sus reliquias en la basílica del Santo. Nació en...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-14",
+    "name": "San Eliseo",
+    "type": "Profeta",
+    "bio": "\"El manantial para reconstruir su vida es el ciclo de Eliseo\" qué también incluye narraciones relativas a las guerras de Israel contra Damasco y Moab y noticias sobre los contemporáneos reyes de Judas....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-15",
+    "name": "Santa Germana Cousin",
+    "type": "Virgen",
+    "bio": "Nacida en Pibrac (Francia) en 1579; muere en el mismo lugar en junio de 1601. Nació fea, escrofulosa, algo deforme y con la mano derecha casi paralizada. Su madre murió apenas la trajo al mundo....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-16",
+    "name": "Santos Quirico y Julita",
+    "type": "Mártires",
+    "bio": "Quirico y Giulitta, fueron mártires del siglo IV. Un pequeño niño, de unos tres años, y su madre, una matrona de estirpe real, de Iconio (Konya) en Licaonia, región central de la actual Turquía. Al...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-17",
+    "name": "San Raniero de Pisa",
+    "type": "Ermitaño",
+    "bio": "Nacido en Pisa (Italia) y muerto en esa misma ciudad el 17 de junio de 1160. Era un trovador renombrado que gustaba de cantar en los castillos acompañado de la viola; y aprovechaba todas las ocasiones...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-18",
+    "name": "San Gregorio Barbarigo",
+    "type": "Obispo",
+    "bio": "Completó los estudios en la Universidad de Padua y fue ordenado sacerdote en 1655, año en el que fue nombrado canónigo de Padua y prelado de la Casa Pontificia por Alejandro VII (su amigo Fabio Chigi)....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-19",
+    "name": "San Romualdo",
+    "type": "Abad",
+    "bio": "Eira un animal con piel de lagarto, y huesos de acero inoxidable. Durante medio siglo viviO. en medio de unas austeridades inconcebibles, perseguido a muerte por principes, obispos y frailes; predicando,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-20",
+    "name": "Santísima Virgen María Consoladora",
+    "type": "",
+    "bio": "Consolador de los Afligidos. Este es el título atribuido a María, madre de Jesús, desde los primeros tiempos del cristianismo. Pero ¿de dónde viene este \"carácter consolador\" de María? El título...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-21",
+    "name": "San Luis Gonzaga",
+    "type": "Religioso",
+    "bio": "En el norte de Italia, debajo de los Alpes, hay un pueblo que se llama Castiglione. Allí hay una fortaleza, alcázar, santuario y jardín, donde vivía la familia de los Gonzaga. El padre era un príncipe...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-22",
+    "name": "San Paulino de Nola",
+    "type": "Obispo",
+    "bio": "Es increíble la vida de este hombre, nacido en Burdeos, gran señor, gran poeta, gran político. A los 20 años hereda un fortunón: granjas, bosques, minas, esclavos y ciudades esparcidos por Francia...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-23",
+    "name": "San Lanfranco Beccari",
+    "type": "Obispo de Pavía",
+    "bio": "Nacido en Pavía en la noble familia Beccari (o de Beccaria) en los primeros decenios del siglo XII, Lanfranco fue consagrado obispo de su ciudad por el Papa Alejandro III. La reconstrucción de su biografía...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-24",
+    "name": "Natividad de San Juan el Bautista",
+    "type": "Mártir y profeta",
+    "bio": "Juan, hijo de Zacarías, era un santo sacerdote de una de las veinticuatro familias sacerdotales en las que los hijos de Aarón se dividieron, su mujer, llamada Isabel, era prima de la Virgen. Aunque...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-25",
+    "name": "San Guillermo de Vercelli",
+    "type": "Abad",
+    "bio": "En el siglo XI lnació en Vercelli, de nobles padres, un niño destinado por el Dios a fundar un numeroso orden religioso. A la pila bautismal tuvo el nombre de Guglielmo. Todavìa niño quiso la soledad...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-26",
+    "name": "San Vigilio",
+    "type": "Obispo y mártir",
+    "bio": "Era hijo de Majencia, y hermano de Claudiano y Magoriano, que también fueron canonizados.1? Con sus padres marchó de Roma a Trento, y estudió teología y filosofía en Atenas, donde conoció a Juan...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-27",
+    "name": "San Cirilo de Alejandría",
+    "type": "Obispo y doctor de la Iglesia",
+    "bio": "El misterio que la Iglesia celebra hoy es el anuncio del arcángel Gabriele a Maria, que Ella fue sida elegida entre todas las mujeres a ser la Madre de Dios y la encarnación del Verbo en su seno refino. Antiguamente...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-28",
+    "name": "San Ireneo de Lyon",
+    "type": "Obispo y mártir",
+    "bio": "El nombre de S. Ireneo está ligado a la multitud de aquellos héroes que con el martirio ilustraron la Iglesia de Lyon. Nacido el año 121 en las cercanías de Esmirna, fue el primer preceptor del ilustre...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-29",
+    "name": "San Pedro y San Pablo",
+    "type": "Apóstoles",
+    "bio": "Pedro y Pablo son dos pilares de nuestra fe. Ninguno de ellos se llamaba al principio como los hemos llamado después. Pedro se llamaba Simón. Pablo era antes Saulo. Pedro ejercía el oficio de pescador....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "06-30",
+    "name": "Santos Protomártires de la Iglesia Romana",
+    "type": "Mártires",
+    "bio": "El día 19 de julio del año 64 estallaba en Roma un terrible incendio que duró nueve días seguidos. Pronto se corrió la voz de que el animal de Nerón había prendido fuego a la ciudad. Los historiadores...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-01",
+    "name": "Santa Esther",
+    "type": "Reina",
+    "bio": "Quedada huérfana cuando era niña, Ester es acogida y criada como una hija del tío Mardocheo. Crecida en edad y belleza fue presentada al rey Assuero que, renegada a la mujer Vasti, va a la búsqueda...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-02",
+    "name": "San Bernardino Realino",
+    "type": "Sacerdote",
+    "bio": "Bernardino Realino nació en Carpi en 1530 y su educación fue confiada enteramente a su madre, debido a las largas ausencias de su padre, comprometida a servir a los príncipes de la época. Después...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-03",
+    "name": "Santo Tomás",
+    "type": "Apóstol",
+    "bio": "Fue Tomás un judío de Galilea y hecho apóstol por Jesús el año 31. Después de la pasión de Nuestro Señor Jesucristo, apareció a sus discípulos para convencerlo de la resurrección, Tomás no...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-04",
+    "name": "Santa Isabel de Portugal",
+    "type": "Reina",
+    "bio": "Era hija de Pedro III de Aragón, nieta de. Jaime I el Conquistador y sobrina de santa Isabel de Hungría o de Turingia. Dionisio, el rey de Portugal, la deseó en matrimonio por su gran belleza, ella...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-05",
+    "name": "San Antonio María Zaccaria",
+    "type": "Sacerdote",
+    "bio": "Médico, sacerdote y fundador. Nació en Cremona, una ciudad que está a 90 kilómetros de Milán. Su familia pertenecía a una estirpe noble, de origen genovés. A los 15 años va a estudiar a París;...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-06",
+    "name": "Santa María Goretti",
+    "type": "Virgen y mártir",
+    "bio": "Nacida en Corinaldi (Ancona, Italia) en 1890; muerta en Nettuno el 6 de julio de 1902. De familia muy pobre y húerfana de padre, con solo doce años tenía ya un carácter maduro y alegre; fue acribillada...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-07",
+    "name": "San Fermín",
+    "type": "Obispo y mártir",
+    "bio": "Dice la tradición que Fermín era un chaval de 10 años cuando sus padres, Firmo y Eugenia, persona-jes de la nobleza, se convirtieron al cristianismo. Ello fue obra de un sacerdote llamado Honesto, el...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-08",
+    "name": "San Áquila y Santa Priscila",
+    "type": "Colaboradores del apóstol Pablo",
+    "bio": "Estos dos novios (Áquila fue judío originario del Ponto trasplantado a Roma, mientras Prisca también dicha Priscilla fue romana), convertidos al cristianismo, fueron muy atados a San Paolo apóstol...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-09",
+    "name": "Santa Verónica Giuliani",
+    "type": "Virgen",
+    "bio": "Nacida en el seno de una familia acomodada en Urbino (Italia) en 1660, muerta en Cita del Castello el 9 de julio de 1727. Desde los cinco años gozaba de la familiaridad de nuestro Señor, y deseaba que...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-10",
+    "name": "Santas Rufina y Segunda",
+    "type": "Mártires de Roma",
+    "bio": "Seconda Mártir, santa (siglo III). Según una antigua pasión, redactada alrededor de la mitad del siglo V, Seconda padeció el martirio junto a su hermana Rufina durante la violenta persecución al tiempo...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-11",
+    "name": "San Benito de Nursia",
+    "type": "Abad y Patrono principal de Europa",
+    "bio": "Desolada por hordas civilizadas a medias, paganas y arrianas, Italia y todo el mundo mediterráneo volvía a caer en la barbarie durante el siglo y. La Iglesia se debatía en conflictos, las ciudades y...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-12",
+    "name": "Santos Fortunato y Hermágoras",
+    "type": "Mártires",
+    "bio": "Ermagora es el obispo con quien comienza el catálogo episcopal de Aquileia y no hay razón para dudar de este testimonio. Habría vivido hacia mediados del siglo III y, después de él, ese catálogo...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-13",
+    "name": "San Enrique II",
+    "type": "Emperador",
+    "bio": "S. Enrico nació en el 972 de Enrico, rey de Baviera y de Gisela, hija de Corrado rey de Borgoña. Tuvo óptima índole, nobles sentimientos y rara virtud: calidad que hicieron de èl un emperador santo. Coronado...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-14",
+    "name": "San Camilo de Lelis",
+    "type": "Sacerdote",
+    "bio": "Nacido en Bucchianico (Abruzos) en 1550; muere en Roma el 14 de julio de 1614. Era un gigante de dos metros de altura, del enorme tamaño de sus pies da fe uno de sus viejos zapatos exhibido hoy en...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-15",
+    "name": "San Buenaventura",
+    "type": "Obispo y doctor de la Iglesia",
+    "bio": "Nacido en Bagnorea (Italia) en 1218 y muerto en Lyon el 14 de julio de 1274. Es uno de los tres grandes doctores de la escolástica, junto a Duns Escoto y Tomás de Aquino. Asimismo, se le considera...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-16",
+    "name": "Nuestra Señora del Carmen",
+    "type": "",
+    "bio": "Son sobre todo los carmelitas, devotos servidores de María, los que contribuyeron a hacerla invocar bajo este título. Ellos mismos tomaron su nombre del Monte Carmelo (Palestina), cuna de su Orden. Desde...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-17",
+    "name": "San Alejo",
+    "type": "Mendigo",
+    "bio": "Hace mucho tiempo que la leyenda de este «loco de Dios» es popular en Occidente. Tenernos La vida de san Alejo, largo poema anterior a La Canción de Roldán. En el siglo XVII, durante el papado de Inocencio...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-18",
+    "name": "San Federico de Utrecht",
+    "type": "Obispo",
+    "bio": "Fue nombrado obispo de Utrecht (Holanda) por Luis el Bonachón, hijo y sucesor de Carlomagno (hacia el 825). Algunos aseguran que nació en Fri-sia y otros en Inglaterra. Se sabe de su presencia en el...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-19",
+    "name": "San Arsenio el Grande",
+    "type": "Ermitaño",
+    "bio": "Nacido sin duda en Roma hacia el 354; muerto en Tróade, cerca de Menfis (Egipto) hacia el 412. Ciertas máximas de este célebre anacoreta se han convertido en proverbiales. Ésta es una de ellas:...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-20",
+    "name": "San Apolinar de Rávena",
+    "type": "Obispo y mártir",
+    "bio": "S. Pietro después del Pentecostés, repleto de Espíritu Santo, fue en todo sitio predicar que el tiempo de la salvación llegó y fue necesaria la fe en Jesús Cristo, para tener la vida eterna. Un día...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-21",
+    "name": "San Lorenzo de Brindisi",
+    "type": "Sacerdote y doctor de la Iglesia",
+    "bio": "Doctor de la Iglesia (1959); nació en Brindisi (Italia) el 22 de julio de 1.5.59; murió en Lisboa (Portugal) el 22 de julio de 1619. Fue uno de los religiosos más eminentes de su tiempo y un adversario...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-22",
+    "name": "Santa María Magdalena",
+    "type": "",
+    "bio": "Hay tres Marías en el Evangelio que fueron particularmente amadas por el Salvador, pero cuya identidad falta todavía por establecer: María de Betania (judía), María Magdalena (galilea) y la pecadora...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "07-23",
+    "name": "Santa Brígida de Suecia",
+    "type": "Religiosa, fundadora",
+    "bio": "Procedente de noble linaje y educada piadosamente, a la edad de catorce años fue casada con el caballero Ulf, príncipe de Nericia, al que amó profundamente y le dio cuatro hijos y cuatro hijas de las...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-24",
+    "name": "Santa Cristina de Bolsena",
+    "type": "Mártir",
+    "bio": "Nacida en Brusthem (Limburg belga) hacia 1150; muerta en SaintTrond (íd.) hacia 1224. Lo que se cuenta de ella sería increíble si no llevase la garantía de Jacques de Vitry (m. 1240), que fue un...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-25",
+    "name": "Santiago el Mayor",
+    "type": "Apóstol",
+    "bio": "Santiago el Mayor era hermano de san Juan Evangelista, hijo de Zebedeo y de María Salomé, originario de Betsaida de Galilea. Después de la Ascensión de Jesús a los cielos, Santiago predicó el evangelio...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "07-26",
+    "name": "San Joaquín y Santa Ana",
+    "type": "Padres de la Inmaculada Virgen María",
+    "bio": "Santa Ana Sobre Santa Ana nada sabemos de cierto. No se menciona en el Nuevo Testamento y debemos basarnos en la literatura apócrifa, especialmente en el Protoevangelio de Jaime, que data solamente...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-27",
+    "name": "San Pantaleón",
+    "type": "Médico y mártir",
+    "bio": "Nació en Nicomedia en el siglo estudió medicina por deseo de su padre que era rico y culto aunque pagano. Con solo su palabra hacia oír a los sordos y ver a los ciegos. Un día fue invitado por...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-28",
+    "name": "Santos Nazario y Celso",
+    "type": "Mártires",
+    "bio": "Nazario era un gentil romano originario de África; su madre había abrazado el cristianismo antes de dar a luz, se llamaba santa Perpetua; el niño fue creciendo en esa misma fe hasta que dejó su casa...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-29",
+    "name": "Santa Marta de Betania",
+    "type": "Virgen",
+    "bio": "I Iermana de María Magdalena y de Lázaro, vivió en Betania, situada muy cerca de Jerusalén, donde solia hospedarse Jesús; con ellos también pasó los días que precedieron a su muerte, era la mayor...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-30",
+    "name": "San Pedro Crisólogo",
+    "type": "Obispo y doctor de la Iglesia",
+    "bio": "Apenas le conocemos más que como doctor. Nació en Imola (Italia) y allí murió. Fue obispo de Ravena durante 20 años. Conservamos de él 180 sermones llenos de espiritualidad y sentido común....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "07-31",
+    "name": "San Ignacio de Loyola",
+    "type": "Sacerdote",
+    "bio": "San Ignacio de Loyola, con su nueva y dinámica concepción de la vida religiosa, ha dejado una huella en la Iglesia sin paralelo en los tiempos modernos. El fundador de la Sociedad de Jesús era un pragmático...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-01",
+    "name": "San Alfonso María de Ligorio",
+    "type": "Obispo y doctor de la Iglesia",
+    "bio": "Este noble napolitano y famoso abogado se arrepiente de haber hecho triunfar una causa injusta y decide dedicarse a Dios para siempre. Nacido en 1696, se ordena sacerdote y predica el evangelio por toda...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-02",
+    "name": "San Eusebio de Vercelli",
+    "type": "Obispo",
+    "bio": "No le tocaron tiempos buenos. Es verdad que Constantino había decretado el cierre de veda para matar cristianos. Pero su sucesor, Constancio, era un juguete de su mujer, Eusebia, y ésta estaba metida...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-03",
+    "name": "San Asprenas de Nápoles",
+    "type": "Obispo",
+    "bio": "Aspreno fue el primero obispo de Nápoles. Según el Calendario Marmóreo de Nápoles, una antigua estela en que hay los nombres de los obispos de Nápoles hasta al siglo IX, su guía pastoral habría...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-04",
+    "name": "San Juan María Vianney",
+    "type": "Sacerdote",
+    "bio": "Es uno de esos santos que da a conocer universalmente la localidad donde vivieron o pasaron gran parte de su prodigiosa vida. Llamado el cura de Ars, localidad donde puso a prueba su caridad. Labrador...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-05",
+    "name": "Virgen Blanca",
+    "type": "",
+    "bio": "Resulta que una vez, en Roma, allá por el siglo IV, había un matrimonio que poseía muchos bienes. El se llamaba Juan. Como no tenían hijos, decidieron dejar heredera de todos sus bienes a la Santísima...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-06",
+    "name": "Transfiguración de Jesús",
+    "type": "",
+    "bio": "Figura del cielo. Para que no quedaran dudas. Después r de parar las olas del mar, después de multiplicar los panes y los peces, y después de resucitar a los muertos, por si quedaran dudas, el Señor...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-07",
+    "name": "San Cayetano de Thiene",
+    "type": "Sacerdote",
+    "bio": "Natural de Vicenza, Italia, nació en 1480, se distinguió en los estudios de teología; al igual que la ley civil y canónica, facultad en la que se graduó como doctor con gran aplauso en Padua, fue...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-08",
+    "name": "Santo Domingo de Guzmán",
+    "type": "Sacerdote y fundador de los Predicadores",
+    "bio": "Domingo, fundador de la gran orden de frailes predicadores que lleva su nombre, nació en el año 1170 en Calahorra, Logroño, España, de noble familia con ilustre parentela. Su padre, don Félix de Guzmán,...",
+    "region": "ES",
+    "is_primary": true
+  },
+  {
+    "date": "08-09",
+    "name": "Santa Teresa Benedicta de la Cruz",
+    "type": "Mártir",
+    "bio": "Edith Stein nació a Breslau el 12 de octubre de 1891 de padres hebreos alemanes. Después del colegio-bachillerato se apuntó a la facultad de filosofía de su ciudad. En el 1913 se trasladó a la universidad...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-10",
+    "name": "San Lorenzo",
+    "type": "Diácono y mártir",
+    "bio": "Nació en Osca en España en el 226 de nobles y santos padres. Tantos fueron los regalos que recibiò en los Sacramentos del Bautismo, Confirmación y Eucaristía, que pareció prevenido por la gracia;...",
+    "region": "ES",
+    "is_primary": true
+  },
+  {
+    "date": "08-11",
+    "name": "Santa Clara de Asís",
+    "type": "Virgen",
+    "bio": "La Dama Clara, «radiante de nombre y más radiante de vida», nació en la ciudad de Aís hacia el año 1193. Su madre sería la Bendita Ortolana de Fiume. Se cree que su padre fue Favorino Scifi, conde...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-12",
+    "name": "Santa Juana Francisca de Chantal",
+    "type": "Religiosa",
+    "bio": "Natural de Dijón, en la Borgoña. A los 20 años estaba casada con el barón de Chantal, último descendiente de san Bernardo. Un día, su marido cae muerto en una cacería. Queda Juana con cuatro hijos...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-13",
+    "name": "Santos Ponciano e Hipólito",
+    "type": "Mártires",
+    "bio": "Estuvieron toda su vida discutiendo. Y al final murieron juntos, como si nada hubiera pasado. Uno de ellos se llamaba Ponciano y era papa. El otro, Hipólito y era sacerdote. Los dos pertenecían a...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-14",
+    "name": "San Maximiliano Kolbe",
+    "type": "Sacerdote y mártir",
+    "bio": "Maximiliano era un fraile franciscano polaco. Siendo sacerdote se dedicó al periodismo, y era director de uan revista mariana que se titulaba \"El caballero de la Inmaculada\". Además de este trabajo,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-15",
+    "name": "Asunción de la Virgen María",
+    "type": "",
+    "bio": "Pío XII declaró el día 1 de noviembre de 1950: \"Definimos ser dogma de revelación divina que la Inmaculada Madre de Dios, siempre Virgen María, cumplido el curso de su vida terrena, fue asunta en...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "08-16",
+    "name": "San Roque",
+    "type": "Peregrino y Taumaturgo",
+    "bio": "Nacido en Montpellier, se dice que a temprana edad quedó huérfano con una cuantiosa herencia, y empieó todo el dincro en ropa y comida para los pobre que s los bie, nes se los dejó a un tío suyo....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-17",
+    "name": "Santa Beatriz de Silva",
+    "type": "Virgen",
+    "bio": "Beatrice de Silva Meneses, una santa portuguesa, nació en Cauta (África del Norte) en 1424 en una familia noble. Hermana del Beato Amedeo de Silva, Beatriz estaba relacionada con la familia real portuguesa. Su...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-18",
+    "name": "Santa Elena",
+    "type": "Madre del Emperador Constantino",
+    "bio": "Elena, madre de Constantino I, llamado el Grande, nació de padre humildes en la provincia romana de Moesia, país de la orilla occidental del Mar Negro. El padre de Constantino, Constancio Clorus, quien...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-19",
+    "name": "San Juan Eudes",
+    "type": "Sacerdote",
+    "bio": "Había nacido en Normandía, y tenía de todo, menos simpatía en su cara y en sus gestos. Era de un natural brusco. Era un predicador con voz de trueno. Pero Dios es capaz de sacar santos de las piedras,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-20",
+    "name": "San Bernardo de Claraval",
+    "type": "Abad y doctor de la Iglesia",
+    "bio": "Bernardo, hijo de Tescelin Sorrel y de Aleth, hija del señor de Montbard, nació en el castillo familiar de Fontaines, cerca de Dijon, en la Borgoña. Su piadosa madre francesa había ofrecido a Dios...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-21",
+    "name": "San Pío X",
+    "type": "Papa",
+    "bio": "Nació en Riese, un pueblecito de la alta Venecia. Cuando era niño, para ir a la escuela, que distaba siete kilómetros de su pueblo, se quitaba los zapatos para no gastarlos. Tal era la pobreza de su...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-22",
+    "name": "santa María Virgen, Reina",
+    "type": "",
+    "bio": "María, como reina, tiene un tratamiento artístico y otro teológico. Desde luego, los artistas le han dado el título de reina sin ningún reparo. Imágenes románicas con la cabeza de la Virgen...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-23",
+    "name": "Santa Rosa de Lima",
+    "type": "Virgen",
+    "bio": "Rosa de Lima despierta nuestro interés de modo especial, ya que es la primera persona nacida en el continente occidental que ha sido canonizada por la Iglesia. Solamente hacía algo más de medio siglo...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "08-24",
+    "name": "San Bartolomé",
+    "type": "Apóstol",
+    "bio": "El hijo de Tolomeo es el discípulo que san Felipe presentó al Señor con el nombre de Natanael, y quien fue tan encomiado por Jesús a causa de su inocencia y sencillez de corazón. Nacido en Canaá...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-25",
+    "name": "San Luis IX",
+    "type": "Rey de Francia",
+    "bio": "En Luis IX de Francia se unieron las cualidades de un soberano justo y recto, un valeroso guerrero y un santo. Este rey cruzado fue la viviente encarnación de la cristiandad de la época : vivió para...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-26",
+    "name": "San Alejandro de Bérgamo",
+    "type": "Mártir -",
+    "bio": "El Alessandro celebrado hoy, es dicho soldado de la Legión Tebana, como mucho otros San venerados en la Italia septentrional, porque haber pertenecido a la legión de los Mártires, para un cristiano...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-27",
+    "name": "Santa Mónica",
+    "type": "Madre de San Agustín",
+    "bio": "Nuestro conocimiento de Mónica nos ha llegado casi por entero de los escritos de su muy amado hijo, el gran doctor de la Iglesia San Agustín de Hipona. La amistad que tuvo con su madre fue muy entrañable,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-28",
+    "name": "San Agustín",
+    "type": "Obispo y doctor de la Iglesia",
+    "bio": "El Papa León I, durante cuyo pontificado fue canonizado Agustín, dispuso que la fiesta de este santo fuera observada con los mismos honores que la de un apóstol. En todos los tiempos su recuerdo se...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-29",
+    "name": "El martirio de San Juan Bautista",
+    "type": "",
+    "bio": "Por la rabieta de una señora, que ni era su señora, ni era nada, en medio de un bailoteo donde todos se ponían como cubas y algo más, al tonto del rey Herodes no se le ocurre otra cosa que prometerle...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "08-30",
+    "name": "Santos Félix y Adauto",
+    "type": "Mártires",
+    "bio": "En una poesía papa Damaso recuerda Feliz y Adautto como mártires cuyo fue prestado un culto en el lugar de su sepultura; El Martirologio Geronimiano, y luego otros textos, recuerdan su memoria al 30...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "08-31",
+    "name": "San Ramón Nonato",
+    "type": "Religioso",
+    "bio": "El apelativo de Nonato es porque negò a la luz de dia y fue extraido del vientre de su madre difunta, mientras su madre fallecía en el mismo instante, oeurría el nacimiento en el sitio catalki de Porteli,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-01",
+    "name": "San Gil",
+    "type": "Abad",
+    "bio": "Natural de Atenas, de casta ilustre fue educado en las letras humanas, sus padres murieron siendo él joven aún y según el consejo de Jesucristo vendió su opulento patrimonio y lo repartió a los necesitados,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-02",
+    "name": "San Elpidio",
+    "type": "Abad",
+    "bio": "Probablemente vivió en el siglo IV en el Piceno.Las noticias que lo conciernen están muy confusas: Pietro de Natalibusa cuenta que fuera sucesivamente un ermitaño de Gerico y llegado en Italia, dónde...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-03",
+    "name": "San Gregorio Magno",
+    "type": "Papa y doctor de la Iglesia",
+    "bio": "Debido a la ruina general de las instituciones civiles que derivó de las grandes migraciones, la Iglesia asumió un papel importante en la vida italiana del siglo vi, particularmente durante el pontificado...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-04",
+    "name": "Santa Rosalía de Palermo",
+    "type": "Virgen",
+    "bio": "Se dice que murió cerca de Palermo en el siglo XII. Los habitantes de Palermo celebran dos fiestas en honor de santa Rosalía, su gran patrona y taumaturga: ésta de hoy, que conmemora su llegada...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-05",
+    "name": "Santa Teresa de Calcuta",
+    "type": "Fundadora",
+    "bio": "El verdadero nombre de Madre Teresa de Calcuta fue Anjeze Gonxhe Bojaxjiu, nació el 26/08/1910 en ex Yugoslavia y más precisamente en la ciudad de Skopjeda, en una familia acomodada de origen albanés....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-06",
+    "name": "San Zacarías",
+    "type": "Profeta",
+    "bio": "Zacarías fue un profeta bíblico penúltimo de los profetas menores del antiguo Testamento. Hijo de Barachia y nieto de Addo, fue de estirpe sacerdotal. El libro de Zacarías se compone de dos partes...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-07",
+    "name": "Santa Regina",
+    "type": "Virgen y mártir",
+    "bio": "Hija de un ciudadano pagano de Borgoña, cuya mujer murió dando a la luz esta espléndida flor, fue confiada a una niñera cristiana la que, después de la haber bautizado, hizo crecer a Regina en la...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-08",
+    "name": "Natividad de la Virgen María",
+    "type": "",
+    "bio": "No sabemos apenas nada, pero eso que sabemos es tanto, que merece la pena celebrarlo a bombo y platillo. No sabemos dónde, ni cuándo, ni cómo nació María. Pero sí sabemos que nació santa. Santa...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-09",
+    "name": "San Pedro Claver",
+    "type": "Sacerdote",
+    "bio": "Pedro Claver era un joven jesuita superdotado, que había estudiado en. Barcelona y Mallorca, con el permiso correspondiente viajó a América con el fin de cvangelizar a csclavos ncgros; en aquellas regiones...",
+    "region": "ES",
+    "is_primary": true
+  },
+  {
+    "date": "09-10",
+    "name": "San Nicolás de Tolentino",
+    "type": "Sacerdote",
+    "bio": "A veces confundido con san Nicode Bari, del cual tornó cl ejemplo, procedia de Licia; de regidor de un monasterio, pasaria a ser obispo de Mira. Desde sus siete anos empeza a ayunar varias vcces por semana....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-11",
+    "name": "Santos Proto y Jacinto",
+    "type": "Mártires de Roma",
+    "bio": "Mártires, Santos (época incierta). La existencia de estos dos mártires romanos es probada históricamente por el hecho que ya en el siglo IV papa Damaso compuso una inscripción por su sepulcro. Legendario...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-12",
+    "name": "Santísimo Nombre de María",
+    "type": "",
+    "bio": "Después del nombre de Jesús no hay nombre más dulce, más potente, más consolador que el de Maria; nombre delante de que se inclinan reverentes los Ángeles, la tierra se alegra, el infierno tiembla. Hay...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-13",
+    "name": "San Juan Crisóstomo",
+    "type": "Obispo y doctor de la Iglesia",
+    "bio": "Su madre, Antusa, puso todo su amor al cuidado de su hijo que siempre fue frágil de salud, flaco, de aspecto huesudo y extraño, sin, embargo siendo joven aún, era solicitado entre los mejores abogados...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-14",
+    "name": "Exaltación de la Santa Cruz",
+    "type": "",
+    "bio": "ACTO PRIMERO. Año 325. El emperador Constantino el Grande da libertad a los cristianos para que sirvan a Cristo como les de la gana, sin que nadie les moleste. En esta misma época corre la voz de que...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-15",
+    "name": "Nuestra Señora de los Dolores",
+    "type": "",
+    "bio": "Andalucía es la tierra donde podría haber nacido esta devoción. Muchas de sus mujeres se llaman Dolores. Muchos de sus pasos de Semana Santa están dedicados a nuestra Señora de los Dolores. Esos...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-16",
+    "name": "Santos Cornelio y Cipriano",
+    "type": "",
+    "bio": "Cipriano era un pagano cualquiera convertido al cristianismo a los 20 años. A los 34 le hicieron obispo de Cartago, su pueblo. Ese mismo año se desencadenaba una persecución terrible, y fueron muchos...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-17",
+    "name": "San Roberto Belarmino",
+    "type": "Obispo y doctor de la Iglesia",
+    "bio": "Natural de Montepulciano, Toscana, hijo de Vicente y Cintia (hermana del papa Marcelo II), y el tercero de doce hermanos. Cada uno de los hermanos fue por camino diferente y él optó por ingresar, siendo...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-18",
+    "name": "San José de Cupertino",
+    "type": "Sacerdote",
+    "bio": "Nacido en Cupertino (Italia) en 1603; muerto en Osimo el 18 de septiembre de 1663. De familia muy pobre, distraído y torpe, considerado como un poco simple, buscó largo tiempo un convento en el que le...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-19",
+    "name": "San Jenaro",
+    "type": "Obispo y mártir",
+    "bio": "El obispo de Benevento, Jenaro, y otros seis compañeros más sufrieron el martirio en Pozzuoli, y de ahí nació todo. Las reliquias de Jenaro fueron llevadas a la catedral de Nápoles. Y allí han...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-20",
+    "name": "Santos Mártires coreanos",
+    "type": "",
+    "bio": "El dato más atrayente es que eran coreanos. Aunque L'o sólo fuera por esto, deberíamos alegrarnos profundamente ante la fiesta de Andrés, Pablo y sus compañeros. Todos eran coreanos. Pablo era...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-21",
+    "name": "San Mateo",
+    "type": "Evangelista",
+    "bio": "También llamado Leví, fue publicano, esto es, recaudador de tributos antes de su conversión, aunque era judío, era funcionario público al servicio de Herodes Antipas, el representante de los romanos,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-22",
+    "name": "San Mauricio y compañeros",
+    "type": "Mártires de la Legión Tebana",
+    "bio": "Era san Mauricio primer capitán de las tropas de la legión Tebaica, llamada así por proceder (le la región de la Tebaida, en el alto Egipto, y estaba compuesta por soldados cristianos, dos oficiales...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-23",
+    "name": "San Pío de Pietrelcina",
+    "type": "",
+    "bio": "Francesco Forgione (así se llamaba Padre Pio antes de vestir la saya franciscana) nació el 25 de mayo de 1887 a Pietrelcina de padres analfabetos, incluso sudando sobre los campos, no lograron saciar...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-24",
+    "name": "San Pacífico de San Severino",
+    "type": "",
+    "bio": "Pacífico de San Severino, al siglo Carlo Antonio Divini, fue un fraile menor observante italiano. Beatificado por Pio V en el 1786, fue proclamado san por papa Gregorio XVI en el 1839. Fue hijo de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-25",
+    "name": "Santa Aurelia y Santa Neomisia",
+    "type": "Vírgenes",
+    "bio": "Las Santas Aurelia y Neomisia nacieron en Asia Occidental de una familia noble. Quedaron huérfanas en edad juvenil, se convirtieron muy pronto en esclavas y fueron conducidas en Tracia, una antigua región...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-26",
+    "name": "Santos Cosme y Damián",
+    "type": "Mártires",
+    "bio": "Aunque algunos hagiógrafos dicen que eran gemelos, sin llegar a ese extremo, eran hermanos de sangre. Eran originarios de Egea, en Arabia, y médicos durante los reinados de Diocleciano y Maximiano. Curaban,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-27",
+    "name": "San Vicente de Paúl",
+    "type": "Sacerdote y fundador",
+    "bio": "Al igual que Francisco de Sales, que fue amigo y contemporáneo suyo, Vicente de Paúl prestó un valioso servicio a la Iglesia católica durante una época de confusión y relajamiento. Pero al revés...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-28",
+    "name": "San Wenceslao",
+    "type": "Mártir",
+    "bio": "Era hijo de Wratislao, duque de Bohemia, y de Drahomira, nieto de Borivor, primer duque cristiano, y de la bienaventurada santa Ludmila; fue creciendo lleno de virtud sin apartarse nunca de su abuela Ludmila...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-29",
+    "name": "Santos Miguel, Gabriel y Rafael",
+    "type": "Arcángeles",
+    "bio": "Miguel es el capitán. Dice el libro de Daniel (12,1): \"Entonces se levantará Miguel, el arcángel que se ocupa de tu pueblo\". El Apocalipsis también nos da noticia de él (12,7-9): \"Se trabó una...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "09-30",
+    "name": "San Jerónimo",
+    "type": "Sacerdote y doctor de la Iglesia",
+    "bio": "San Jerónimo, nacido Eusebio Jerónimo Sofronio, fue el más versado de los Padres de la Iglesia de Occidente. Nació alrededor del año 342 en Estridonia, pequeña ciudad del Adriático, cerca de la...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-01",
+    "name": "Santa Teresita del Niño Jesús (de Lisieux)",
+    "type": "Virgen y doctora de la Iglesia",
+    "bio": "La extensión del culto de Santa Teresa de Lisieux es una de las manifestaciones religiosas más impresionantes de nuestros tiempos. Durante los pocos años que vivió, esta joven carmelita francesa fue...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-02",
+    "name": "Los Angeles Custodios",
+    "type": "",
+    "bio": "Hoy no estamos para creer en los angelitos. Sin embargo, las películas que más expectación despiertan son las de posesiones, demonios y brujas. Conviene saber qué dice la Biblia sobre este aspecto....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-03",
+    "name": "San Gerardo de Brogne",
+    "type": "Abad",
+    "bio": "Gerardo nació hacia el final del siglo IX en la zona de Namur, en la actual Bélgica. Noble de nacimiento, consagró su vida a la fe y sobre todo a la causa de la reforma del orden monástico. Segùn...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-04",
+    "name": "San Francisco de Asís",
+    "type": "Patrono de Italia",
+    "bio": "Sabemos más acerca de San Francisco que acerca de ningún otro de los santos medievales. No solamente tenemos sus propias palabras, su Regla, Testamento, cartas, poemas y escritos litúrgicos, sino también...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-05",
+    "name": "San Plácido",
+    "type": "Mártir",
+    "bio": "Muerto en Montecassino en la segunda mitad del siglo VI. Durante cinco siglos los benedictinos le honraron como confesor no pontífice, es decir, como un servidor de Dios que no había sido obispo...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-06",
+    "name": "San Bruno de Colonia",
+    "type": "Sacerdote y monaco",
+    "bio": "S. Brunone nació de noble familia hacia el año 1035 en la ciudad de Colonia. Frecuentó la escuela cerca de la iglesia de S. Cuniberto, haciendo rápidos progresos en la ciencia y en la piedad, tanto...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-07",
+    "name": "Nuestra Señora del Rosario",
+    "type": "",
+    "bio": "El día 7 de octubre de 1571 fue un día de excepcional 1; importancia para la cultura de Occidente. Había en Europa un grave peligro que amenazaba a la civilización occidental. El peligro venía del...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-08",
+    "name": "Santas Tais y Pelagia",
+    "type": "Penitentes",
+    "bio": "Vivieron las dos en los principios del siglo IV, cuando los cristianos eran perseguidos en el Imperio romano. Tais era una prostituta de Alejandría, y Pelagia era una bailarina de Antioquía. Tais,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-09",
+    "name": "San Dionisio",
+    "type": "Obispo y mártir",
+    "bio": "Es la fiesta de los franceses: San Dionisio. Este señor fue enviado a Francia a evangelizar a aquellas gentes, y le hicieron el primer obispo de París, hacia el año 250. Poco después murió mártir....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-10",
+    "name": "San Daniel Comboni",
+    "type": "Obispo",
+    "bio": "Después de años de olvido, en el 800 las tierras africanas son recorridas de exploratorios, mercantes y agentes comerciales de las potencias europeas. Con ellos a menudo viajan misioneros deseosos de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-11",
+    "name": "San Juan XXIII",
+    "type": "Papa",
+    "bio": "Angelo Roncalli nació en el 1881 en Sotto el Monte, cerca de Bérgamo, de una familia campesina. Fue ordenado sacerdote más tarde en el 1904 y en pocos meses se volvió a secretario del obispo de Bérgamo...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-12",
+    "name": "Nuestra Señora del Pilar",
+    "type": "",
+    "bio": "Ati, Virgen del Pilar, te dedico esta pequeña flor en nombre de todos mis amigos que ahora me están leyendo. Y junto a esta misteriosa flor, te dejo nuestro cariño de hijos. Hoy me gustaría traer...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-13",
+    "name": "San Benito",
+    "type": "Mártir",
+    "bio": "Benedicto fue un soldado de la guarnición romana estacionada en Cupra (ahora Cupra Marittima), el tema de una de las últimas olas terribles de persecución de los cristianos, la que siguió al cuarto...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-14",
+    "name": "San Calixto",
+    "type": "Papa",
+    "bio": "Era un esclavo del Imperio romano. Su amo, un tal Carpóforo, viendo que el joven Calixto era de fiar, le puso al frente de la banca que tenía junto a las termas de Caracalla. Era demasiado bueno para...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-15",
+    "name": "Santa Teresa de Jesús",
+    "type": "Virgen y doctora de la Iglesia",
+    "bio": "En la Autobiografía que completó al finalizar su vida Santa Teresa de Ávila nos da una descripción de sus padres junto con una censura de su propio carácter. «La posesión de padres virtuosos que...",
+    "region": "ES",
+    "is_primary": true
+  },
+  {
+    "date": "10-16",
+    "name": "Santa Margarita Mara Alacoque",
+    "type": "Virgen",
+    "bio": "En la Francia del siglo xvii, la fe del pueblo estaba quebrantada; había rebelión contra la Iglesia y descuido de sus enseñanzas; el auge del protestantismo y la herejía jansenista' tenían parte de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-17",
+    "name": "San Ignacio de Antioquía",
+    "type": "Obispo y mártir",
+    "bio": "Ignacio de Antioquía, también llamado Teóforo, que en griego quiere decir «Sustentador de Dios», fue probablemente un converso y discípulo de San Juan Evangelista. Nada sabemos de los primeros años...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-18",
+    "name": "San Lucas",
+    "type": "Evangelista",
+    "bio": "De origen gentil, nació en Antioquía, Siria, convertido al cristianismo por el apóstol Pablo a quien acompañó en sus viajes evangelizadores. Este gran médico no se contenta con recibir el bautismo,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-19",
+    "name": "San Pablo de la Cruz",
+    "type": "Sacerdote",
+    "bio": "Italiano, de Castellazo, en Génova. Su padre era un 1, modesto tendero que veía cómo su hijo quería vivir peor aún que él, que siempre estaba entrampado en deudas. Pablo gozaba viviendo en un rincón...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-20",
+    "name": "Santa María Bertilla Boscardin",
+    "type": "Vírgen",
+    "bio": "Anna Francesca Boscardin nació a Brendola, en el Vicentino, el 6 de octubre1888. Ángel, el padre, a diferencia de su virtuosa novia y de la piadosa e ingenua hijita, fue todo otro que un ángel de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-21",
+    "name": "Santa Úrsula y las once mil vírgenes",
+    "type": "Mártires",
+    "bio": "Santa Úrsula goza de la lama de una de las más antiguas mártires sin saber ciertamente corno murió, allá por el año 383 en Colonia, en un viaje con otras once mil vírgenes. Parece que Conan...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-22",
+    "name": "San Juan Pablo II",
+    "type": "Papa",
+    "bio": "Karol Józef Wojty?a, naciò en Wadowice, ciudad situada a 50 km de Cracovia, el 18 de mayo de 1920. Fue el segundo de los dos hijos de Karol Wojtyla y Emilia Kaczorowska, que murió en el 1929. Su hermano...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-23",
+    "name": "San Juan Capistrano",
+    "type": "Sacerdote",
+    "bio": "Natural de Nàipoles, se inicia en la ciencia teológica de mano de san Bernardino de Siena y llegaría a ser un consumalo teólogo, es ordenado diacono y poco después sacerdote, todo bajo el auspicio...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-24",
+    "name": "San Antonio María Claret",
+    "type": "Obispo",
+    "bio": "Deja la industria textil en Sallent, su ciudad natal, e ingresa en el seminario de Vis. Ordenado sacerdote, agiliza los trámites para ejercer de misionero, su salud le impidió profesar los votos en la...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-25",
+    "name": "Santos Crisanto y Daría",
+    "type": "Mártires",
+    "bio": "Crisante y Daria fueron dos nobles novios romanos rico en dotes naturales y riquezas. Conocida la religión cristiana, el marido tuvo cura de instruir también a su novia Daria y este, abrazada la fe católica,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-26",
+    "name": "San Fulco Scotti",
+    "type": "Obispo",
+    "bio": "Hace tres días que hemos entrado con la fantasía en la iglesia de San Pietro en el Ciel de oro, a Pavía, para ver la tumba de San Boecio, enterrado en la cripta justo bajo el arca del gran convertido...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-27",
+    "name": "San Evaristo",
+    "type": "Papa y mártir",
+    "bio": "Este san Pontífice, que se sentó sobre la cátedra de S. Pietro por 9 años, ilustró la Iglesia con sabias disposiciones y con su santa vida, coronada por la palma del martirio. Nació, Evaristo,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-28",
+    "name": "Santos Judas y Simón",
+    "type": "Apóstoles",
+    "bio": "Poco sabemos de la vida de este apóstol que se conoce principalmente por ser autor de la Epístola de San Judas, el libro que precede al Apocalipsis de San Juan, en el Nuevo Testamento. Al principiar...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-29",
+    "name": "Chiara Badano",
+    "type": "Laica",
+    "bio": "La beatificación de Chiara Luce Badano, que tuvo lugar el 25 de septiembre de 2010, fue acompañada por una corriente de alegría y entusiasmo juvenil. Chiara nace en Sassello el 29 de octubre de 1971....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-30",
+    "name": "San Germán de Capua",
+    "type": "Obispo",
+    "bio": "\"Mientras el venerable padre [san Benedetto] fijaba con intensidad su mirada sobre este fulgor de luz, vio el alma de alemán, obispo de Capua, llevada por los ángeles en cielo dentro de una esfera de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "10-31",
+    "name": "Santa Lucilla de Roma",
+    "type": "Vírgen y mártir",
+    "bio": "Lucilla nació al alba de la era Cristiana, cuando quién llevó la luz de la nueva fe fue perseguido por los que la habrían querido apagar, convirtiendo el nombre de Lucia en el de Crepusca. Sobre...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-01",
+    "name": "Todos los santos",
+    "type": "",
+    "bio": "Yo creo que los santos son nuestros amigos por dos razones. La primera es que el tiempo que nos separa de ellos no es para tanto. Nuestra vida es reducida; echando mucho, 100 años. Y por eso nos parece...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-02",
+    "name": "Todos los difuntos",
+    "type": "",
+    "bio": "Parece que, si queremos ser felices, tenemos que olvidarnos de que vamos a morir. Pero ese intento es una tontería, porque, quieras o no, te vas a morir y, con la muerte, se terminará tu felicidad, la...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-03",
+    "name": "Santa Silvia de Roma",
+    "type": "Madre de San Gregorio Magno",
+    "bio": "Silvia nació en Roma alrededor del 520 en una familia de modestas condiciones, tercera de tres hijas entre cuyo Emiliana y Tarsilla, también ellas santas. En el 538 se casó al senador Gordiano miembro...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-04",
+    "name": "San Carlos Borromeo",
+    "type": "Obispo",
+    "bio": "Entre los grandes reformadores del agitado siglo xvi se encuentra Carlos Borromeo, quien, junto con San Francisco de Loyola, San Felipe Neri y otros, encabezó el movimiento para combatir la Reforma protestante....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-05",
+    "name": "San Guido María Conforti",
+    "type": "Fundador de los Misiones Extranjeras (Javerianos)",
+    "bio": "Guido Conforti nació el 30 de marzo de 1865 a Casalora de Ravadese, en el parmense. Fue el octavo de diez hijos de Rinaldo y Antonia Adorni. Después de haber estudiado de los Hermanos de las escuelas...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-06",
+    "name": "San Leonardo de Limoges",
+    "type": "Ermitaño",
+    "bio": "De ilustre y noble familia francesa, Y caballero de la corte de Clodoveo I, había sido conducido a la religión cristiana por obra de san Remigio, a quien tenía siempre corno maestro y conductor de su...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-07",
+    "name": "San Ernesto de Zwiefalten",
+    "type": "Abad y mártir",
+    "bio": "La primera cruzada había sido un éxito: no sólo había reabierto la ruta de los Santos Lugares a los peregrinos, sino que había permitido además fundar cuatro pequeños Estados cristianos en tierras...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-08",
+    "name": "San Godofredo de Amiens",
+    "type": "Obispo",
+    "bio": "Nacido en Soissons (Francia) hacia 1066; murió en esta misma localidad el 8 noveimbre de 1115. No eran más de seis en aquella abadía y las zarzas ya se extendían por todas partes, cuando los benedictinos...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-09",
+    "name": "Dedicación de la Basílica de Letrán",
+    "type": "",
+    "bio": "Los cristianos llevábamos ya 300 años perseguidos por los emperadores romanos. Pero aquello se acabó, y vinieron días de más calma. La gente corría a Letrán, que era el palacio de los papas,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-10",
+    "name": "San León I el Magno",
+    "type": "Papa y doctor de la Iglesia",
+    "bio": "Durante la desintegración del Imperio de Occidente, cuando la herejía era frecuente y todos los valores morales estaban amenazados por las invasiones bárbaras, el Papa León I se yergue como el reuelto...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-11",
+    "name": "San Martín de Tours",
+    "type": "Obispo",
+    "bio": "San Martín, llamado «gloria de Galia», nació hacia el año 316 de padres paganos, en Sabaria, Alta Pannonia, provincia que comprendía el norte de Yugoslavia y el occidente de Hungría. Su padre era...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-12",
+    "name": "San Josafat",
+    "type": "Obispo y mártir",
+    "bio": "Su nombre era Juan. Su nación, Lituania. Su situación, entre católicos y ortodoxos. Su familia, de zapateros. A los 24 años decidió hacerse monje. Y en aquella ciudad de Vilna, capital de Lituania,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-13",
+    "name": "San Homobono Tucenghi",
+    "type": "Laico",
+    "bio": "Omobono nació en Cremona, en Lombardía, en la primera mitad del siglo XII; el padre fue sastre y, bautizándolo, le dio su nombre, que significa \"hombre bueno\". Incluso no frecuentando la escuela, aprendió...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-14",
+    "name": "San Lorenzo O'Toole",
+    "type": "Arzobispo de Dublín",
+    "bio": "San Lorenzo nació en Irlanda hacia el año 1128, la familia O’Toole que era dueña de uno de los más importantes castillos de esa época. Cuando el niño nació, su padre dispuso pedirle a un conde...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-15",
+    "name": "San Alberto Magno",
+    "type": "Obispo y doctor de la Iglesia",
+    "bio": "Primogénito del conde de Bollstádt, estudia en Padua, deja su patrimonio y su castillo de Suavia junto al Danubio y entra en la orden de Santo Domingo. Uno de los mayores eruditos de su tiempo, impartió...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "11-16",
+    "name": "Santa Gertrudis La Magna",
+    "type": "Virgen",
+    "bio": "Llamada la Magna, a los cinco años ingresó en el monasterio de Helfta, Turingia, un monasterio de la regla de san Benito; bajo la dirección de la abadesa homónima, se instruyó en materias humanísticas...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-17",
+    "name": "Santa Isabel de Hungría",
+    "type": "Religiosa",
+    "bio": "Hija del rey Andrés II de Hungría se casa a temprana edad con el landgrave de Turingia, Luis IV. A sus diecinueve años ya tiene tres hijos, y con pesar en cl corazón ve marchar a su marido a las cruzadas,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-18",
+    "name": "Dedicación de la Basílica de San Pedro y San Pablo",
+    "type": "Apóstoles",
+    "bio": "Cuando Pedro y Pablo perdieron su vida por Cristo, los cristianos empezaron a reunirse alrededor de sus tumbas para venerar su recuerdo. El sepulcro de Pedro, sobre el monte Vaticano. El de Pablo,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-19",
+    "name": "Santa Matilde de Hackeborn",
+    "type": "Monja",
+    "bio": "Matilde nació en el castillo de Helfta, Sajonia, en el seno de la noble y poderosa familia de los Hackeborn, que poseía tierras en Turingia. Nació tan débil que se la creyó muerta, pero al presentarla...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-20",
+    "name": "San Edmundo",
+    "type": "Rey de Anglia Oriental",
+    "bio": "Rey del pequeño país de Anglia del Este (Inglaterra) invadido frecuentemente por los daneses. Fue hecho prisionero después de la batalla de Hoxne en el año 870. Prefirió la muerte antes que firmar...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-21",
+    "name": "Presentación de la Virgen María",
+    "type": "",
+    "bio": "Los libros apócrifos nos transmiten bastantes tonterías de la vida de la Virgen. Pero la Iglesia ha admitido una bella tradición: la presentación de María en el templo. Esta fiesta se celebraba en...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-22",
+    "name": "Solemnidad de Jesús Rey",
+    "type": "",
+    "bio": "De gran tiempo se ha usado comúnmente llamar a Jesús Cristo con el apelativo de Rey, por su cumbre grado de excelencia, que tiene de modo superior entre todas las cosas creadas. De tal manera en efecto,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-23",
+    "name": "San Clemente I",
+    "type": "Papa y mártir",
+    "bio": "Fue el tercer sucesor de san Pedro en la silla romana y ordenado por él mismo; siendo obispo de Roma gozó de ilustre fama por sus colaboraciones con san Pablo en la carta a los Corintios. Nueve años...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-24",
+    "name": "Santos Mártires de Vietnam (Andrés Dung-Lac y 116 compañeros)",
+    "type": "",
+    "bio": "La historia de estos mártires comenzó en 1615, cuando dos jesuitas desembarcaron en el puerto de Tourane (hoy Da Nang) y fueron luego acompañados en 1624 por Alexander Rhodes, considerado el verdadero...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-25",
+    "name": "Santa Catalina de Alejandría",
+    "type": "Mártir",
+    "bio": "Desde el siglo x en adelante, la veneración de Santa Catalina de Alejandría 1 se extendió ampliamente en la Iglesia de Oriente, y desde la época de las cruzadas esta santa ha sido popular en Occidente,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-26",
+    "name": "San Leonardo de Puerto Mauricio",
+    "type": "Sacerdote",
+    "bio": "Nacido en Puerto Mauricio (Liguria, Italia) en 1676; murió en Roma el 26 de noviembre de 1751. Hijo de un capitán de cabotaje, se hizo franciscano a los veintiún años, comenzó a predicar a los treinta...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-27",
+    "name": "Beata Vírgen de la Medalla Milagrosa",
+    "type": "",
+    "bio": "La Beata Virgo Maria de la Medalla Milagrosa del 1894 se celebra, al final de una novena, el 27 de noviembre a las 17, o bien, como recita la súplica \"justo en el día y a la hora bendita, de ti elegida...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-28",
+    "name": "San Jaime de la Marca",
+    "type": "Religioso y sacerdote",
+    "bio": "Nació en Monteprandone el 1 de septiembre de 1393 en el seno de una familia pobre y recibió el nombre de Domenico Gangala. Empieza a estudiar con un tío sacerdote, que lo envió a estudiar artes liberales...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-29",
+    "name": "San Saturnino de Toulouse",
+    "type": "Obispo y mártir",
+    "bio": "Santo que corno tantos otros cs rccordado por su sobrenombre, en este caso el de san Cernín, que después de peregrinar y deambular por el sur de Francia y el aorte de Espaiia, se establece en Toulouse,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "11-30",
+    "name": "San Andrés",
+    "type": "Apóstol",
+    "bio": "Hermano carnal de Pedro, natural de Betsaida de Galilea, allí se gana la vida como pescador al igual que su padre Jonás y su hermano Simón. Buscando a Jesús, escucha al Bautista en las llanuras de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-01",
+    "name": "San Eloy",
+    "type": "Obispo",
+    "bio": "Era un humilde joyero pero muy profesional, todos los encargos los trataba de forma desmesurada, enterado el rcy Clotario II de las habilidadcs del joven., mandò elaborar un trono de oro y piedras preciosas,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-02",
+    "name": "Santa Bibiana",
+    "type": "Martyr",
+    "bio": "Los cristianos de los primeros tiempos, como inmensamente mayores fueron las necesidades de la Iglesia, también tuvieron regalos y gracias extraordinarias. A ellos fue concedido a menudo el regalo de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-03",
+    "name": "San Francisco Javier",
+    "type": "Sacerdote",
+    "bio": "En todas las épocas, desde que Cristo encargó a los apóstoles que fueran y predicaran a todas las naciones, ha habido hombres santos y heroicos que han viajado hasta lejanas tierras para llevar a nuevos...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-04",
+    "name": "Santa Bárbara",
+    "type": "Mártir",
+    "bio": "Hija de un rico pagano natural de Nicomedia. Según la tradición la hermosa doncella profesaba la fe cristiana, cuando su padre se ausentó, le pidió construir un cuarto de baño; al regreso, cl padre...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-05",
+    "name": "San Sabas de Capadocia",
+    "type": "Abad",
+    "bio": "S. Saba nació en Mutalasca, en el territorio de Cesárea en el Cappadocia, de una de las más ilustres familias de aquel país. En su edad juvenil se apartó en un monasterio poco lejano de su patria;...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-06",
+    "name": "San Nicolás de Bari",
+    "type": "Obispo",
+    "bio": "La veneración con que este santo ha sido honrado tanto en Oriente como en Occidente, el número de altares y de iglesias erigidas en memoria suya y el sinfín de historias asociadas con su nombre atestiguan...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-07",
+    "name": "San Ambrosio",
+    "type": "Obispo y doctor de la Iglesia",
+    "bio": "San Ambrosio fue un hombre pequeño, con un pelo rubio clero, como un nimbo. En medio de la violencia y confusión de su época se mantuvo valientemente, resistiendo ante la maldad, fortaleciendo la Iglesia...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-08",
+    "name": "La Inmaculada Concepción",
+    "type": "",
+    "bio": "Calderón de la Barca lo explicaba muy bien. Sobre el escenario aparecía un hombre cultivando las flores de un jardín. Era Jesús. A su lado asomaba la boca de un hoyo profundo. Mientras el jardinero...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-09",
+    "name": "San Siro de Pavía",
+    "type": "Obispo",
+    "bio": "S. Siro de Palestina, fue amaestrado y le levantado a ministro de Dios de los discípulos de los Apóstoles. Tomado consigo el san joven luvenzio, fue a Italia, evangelizando en todo sitio, y estacionó...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-10",
+    "name": "Nuestra Señora de Loreto",
+    "type": "",
+    "bio": "Los santuarios dedicados a Maria son esparcidos en todo el mundo, porque la Virgen siendo mamá de todos, quiere estar vecina a todos sus hijos. Uno de los más famosos santuarios es aquel de Loreto...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-11",
+    "name": "San Dámaso I",
+    "type": "Papa",
+    "bio": "Era espaiiol de nacimiento, aunque algunos autores lo consideran romano, Profesò todas las condiciones eclesiUticas, desde dikono basta papa, corno sucesor de Liberio, fue consagrado en Letrki en una...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-12",
+    "name": "Nuestra Señora de Guadalupe",
+    "type": "",
+    "bio": "La historia religiosa de Guadalupe empieza hace 480 años en el 1531 cuando el Santa Virgo, Madre de Nuestro Dios Jesús Cristo, apareció más veces a Guadalupe, en México. Quien al que la Virgen...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "12-13",
+    "name": "Santa Lucía",
+    "type": "Vírgen y mártir",
+    "bio": "La historia tradicional de Santa Lucía cuenta que era de noble familia griega, nacida en Siracusa, Sicilia, y educada como cristiana por su madre Eutiquia. Aunque Lucía, al igual que Cecilia, quería...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-14",
+    "name": "San Juan de la Cruz",
+    "type": "Sacerdote y doctor de la Iglesia",
+    "bio": "Nacido de familia humilde en Fontiveros, Ávila, se llamaba Juan Yepes, pronto quedó huérfano y el director del hospital de Medina del Campo lo tomó a su cargo, lo hizo enfermero y al mismo tiempo lo...",
+    "region": "ES",
+    "is_primary": true
+  },
+  {
+    "date": "12-15",
+    "name": "Santa Virginia Centurione Bracelli",
+    "type": "",
+    "bio": "Aunque sintiera en su ánimo la vocación religiosa ya desde la tierna edad, Virginia Centurión no logró convencer a sus padres de tener una predisposición por la vida religiosa, por tanto, a los quince...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-16",
+    "name": "Santa Adelaida",
+    "type": "Emperatriz",
+    "bio": "Nacida en Borgoña hacia el 931; muerta en Seltz ( Bajo Rhin) el 16 de diciembre del 999. El cielo la había colmado de dones. Fue a la vez reina de Italia y Alemania, y la primera de las emperatrices...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-17",
+    "name": "San Juan de Mata",
+    "type": "Sacerdote",
+    "bio": "Es el fundador del orden de los Trinitari para la redención de los esclavos. Nació en Falcone en Provenza el año 1160 de padres ricos en censo y virtud. Educado con cada cura, enseñó pronto tales...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-18",
+    "name": "San Gaciano de Tours",
+    "type": "Obispo",
+    "bio": "En la Historia Francorum la famosa obra de Gregorio de Tours, cuenta que en el año 250 fue siete obispos fueron mandados por Roma para evangelizar la Gallia, entre este estava Graciano. Graciano se...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-19",
+    "name": "San Anastasio I",
+    "type": "Papa",
+    "bio": "Hijo del romano Massimo, ejerció un pontificado breve pero activo. Según el Duchesne muy probablemente fue consagrado el 27 de noviembre de 399. Tuvo relaciones de gran amistad con san Girolamo y san...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-20",
+    "name": "San Liberal",
+    "type": "Mártir en Roma",
+    "bio": "Procedente de una lista del Martirologio Geronimiano, el nombre de s. Liberado mártir, fue insertado, también aquí al 20 de diciembre, en el Martirologio Romano compuesto en el siglo XVI, del gran histórico...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-21",
+    "name": "San Pedro Canisio",
+    "type": "Sacerdote y doctor de la Iglesia",
+    "bio": "Hijo del alcalde de Nimega, Holanda, nació el 8 de mayo de 1521, después de los estudios en su ciudad pasó a la universidad de Colonia, fue hombre de talento singular, una de las glorias más brillantes...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-22",
+    "name": "Santa Francisca Javier Cabrini",
+    "type": "Vírgen",
+    "bio": "Como santa de nuestros propios tiempos y como la primera ciudadana de los Estados Unidos que ha sido elevada a santa, la Madre Cabrini atrae doblemente nuestro interés. Fundadora de las Hermanas Misioneras...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-23",
+    "name": "San Juan de Kety",
+    "type": "Sacerdote",
+    "bio": "Nació en Kety, cerca de Cracovia (Polonia). A los 23 años se inscribió en la universidad y allí transcurrió toda su vida. Al terminar la carrera de letras empezó a actuar como profesor. A los 42...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-24",
+    "name": "San Delfín de Burdeos",
+    "type": "Obispo",
+    "bio": "Es el primero obispo de Bordeaux atestado con seguridad. Bajo su episcopado, que se sitúa en los últimos veinte años del siglo IV, la cristianización de la diócesis pareció haber superado una fase...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-25",
+    "name": "La Navidad del Señor",
+    "type": "",
+    "bio": "Aquella noche fue de una alegría desbordante. Los pastores se quedaron asombrados ante la noticia del Mesías nacido. Llevaron regalos. Y el mundo empezó a ser nuevo con la presencia de Dios entre nosotros....",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-26",
+    "name": "San Esteban",
+    "type": "Protomártir",
+    "bio": "Todo lo que sabemos sobre la vida, juicio y muerte de San Esteban, el primer mártir, se encuentra en el Libro de los Hechos, en los capítulos VI y VII. En la larga crónica de los mártires cristianos,...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-27",
+    "name": "San Juan",
+    "type": "Apóstol",
+    "bio": "Era uno de los tres discípulos que estaban siempre con Jesús en los momentos de mayor intimidad. Pedro, Santiago y Juan. En la resurrección de la hija de Jairo, los tres entraron solos en la habitación...",
+    "region": "LATAM",
+    "is_primary": true
+  },
+  {
+    "date": "12-28",
+    "name": "Santos Inocentes",
+    "type": "Martires",
+    "bio": "Herodes se coronó de gloria. Para solucionar el problema del sucesor, mandó matar a todos los niños menores de dos años. En la historia se han hecho barbaridades sin cuento. Ahora los matamos de...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-29",
+    "name": "San Tomás Becket",
+    "type": "Obispo y mártir",
+    "bio": "Hay una leyenda romántica que cuenta que la madre de Tomás Becket era una princesa sarracena que siguió a su padre, peregrino o cruzado, a su regreso de Tierra Santa, y que recorrió Europa repitiendo...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-30",
+    "name": "San Eugenio de Milán",
+    "type": "Obispo",
+    "bio": "No se tienen noticias ciertas sobre de él, de Landolfo Mayor sabemos que se trató de un obispo ido a Italia a la continuación de Carlo Magno, de que también fue padre espiritual. A él fue atribuido...",
+    "region": "WORLD",
+    "is_primary": true
+  },
+  {
+    "date": "12-31",
+    "name": "San Silvestre",
+    "type": "Papa",
+    "bio": "Papa del año 314 al 335. Con san Silvestre en cl pontificalo, el emperador Constantino termina con la cra de las persecuciones. Est presente en los concilios de Arlés y Ankara, y el primer Concilio ecuménico...",
+    "region": "WORLD",
+    "is_primary": true
+  }
+]

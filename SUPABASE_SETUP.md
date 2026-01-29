@@ -64,8 +64,30 @@
      - `theological_sources`
      - `daily_gospel_readings`
      - `conversations`
+     - `saints` (New)
+     - `books` (New)
+     - `regional_data` (New)
 
-## Step 4: Configure Authentication
+## Step 4: Data Migration (JSON -> Supabase)
+
+To move your local JSON data (Saints, Books, Regional Data) to Supabase:
+
+1. Ensure `.env.local` has `SUPABASE_SERVICE_ROLE_KEY`.
+2. Run the migration script:
+   ```bash
+   npx tsx scripts/migrate-to-supabase.ts
+   ```
+
+## Step 5: Media Storage (MP3/Video)
+
+For future audio/video files, use **Supabase Storage**:
+
+1. Go to **Storage** in Dashboard.
+2. Create a new public bucket named `media`.
+3. Upload your MP3s/Videos there.
+4. The URL format will be: `https://[project-id].supabase.co/storage/v1/object/public/media/[filename]`
+
+## Step 6: Configure Authentication
 
 1. **Authentication Settings**
    - Go to **Authentication > Settings**
@@ -85,7 +107,7 @@
    - Customize confirmation and reset password emails
    - Add your branding and styling
 
-## Step 5: Test Database Connection
+## Step 7: Test Database Connection
 
 1. **Start Your Development Server**
    ```bash
@@ -97,78 +119,3 @@
    - Try creating a new account
    - Check if user appears in **Authentication > Users**
    - Verify profile is created in **Table Editor > profiles**
-
-## Step 6: Load Sample Data
-
-The schema automatically includes:
-- ✅ Sample theological sources (English & Spanish)
-- ✅ Daily gospel reading for today
-- ✅ All necessary database functions and triggers
-
-## Step 7: Security Configuration
-
-1. **Row Level Security (RLS)**
-   - Already enabled by our schema
-   - Users can only see their own data
-   - Theological sources are read-only for all users
-
-2. **API Keys Security**
-   - ✅ `anon` key is safe for client-side use
-   - ⚠️ `service_role` key should NEVER be exposed to clients
-   - Keep `service_role` key only in server-side environment variables
-
-## Step 8: Production Setup
-
-When deploying to Vercel:
-
-1. **Update Environment Variables**
-   - In Vercel dashboard: Settings > Environment Variables
-   - Add all your Supabase variables
-   - Update Site URL to your domain: `https://your-app.vercel.app`
-
-2. **Update Redirect URLs**
-   - In Supabase: Authentication > Settings
-   - Add production URL: `https://your-app.vercel.app/auth/callback`
-
-## Troubleshooting
-
-### Common Issues:
-
-1. **"Invalid API key" Error**
-   - Double-check your environment variables
-   - Ensure no extra spaces or characters
-   - Restart your development server
-
-2. **Schema Creation Errors**
-   - Make sure you copied the entire SQL script
-   - Run script sections separately if needed
-   - Check for syntax errors in SQL Editor
-
-3. **Authentication Not Working**
-   - Verify redirect URLs match exactly
-   - Check browser developer console for errors
-   - Ensure Site URL is correct
-
-4. **Database Connection Issues**
-   - Confirm project is fully initialized (not still setting up)
-   - Test connection in SQL Editor first
-   - Check network connectivity
-
-### Need Help?
-
-- 📧 Supabase Documentation: [supabase.com/docs](https://supabase.com/docs)
-- 🎯 Next.js + Supabase Guide: [supabase.com/docs/guides/getting-started/tutorials/with-nextjs](https://supabase.com/docs/guides/getting-started/tutorials/with-nextjs)
-- 🔒 RLS Guide: [supabase.com/docs/guides/auth/row-level-security](https://supabase.com/docs/guides/auth/row-level-security)
-
----
-
-## Next Steps After Setup
-
-Once your database is running:
-
-1. **✅ Test user registration and login**
-2. **✅ Verify subscription tier system**
-3. **✅ Test usage limits and tracking**
-4. **🔄 Set up Stripe integration (optional)**
-5. **🔄 Create landing page**
-6. **🔄 Deploy to production**

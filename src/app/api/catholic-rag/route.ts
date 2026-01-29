@@ -42,7 +42,7 @@ async function initializeRAG() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { query, language = 'es', model, studyTrack, specialistMode } = await request.json();
+    const { query, language = 'es', model, studyTrack, specialistMode, country } = await request.json();
     
     if (!query || typeof query !== 'string') {
       return NextResponse.json({
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     const rag = await initializeRAG();
     
     // Generate response
-    console.log(`🙏 Processing Catholic query: ${query.substring(0, 100)}...`);
+    console.log(`🙏 Processing Catholic query: ${query.substring(0, 100)}... [Country: ${country || 'N/A'}]`);
     const userId = request.headers.get('x-user-id') || 'anonymous';
 
     const response = await rag.generateResponse(query, {
@@ -65,6 +65,7 @@ export async function POST(request: NextRequest) {
       model: model as 'anthropic' | 'llama' | 'gemma' | 'auto' | undefined,
       studyTrack,
       specialistMode: !!specialistMode,
+      country: country as string | undefined,
     });
     
     const modelUsage = rag.getLastModelUsage

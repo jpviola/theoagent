@@ -9,7 +9,7 @@ const supabaseAdmin = createClient(
 // TIPOS DE TYPESCRIPT
 // ==============================================
 
-export type PaymentProvider = 'stripe' | 'paypal' | 'mercadopago'
+export type PaymentProvider = 'paypal' | 'mercadopago'
 
 export type DonationStatus = 'pending' | 'completed' | 'failed' | 'refunded' | 'cancelled'
 
@@ -51,8 +51,8 @@ export interface DonationStats {
   total_donations: number
   total_amount_cents: number
   completed_donations: number
-  stripe_donations: number
   paypal_donations: number
+  mercadopago_donations: number
   average_amount_cents: number
 }
 
@@ -193,9 +193,9 @@ export async function getDonationStats(): Promise<{ data: DonationStats | null; 
       total_donations: data.length,
       total_amount_cents: data.reduce((sum, d) => sum + d.amount_cents, 0),
       completed_donations: data.filter(d => d.status === 'completed').length,
-      stripe_donations: data.filter(d => d.payment_provider === 'stripe').length,
       paypal_donations: data.filter(d => d.payment_provider === 'paypal').length,
-      average_amount_cents: data.length > 0 ? Math.round(data.reduce((sum, d) => sum + d.amount_cents, 0) / data.length) : 0
+      average_amount_cents: data.length > 0 ? Math.round(data.reduce((sum, d) => sum + d.amount_cents, 0) / data.length) : 0,
+      mercadopago_donations: 0
     }
 
     return { data: stats, error: null }

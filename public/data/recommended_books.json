@@ -1,0 +1,59 @@
+{
+  "categories": [
+    {
+      "id": "espiritualidad_clasica",
+      "name": "Clásicos de Espiritualidad",
+      "books": [
+        { "author": "Tomás de Kempis", "title": "La Imitación de Cristo (El Kempis)" },
+        { "author": "Anónimo", "title": "Relatos de un peregrino ruso" },
+        { "author": "San Francisco de Sales", "title": "Introducción a la vida devota" },
+        { "author": "San Juan de la Cruz", "title": "Obras Completas (Subida al Monte Carmelo, Cántico Espiritual, Noche Oscura)" },
+        { "author": "Santa Teresa de Jesús", "title": "Obras Completas (El castillo interior, Camino de perfección, El libro de la vida)" },
+        { "author": "San Josemaría Escrivá", "title": "Camino, Surco, Forja" },
+        { "author": "Jacques Philippe", "title": "La libertad interior, Tiempo para Dios, La paz interior, En la escuela del Espíritu Santo" },
+        { "author": "San Ignacio de Loyola", "title": "Ejercicios Espirituales" },
+        { "author": "Santa Teresita del Niño Jesús", "title": "Historia de un alma" },
+        { "author": "Lorenzo Scupoli", "title": "El Combate Espiritual" },
+        { "author": "San Francisco de Asís", "title": "Las Florecillas" },
+        { "author": "José Tissot", "title": "El arte de aprovechar nuestras faltas" },
+        { "author": "San Alfonso María de Ligorio", "title": "Las glorias de María" },
+        { "author": "Scott Hahn", "title": "La Cena del Cordero" }
+      ]
+    },
+    {
+      "id": "vidas_santos_biografias",
+      "name": "Vidas de Santos y Novela Histórica",
+      "books": [
+        { "author": "San Agustín", "title": "Las Confesiones" },
+        { "author": "Jan Dobraczyński", "title": "La sombra del padre, Cartas de Nicodemo (y obra general)" },
+        { "author": "Francis Trochu", "title": "El Cura de Ars" },
+        { "author": "Louis de Wohl", "title": "La luz apacible (Santo Tomás), El mendigo alegre (San Francisco), y obra general" },
+        { "author": "Javier María Javierre", "title": "Teresa de Jesús (y obra general)" },
+        { "author": "Varios", "title": "Biografías del Padre Pío de Pietrelcina" }
+      ]
+    },
+    {
+      "id": "teologia_espiritualidad",
+      "name": "Teología y Espiritualidad Contemporánea",
+      "books": [
+        { "author": "Joseph Ratzinger (Benedicto XVI)", "title": "Introducción al cristianismo, El espíritu de la liturgia, Jesús de Nazaret (Trilogía)" },
+        { "author": "Joseph Ratzinger", "title": "El camino pascual, Cooperadores de la verdad, Dios es siempre nuevo" },
+        { "author": "Cardenal F.X. Van Thuan", "title": "El camino de la esperanza, Testigos de esperanza" },
+        { "author": "Olivier Clément", "title": "Raíces cristianas de Europa (y obra general)" }
+      ]
+    },
+    {
+      "id": "literatura",
+      "name": "Literatura Universal con Valores",
+      "books": [
+        { "author": "Antoine de Saint-Exupéry", "title": "El Principito" },
+        { "author": "Fiódor Dostoyevski", "title": "Los hermanos Karamazov, Crimen y Castigo" },
+        { "author": "Pável Florenski", "title": "La columna y el fundamento de la verdad" },
+        { "author": "Thomas Mann", "title": "José y sus hermanos (y obra selecta)" },
+        { "author": "Susanna Tamaro", "title": "Donde el corazón te lleve, Más fuego más viento" },
+        { "author": "Alessandro D'Avenia", "title": "Blanca como la nieve, roja como la sangre" },
+        { "author": "Graham Greene", "title": "El poder y la gloria, El final del affaire" }
+      ]
+    }
+  ]
+}

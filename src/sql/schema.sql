@@ -13,7 +13,6 @@ CREATE TABLE public.profiles (
     subscription_status TEXT DEFAULT 'active' CHECK (subscription_status IN ('active', 'canceled', 'past_due')),
     usage_count_today INTEGER DEFAULT 0,
     usage_reset_date DATE DEFAULT CURRENT_DATE,
-    stripe_customer_id TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -50,11 +49,49 @@ CREATE TABLE public.conversations (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Create saints table
+CREATE TABLE public.saints (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    date_str TEXT NOT NULL, -- Format: MM-DD
+    name TEXT NOT NULL,
+    type TEXT,
+    bio TEXT,
+    region TEXT DEFAULT 'WORLD' CHECK (region IN ('ES', 'LATAM', 'WORLD')),
+    is_primary BOOLEAN DEFAULT false,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create books table
+CREATE TABLE public.books (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    category TEXT NOT NULL,
+    title TEXT NOT NULL,
+    author TEXT,
+    description TEXT,
+    url TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create regional data table
+CREATE TABLE public.regional_data (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    region TEXT NOT NULL,
+    country TEXT, -- derived from region if specific (e.g. AR, PE)
+    source_type TEXT,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    url TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Enable Row Level Security
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.theological_sources ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.daily_gospel_readings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.conversations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.saints ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.books ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.regional_data ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for profiles
 CREATE POLICY "Users can view own profile" ON public.profiles
@@ -66,6 +103,17 @@ CREATE POLICY "Users can update own profile" ON public.profiles
 -- Create policies for theological sources (read-only for all authenticated users)
 CREATE POLICY "Authenticated users can view theological sources" ON public.theological_sources
     FOR SELECT USING (auth.role() = 'authenticated');
+
+-- Create policies for public data (Saints, Books, Regional)
+-- Allow public read access since these are general knowledge
+CREATE POLICY "Public read access for saints" ON public.saints
+    FOR SELECT USING (true);
+
+CREATE POLICY "Public read access for books" ON public.books
+    FOR SELECT USING (true);
+
+CREATE POLICY "Public read access for regional_data" ON public.regional_data
+    FOR SELECT USING (true);
 
 -- Create policies for daily gospel readings (read-only for all authenticated users)
 CREATE POLICY "Authenticated users can view daily readings" ON public.daily_gospel_readings

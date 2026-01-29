@@ -7,7 +7,8 @@ import { motion } from 'framer-motion';
 import { Globe } from 'lucide-react';
 import Header from '@/components/Header';
 import { AuthProvider } from '@/lib/auth-context';
-import DonationModal from '@/components/DonationModal';
+import { ModalProvider } from '@/components/ModalContext';
+import GlobalModalManager from '@/components/GlobalModalManager';
 import CookieConsentModal from '@/components/CookieConsentModal';
 
 function LanguageToggle() {
@@ -54,8 +55,10 @@ export default function AppChrome({ children }: { children: React.ReactNode }) {
           <Header />
           {showLanguageToggle && <LanguageToggle />}
           <AuthFlowManager>{children}</AuthFlowManager>
-          <DonationModal />
-          <CookieConsentModal />
+          <ModalProvider>
+            <GlobalModalManager />
+            <CookieConsentModal />
+          </ModalProvider>
         </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>

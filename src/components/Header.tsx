@@ -6,18 +6,18 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useUserProgress, GamificationModal } from '@/components/GamificationSystem';
-import EmailSubscriptionModal from '@/components/EmailSubscriptionModal';
 import { isUserSubscribed, subscribeToNewsletter } from '@/lib/subscription';
 import { useState, useEffect } from 'react';
 import { Trophy, Mail, Shield } from 'lucide-react';
+import { useModal } from '@/components/ModalContext';
 
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const { language, toggleLanguage } = useLanguage();
   const { isDarkMode, toggleDarkMode } = useTheme();
+  const { openModal } = useModal();
   const [showGamificationModal, setShowGamificationModal] = useState(false);
-  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { progress } = useUserProgress();
 
@@ -28,7 +28,6 @@ export default function Header() {
   const handleSubscribe = async (email: string) => {
     await subscribeToNewsletter(email, language);
     setIsSubscribed(true);
-    setShowSubscriptionModal(false);
   };
 
   const isChatPage =
@@ -36,97 +35,7 @@ export default function Header() {
     (typeof window !== 'undefined' && window.location.pathname.startsWith('/catholic-chat'));
 
   if (isChatPage) {
-    // Header especial para la página de chat: solo logo grande + leyenda, con donación/café destacados
-    return (
-      <>
-        <header className={`relative sticky top-0 z-50 w-full ${isDarkMode ? 'border-b border-transparent' : 'border-b border-amber-200'} bg-white/95 backdrop-blur-xl shadow-sm ${isDarkMode ? 'dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 dark:bg-opacity-95' : ''}`}>
-          <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-transparent to-black/10 dark:from-black/10 dark:to-black/20" />
-            <div className="mx-auto max-w-7xl px-4 py-3 relative z-10">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <Link href="/" className="flex w-full items-center justify-center gap-4 sm:w-auto sm:justify-start">
-                <div className="relative h-14 w-14 md:h-16 md:w-16 rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100 p-2 shadow-md dark:from-gray-700 dark:to-gray-600">
-                  <Image
-                    src="/santapalabra-logo.svg"
-                    alt="SantaPalabra"
-                    width={64}
-                    height={64}
-                    className="h-full w-full object-contain dark:brightness-125 dark:contrast-125"
-                    priority
-                  />
-                </div>
-                <div className="leading-tight">
-                  <div className="text-xl md:text-2xl font-black text-gray-900 tracking-tight dark:text-white/90 flex items-center gap-2">
-                    SantaPalabra,
-                    <span className="px-1.5 py-0.5 rounded-md bg-blue-600 text-[10px] font-bold text-white shadow-sm leading-none align-middle">
-                      BETA
-                    </span>
-                  </div>
-                  <div className="text-sm md:text-base text-gray-700 font-semibold dark:text-white/70">
-                    ¡Ruega por nosotros!
-                  </div>
-                </div>
-              </Link>
-  
-              <div className="flex w-full flex-wrap items-center justify-center gap-3 sm:w-auto sm:justify-end md:gap-4">
-                <Link
-                  href="/admin"
-                  className="h-9 w-9 flex items-center justify-center rounded-full border border-purple-200 text-purple-600 hover:bg-purple-50 transition-colors dark:text-purple-400 dark:border-purple-900 dark:hover:bg-purple-900/30"
-                  aria-label="Administración"
-                >
-                  <Shield className="h-4 w-4" />
-                </Link>
-                <button
-                  onClick={() => setShowGamificationModal(true)}
-                  className="h-9 w-9 flex items-center justify-center rounded-full border border-amber-200 text-base text-gray-600 hover:bg-amber-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700 relative"
-                  aria-label="Ver progreso"
-                >
-                  <Trophy className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                  {progress.level > 1 && (
-                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-                      {progress.level}
-                    </span>
-                  )}
-                </button>
-                <button
-                  onClick={toggleDarkMode}
-                  className="h-9 w-9 rounded-full border border-amber-200 text-base text-gray-600 hover:bg-amber-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700"
-                  aria-label="Alternar tema"
-                >
-                  {isDarkMode ? '☀️' : '🌙'}
-                </button>
-                <Link
-                  href="/support"
-                  className="group inline-flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-black px-5 py-2.5 rounded-full text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 dark:text-gray-100 dark:from-amber-500 dark:to-amber-600 dark:hover:from-amber-600 dark:hover:to-amber-700"
-                >
-                  <span className="group-hover:animate-pulse text-xl">❤️</span>
-                  <span>¡Quiero donar!</span>
-                </Link>
-                {/* Subscription Control for Chat Page */}
-                {!isSubscribed && (
-                  <button
-                    onClick={() => setShowSubscriptionModal(true)}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 text-amber-900 hover:bg-amber-200 transition-colors dark:bg-amber-900/30 dark:text-amber-100 dark:hover:bg-amber-900/50 text-sm font-semibold"
-                  >
-                    <Mail className="h-4 w-4" />
-                    Suscribirse
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </header>
-        <EmailSubscriptionModal
-          isOpen={showSubscriptionModal}
-          onClose={() => setShowSubscriptionModal(false)}
-          onSubscribe={handleSubscribe}
-        />
-        <GamificationModal
-          isOpen={showGamificationModal}
-          onClose={() => setShowGamificationModal(false)}
-          progress={progress}
-        />
-      </>
-    );
+    return null;
   }
 
   // Header normal para otras páginas
@@ -134,28 +43,27 @@ export default function Header() {
     <>
       <header className={`relative sticky top-0 z-50 w-full ${isDarkMode ? 'border-b border-transparent' : 'border-b border-amber-100'} bg-white/85 backdrop-blur-xl shadow-sm ${isDarkMode ? 'dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 dark:bg-opacity-85' : ''}`}>
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-transparent to-black/8 dark:from-black/8 dark:to-black/18" />
-        <div className="mx-auto max-w-7xl px-4 py-2.5 relative z-10">
+        <div className="mx-auto max-w-7xl px-4 py-2 relative z-10">
           <div className="flex items-center justify-between">
             {/* Logo y título principal */}
-            <Link href="/" className="flex items-center gap-3 group transition-transform hover:scale-[1.01]">
-              <div className="relative h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-amber-50 to-amber-100 p-2 shadow-sm group-hover:shadow-md transition-shadow dark:from-gray-700 dark:to-gray-600">
+            <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-[1.01]">
+              <div className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-gradient-to-br from-amber-50 to-amber-100 p-1.5 shadow-sm group-hover:shadow-md transition-shadow dark:from-gray-700 dark:to-gray-600">
                 <Image
                   src="/santapalabra-logo.svg"
                   alt="SantaPalabra"
-                  width={48}
-                  height={48}
+                  width={40}
+                  height={40}
                   className="h-full w-full object-contain dark:brightness-125 dark:contrast-125"
                   priority
                 />
               </div>
               <div className="leading-tight">
-                <div className="text-lg sm:text-xl font-black text-gray-900 tracking-tight dark:text-white/90 flex items-center gap-2">
+                <div className="text-base sm:text-lg font-black text-gray-900 tracking-tight dark:text-white/90 flex items-center gap-1.5">
                   SantaPalabra
-                  <span className="px-1.5 py-0.5 rounded-md bg-blue-600 text-[10px] font-bold text-white shadow-sm leading-none align-middle hidden sm:inline-block">
+                  <span className="px-1 py-0.5 rounded bg-blue-600 text-[9px] font-bold text-white shadow-sm leading-none align-middle hidden sm:inline-block">
                     BETA
                   </span>
                 </div>
-                <div className="text-xs text-gray-600 font-medium dark:text-white/70 hidden sm:block">Catequista digital hispanoamericano</div>
               </div>
             </Link>
 
@@ -179,7 +87,7 @@ export default function Header() {
               
               {!isSubscribed && (
                 <button
-                  onClick={() => setShowSubscriptionModal(true)}
+                  onClick={() => openModal('subscription')}
                   className="px-4 py-2 rounded-lg bg-amber-100 text-amber-900 hover:bg-amber-200 transition-colors dark:bg-amber-900/30 dark:text-amber-100 dark:hover:bg-amber-900/50"
                 >
                   Suscribirse
@@ -198,7 +106,7 @@ export default function Header() {
               </Link>
               {!isSubscribed && (
                 <button
-                  onClick={() => setShowSubscriptionModal(true)}
+                  onClick={() => openModal('subscription')}
                   className="p-2 rounded-lg hover:bg-amber-50 transition-colors dark:bg-transparent dark:hover:bg-gray-700"
                   aria-label="Suscribirse"
                 >
@@ -246,11 +154,6 @@ export default function Header() {
           </div>
         </div>
       </header>
-      <EmailSubscriptionModal
-        isOpen={showSubscriptionModal}
-        onClose={() => setShowSubscriptionModal(false)}
-        onSubscribe={handleSubscribe}
-      />
       <GamificationModal
         isOpen={showGamificationModal}
         onClose={() => setShowGamificationModal(false)}

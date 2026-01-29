@@ -18,8 +18,6 @@ export default function HomePage() {
   const { language, toggleLanguage } = useLanguage();
   const [, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [displayedText, setDisplayedText] = useState('');
-  const [startTypewriter, setStartTypewriter] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   
   const [userProfile, setUserProfile] = useState<PersonalizationUserProfile | null>(null);
@@ -54,8 +52,6 @@ export default function HomePage() {
       ctaChat: 'Entrar al chat',
       ctaAdmin: 'Panel',
       testimonialsTitle: 'Lo que dicen nuestros usuarios',
-      principlesTitle: 'Nuestro Principio Fundacional',
-      principlesText: 'Que tu tono sea caritativo pero firme en la verdad dogmática. Ante dudas complejas, prioriza siempre citas directas del Catecismo de la Iglesia Católica (CIC) y documentos conciliares. Evita alucinaciones teológicas y si no hay respuesta en el Magisterio indícalo con humildad.',
       faqTitle: 'Preguntas Frecuentes',
       faqSubtitle: '¿Tienes dudas? Aquí respondemos las consultas más comunes',
       footerText: 'Hecho con amor',
@@ -74,8 +70,6 @@ export default function HomePage() {
       ctaChat: 'Open chat',
       ctaAdmin: 'Dashboard',
       testimonialsTitle: 'What our users say',
-      principlesTitle: 'Our Foundational Principle',
-      principlesText: 'Let your tone be charitable but firm in dogmatic truth. When facing complex doubts, always prioritize direct citations from the Catechism of the Catholic Church (CCC) and conciliar documents. Avoid theological hallucinations and if there is no answer in the Magisterium indicate it with humility.',
       faqTitle: 'Frequently Asked Questions',
       faqSubtitle: 'Have questions? Here we answer the most common inquiries',
       footerText: 'Made with love',
@@ -187,24 +181,6 @@ export default function HomePage() {
     };
   }, []);
 
-  const fullText = t.principlesText;
-  useEffect(() => {
-    if (!startTypewriter) {
-      setDisplayedText('');
-      return;
-    }
-    let currentIndex = 0;
-    const intervalId = setInterval(() => {
-      if (currentIndex <= fullText.length) {
-        setDisplayedText(fullText.slice(0, currentIndex));
-        currentIndex++;
-      } else {
-        clearInterval(intervalId);
-      }
-    }, 30);
-    return () => clearInterval(intervalId);
-  }, [fullText, startTypewriter]);
-
   useEffect(() => {
     if (profileInitializedRef.current) return;
     profileInitializedRef.current = true;
@@ -288,7 +264,7 @@ export default function HomePage() {
       
 
       {/* HERO SECTION */}
-      <section className="hero-section relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-16 text-center">
+      <section className="hero-section relative flex h-screen max-h-screen items-center justify-center overflow-hidden px-4 py-16 text-center">
         {/* Video Background */}
         <div className="absolute inset-0 z-0">
           <video
@@ -489,44 +465,6 @@ export default function HomePage() {
               <Heart className="mr-3 h-6 w-6" />
               {language === 'es' ? '¡Sí, quiero apoyar este proyecto!' : '¡Yes, I want to support this project!'}
             </Link>
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* PRINCIPLES SECTION */}
-      <section className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 py-20 px-4 md:py-28">
-        <motion.div
-          className="mx-auto max-w-4xl"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          onViewportEnter={() => setStartTypewriter(true)}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <h2 className="mb-8 text-4xl font-black text-amber-900 dark:text-amber-500 md:text-5xl">
-              {t.principlesTitle}
-            </h2>
-
-            <div className="rounded-2xl border-2 border-amber-200 bg-white/60 backdrop-blur-md p-10 shadow-xl shadow-amber-100/50 md:p-12 dark:bg-black dark:border-amber-900">
-              <div className="flex gap-4 md:gap-6">
-                <Check className="h-8 w-8 flex-shrink-0 text-amber-600 md:h-10 md:w-10" />
-                <p className="font-mono text-lg leading-relaxed text-amber-800 md:text-xl dark:text-amber-200">
-                  {displayedText}
-                  <motion.span
-                    animate={{ opacity: [1, 0, 1] }}
-                    transition={{ duration: 0.8, repeat: Infinity, repeatType: 'loop' as const }}
-                    className="ml-1 inline-block h-6 w-2 bg-amber-600 align-middle"
-                  />
-                </p>
-              </div>
-            </div>
           </motion.div>
         </motion.div>
       </section>

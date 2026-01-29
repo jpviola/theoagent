@@ -4,18 +4,28 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Sparkles, Check } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useModal } from '@/components/ModalContext';
+import { subscribeToNewsletter } from '@/lib/subscription';
+import { useUserProgress } from '@/components/GamificationSystem';
 
-interface EmailSubscriptionModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubscribe: (email: string) => Promise<void>;
-}
-
-export default function EmailSubscriptionModal({ isOpen, onClose, onSubscribe }: EmailSubscriptionModalProps) {
+export default function EmailSubscriptionModal() {
   const { language } = useLanguage();
+  const { activeModal, closeModal } = useModal();
+  const { addXP } = useUserProgress();
+  const isOpen = activeModal === 'subscription';
+  
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
+
+  const onSubscribe = async (email: string) => {
+    await subscribeToNewsletter(email);
+    addXP(25);
+  };
+
+  const onClose = () => {
+    closeModal('subscription');
+  };
 
   const texts = {
     es: {
@@ -102,30 +112,30 @@ export default function EmailSubscriptionModal({ isOpen, onClose, onSubscribe }:
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          className="absolute inset-0 bg-black/20 backdrop-blur-[2px]"
           onClick={onClose}
         />
 
         {/* Modal */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          className="relative w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-amber-200 dark:border-amber-700 overflow-hidden"
+          exit={{ opacity: 0, scale: 0.95, y: 10 }}
+          className="relative w-full max-w-sm bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-amber-100 dark:border-amber-900/50 overflow-hidden"
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-amber-500 to-yellow-500 p-6 text-center relative">
+          <div className="bg-amber-50 dark:bg-amber-900/20 p-5 text-center relative">
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+              className="absolute top-3 right-3 p-1.5 rounded-full bg-white/50 hover:bg-white text-gray-400 hover:text-gray-600 transition-colors"
             >
-              <X className="h-5 w-5 text-white" />
+              <X className="h-4 w-4" />
             </button>
             
             <motion.div
@@ -134,35 +144,33 @@ export default function EmailSubscriptionModal({ isOpen, onClose, onSubscribe }:
               transition={{ delay: 0.2 }}
               className="mb-2"
             >
-              <Sparkles className="h-12 w-12 text-white mx-auto" />
+              <Sparkles className="h-8 w-8 text-amber-500 mx-auto" />
             </motion.div>
             
-            <h2 className="text-xl font-bold text-white mb-2">
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-1">
               {isSubscribed ? t.successTitle : t.title}
             </h2>
-            <p className="text-amber-100 text-sm">
+            <p className="text-xs text-gray-500 dark:text-gray-400 max-w-[250px] mx-auto">
               {isSubscribed ? t.successMessage : t.subtitle}
             </p>
           </div>
 
           {/* Content */}
-          <div className="p-6">
+          <div className="p-5 pt-4">
             {!isSubscribed ? (
               <>
-                {/* Benefits */}
-                <div className="space-y-3 mb-6">
-                  {t.benefits.map((benefit, index) => (
+                {/* Benefits - Simplified */}
+                <div className="space-y-2 mb-4">
+                  {t.benefits.slice(0, 2).map((benefit, index) => (
                     <motion.div
                       key={index}
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.1 * index }}
-                      className="flex items-start gap-3"
+                      className="flex items-center gap-2"
                     >
-                      <div className="p-1 rounded-full bg-green-100 dark:bg-green-900/30 flex-shrink-0 mt-0.5">
-                        <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
-                      </div>
-                      <span className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                      <Check className="h-3 w-3 text-amber-500 flex-shrink-0" />
+                      <span className="text-xs text-gray-600 dark:text-gray-300">
                         {benefit}
                       </span>
                     </motion.div>
@@ -170,15 +178,15 @@ export default function EmailSubscriptionModal({ isOpen, onClose, onSubscribe }:
                 </div>
 
                 {/* Email Form */}
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-3">
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder={t.inputPlaceholder}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                      className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                       required
                     />
                   </div>
@@ -186,23 +194,23 @@ export default function EmailSubscriptionModal({ isOpen, onClose, onSubscribe }:
                   <motion.button
                     type="submit"
                     disabled={isLoading || !email}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-semibold rounded-lg hover:from-amber-600 hover:to-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    className="w-full py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-medium rounded-lg hover:from-amber-600 hover:to-orange-600 disabled:opacity-70 disabled:cursor-not-allowed transition-all shadow-sm"
                   >
                     {isLoading ? t.loadingText : t.subscribeButton}
                   </motion.button>
                 </form>
 
-                <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-3 font-medium">
+                <p className="text-center text-[10px] text-gray-400 dark:text-gray-500 mt-2">
                   {t.freeLabel}
                 </p>
 
                 {/* Skip Option */}
-                <div className="text-center mt-4">
+                <div className="text-center mt-3">
                   <button
                     onClick={handleContinue}
-                    className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 underline transition-colors"
+                    className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
                   >
                     {t.skipButton}
                   </button>
@@ -211,20 +219,20 @@ export default function EmailSubscriptionModal({ isOpen, onClose, onSubscribe }:
             ) : (
               <>
                 {/* Success State */}
-                <div className="text-center">
+                <div className="text-center py-2">
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4"
+                    className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-3"
                   >
-                    <Check className="h-8 w-8 text-green-600 dark:text-green-400" />
+                    <Check className="h-6 w-6 text-green-600 dark:text-green-400" />
                   </motion.div>
 
                   <motion.button
                     onClick={handleContinue}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
+                    className="w-full py-2 bg-amber-500 text-white text-sm font-medium rounded-lg hover:bg-amber-600 transition-all shadow-sm"
                   >
                     {t.continueButton}
                   </motion.button>

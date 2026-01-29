@@ -13,6 +13,13 @@ import { AIMessage, HumanMessage, BaseMessage } from '@langchain/core/messages';
 // import { HNSWLib } from '@langchain/community/vectorstores/hnswlib';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { getTodaysGospelReflection, formatDailyGospelContext } from './dailyGospel';
+import fs from 'fs';
+import path from 'path';
+
+// Initialize module-level Supabase client for static data queries
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseClient = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
 
 type SupportedChatModel = 'anthropic' | 'openai' | 'llama' | 'gemma' | 'qwen' | 'local' | 'auto';
 
@@ -33,6 +40,130 @@ interface ChatContext {
   studyTrack?: string;
   specialistMode?: boolean;
   country?: string;
+  todaysSaint?: string;
+}
+
+interface SaintEntry {
+  date_str: string; // MM-DD
+  name: string;
+  type: string;
+  bio: string;
+  region: 'ES' | 'LATAM' | 'WORLD';
+  is_primary: boolean;
+}
+
+export async function getSaintContext(country: string = 'LATAM'): Promise<string> {
+  try {
+    if (!supabaseClient) return '';
+
+    const today = new Date();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const dateKey = `${month}-${day}`;
+    
+    // Query Supabase for today's saints
+    const { data: todaysSaints, error } = await supabaseClient
+      .from('saints')
+      .select('*')
+      .eq('date_str', dateKey);
+
+    if (error || !todaysSaints || todaysSaints.length === 0) return '';
+    
+    // Select best match based on region
+    // Priority: Primary + Region match > Region match > Primary > Any
+    const isSpain = country === 'ES';
+    const regionKey = isSpain ? 'ES' : 'LATAM';
+    
+    // Cast to SaintEntry to satisfy TS if needed, though Supabase return is any[] usually
+    const saints = todaysSaints as SaintEntry[];
+
+    let selected = saints.find(s => s.is_primary && s.region === regionKey);
+    if (!selected) selected = saints.find(s => s.region === regionKey);
+    if (!selected) selected = saints.find(s => s.is_primary);
+    if (!selected) selected = saints[0];
+    
+    if (!selected) return '';
+    
+    return `HOY (${dateKey}) SE CELEBRA: ${selected.name} (${selected.type}).
+BIO: ${selected.bio}
+${selected.region !== 'WORLD' ? `(Santo de relevancia en ${selected.region})` : ''}`;
+  } catch (error) {
+    console.error('Error loading saint data:', error);
+    return '';
+  }
+}
+
+interface RegionalData {
+  url: string;
+  title: string;
+  content: string;
+  region: 'LATAM' | 'AR' | 'PE' | 'ES' | 'BR';
+  source_type: 'official' | 'informational';
+}
+
+export async function getRegionalContext(country: string = 'LATAM'): Promise<string> {
+  try {
+    if (!supabaseClient) return '';
+
+    // We fetch all regional data for the target region or general LATAM
+    // Since the table is small, we can fetch relevant rows
+    // Logic: region = country OR (region = 'LATAM' AND country is in LATAM block)
+    
+    const isLatamCountry = ['AR', 'PE', 'CO', 'MX', 'CL', 'BR'].includes(country);
+    
+    let query = supabaseClient.from('regional_data').select('*');
+    
+    if (isLatamCountry) {
+       // Ideally we want (region = country OR region = 'LATAM')
+       // Supabase .or syntax: .or(`region.eq.${country},region.eq.LATAM`)
+       query = query.or(`region.eq.${country},region.eq.LATAM`);
+    } else {
+       // Just match the country (e.g. ES)
+       query = query.eq('region', country);
+    }
+
+    const { data, error } = await query;
+
+    if (error || !data || data.length === 0) return '';
+
+    const sources = data.map((d: any) => `- ${d.title} (${d.source_type}): ${d.url}`).join('\n');
+    return `FUENTES REGIONALES DISPONIBLES:\n${sources}\n(Prioriza estas fuentes para respuestas locales)`;
+  } catch (error) {
+    console.error('Error loading regional data:', error);
+    return '';
+  }
+}
+
+export async function getBookRecommendations(): Promise<string> {
+  try {
+    if (!supabaseClient) return '';
+
+    const { data: books, error } = await supabaseClient
+      .from('books')
+      .select('*')
+      .order('category');
+
+    if (error || !books) return '';
+    
+    // Group by category
+    const grouped: Record<string, any[]> = {};
+    books.forEach((book: any) => {
+      if (!grouped[book.category]) grouped[book.category] = [];
+      grouped[book.category].push(book);
+    });
+    
+    let recommendationText = '';
+    for (const [category, bookList] of Object.entries(grouped)) {
+      recommendationText += `\n**${category.toUpperCase()}**:\n`;
+      bookList.forEach((book: any) => {
+        recommendationText += `- "${book.title}" de ${book.author}\n`;
+      });
+    }
+    return recommendationText;
+  } catch (error) {
+    console.error('Error loading book recommendations:', error);
+    return '';
+  }
 }
 
 interface RetrievalResult {
@@ -713,11 +844,15 @@ export class SantaPalabraRAG {
     );
   }
 
-  private createSystemPrompt(context: ChatContext): PromptTemplate {
+  private async createSystemPrompt(context: ChatContext): Promise<PromptTemplate> {
     const isSpecialist = context.specialistMode;
     const today = new Date().toISOString().split('T')[0];
     const country = context.country?.toUpperCase() || 'LATAM'; // Default to LATAM neutral if not specified
     const isSpain = country === 'ES';
+    
+    const saintInfo = await getSaintContext(country);
+    const bookRecommendations = await getBookRecommendations();
+    const regionalInfo = await getRegionalContext(country);
     
     // Country-specific context
     let localContext = '';
@@ -726,7 +861,8 @@ export class SantaPalabraRAG {
 CONTEXTO LOCAL (ESPAÑA):
 - Usa "Español de España" (tú, vosotros).
 - Prioriza noticias y documentos de la Conferencia Episcopal Española (conferenciaepiscopal.es).
-- Menciona santos y beatos españoles cuando sea relevante.`;
+- Menciona santos y beatos españoles cuando sea relevante.
+${regionalInfo}`;
     } else if (['AR', 'PE', 'MX', 'CO', 'CL', 'LATAM'].includes(country)) {
        localContext = `
 CONTEXTO LOCAL (LATINOAMÉRICA - ${country}):
@@ -734,7 +870,8 @@ CONTEXTO LOCAL (LATINOAMÉRICA - ${country}):
 - Prioriza documentos del CELAM (celam.org) y la Pontificia Comisión para América Latina (americalatina.va).
 - Si es Argentina (AR), puedes usar "voseo" moderado y citar a la Conferencia Episcopal Argentina (episcopado.org).
 - Si es Perú (PE), cita a la Conferencia Episcopal Peruana (iglesiacatolica.org.pe).
-- Si es Brasil (BR), cita a la CNBB (cnbb.org.br).`;
+- Si es Brasil (BR), cita a la CNBB (cnbb.org.br).
+${regionalInfo}`;
     }
 
     const systemMessage = context.language === 'es' 
@@ -776,10 +913,14 @@ GUÍAS TEMÁTICAS (Instrucciones específicas por tipo de pregunta):
    - REFLEXIÓN: Concluye con la reflexión personal y aplicación práctica.
 
 2. RECOMENDACIÓN DE LIBROS:
-   - [Esperando instrucciones del usuario...]
+   - Si el usuario pide libros, recomienda PRIORITARIAMENTE los de esta lista curada:
+${bookRecommendations}
 
 3. SANTO DEL DÍA:
-   - [Esperando instrucciones del usuario...]
+   - INFORMACIÓN DE HOY: ${saintInfo}
+   - Si el usuario pregunta por el santo de hoy, usa la información anterior.
+   - Si está vacío, indica que no tienes datos específicos para hoy.
+   - Destaca si el santo tiene relevancia local para la región del usuario.
 
 PAUTAS DE RESPUESTA:
 1. Base tus respuestas en las enseñanzas católicas oficiales del contexto.
@@ -831,7 +972,10 @@ THEMATIC GUIDES (Specific instructions by question type):
    - [Waiting for user instructions...]
 
 3. SAINT OF THE DAY:
-   - [Waiting for user instructions...]
+   - TODAY'S SAINT INFO: ${saintInfo}
+   - If the user asks about today's saint, use the information above.
+   - If empty, state you don't have specific data for today.
+   - Highlight if the saint has local relevance to the user's region.
 
 RESPONSE GUIDELINES:
 1. Base responses on official Catholic teachings from the provided context.
@@ -1013,7 +1157,7 @@ To enable full AI chat, please configure ANTHROPIC_API_KEY or GROQ_API_KEY in yo
       }
 
       // Create prompt template
-      const systemPrompt = this.createSystemPrompt(context);
+      const systemPrompt = await this.createSystemPrompt(context);
 
       const runWithLLM = async (currentLLM: BaseChatModel): Promise<string> => {
         const chain = RunnableSequence.from([
