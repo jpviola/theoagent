@@ -68,7 +68,7 @@ export default function GlobalModalManager() {
         return false;
     };
 
-    // Run checks
+    // Run checks ONLY ONCE on mount
     const angelusTriggered = checkAngelus();
     
     // Even if Angelus triggered, we queue the others.
@@ -85,7 +85,7 @@ export default function GlobalModalManager() {
 
     return () => clearInterval(interval);
 
-  }, [openModal]);
+  }, []); // Empty dependency array to prevent loop
 
   return (
     <>

@@ -13,7 +13,7 @@ export default function AngelusModal() {
   const isOpen = activeModal === 'angelus';
 
   const handleClose = () => {
-    closeModal();
+    closeModal('angelus');
   };
 
   const content = {
@@ -97,7 +97,7 @@ export default function AngelusModal() {
                 {t.subtitle}
               </p>
             </div>
-
+            
             {/* Body */}
             <div className="p-5 space-y-4">
               <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">

@@ -105,6 +105,9 @@ export default function EmailSubscriptionModal() {
   };
 
   const handleContinue = () => {
+    if (!isSubscribed) {
+      markSubscriptionSkipped();
+    }
     onClose();
   };
 

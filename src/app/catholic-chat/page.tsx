@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, User, BookOpen, AlertTriangle, X, Zap, Clock, Upload, FileText, Mic, Square, Volume2, Menu, CheckCircle2, Circle, Copy, RefreshCw, Check } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AuthFlowManager from '@/components/AuthFlowManager';
-import { subscribeToNewsletter, markSubscriptionSkipped, SUBSCRIPTION_TIERS } from '@/lib/subscription';
+import { subscribeToNewsletter, SUBSCRIPTION_TIERS } from '@/lib/subscription';
 import { useUserProgress } from '@/components/GamificationSystem';
 import ChatRightSidebar from '@/components/ChatRightSidebar';
 import ScriptureLinkedMarkdown from '@/components/ScriptureLinkedMarkdown';

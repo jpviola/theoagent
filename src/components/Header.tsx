@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useUserProgress, GamificationModal } from '@/components/GamificationSystem';
-import { isUserSubscribed, subscribeToNewsletter } from '@/lib/subscription';
+import { isUserSubscribed } from '@/lib/subscription';
 import { useState, useEffect } from 'react';
 import { Trophy, Mail, Shield } from 'lucide-react';
 import { useModal } from '@/components/ModalContext';
@@ -19,16 +19,13 @@ export default function Header() {
   const { openModal } = useModal();
   const [showGamificationModal, setShowGamificationModal] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { progress } = useUserProgress();
 
   useEffect(() => {
     setIsSubscribed(isUserSubscribed());
+    setMounted(true);
   }, []);
-
-  const handleSubscribe = async (email: string) => {
-    await subscribeToNewsletter(email, language);
-    setIsSubscribed(true);
-  };
 
   const isChatPage =
     (pathname || '').startsWith('/catholic-chat') ||
@@ -41,7 +38,7 @@ export default function Header() {
   // Header normal para otras páginas
   return (
     <>
-      <header className={`relative sticky top-0 z-50 w-full ${isDarkMode ? 'border-b border-transparent' : 'border-b border-amber-100'} bg-white/85 backdrop-blur-xl shadow-sm ${isDarkMode ? 'dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 dark:bg-opacity-85' : ''}`}>
+      <header className="relative sticky top-0 z-50 w-full border-b border-amber-100 dark:border-transparent bg-white/85 backdrop-blur-xl shadow-sm dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 dark:bg-opacity-85">
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-transparent to-black/8 dark:from-black/8 dark:to-black/18" />
         <div className="mx-auto max-w-7xl px-4 py-2 relative z-10">
           <div className="flex items-center justify-between">
@@ -140,7 +137,7 @@ export default function Header() {
                 className="h-9 w-9 rounded-full border border-amber-200 text-base text-gray-600 hover:bg-amber-50 transition-colors dark:text-gray-100 dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700"
                 aria-label="Alternar tema"
               >
-                {isDarkMode ? '☀️' : '🌙'}
+                {mounted && isDarkMode ? '☀️' : '🌙'}
               </button>
               <button
                 onClick={toggleLanguage}
