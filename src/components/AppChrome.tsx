@@ -52,10 +52,10 @@ export default function AppChrome({ children }: { children: React.ReactNode }) {
     <ThemeProvider>
       <LanguageProvider>
         <AuthProvider>
-          <Header />
-          {showLanguageToggle && <LanguageToggle />}
-          <AuthFlowManager>{children}</AuthFlowManager>
           <ModalProvider>
+            <Header />
+            {showLanguageToggle && <LanguageToggle />}
+            <AuthFlowManager>{children}</AuthFlowManager>
             <GlobalModalManager />
             <CookieConsentModal />
           </ModalProvider>

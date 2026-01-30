@@ -1,43 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, X, BookOpen } from 'lucide-react';
 import Image from 'next/image';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useModal } from '@/components/ModalContext';
 
 export default function AngelusModal() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { activeModal, closeModal } = useModal();
   const { language } = useLanguage();
-
-  useEffect(() => {
-    const checkTime = () => {
-      const now = new Date();
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-      
-      // Check if it's noon (12:00 PM - 1:00 PM window)
-      // and if we haven't shown it today yet
-      if (hours === 12) {
-        const today = new Date().toDateString();
-        const lastShownDate = localStorage.getItem('santapalabra_angelus_shown_date');
-        
-        if (lastShownDate !== today) {
-          setIsOpen(true);
-          localStorage.setItem('santapalabra_angelus_shown_date', today);
-        }
-      }
-    };
-
-    // Check immediately and then every minute
-    checkTime();
-    const interval = setInterval(checkTime, 60000);
-    
-    return () => clearInterval(interval);
-  }, []);
+  
+  const isOpen = activeModal === 'angelus';
 
   const handleClose = () => {
-    setIsOpen(false);
+    closeModal();
   };
 
   const content = {

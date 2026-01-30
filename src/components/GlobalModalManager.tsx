@@ -23,6 +23,7 @@ export default function GlobalModalManager() {
         
         if (lastShownDate !== today) {
           openModal('angelus');
+          localStorage.setItem('santapalabra_angelus_shown_date', today);
           return true; // Angelus triggered
         }
       }
