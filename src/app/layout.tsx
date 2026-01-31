@@ -19,9 +19,13 @@ export const metadata: Metadata = {
   description: "Catequista digital católico especializado en la rica espiritualidad hispanoamericana. Con la sabiduría de Santa Teresa de Ávila, San Juan de la Cruz, CELAM y toda la tradición católica.",
   icons: {
     icon: [
-      { url: '/santapalabra-logoSinLeyenda.ico', sizes: 'any' }
+      { url: '/santapalabra-logoSinLeyenda.ico', sizes: 'any' },
+      { url: '/favicon-96x96.svg', type: 'image/svg+xml' }
     ],
-    shortcut: '/santapalabra-logoSinLeyenda.ico'
+    shortcut: '/santapalabra-logoSinLeyenda.ico',
+    apple: [
+      { url: '/faviconAndroid-icon-144x144.svg', type: 'image/svg+xml' }
+    ]
   },
   appleWebApp: {
     capable: true,
@@ -52,6 +56,7 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <link rel="manifest" href="/site.webmanifest" />
+        <link rel="apple-touch-icon" href="/faviconAndroid-icon-144x144.svg" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200 overflow-x-hidden`}

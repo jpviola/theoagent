@@ -11,6 +11,7 @@ import { subscribeToNewsletter, SUBSCRIPTION_TIERS } from '@/lib/subscription';
 import { useUserProgress } from '@/components/GamificationSystem';
 import ChatRightSidebar from '@/components/ChatRightSidebar';
 import ScriptureLinkedMarkdown from '@/components/ScriptureLinkedMarkdown';
+import { useLearningEngine } from '@/hooks/useLearningEngine';
 
 interface Message {
   id: string;
@@ -95,6 +96,7 @@ export default function CatholicChatPage() {
   const { language } = useLanguage();
   const searchParams = useSearchParams();
   const { progress, addXP } = useUserProgress();
+  const { learnFromInteraction } = useLearningEngine();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const fetchAbortRef = useRef<AbortController | null>(null);
@@ -106,6 +108,7 @@ export default function CatholicChatPage() {
   const sttProcessorRef = useRef<ScriptProcessorNode | null>(null);
   const sttSourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const transcriptRef = useRef<string>('');
+  const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
     // Load active journey
@@ -432,6 +435,70 @@ export default function CatholicChatPage() {
     setIsTranscribing(true);
     transcriptRef.current = '';
 
+    // 1. Try Native Web Speech API first
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    
+    if (SpeechRecognition) {
+      try {
+        const recognition = new SpeechRecognition();
+        recognition.lang = language === 'es' ? 'es-ES' : language === 'pt' ? 'pt-BR' : 'en-US';
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onstart = () => {
+          setIsRecording(true);
+          setIsTranscribing(false);
+        };
+
+        recognition.onerror = (event: any) => {
+          console.error('Speech recognition error', event.error);
+          if (event.error === 'not-allowed') {
+             setError(language === 'es' ? 'Permiso de micrófono denegado' : language === 'pt' ? 'Permissão de microfone negada' : 'Microphone permission denied');
+          }
+          // If network error or no-speech, we might want to just stop
+          setIsRecording(false);
+          setIsTranscribing(false);
+        };
+
+        recognition.onend = () => {
+          setIsRecording(false);
+          setIsTranscribing(false);
+          // Only auto-send if we have a final transcript
+           const finalTranscript = transcriptRef.current.trim();
+           if (finalTranscript && autoSendVoice) {
+               void sendMessageText(finalTranscript);
+           }
+        };
+
+        recognition.onresult = (event: any) => {
+          let interimTranscript = '';
+          let finalTranscript = '';
+
+          for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+              finalTranscript += event.results[i][0].transcript;
+            } else {
+              interimTranscript += event.results[i][0].transcript;
+            }
+          }
+          
+          if (finalTranscript) {
+             transcriptRef.current = (transcriptRef.current + ' ' + finalTranscript).trim();
+          }
+          
+          // Update visual input with both confirmed and interim
+          const currentFull = (transcriptRef.current + ' ' + interimTranscript).trim();
+          if (currentFull) setInput(currentFull);
+        };
+
+        recognitionRef.current = recognition;
+        recognition.start();
+        return; 
+      } catch (e) {
+        console.warn('Native Speech Recognition failed, falling back to Cloud STT', e);
+      }
+    }
+
     try {
       const tokenRes = await fetch('/api/elevenlabs/single-use-token', {
         method: 'POST',
@@ -465,6 +532,7 @@ export default function CatholicChatPage() {
             const next = msg.text.trim();
             if (next) {
               transcriptRef.current = (transcriptRef.current + ' ' + next).trim();
+              setInput(transcriptRef.current); // Update UI
             }
           }
         } catch {
@@ -544,6 +612,17 @@ export default function CatholicChatPage() {
   const stopTranscription = async () => {
     setIsRecording(false);
     setIsTranscribing(false);
+    
+    // Stop Native Recognition if active
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {
+        // ignore
+      }
+      recognitionRef.current = null;
+      return; // Handled by onend event
+    }
 
     try {
       await cleanupSttResources();
@@ -594,6 +673,9 @@ export default function CatholicChatPage() {
     // Activar animación de reverencia
     setIsBowing(true);
     setTimeout(() => setIsBowing(false), 4000); // Duración de la animación - 4 segundos para transición suave
+
+    // Aprender de la interacción
+    learnFromInteraction(trimmed);
 
     const userMessage: Message = {
       id: Date.now().toString() + '_user',
@@ -911,7 +993,7 @@ export default function CatholicChatPage() {
 
   return (
     <AuthFlowManager>
-      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col relative overflow-hidden">
+      <div className="h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col relative overflow-hidden">
       {/* Modal de suscripción eliminado de aquí - gestionado por GlobalModalManager */}
 
       {/* Imágenes decorativas católicas de fondo */}
@@ -1213,7 +1295,7 @@ export default function CatholicChatPage() {
 
             {/* Messages - Renderizar cuando existan */}
             {messages.length > 0 && (
-              <div className="space-y-4">
+              <div className="flex-1 overflow-y-auto pr-2 space-y-4 min-h-0 scrollbar-thin scrollbar-thumb-amber-200 dark:scrollbar-thumb-amber-800 scrollbar-track-transparent">
                 <AnimatePresence initial={false}>
                   {messages.map((message) => (
                     <motion.div
@@ -1380,7 +1462,7 @@ export default function CatholicChatPage() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className={`w-full max-w-3xl mx-auto px-2 transition-all duration-500 ${messages.length === 0 ? 'mb-[15vh]' : 'mt-4'}`}
+            className={`w-full max-w-3xl mx-auto px-2 transition-all duration-500 flex-shrink-0 ${messages.length === 0 ? 'mb-[15vh]' : 'mt-4'}`}
           >
             {/* Preguntas Sugeridas - Pegadas a la barra */}
             <AnimatePresence>
@@ -1421,6 +1503,7 @@ export default function CatholicChatPage() {
                   ? 'border-amber-400 shadow-amber-100 dark:shadow-none' 
                   : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
+              aria-label={language === 'es' ? 'Formulario de chat' : language === 'pt' ? 'Formulário de chat' : 'Chat form'}
             >
               <input
                 ref={fileInputRef}
@@ -1428,6 +1511,8 @@ export default function CatholicChatPage() {
                 accept=".pdf"
                 onChange={handlePdfUpload}
                 className="hidden"
+                aria-hidden="true"
+                tabIndex={-1}
               />
               
               {/* File Upload Trigger */}
@@ -1436,10 +1521,11 @@ export default function CatholicChatPage() {
                 onClick={() => fileInputRef.current?.click()}
                 className={`p-2 rounded-full transition-colors flex-shrink-0 ${
                   pdfFile 
-                    ? 'bg-green-100 texle - Expticit Lab-lgreen-600 dark:bg-green-900/30 dark:text-green-400' 
+                    ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' 
                     : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
                 title={pdfFile ? currentTexts.pdfAttached : currentTexts.uploadPdf}
+                aria-label={pdfFile ? currentTexts.pdfAttached : currentTexts.uploadPdf}
               >
                 {pdfFile ? <FileText className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
               </button>
@@ -1453,11 +1539,13 @@ export default function CatholicChatPage() {
                     ? 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-700'
                     : 'bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700 dark:hover:bg-gray-700'
                 }`}
-                title={language === 'es' ? 'Activar modo teológico avanzado' : 'Toggle theological mode'}
+                title={language === 'es' ? 'Activar modo teólogo avanzado' : 'Toggle theological mode'}
+                aria-label={language === 'es' ? 'Modo teólogo' : language === 'pt' ? 'Modo teológico' : 'Theological mode'}
+                aria-pressed={isSpecialist}
               >
                 <BookOpen className="h-4 w-4" />
                 <span className="text-xs font-bold whitespace-nowrap hidden sm:inline-block">
-                  {language === 'es' ? 'Modo Teológico' : language === 'pt' ? 'Modo Teológico' : 'Theology Mode'}
+                  {language === 'es' ? 'Modo Teólogo' : language === 'pt' ? 'Modo Teológico' : 'Theology Mode'}
                 </span>
                 <span className="text-xs font-bold whitespace-nowrap sm:hidden">
                   {isSpecialist ? 'ON' : 'OFF'}
@@ -1471,6 +1559,7 @@ export default function CatholicChatPage() {
                 placeholder={language === 'es' ? 'Pregunta algo sobre la fe...' : language === 'pt' ? 'Pergunte algo sobre a fé...' : 'Ask something about faith...'}
                 className="flex-1 bg-transparent border-none focus:ring-0 text-sm sm:text-base text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500 py-2 min-w-0"
                 disabled={isLoading}
+                aria-label={language === 'es' ? 'Escribe tu pregunta' : language === 'pt' ? 'Digite sua pergunta' : 'Type your question'}
               />
 
               {/* Mic (STT) */}
@@ -1494,6 +1583,8 @@ export default function CatholicChatPage() {
                     ? (language === 'es' ? 'Detener' : language === 'pt' ? 'Parar' : 'Stop')
                     : (language === 'es' ? 'Hablar' : language === 'pt' ? 'Falar' : 'Speak')
                 }
+                aria-label={language === 'es' ? 'Entrada de voz' : language === 'pt' ? 'Entrada de voz' : 'Voice input'}
+                aria-pressed={isRecording}
               >
                 {isTranscribing ? (
                   <RefreshCw className="h-5 w-5 animate-spin" />
@@ -1530,6 +1621,7 @@ export default function CatholicChatPage() {
                         : 'Stop response'
                     : currentTexts.send
                 }
+                aria-label={isLoading ? (language === 'es' ? 'Detener' : 'Stop') : currentTexts.send}
               >
                 {isLoading ? (
                   <Square className="h-4 w-4 fill-current" />

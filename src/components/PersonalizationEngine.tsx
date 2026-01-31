@@ -449,7 +449,7 @@ export function SmartNotifications({ profile }: { profile: UserProfile | null })
             initial={{ opacity: 0, x: -100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-2xl shadow-2xl max-w-sm relative pr-10"
+            className="bg-gradient-to-r from-amber-500 to-orange-600 text-white p-4 rounded-lg shadow-xl max-w-sm relative pr-10"
           >
             <button
               onClick={() => setDismissedIds(prev => [...prev, notification.id])}

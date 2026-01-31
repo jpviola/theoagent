@@ -60,17 +60,21 @@ export const DiffusionSupportModal: React.FC<DiffusionSupportModalProps> = ({ is
               className="bg-white rounded-2xl shadow-xl w-full max-w-md pointer-events-auto overflow-hidden"
             >
               {/* Header */}
-              <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white text-center relative">
+              <div className="bg-amber-50 dark:bg-amber-900/20 p-4 text-center relative">
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
+                  className="absolute top-3 right-3 p-1.5 rounded-full bg-white/50 hover:bg-white text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  <X className="w-6 h-6" />
+                  <X className="w-4 h-4" />
                 </button>
-                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-md">
-                  <span className="text-3xl">📣</span>
+                <div className="flex justify-center mb-2">
+                  <div className="p-3 bg-amber-100 dark:bg-amber-800/30 rounded-full">
+                    <span className="text-2xl">📣</span>
+                  </div>
                 </div>
-                <h2 className="text-2xl font-bold">Apoyo mediante difusión</h2>
+                <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 font-serif">
+                  Apoyo mediante difusión
+                </h2>
               </div>
 
               {/* Content */}

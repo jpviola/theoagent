@@ -8,19 +8,27 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useUserProgress, GamificationModal } from '@/components/GamificationSystem';
 import { isUserSubscribed } from '@/lib/subscription';
 import { useState, useEffect } from 'react';
-import { Trophy, Mail, Shield } from 'lucide-react';
+import { Trophy, Mail, Shield, Globe, ChevronDown } from 'lucide-react';
 import { useModal } from '@/components/ModalContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
-  const { language, toggleLanguage } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const { isDarkMode, toggleDarkMode } = useTheme();
   const { openModal } = useModal();
   const [showGamificationModal, setShowGamificationModal] = useState(false);
+  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { progress } = useUserProgress();
+
+  const languages = [
+    { code: 'es' as const, name: 'Español', flag: '🇪🇸' },
+    { code: 'pt' as const, name: 'Português', flag: '🇧🇷' },
+    { code: 'en' as const, name: 'English', flag: '🇺🇸' }
+  ];
 
   useEffect(() => {
     setIsSubscribed(isUserSubscribed());
@@ -139,14 +147,52 @@ export default function Header() {
               >
                 {mounted && isDarkMode ? '☀️' : '🌙'}
               </button>
-              <button
-                onClick={toggleLanguage}
-                style={{ color: 'var(--foreground)' }}
-                className="h-9 px-3 rounded-full border border-amber-200 text-sm font-semibold text-gray-700 hover:bg-amber-50 transition-colors dark:text-white dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700"
-                aria-label="Cambiar idioma"
-              >
-                {language === 'es' ? 'EN' : 'ES'}
-              </button>
+              <div className="relative">
+                <button
+                  onClick={() => setShowLanguageSelector(!showLanguageSelector)}
+                  className="h-9 px-3 rounded-full border border-amber-200 text-sm font-semibold text-gray-700 hover:bg-amber-50 transition-colors dark:text-white dark:border-gray-600 dark:bg-transparent dark:hover:bg-gray-700 flex items-center gap-2"
+                  aria-label="Cambiar idioma"
+                  aria-expanded={showLanguageSelector}
+                  aria-haspopup="true"
+                >
+                  <Globe className="h-4 w-4" />
+                  <span className="text-lg leading-none">
+                    {languages.find(l => l.code === language)?.flag}
+                  </span>
+                  <ChevronDown className={`h-3 w-3 transition-transform ${showLanguageSelector ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {showLanguageSelector && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute top-full mt-2 right-0 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 p-2 z-50"
+                    >
+                      {languages.map((lang) => (
+                        <button
+                          key={lang.code}
+                          onClick={() => {
+                            setLanguage(lang.code);
+                            setShowLanguageSelector(false);
+                          }}
+                          className={`w-full text-left p-3 rounded-lg transition-colors flex items-center gap-3 ${
+                            language === lang.code 
+                              ? 'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700' 
+                              : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                          }`}
+                        >
+                          <span className="text-xl">{lang.flag}</span>
+                          <span className="font-medium text-gray-900 dark:text-white">
+                            {lang.name}
+                          </span>
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </div>

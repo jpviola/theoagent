@@ -12,6 +12,7 @@
     "start:3001": "next start -p 3001",
     "lint": "eslint",
     "ingest": "npx ts-node scripts/ingest-documents.ts",
+    "scrape:liturgy": "npx tsx scripts/scrape-liturgy.ts",
     "vercel-build": "npm ci --legacy-peer-deps && next build",
     "create-paypal-webhook": "node scripts/create_paypal_webhook.js"
   },

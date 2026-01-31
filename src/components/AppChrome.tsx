@@ -3,6 +3,7 @@
 import AuthFlowManager from '@/components/AuthFlowManager';
 import { LanguageProvider, useLanguage } from '@/contexts/LanguageContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { FontSizeProvider } from '@/contexts/FontSizeContext';
 import { motion } from 'framer-motion';
 import { Globe } from 'lucide-react';
 import Header from '@/components/Header';
@@ -50,17 +51,19 @@ export default function AppChrome({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeProvider>
-      <LanguageProvider>
-        <AuthProvider>
-          <ModalProvider>
-            <Header />
-            {showLanguageToggle && <LanguageToggle />}
-            <AuthFlowManager>{children}</AuthFlowManager>
-            <GlobalModalManager />
-            <CookieConsentModal />
-          </ModalProvider>
-        </AuthProvider>
-      </LanguageProvider>
+      <FontSizeProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <ModalProvider>
+              <Header />
+              {showLanguageToggle && <LanguageToggle />}
+              <AuthFlowManager>{children}</AuthFlowManager>
+              <GlobalModalManager />
+              <CookieConsentModal />
+            </ModalProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </FontSizeProvider>
     </ThemeProvider>
   );
 }

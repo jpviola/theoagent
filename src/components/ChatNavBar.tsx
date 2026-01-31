@@ -10,9 +10,11 @@ import {
   Zap,
   Globe,
   ChevronDown,
-  Menu
+  Menu,
+  Type
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useFontSize } from '@/contexts/FontSizeContext';
 import SantaPalabraLogo from '@/components/SantaPalabraLogo';
 
 interface NavUser {
@@ -43,6 +45,7 @@ export default function NavBar({
   onToggleSidebar
 }: NavBarProps) {
   const { language, setLanguage } = useLanguage();
+  const { fontSize, toggleFontSize } = useFontSize();
   const [showModelSelector, setShowModelSelector] = useState(false);
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
 
@@ -55,7 +58,8 @@ export default function NavBar({
       signedAs: 'Conectado como',
       selectModel: 'Seleccionar Modelo IA',
       selectLanguage: 'Idioma',
-      xpPoints: 'XP'
+      xpPoints: 'XP',
+      fontSize: 'Tamaño de letra'
     },
     pt: {
       newChat: 'Novo Chat',
@@ -65,7 +69,8 @@ export default function NavBar({
       signedAs: 'Conectado como',
       selectModel: 'Selecionar Modelo IA',
       selectLanguage: 'Idioma',
-      xpPoints: 'XP'
+      xpPoints: 'XP',
+      fontSize: 'Tamanho da fonte'
     },
     en: {
       newChat: 'New Chat',
@@ -75,7 +80,8 @@ export default function NavBar({
       signedAs: 'Signed in as',
       selectModel: 'Select AI Model',
       selectLanguage: 'Language',
-      xpPoints: 'XP'
+      xpPoints: 'XP',
+      fontSize: 'Font Size'
     }
   };
 
@@ -244,12 +250,30 @@ export default function NavBar({
               </div>
             )}
 
+            {/* Font Size Selector */}
+            <motion.button
+              onClick={toggleFontSize}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors relative"
+              title={t.fontSize}
+              aria-label={t.fontSize}
+            >
+              <Type className="h-5 w-5" />
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white">
+                {fontSize === 'normal' ? 'A' : fontSize === 'large' ? 'A+' : '++'}
+              </span>
+            </motion.button>
+
             {/* Language Selector */}
             <div className="relative">
               <motion.button
                 onClick={() => setShowLanguageSelector(!showLanguageSelector)}
                 whileHover={{ scale: 1.02 }}
                 className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                aria-label={t.selectLanguage}
+                aria-expanded={showLanguageSelector}
+                aria-haspopup="true"
               >
                 <Globe className="h-4 w-4 text-gray-600 dark:text-gray-400" />
                 <span className="text-2xl">

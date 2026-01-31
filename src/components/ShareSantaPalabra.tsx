@@ -89,7 +89,7 @@ export default function ShareSantaPalabra({ onShare, onReferralTracked }: ShareS
         window.location.href = emailUrl;
         handleShare('email');
       },
-      color: 'bg-purple-500 hover:bg-purple-600',
+      color: 'bg-amber-500 hover:bg-amber-600',
       platform: 'email'
     }
   ];
@@ -99,7 +99,7 @@ export default function ShareSantaPalabra({ onShare, onReferralTracked }: ShareS
       {/* Botón para abrir el modal de compartir */}
       <motion.button
         onClick={() => setIsOpen(true)}
-        className="group inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 dark:from-sky-600 dark:to-violet-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+        className="group inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-600 dark:from-amber-600 dark:to-orange-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -125,12 +125,12 @@ export default function ShareSantaPalabra({ onShare, onReferralTracked }: ShareS
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-3xl p-8 max-w-md w-full shadow-2xl border-2 border-yellow-200 dark:from-gray-800 dark:to-gray-700 dark:border-amber-700"
+              className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full shadow-xl border border-amber-100 dark:border-amber-900/50"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
               <div className="text-center mb-6">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full mb-4">
                   <Heart className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">

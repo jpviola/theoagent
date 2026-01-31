@@ -12,6 +12,7 @@ import { BlessedButton, BreathingImage } from '@/components/SensorialEffects';
 import { ProgressBar, AchievementNotification, useUserProgress } from '@/components/GamificationSystem';
 import { SmartNotifications, PersonalizedRecommendations, type UserProfile as PersonalizationUserProfile } from '@/components/PersonalizationEngine';
 import ShareSantaPalabra from '@/components/ShareSantaPalabra';
+import { CC0License } from '@/components/CC0License';
 import { subscribeToNewsletter } from '@/lib/subscription';
 
 export default function HomePage() {
@@ -660,20 +661,21 @@ export default function HomePage() {
 
             {/* Créditos minimalistas */}
             <div className="border-t border-amber-400 dark:border-amber-600 pt-4 w-full max-w-xl text-xs text-white dark:text-gray-300 font-medium drop-shadow-sm">
-              <p className="flex items-center justify-center gap-1">
-                <span>© {new Date().getFullYear()}</span>
-                <span>·</span>
-                <span>{language === 'es' ? 'Powered con' : 'Powered by'}</span>
-                <Heart className="h-3 w-3 text-red-100 fill-red-100 drop-shadow-sm" />
-                <a 
-                  href="https://www.laprensadetales.dev/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="hover:text-amber-200 transition-colors"
-                >
-                  {language === 'es' ? 'por La prensa de Tales' : 'La prensa de Tales'}
-                </a>
-              </p>
+              <div className="flex flex-col items-center gap-2">
+                <CC0License />
+                <p className="flex items-center justify-center gap-1">
+                  <span>{language === 'es' ? 'Powered con' : 'Powered by'}</span>
+                  <Heart className="h-3 w-3 text-red-100 fill-red-100 drop-shadow-sm" />
+                  <a 
+                    href="https://www.laprensadetales.dev/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-amber-200 transition-colors"
+                  >
+                    {language === 'es' ? 'por La prensa de Tales' : 'La prensa de Tales'}
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
         </motion.div>

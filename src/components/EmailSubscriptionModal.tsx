@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Sparkles, Check } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useModal } from '@/components/ModalContext';
-import { subscribeToNewsletter } from '@/lib/subscription';
+import { subscribeToNewsletter, markSubscriptionSkipped } from '@/lib/subscription';
 import { useUserProgress } from '@/components/GamificationSystem';
 
 export default function EmailSubscriptionModal() {
