@@ -439,6 +439,10 @@ export class SantaPalabraRAG {
           return this.createGemmaLLM(specialistMode);
         case 'qwen':
           return this.createQwenLLM(specialistMode);
+        case 'nemotron':
+          return this.createNemotronLLM(specialistMode);
+        case 'gpt_oss':
+          return this.createGptOssLLM(specialistMode);
         case 'local':
           return this.createLocalLLM();
         case 'auto':
