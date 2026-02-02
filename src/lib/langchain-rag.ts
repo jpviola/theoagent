@@ -21,7 +21,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabaseClient = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
 
-type SupportedChatModel = 'anthropic' | 'openai' | 'llama' | 'gemma' | 'qwen' | 'local' | 'auto';
+type SupportedChatModel = 'anthropic' | 'openai' | 'llama' | 'gemma' | 'qwen' | 'nemotron' | 'gpt_oss' | 'local' | 'auto';
 
 // Types
 interface CatholicDocument {
@@ -556,6 +556,50 @@ export class SantaPalabraRAG {
     return new ChatOpenAI({
       apiKey: apiKey,
       modelName: process.env.OPENROUTER_QWEN_MODEL || 'qwen/qwen3-4b:free',
+      temperature: 0.3,
+      maxTokens: specialistMode ? 4096 : 2048,
+      configuration: {
+        baseURL: 'https://openrouter.ai/api/v1',
+        defaultHeaders: {
+          'HTTP-Referer': 'https://santapalabra.org',
+          'X-Title': 'Santa Palabra',
+        }
+      },
+    });
+  }
+
+  private createNemotronLLM(specialistMode: boolean = false): BaseChatModel {
+    const apiKey = process.env.OPENROUTER_NEMOTRON_API_KEY || process.env.OPENROUTER_API_KEY;
+    if (!apiKey) {
+      throw new Error('Missing OPENROUTER_API_KEY for Nemotron');
+    }
+
+    // console.log('🌌 Using Nemotron via OpenRouter');
+    return new ChatOpenAI({
+      apiKey: apiKey,
+      modelName: process.env.OPENROUTER_NEMOTRON_MODEL || 'nvidia/nemotron-3-nano-30b-a3b:free',
+      temperature: 0.3,
+      maxTokens: specialistMode ? 4096 : 2048,
+      configuration: {
+        baseURL: 'https://openrouter.ai/api/v1',
+        defaultHeaders: {
+          'HTTP-Referer': 'https://santapalabra.org',
+          'X-Title': 'Santa Palabra',
+        }
+      },
+    });
+  }
+
+  private createGptOssLLM(specialistMode: boolean = false): BaseChatModel {
+    const apiKey = process.env.OPENROUTER_GPT_OSS_API_KEY || process.env.OPENROUTER_API_KEY;
+    if (!apiKey) {
+      throw new Error('Missing OPENROUTER_API_KEY for GPT-OSS');
+    }
+
+    // console.log('🤖 Using GPT-OSS via OpenRouter');
+    return new ChatOpenAI({
+      apiKey: apiKey,
+      modelName: process.env.OPENROUTER_GPT_OSS_MODEL || 'openai/gpt-oss-120b:free',
       temperature: 0.3,
       maxTokens: specialistMode ? 4096 : 2048,
       configuration: {
@@ -1188,10 +1232,14 @@ To enable full AI chat, please configure ANTHROPIC_API_KEY or GROQ_API_KEY in yo
       } else if (initialModel === 'gemma') {
         attemptOrder = ['gemma', 'qwen', 'llama', 'anthropic'];
       } else if (initialModel === 'qwen') {
-        attemptOrder = ['qwen', 'gemma', 'llama', 'anthropic'];
+        attemptOrder = ['qwen', 'nemotron', 'gpt_oss', 'gemma', 'llama', 'anthropic'];
+      } else if (initialModel === 'nemotron') {
+        attemptOrder = ['nemotron', 'gpt_oss', 'anthropic', 'llama', 'gemma', 'qwen'];
+      } else if (initialModel === 'gpt_oss') {
+        attemptOrder = ['gpt_oss', 'nemotron', 'anthropic', 'llama', 'gemma', 'qwen'];
       } else {
         // Fallback default
-        attemptOrder = ['anthropic', 'llama', 'gemma', 'qwen'];
+        attemptOrder = ['nemotron', 'gpt_oss', 'anthropic', 'llama', 'gemma', 'qwen'];
       }
 
       // Remove duplicates
