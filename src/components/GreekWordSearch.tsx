@@ -82,7 +82,7 @@ export default function GreekWordSearch() {
         </h3>
         
         <form onSubmit={handleSearch} className="flex gap-2">
-          <div className="relative flex-grow">
+          <div className="relative grow">
             <input
               type="text"
               value={query}

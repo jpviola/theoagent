@@ -183,7 +183,7 @@ export default function WelcomeQuiz({ onComplete }: { onComplete: (profile: User
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="relative mx-4 max-w-lg w-full bg-gradient-to-br from-yellow-50 to-amber-50 rounded-3xl shadow-2xl p-8 border-2 border-yellow-200 dark:from-gray-800 dark:to-gray-700 dark:border-amber-600 dark:bg-gradient-to-br"
+            className="relative mx-4 max-w-lg w-full bg-linear-to-br from-yellow-50 to-amber-50 rounded-3xl shadow-2xl p-8 border-2 border-yellow-200 dark:from-gray-800 dark:to-gray-700 dark:border-amber-600 dark:bg-linear-to-br"
           >
             {/* Botón cerrar */}
             <button
@@ -237,7 +237,7 @@ export default function WelcomeQuiz({ onComplete }: { onComplete: (profile: User
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <div className="flex-shrink-0 p-2 rounded-xl bg-yellow-100 text-yellow-700 group-hover:bg-yellow-200 transition-colors">
+                      <div className="shrink-0 p-2 rounded-xl bg-yellow-100 text-yellow-700 group-hover:bg-yellow-200 transition-colors">
                         {answer.icon}
                       </div>
                       <span className="flex-1 font-semibold text-gray-800">

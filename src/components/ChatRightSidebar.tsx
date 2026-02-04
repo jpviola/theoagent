@@ -133,7 +133,7 @@ export default function ChatRightSidebar() {
 
       <div className={`p-4 flex flex-col h-full ${isCollapsed ? 'items-center' : ''}`}>
         {!isCollapsed && (
-          <div className="mt-6 mb-2 px-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider flex-shrink-0">
+          <div className="mt-6 mb-2 px-3 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider shrink-0">
             {language === 'es' ? 'Recursos' : language === 'pt' ? 'Recursos' : 'Resources'}
           </div>
         )}
@@ -145,7 +145,7 @@ export default function ChatRightSidebar() {
               className={`flex items-center gap-3 px-3 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-gray-800 rounded-xl transition-all group ${isCollapsed ? 'justify-center' : ''}`}
               title={isCollapsed ? (link.label[language as keyof typeof link.label] || link.label.es) : ''}
             >
-              <link.icon className={`h-5 w-5 text-amber-500/70 group-hover:text-amber-600 transition-colors flex-shrink-0`} />
+              <link.icon className={`h-5 w-5 text-amber-500/70 group-hover:text-amber-600 transition-colors shrink-0`} />
               {!isCollapsed && (
                 <span className="whitespace-nowrap overflow-hidden text-ellipsis">
                   {link.label[language as keyof typeof link.label] || link.label.es}
@@ -160,7 +160,7 @@ export default function ChatRightSidebar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="pt-6 border-t border-amber-100 dark:border-gray-800 mt-auto flex-shrink-0"
+            className="pt-6 border-t border-amber-100 dark:border-gray-800 mt-auto shrink-0"
           >
             <div className="flex justify-center gap-3">
                {/* Social Icons */}

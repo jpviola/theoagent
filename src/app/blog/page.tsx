@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function BlogPage() {
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+    <div className="min-h-screen bg-(--background) text-(--foreground)">
       <div className="max-w-4xl mx-auto py-12 px-6">
       <header className="mb-8 text-gray-900 dark:text-gray-100">
         <h1 className="text-4xl font-bold">Blog — SantaPalabra</h1>

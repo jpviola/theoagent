@@ -356,7 +356,7 @@ export default function SupportPage() {
         }}
       />
       
-      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+      <div className="min-h-screen bg-(--background) text-(--foreground)">
         <SupportHeader
           selectedCountry={selectedCountry}
           onCountryChange={setSelectedCountry}
@@ -408,7 +408,7 @@ interface SupportHeaderProps {
 
 function SupportHeader({ selectedCountry, onCountryChange }: SupportHeaderProps) {
   return (
-    <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-16 relative">
+    <div className="bg-linear-to-r from-purple-600 to-blue-600 text-white py-16 relative">
       <div className="absolute top-4 left-4 md:top-8 md:left-8">
         <Link 
           href="/catholic-chat" 
@@ -500,7 +500,7 @@ function SupportContent({ loading, mpLoaded, selectedCountry, onMercadoPagoPayme
     <main className="max-w-4xl mx-auto px-4 py-8">
       {/* Hero Section */}
       <div className="text-center mb-12 animate-fade-in">
-        <h1 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-amber-600 to-amber-500 bg-clip-text text-transparent drop-shadow-sm">
+        <h1 className="text-4xl md:text-5xl font-black mb-4 bg-linear-to-r from-amber-600 to-amber-500 bg-clip-text text-transparent drop-shadow-sm">
           Apoya a SantaPalabra
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed mb-8">
@@ -649,7 +649,7 @@ function NotificationBanner({ notification, onClose }: NotificationBannerProps) 
     >
       <div className="p-4">
         <div className="flex items-start">
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             {notification.type === 'success' && '✅'}
             {notification.type === 'error' && '❌'}
             {notification.type === 'warning' && '⚠️'}
@@ -663,7 +663,7 @@ function NotificationBanner({ notification, onClose }: NotificationBannerProps) 
               {notification.message}
             </p>
           </div>
-          <div className="ml-4 flex-shrink-0 flex">
+          <div className="ml-4 shrink-0 flex">
             <button
               className="bg-transparent rounded-md inline-flex text-white hover:text-gray-200 focus:outline-none"
               onClick={onClose}

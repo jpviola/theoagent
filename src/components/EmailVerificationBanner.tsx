@@ -173,14 +173,14 @@ export default function EmailVerificationBanner({
 
   return (
     <div 
-      className={`bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-xl p-4 md:p-6 mb-4 shadow-sm ${className}`}
+      className={`bg-linear-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-xl p-4 md:p-6 mb-4 shadow-sm ${className}`}
       role="alert"
       aria-live="polite"
       aria-label="Email verification required"
     >
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-3 flex-1">
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <svg 
               className="w-6 h-6 text-amber-600" 
               fill="none" 
@@ -235,7 +235,7 @@ export default function EmailVerificationBanner({
             {error && (
               <div className="mt-3 p-2 bg-red-50 border border-red-200 rounded-lg">
                 <div className="flex items-start space-x-2">
-                  <svg className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-red-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <p className="text-sm text-red-700" role="alert">{error}</p>
@@ -246,7 +246,7 @@ export default function EmailVerificationBanner({
             {isResent && (
               <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded-lg">
                 <div className="flex items-start space-x-2">
-                  <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <p className="text-sm text-green-700" role="status">
@@ -260,7 +260,7 @@ export default function EmailVerificationBanner({
         
         <button
           onClick={handleDismiss}
-          className="flex-shrink-0 text-amber-500 hover:text-amber-700 ml-2 p-1 rounded-full hover:bg-amber-100 transition-colors"
+          className="shrink-0 text-amber-500 hover:text-amber-700 ml-2 p-1 rounded-full hover:bg-amber-100 transition-colors"
           aria-label="Dismiss email verification banner"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

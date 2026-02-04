@@ -237,7 +237,7 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex items-center justify-center">
+      <div className="min-h-screen bg-(--background) text-(--foreground) flex items-center justify-center">
         <div className="text-xl text-gray-600 dark:text-gray-300">Loading admin dashboard...</div>
       </div>
     );
@@ -245,14 +245,14 @@ export default function AdminDashboard() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex items-center justify-center">
+      <div className="min-h-screen bg-(--background) text-(--foreground) flex items-center justify-center">
         <div className="text-xl text-red-600 dark:text-red-400">Error: {error}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] py-8 px-4">
+    <div className="min-h-screen bg-(--background) text-(--foreground) py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">santaPalabra Admin Dashboard</h1>

@@ -221,7 +221,7 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[calc(100vh-56px)] items-center justify-center bg-gradient-to-b from-gray-50 via-gray-100 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="flex min-h-[calc(100vh-56px)] items-center justify-center bg-linear-to-b from-gray-50 via-gray-100 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -252,7 +252,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200">
+    <div className="flex min-h-screen flex-col bg-(--background) text-(--foreground) transition-colors duration-200">
       {/* Notificaciones y elementos personalizados */}
       <SmartNotifications profile={userProfile} />
       <PersonalizedRecommendations profile={userProfile} />
@@ -286,7 +286,7 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1.3 }}
             transition={{ duration: 2.5, ease: 'circOut' }}
-            className="absolute -top-1/3 left-1/2 h-full w-full -translate-x-1/2 rounded-full bg-gradient-to-b from-amber-200/20 via-amber-100/10 to-transparent blur-3xl dark:from-amber-800/20 dark:via-amber-900/10 dark:to-transparent"
+            className="absolute -top-1/3 left-1/2 h-full w-full -translate-x-1/2 rounded-full bg-linear-to-b from-amber-200/20 via-amber-100/10 to-transparent blur-3xl dark:from-amber-800/20 dark:via-amber-900/10 dark:to-transparent"
           />
           {/* Imágenes decorativas católicas vectorializadas - distribución simétrica */}
           {/* Esquina superior izquierda - Guadalupana con efecto respiración */}
@@ -356,17 +356,19 @@ export default function HomePage() {
               <BlessedButton
                 href="/catholic-chat"
                 onClick={() => handleInteraction('question')}
-                className="group w-full sm:w-auto min-w-[300px] flex flex-row items-center justify-center gap-3 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-5 text-xl md:text-2xl font-bold text-white shadow-2xl shadow-amber-500/40 transition-all duration-300 hover:scale-105 hover:shadow-amber-500/60 whitespace-normal text-center preserve-light-bg-amber"
+                className="group w-full sm:w-auto min-w-[300px] flex flex-row items-center justify-center gap-3 rounded-full bg-linear-to-r from-amber-500 to-amber-600 px-8 py-5 text-xl md:text-2xl font-bold text-white shadow-2xl shadow-amber-500/40 transition-all duration-300 hover:scale-105 hover:shadow-amber-500/60 whitespace-normal text-center preserve-light-bg-amber"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <BookOpen className="inline-block h-8 w-8 flex-shrink-0" />
-                <span className="inline-block">{t.heroTitle}</span>
-                <ArrowRight className="inline-block h-6 w-6 flex-shrink-0 transition-transform group-hover:translate-x-1" />
+                <BookOpen className="inline-block h-8 w-8 shrink-0" />
+                <span className="flex-1">Comenzar Catequesis</span>
+                <ArrowRight className="inline-block h-6 w-6 shrink-0 transition-transform group-hover:translate-x-1" />
               </BlessedButton>
 
               <BlessedButton
                 href="/support"
                 onClick={() => handleInteraction('donation')}
-                className="group w-full sm:w-auto min-w-[200px] flex flex-row items-center justify-center gap-3 rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-8 py-3 text-base md:text-lg font-bold text-white shadow-2xl shadow-amber-400/40 transition-all duration-300 hover:scale-105 hover:shadow-amber-400/60 whitespace-nowrap preserve-light-bg-green"
+                className="group w-full sm:w-auto min-w-[200px] flex flex-row items-center justify-center gap-3 rounded-full bg-linear-to-r from-amber-400 to-orange-400 px-8 py-3 text-base md:text-lg font-bold text-white shadow-2xl shadow-amber-400/40 transition-all duration-300 hover:scale-105 hover:shadow-amber-400/60 whitespace-nowrap preserve-light-bg-green"
               >
                 <Heart className="inline-block h-6 w-6 md:h-7 md:w-7" />
                 <span className="inline-block">{language === 'es' ? '¡Quiero donar!' : '¡I want to donate!'}</span>
@@ -395,7 +397,7 @@ export default function HomePage() {
 
       {/* PROGRESS SECTION - Solo visible si el usuario ha completado el perfil */}
       {userProfile && progress.level > 1 && (
-        <section className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 py-12 px-4 border-b border-amber-100/50">
+        <section className="bg-linear-to-r from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 py-12 px-4 border-b border-amber-100/50">
           <motion.div
             className="mx-auto max-w-4xl"
             initial={{ opacity: 0, y: 20 }}
@@ -461,7 +463,7 @@ export default function HomePage() {
             </p>
             <Link
               href="/support"
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-amber-400/30 transition-all duration-300 hover:scale-105 hover:shadow-amber-400/50"
+              className="inline-flex items-center justify-center rounded-full bg-linear-to-r from-amber-400 to-orange-400 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-amber-400/30 transition-all duration-300 hover:scale-105 hover:shadow-amber-400/50"
             >
               <Heart className="mr-3 h-6 w-6" />
               {language === 'es' ? '¡Sí, quiero apoyar este proyecto!' : '¡Yes, I want to support this project!'}
@@ -518,7 +520,7 @@ export default function HomePage() {
                     animate={{ rotate: openFaqIndex === index ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <ChevronDown className="h-6 w-6 text-amber-500 dark:text-amber-500 flex-shrink-0" />
+                    <ChevronDown className="h-6 w-6 text-amber-500 dark:text-amber-500 shrink-0" />
                   </motion.div>
                 </button>
                 <AnimatePresence>
@@ -543,7 +545,7 @@ export default function HomePage() {
       </section>
 
       {/* NEWSLETTER SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-gray-900 py-20 px-4 text-amber-900 dark:text-white">
+      <section className="relative overflow-hidden bg-linear-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-gray-900 py-20 px-4 text-amber-900 dark:text-white">
         {/* Decorative elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-40">
           <div className="absolute top-[-10%] left-[-10%] w-96 h-96 rounded-full bg-white blur-3xl"></div>
@@ -573,12 +575,12 @@ export default function HomePage() {
               placeholder={t.newsletterPlaceholder}
               required
               disabled={newsletterStatus === 'loading' || newsletterStatus === 'success'}
-              className="flex-grow px-6 py-3 rounded-full border border-amber-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:opacity-70 shadow-sm"
+              className="grow px-6 py-3 rounded-full border border-amber-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:opacity-70 shadow-sm"
             />
             <button
               type="submit"
               disabled={newsletterStatus === 'loading' || newsletterStatus === 'success'}
-              className="px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-full hover:from-amber-600 hover:to-orange-600 transition-all hover:scale-105 disabled:opacity-70 shadow-lg shadow-amber-500/20"
+              className="px-8 py-3 bg-linear-to-r from-amber-500 to-orange-500 text-white font-bold rounded-full hover:from-amber-600 hover:to-orange-600 transition-all hover:scale-105 disabled:opacity-70 shadow-lg shadow-amber-500/20"
             >
               {newsletterStatus === 'loading' ? (
                 <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent mx-auto"></div>
@@ -613,7 +615,7 @@ export default function HomePage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-gradient-to-r from-amber-500 to-orange-600 dark:from-gray-900 dark:to-gray-800 px-4 py-12 text-center text-white">
+      <footer className="bg-linear-to-r from-amber-500 to-orange-600 dark:from-gray-900 dark:to-gray-800 px-4 py-12 text-center text-white">
         <motion.div
           className="mx-auto max-w-6xl"
           initial={{ opacity: 0 }}

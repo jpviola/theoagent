@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function SobreNosotrosPage() {
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+    <div className="min-h-screen bg-(--background) text-(--foreground)">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
         <div className="mb-10 text-center">
           <p className="text-sm font-semibold uppercase tracking-wide text-amber-600">Sobre nosotros</p>
@@ -69,7 +69,7 @@ export default function SobreNosotrosPage() {
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
                 href="/support"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow-md transition hover:scale-105"
+                className="inline-flex items-center gap-2 rounded-full bg-linear-to-r from-green-500 to-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow-md transition hover:scale-105"
               >
                 Apoyar el proyecto
               </Link>

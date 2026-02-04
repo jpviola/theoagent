@@ -201,9 +201,9 @@ export default function ResourcesPage() {
                       <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-yellow-500" />
                     </div>
                     
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 flex-grow">
-                      {language === 'es' ? item.description.es : language === 'pt' ? item.description.pt : item.description.en}
-                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 grow">
+                    {language === 'es' ? item.description.es : language === 'pt' ? item.description.pt : item.description.en}
+                  </p>
   
                     <div className="flex flex-wrap gap-2 mt-auto">
                       {item.tags.map(tag => (

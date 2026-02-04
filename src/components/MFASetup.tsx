@@ -217,7 +217,7 @@ export default function MFASetup({ user, onClose, onSuccess, enforced = false }:
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="relative p-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div className="relative p-6 bg-linear-to-r from-blue-600 to-purple-600 text-white">
           <div className="text-center">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
               <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">

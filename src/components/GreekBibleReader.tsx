@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useQueryState, parseAsInteger, parseAsString } from 'nuqs';
 import { supabase } from '@/lib/supabase-client';
 import { ChevronLeft, ChevronRight, Book, Loader2 } from 'lucide-react';
 import { GREEK_BOOKS } from '@/lib/greek-bible-data';
@@ -23,8 +24,8 @@ type Verse = {
 };
 
 export default function GreekBibleReader() {
-  const [selectedBook, setSelectedBook] = useState('Mt');
-  const [selectedChapter, setSelectedChapter] = useState(1);
+  const [selectedBook, setSelectedBook] = useQueryState('book', parseAsString.withDefault('Mt'));
+  const [selectedChapter, setSelectedChapter] = useQueryState('chapter', parseAsInteger.withDefault(1));
   const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
@@ -120,7 +121,7 @@ export default function GreekBibleReader() {
             <div className="space-y-4">
               {verses.map((v) => (
                 <div key={v.verse} className="flex gap-4">
-                  <span className="text-xs font-bold text-amber-600 dark:text-amber-400 mt-1 select-none min-w-[1.5rem]">
+                  <span className="text-xs font-bold text-amber-600 dark:text-amber-400 mt-1 select-none min-w-6">
                     {v.verse}
                   </span>
                   <p className="font-serif text-xl leading-relaxed text-gray-800 dark:text-gray-200 flex flex-wrap gap-1">
@@ -152,7 +153,7 @@ export default function GreekBibleReader() {
         <div className="lg:col-span-1">
           <div className="sticky top-4 bg-amber-50 dark:bg-gray-900 rounded-xl p-4 border border-amber-100 dark:border-gray-700">
             <h3 className="font-bold text-amber-900 dark:text-amber-100 mb-4 flex items-center gap-2">
-              <Book className="w-4 h-4" />
+              <Book className="size-4" />
               Análisis Morfológico
             </h3>
             

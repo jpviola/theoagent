@@ -46,13 +46,13 @@ export default function Header() {
   // Header normal para otras páginas
   return (
     <>
-      <header className="relative sticky top-0 z-50 w-full border-b border-amber-100 dark:border-transparent bg-white/85 backdrop-blur-xl shadow-sm dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 dark:bg-opacity-85">
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-transparent to-black/8 dark:from-black/8 dark:to-black/18" />
+      <header className="sticky top-0 z-50 w-full border-b border-amber-100 dark:border-transparent bg-white/85 backdrop-blur-xl shadow-sm dark:bg-linear-to-b dark:from-gray-900 dark:to-gray-800 dark:bg-opacity-85">
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-transparent to-black/8 dark:from-black/8 dark:to-black/18" />
         <div className="mx-auto max-w-7xl px-4 py-2 relative z-10">
           <div className="flex items-center justify-between">
             {/* Logo y título principal */}
             <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-[1.01]">
-              <div className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-gradient-to-br from-amber-50 to-amber-100 p-1.5 shadow-sm group-hover:shadow-md transition-shadow dark:from-gray-700 dark:to-gray-600">
+              <div className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-linear-to-br from-amber-50 to-amber-100 p-1.5 shadow-sm group-hover:shadow-md transition-shadow dark:from-gray-700 dark:to-gray-600">
                 <Image
                   src="/santapalabra-logo.svg"
                   alt="SantaPalabra"

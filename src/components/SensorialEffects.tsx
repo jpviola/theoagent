@@ -79,7 +79,7 @@ export function BlessedButton({
       {/* Efecto de luz de bendición */}
       {isHovered && (
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent mix-blend-screen pointer-events-none"
+          className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent mix-blend-screen pointer-events-none"
           initial={{ x: '-100%' }}
           animate={{ x: '100%' }}
           transition={{ duration: 0.8, ease: 'easeInOut' }}

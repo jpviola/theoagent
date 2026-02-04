@@ -993,7 +993,7 @@ export default function CatholicChatPage() {
 
   return (
     <AuthFlowManager>
-      <div className="h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col relative overflow-hidden">
+      <div className="h-screen bg-(--background) text-(--foreground) flex flex-col relative overflow-hidden">
       {/* Modal de suscripción eliminado de aquí - gestionado por GlobalModalManager */}
 
       {/* Imágenes decorativas católicas de fondo */}
@@ -1093,7 +1093,7 @@ export default function CatholicChatPage() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-2xl p-6 border border-amber-200 dark:border-amber-700"
+                className="bg-linear-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-2xl p-6 border border-amber-200 dark:border-amber-700"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 bg-amber-500 rounded-full">
@@ -1314,7 +1314,7 @@ export default function CatholicChatPage() {
                           initial={{ scale: 0, rotate: -180 }}
                           animate={{ scale: 1, rotate: 0 }}
                           transition={{ duration: 0.5, ease: 'backOut' }}
-                          className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg border-2 border-white"
+                          className="shrink-0 w-10 h-10 rounded-full bg-linear-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg border-2 border-white"
                         >
                           <BookOpen className="h-5 w-5 text-white" />
                         </motion.div>
@@ -1326,7 +1326,7 @@ export default function CatholicChatPage() {
                         <div
                           className={`rounded-2xl px-4 py-3 shadow-md ${
                             message.role === 'user'
-                              ? 'bg-gradient-to-br from-amber-400 to-amber-500 text-gray-900'
+                              ? 'bg-linear-to-br from-amber-400 to-amber-500 text-gray-900'
                               : 'bg-white dark:bg-gray-800 border-2 border-amber-100 dark:border-amber-700 text-gray-900 dark:text-gray-100'
                           }`}
                         >
@@ -1420,7 +1420,7 @@ export default function CatholicChatPage() {
                           initial={{ scale: 0, rotate: 180 }}
                           animate={{ scale: 1, rotate: 0 }}
                           transition={{ duration: 0.5, ease: 'backOut' }}
-                          className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center shadow-lg border-2 border-white"
+                          className="shrink-0 w-10 h-10 rounded-full bg-linear-to-br from-gray-600 to-gray-700 flex items-center justify-center shadow-lg border-2 border-white"
                         >
                           <User className="h-5 w-5 text-white" />
                         </motion.div>
@@ -1462,7 +1462,7 @@ export default function CatholicChatPage() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className={`w-full max-w-3xl mx-auto px-2 transition-all duration-500 flex-shrink-0 ${messages.length === 0 ? 'mb-[15vh]' : 'mt-4'}`}
+            className={`w-full max-w-3xl mx-auto px-2 transition-all duration-500 shrink-0 ${messages.length === 0 ? 'mb-[15vh]' : 'mt-4'}`}
           >
             {/* Preguntas Sugeridas - Pegadas a la barra */}
             <AnimatePresence>
@@ -1498,7 +1498,7 @@ export default function CatholicChatPage() {
 
             <form 
               onSubmit={handleSubmit} 
-              className={`relative flex items-center gap-2 bg-white dark:bg-gray-800 rounded-[2rem] shadow-2xl border transition-all p-2 pl-4 ${
+              className={`relative flex items-center gap-2 bg-white dark:bg-gray-800 rounded-4xl shadow-2xl border transition-all p-2 pl-4 ${
                 isLoading 
                   ? 'border-amber-400 shadow-amber-100 dark:shadow-none' 
                   : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
@@ -1519,7 +1519,7 @@ export default function CatholicChatPage() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className={`p-2 rounded-full transition-colors flex-shrink-0 ${
+                className={`p-2 rounded-full transition-colors shrink-0 ${
                   pdfFile 
                     ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' 
                     : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
@@ -1534,7 +1534,7 @@ export default function CatholicChatPage() {
               <button
                 type="button"
                 onClick={() => setIsSpecialist(!isSpecialist)}
-                className={`pl-2 pr-3 py-1.5 rounded-full transition-all flex-shrink-0 flex items-center gap-2 border ${
+                className={`pl-2 pr-3 py-1.5 rounded-full transition-all shrink-0 flex items-center gap-2 border ${
                   isSpecialist
                     ? 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-700'
                     : 'bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700 dark:hover:bg-gray-700'
@@ -1573,7 +1573,7 @@ export default function CatholicChatPage() {
                   }
                 }}
                 disabled={isLoading || isTranscribing}
-                className={`p-2 rounded-full transition-all flex-shrink-0 ${
+                className={`p-2 rounded-full transition-all shrink-0 ${
                   isRecording
                     ? 'bg-red-500 text-white hover:bg-red-600 animate-pulse'
                     : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
@@ -1605,7 +1605,7 @@ export default function CatholicChatPage() {
                     handleStopGeneration();
                   }
                 }}
-                className={`p-2.5 rounded-full transition-all flex-shrink-0 shadow-sm ${
+                className={`p-2.5 rounded-full transition-all shrink-0 shadow-sm ${
                   isLoading
                     ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'
                     : !input.trim()

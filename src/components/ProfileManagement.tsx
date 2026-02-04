@@ -258,7 +258,7 @@ export default function ProfileManagement({
         <div className="relative p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
@@ -308,7 +308,7 @@ export default function ProfileManagement({
           {error && (
             <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl dark:bg-red-900/60 dark:border-red-700 dark:text-red-200">
               <div className="flex items-start space-x-3">
-                <svg className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-red-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-sm text-red-700">{error}</p>
@@ -319,7 +319,7 @@ export default function ProfileManagement({
           {success && (
             <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl dark:bg-green-900/60 dark:border-green-700 dark:text-green-200">
               <div className="flex items-start space-x-3">
-                <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <p className="text-sm text-green-700">{success}</p>
@@ -534,7 +534,7 @@ export default function ProfileManagement({
           {activeTab === 'billing' && profile && (
             <div className="space-y-6">
               {/* Current Plan */}
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
+              <div className="bg-linear-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Current Plan</h3>
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -582,7 +582,7 @@ export default function ProfileManagement({
                 <div className="grid gap-3">
                   {SUBSCRIPTION_TIERS[profile.subscription_tier].features.map((feature, index) => (
                     <div key={index} className="flex items-start space-x-3">
-                      <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                       <span className="text-gray-700">{feature}</span>
@@ -593,7 +593,7 @@ export default function ProfileManagement({
 
               {/* Upgrade CTA */}
               {profile.subscription_tier === 'free' && (
-                <div className="bg-gradient-to-r from-[#F4B400] to-[#FFCC00] rounded-xl p-6 text-center">
+                <div className="bg-linear-to-r from-[#F4B400] to-[#FFCC00] rounded-xl p-6 text-center">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Ready to Unlock More?</h3>
                   <p className="text-gray-800 mb-4">
                     Upgrade to Plus or Expert for unlimited questions, advanced modes, and premium features.

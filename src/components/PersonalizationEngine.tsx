@@ -425,7 +425,7 @@ export function PersonalizedRecommendations({ profile }: { profile: UserProfile 
 
           <button 
             onClick={handleViewMore}
-            className="w-full mt-4 py-2 px-4 bg-gradient-to-r from-yellow-500 to-amber-600 text-white font-semibold rounded-xl hover:from-yellow-600 hover:to-amber-700 transition-colors"
+            className="w-full mt-4 py-2 px-4 bg-linear-to-r from-yellow-500 to-amber-600 text-white font-semibold rounded-xl hover:from-yellow-600 hover:to-amber-700 transition-colors"
           >
             Ver más recomendaciones
           </button>
@@ -449,7 +449,7 @@ export function SmartNotifications({ profile }: { profile: UserProfile | null })
             initial={{ opacity: 0, x: -100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
-            className="bg-gradient-to-r from-amber-500 to-orange-600 text-white p-4 rounded-lg shadow-xl max-w-sm relative pr-10"
+            className="bg-linear-to-r from-amber-500 to-orange-600 text-white p-4 rounded-lg shadow-xl max-w-sm relative pr-10"
           >
             <button
               onClick={() => setDismissedIds(prev => [...prev, notification.id])}

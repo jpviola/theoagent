@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AppChrome from "@/components/AppChrome";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -59,13 +60,15 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/faviconAndroid-icon-144x144.svg" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200 overflow-x-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-(--background) text-(--foreground) transition-colors duration-200 overflow-x-hidden`}
       >
-        <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200">
-          <AppChrome>{children}</AppChrome>
-        </main>
-        
-        <SpeedInsights />
+        <NuqsAdapter>
+          <main className="min-h-screen bg-(--background) text-(--foreground) transition-colors duration-200">
+            <AppChrome>{children}</AppChrome>
+          </main>
+          
+          <SpeedInsights />
+        </NuqsAdapter>
       </body>
     </html>
   );

@@ -82,7 +82,7 @@ export default function ProtectedRoute({
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="text-center space-y-4">
           <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
           <p className="text-gray-600 dark:text-gray-300">Loading...</p>
@@ -94,7 +94,7 @@ export default function ProtectedRoute({
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="text-center space-y-4">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto dark:bg-red-900">
             <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +121,7 @@ export default function ProtectedRoute({
     }
     
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="text-center space-y-6 max-w-md px-6">
           <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto dark:bg-slate-800">
             <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -158,7 +158,7 @@ export default function ProtectedRoute({
     }
     
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7]">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7]">
         <div className="text-center space-y-6 max-w-md px-6">
           <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto">
             <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -212,7 +212,7 @@ export default function ProtectedRoute({
       }
       
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7]">
+        <div className="min-h-screen flex items-center justify-center bg-linear-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7]">
           <div className="text-center space-y-6 max-w-md px-6">
             <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto">
               <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

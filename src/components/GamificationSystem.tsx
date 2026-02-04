@@ -83,12 +83,12 @@ export function ProgressBar({ progress }: { progress: UserProgress }) {
 
       <div className="relative h-3 bg-amber-200 rounded-full overflow-hidden mb-4">
         <motion.div
-          className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
+          className="absolute inset-y-0 left-0 bg-linear-to-r from-amber-500 to-orange-500 rounded-full"
           initial={{ width: 0 }}
           animate={{ width: `${progressPercent}%` }}
           transition={{ duration: 1, ease: "easeOut" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
+        <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent animate-pulse" />
       </div>
 
       <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300">
@@ -112,7 +112,7 @@ export function AchievementNotification({ achievement, onClose }: { achievement:
       exit={{ opacity: 0, y: -50, scale: 0.9 }}
       className="fixed top-4 right-4 z-50 max-w-sm"
     >
-      <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white p-4 rounded-2xl shadow-2xl border-2 border-amber-300 dark:from-amber-700 dark:to-orange-700 dark:border-amber-700">
+      <div className="bg-linear-to-r from-amber-500 to-orange-600 text-white p-4 rounded-2xl shadow-2xl border-2 border-amber-300 dark:from-amber-700 dark:to-orange-700 dark:border-amber-700">
         <div className="flex items-center gap-3 mb-2">
           <div className="p-2 bg-white/20 rounded-full">
             {achievement.icon}
@@ -144,7 +144,7 @@ export function AchievementsList({ userProgress }: { userProgress: UserProgress 
           {unlockedAchievements.map((achievement) => (
             <motion.div
               key={achievement.id}
-              className="flex items-center gap-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border-2 border-amber-200 dark:from-neutral-800 dark:to-neutral-700 dark:border-gray-700"
+              className="flex items-center gap-4 p-4 bg-linear-to-r from-amber-50 to-orange-50 rounded-xl border-2 border-amber-200 dark:from-neutral-800 dark:to-neutral-700 dark:border-gray-700"
               whileHover={{ scale: 1.02 }}
             >
               <div className="p-2 bg-amber-500 text-white rounded-full">

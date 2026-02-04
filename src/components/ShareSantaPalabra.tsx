@@ -99,7 +99,7 @@ export default function ShareSantaPalabra({ onShare, onReferralTracked }: ShareS
       {/* Botón para abrir el modal de compartir */}
       <motion.button
         onClick={() => setIsOpen(true)}
-        className="group inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-600 dark:from-amber-600 dark:to-orange-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+        className="group inline-flex items-center gap-2 px-4 py-2 bg-linear-to-r from-amber-500 to-orange-600 dark:from-amber-600 dark:to-orange-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -130,7 +130,7 @@ export default function ShareSantaPalabra({ onShare, onReferralTracked }: ShareS
             >
               {/* Header */}
               <div className="text-center mb-6">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full mb-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-r from-amber-500 to-orange-600 rounded-full mb-4">
                   <Heart className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
@@ -180,7 +180,7 @@ export default function ShareSantaPalabra({ onShare, onReferralTracked }: ShareS
               </div>
 
               {/* Información sobre recompensas */}
-              <div className="bg-gradient-to-r from-yellow-100 to-amber-100 rounded-2xl p-4 mb-6 dark:from-amber-900 dark:to-amber-800 dark:text-gray-200">
+              <div className="bg-linear-to-r from-yellow-100 to-amber-100 rounded-2xl p-4 mb-6 dark:from-amber-900 dark:to-amber-800 dark:text-gray-200">
                 <h4 className="font-bold text-gray-900 mb-2 flex items-center gap-2 dark:text-white">
                   <Star className="h-5 w-5 text-yellow-600" />
                   Recompensas por Referidos

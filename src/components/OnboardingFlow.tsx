@@ -173,10 +173,10 @@ export default function OnboardingFlow({ user, onComplete, onSkip }: OnboardingF
   }
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-yellow-50 to-amber-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-linear-to-br from-blue-50 via-yellow-50 to-amber-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="relative p-6 border-b border-gray-200 bg-gradient-to-r from-[#F4B400] to-[#FFCC00] flex-none">
+        <div className="relative p-6 border-b border-gray-200 bg-linear-to-r from-[#F4B400] to-[#FFCC00] flex-none">
           <div className="text-center text-white">
             <div className="flex items-center justify-center mb-4">
               <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">

@@ -47,7 +47,7 @@ function AuthErrorContent() {
   const errorInfo = getErrorInfo(error)
 
   return (
-    <div className="min-h-screen bg-gradient-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-t from-[#a4becf] via-[#d0dce6] to-[#f0f4f7] flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-xl">
         <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,7 +118,7 @@ function AuthErrorContent() {
 export default function AuthError() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex items-center justify-center">
+      <div className="min-h-screen bg-(--background) text-(--foreground) flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading...</p>

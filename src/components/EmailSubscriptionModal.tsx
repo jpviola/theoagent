@@ -115,7 +115,7 @@ export default function EmailSubscriptionModal() {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-60 flex items-center justify-center p-4">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -172,7 +172,7 @@ export default function EmailSubscriptionModal() {
                       transition={{ delay: 0.1 * index }}
                       className="flex items-center gap-2"
                     >
-                      <Check className="h-3 w-3 text-amber-500 flex-shrink-0" />
+                      <Check className="h-3 w-3 text-amber-500 shrink-0" />
                       <span className="text-xs text-gray-600 dark:text-gray-300">
                         {benefit}
                       </span>
@@ -199,7 +199,7 @@ export default function EmailSubscriptionModal() {
                     disabled={isLoading || !email}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    className="w-full py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-medium rounded-lg hover:from-amber-600 hover:to-orange-600 disabled:opacity-70 disabled:cursor-not-allowed transition-all shadow-sm"
+                    className="w-full py-2 bg-linear-to-r from-amber-500 to-orange-500 text-white text-sm font-medium rounded-lg hover:from-amber-600 hover:to-orange-600 disabled:opacity-70 disabled:cursor-not-allowed transition-all shadow-sm"
                   >
                     {isLoading ? t.loadingText : t.subscribeButton}
                   </motion.button>
